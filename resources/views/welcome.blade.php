@@ -15,8 +15,8 @@
          @vite(['resources/js/home.js'])
     </head>
     <body>
-        <script>
-
-        </script>
+        <div class="w-screen h-screen flex justify-center items-center">
+            <h1 class="text-3xl">Tailwind CSS</h1>
+        </div>
     </body>
 </html>
