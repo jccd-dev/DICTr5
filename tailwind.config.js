@@ -6,6 +6,9 @@ module.exports = {
         "./resources/**/*.vue",
     ],
     theme: {
+        fontFamily: {
+            quicksand: "Quicksand",
+        },
         extend: {},
     },
     plugins: [],

@@ -5,9 +5,12 @@
     </head>
     <body>
 
+        @include("components.navbar")
+
+        {{-- Add Content --}}
         @yield('content')
 
-        {{-- Footer --}}
+        {{-- Footer Section --}}
         @hasSection ('components.footer')
             @include('components.footer')
         @endif

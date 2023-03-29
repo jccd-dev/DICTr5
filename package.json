@@ -17,6 +17,7 @@
     "main": "index.js",
     "license": "MIT",
     "dependencies": {
+        "alpinejs": "^3.12.0",
         "select-philippines-address": "^1.0.6"
     }
 }
