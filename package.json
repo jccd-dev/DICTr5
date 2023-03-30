@@ -2,7 +2,8 @@
     "private": true,
     "scripts": {
         "dev": "vite",
-        "build": "vite build"
+        "build": "vite build",
+        "git-save": "bash git-auto.sh"
     },
     "devDependencies": {
         "autoprefixer": "^10.4.14",
@@ -17,6 +18,8 @@
     "main": "index.js",
     "license": "MIT",
     "dependencies": {
+        "@splidejs/splide": "^4.1.4",
+        "@splidejs/splide-extension-auto-scroll": "^0.5.3",
         "alpinejs": "^3.12.0",
         "select-philippines-address": "^1.0.6",
         "swiper": "^9.1.1"
