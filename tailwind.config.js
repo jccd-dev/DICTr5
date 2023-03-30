@@ -8,6 +8,7 @@ module.exports = {
     theme: {
         fontFamily: {
             quicksand: "Quicksand",
+            inter: "Inter",
         },
         extend: {},
     },

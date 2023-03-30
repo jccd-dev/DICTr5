@@ -4,5 +4,4 @@ import {
     cities,
     barangays,
 } from "select-philippines-address";
-
 regions().then((region) => console.log(region));
