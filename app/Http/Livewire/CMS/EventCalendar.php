@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Admin;
+namespace App\Http\Livewire\Cms;
 
 use Livewire\Component;
 
@@ -8,6 +8,6 @@ class EventCalendar extends Component
 {
     public function render()
     {
-        return view('livewire.admin.event-calendar');
+        return view('livewire.cms.event-calendar');
     }
 }
