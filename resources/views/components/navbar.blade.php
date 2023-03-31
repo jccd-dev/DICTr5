@@ -4,7 +4,7 @@
       <div class="flex items-center flex-grow">
         <div class="flex-shrink-0">
           <h1 class="text-lg font-bold tracking-wider text-black uppercase">
-            <a href="#">GOVPH</a>test
+            <a href="#">GOVPH</a>
             <span class="mx-3 font-semibold hidden xl:flex">|</span>
           </h1>
         </div>
