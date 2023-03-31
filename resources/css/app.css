@@ -14,3 +14,15 @@
 .splide__arrow {
     display: none !important;
 }
+
+@media screen and (max-width: 1600px) {
+    .nav--top {
+        font-size: 12px;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .nav--top {
+        font-size: 14px;
+    }
+}
