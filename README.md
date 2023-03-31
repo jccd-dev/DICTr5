@@ -26,6 +26,17 @@
     composer --version
 ```
 
+## Installing Node.js on Windows 11
+
+1. First, download the Node.js installer from the [official website](https://nodejs.org/en/download/).
+
+2. Run the downloaded installer and follow the instructions to complete the installation.
+
+3. Once installed, open the Command Prompt and type the following command to verify that Node.js is installed:
+```bash
+    node --version
+```
+
 ## Installing Yarn on Windows 11
 
 1. First, download and install Node.js on your system. You can download the latest version of Node.js for Windows from the [official website](https://nodejs.org/en/download/).
