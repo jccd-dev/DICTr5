@@ -1,4 +1,4 @@
-# Installing Composer and Yarn on Windows 11
+# Installing Composer, NodeJs and Yarn on Windows 11
 
 ## Installing Composer on Windows 11
 
