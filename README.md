@@ -57,7 +57,6 @@
 That's it! You have successfully installed Composer and Yarn on your Windows 11 system.
 
 # Auto GIT Push and Pull command
-### You can use this everytime you want to
 
 ## Git Push Command
 1. Run this command when you need to push your code into the repository. 
