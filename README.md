@@ -37,6 +37,8 @@
     node --version
 ```
 
+
+
 ## Installing Yarn on Windows 11
 
 1. First, download and install Node.js on your system. You can download the latest version of Node.js for Windows from the [official website](https://nodejs.org/en/download/).
@@ -53,3 +55,27 @@
 
 
 That's it! You have successfully installed Composer and Yarn on your Windows 11 system.
+
+# Auto GIT Push and Pull command
+### You can use this everytime you want to
+
+## Git Push Command
+1. Run this command when you need to push your code into the repository. 
+```bash
+    yarn git-push
+```
+2. You need to Enter your commit message to the terminal when a line show like this.
+```terminal   
+   Enter EMOTIONAL commit message:
+```
+3. when there is a conflict in pushing your code and needed to pull first, theres no need to run the pull command
+   it will automatic pulling from the repository when it detects the error.
+   
+## Git Pull Command
+This command will update your cloned repository from the main together with auto installing the other
+dependencies such as installing the composer and node packages.
+
+1. For just updating your repository from main repo, you need to run this command.
+```bash
+    yarn git-pull
+```
