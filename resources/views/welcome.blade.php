@@ -4,6 +4,8 @@
 
 <div class="mt-16"></div>
 
+@include('components.banner')
+
 @include('layouts.home.announcement-marquee')
 
 @include('layouts.home.home-slider')

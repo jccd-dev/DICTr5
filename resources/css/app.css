@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+/* FONTS */
+@font-face {
+    font-family: "Lucida Unicode Calligraphy";
+    src: url("../fonts/LucidaUnicodeCalligraphy.ttf");
+}
+@font-face {
+    font-family: "Lucida Unicode Calligraphy Bold";
+    src: url("../fonts/LucidaUnicodeCalligraphyBold.ttf");
+}
+
 .swiper-button-next,
 .swiper-button-prev {
     color: #838383 !important;

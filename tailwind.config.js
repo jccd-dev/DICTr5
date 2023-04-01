@@ -9,6 +9,8 @@ module.exports = {
         fontFamily: {
             quicksand: "Quicksand",
             inter: "Inter",
+            lucida: "Lucida Unicode Calligraphy",
+            lucidaBold: "Lucida Unicode Calligraphy Bold",
         },
         extend: {},
     },
