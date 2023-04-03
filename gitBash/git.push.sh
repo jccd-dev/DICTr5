@@ -3,11 +3,11 @@
 # Prompt the user for a commit message
 read -p "Enter EMOTIONAL commit message: " message
 
-# Add all changes to the staging area
-git add -A
-
 # Commit the changes with the provided commit message
 git commit -m "$message"
+
+# Add all changes to the staging area
+git add -A
 
 # Attempt to push the changes to the remote repository
 if git push -u origin dict; then
