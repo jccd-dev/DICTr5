@@ -1,4 +1,7 @@
 #!/bin/bash
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+RESET=$(tput sgr0)
 
 # Prompt the user for a commit message
 read -p "Enter EMOTIONAL commit message: " message
@@ -12,28 +15,29 @@ git add -A
 # Attempt to push the changes to the remote repository
 if git push -u origin dict; then
   echo " "
-  echo "\e[31m----------------------------\e[0m"
+  echo "${GREEN}----------------------------${RESET}"
   echo "Push successful."
-  echo "\e[31m----------------------------"
+  echo "${GREEN}----------------------------${RESET}"
   echo " "
 else
   # If the push failed, perform a git pull to update the local repository
   echo " "
-  echo "\e[31m--------------------------------------------------------------------"
+  echo "${RED}--------------------------------------------------------------------${RESET}"
   echo "Push failed. Performing a git pull to update the local repository..."
-  echo "\e[31m--------------------------------------------------------------------"
+  echo "${RED}--------------------------------------------------------------------${RESET}"
   echo " "
+
   git pull origin dict
 
   echo " "
   # Attempt to push the changes to the remote repository again
   if git push -u origin dict; then
-    echo "\e[31m------------------------------------------"
+    echo "${GREEN}------------------------------------------${RESET}"
     echo "Push successful after resolving conflicts."
-    echo "------------------------------------------"
+    echo "${GREEN}------------------------------------------${RESET}"
   else
-    echo "\e[31m-----------------------------------------------"
+    echo "${RED}-----------------------------------------------${RESET}"
     echo "Push failed. Please resolve conflicts manually."
-    echo "-----------------------------------------------"
+    echo "${RED}-----------------------------------------------${RESET}"
   fi
 fi
