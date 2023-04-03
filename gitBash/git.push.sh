@@ -12,7 +12,7 @@ git add -A
 # Attempt to push the changes to the remote repository
 if git push -u origin dict; then
   echo " "
-  echo "\e[31m----------------------------"
+  echo "\e[31m----------------------------\e[0m"
   echo "Push successful."
   echo "\e[31m----------------------------"
   echo " "
