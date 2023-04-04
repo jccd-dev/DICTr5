@@ -3,7 +3,7 @@
     <head>
         @include("components.header")
     </head>
-    <body>
+    <body class="overflow-y-scroll overflow-x-hidden">
 
         @include("components.navbar")
 
@@ -14,5 +14,5 @@
         @hasSection ('components.footer')
             @include('components.footer')
         @endif
-</body>
+    </body>
 </html>

@@ -1,27 +1,39 @@
-# Installing Composer, NodeJs and Yarn on Windows 11
+# Installing Composer, NodeJs and Yarn on Windows
+
+### Note: 
+1. Make sure to install Git and git-bash on your computer before proceeding on further instructions, see guide [Git Install Guide](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+
+2. Then set up your git account on your system using git-bash terminal. 
+```bash
+$ git config --global user.name "Git username"
+```
+```bash
+$ git config --global user.email "used email on your git account"
+```
 
 ## Installing Composer on Windows 11
 
-1. First, download and install PHP on your system. You can download the latest version of PHP for Windows from the [official website](https://windows.php.net/download/).
-
-2. Next, download the Composer setup file from the [official website](https://getcomposer.org/download/).
-
-3. Run the downloaded setup file and follow the instructions to complete the installation.
-
-4. Once installed, open the Command Prompt and navigate to the directory where you want to install your PHP project.
-
-5. Type the following command to install Composer globally on your system: 
+1. Instead of installing PHP, we recommnend to install the XAMPP 8.1.12 or higher version. It is for the Laravel 10 compatability.
+2. To run and work the PHP on your system you need to PATH it on your environmment variable.
+3. On your desktop search for System Environment Variable then a modal will pop up.
+4. Then click the "Environment Variables" button.
+5. Then select the path for User Variables then click Edit, then click New.
+    ![image](https://user-images.githubusercontent.com/119395442/229665114-9d6e490b-fec7-4275-9056-f4febb594d18.png)
+6. After clicking the New button paste this on input box.
 ```bash
-    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+    C:\xampp\php
 ```
-
-6. Then type:
+7. Reapeat instruction 5-6 but for System Variables.
+8. then click ok.
+9. To verify that PHP is added to your system environment, run the following command in the Command Prompt: 
 ```bash
-    php composer-setup.php
+    php --v
 ```
-7. This will install Composer in the current directory. To install it globally, move the `composer.phar` file to a directory that is included in your system's PATH environment variable.
+10. Next, download the Composer setup file from the [official website](https://getcomposer.org/download/).
 
-8. To verify that Composer is installed, run the following command in the Command Prompt: 
+11. Run the downloaded setup file and follow the instructions to complete the installation.
+
+12. To verify that Composer is installed, run the following command in the Command Prompt: 
 ```bash
     composer --version
 ```
