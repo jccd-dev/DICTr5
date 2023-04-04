@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
-        @include("components.header")
+        <x-metadata.header />
     </head>
-    <body>
+    <body class="overflow-y-scroll overflow-x-hidden">
 
-        @include("components.navbar")
+        <x-layouts.navbar />
 
         {{-- Add Content --}}
         @yield('content')
@@ -14,5 +14,5 @@
         @hasSection ('components.footer')
             @include('components.footer')
         @endif
-</body>
+    </body>
 </html>

@@ -4,15 +4,23 @@
 
 <div class="mt-16"></div>
 
-@include('components.banner')
+<x-layouts.banner />
 
-@include('layouts.home.announcement-marquee')
+<x-layouts.announcement-marquee />
 
-@include('layouts.home.home-slider')
+<x-home.section.home-slider />
 
-@include('layouts.home.calendar')
+<x-home.section.exam-section />
 
-{{-- @include('layouts.home.calendar-v2') --}}
+<x-home.section.calendar-section />
+
+<x-home.section.services-section />
+
+<x-home.section.contact-center-section />
+
+<x-forms.input required="true" name="Name" type="text" placeholder="Enter name" />
+
+<x-home.section.details-section />
 
 <div class="flex justify-center items-center h-screen w-screen">
 

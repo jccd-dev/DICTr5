@@ -18,9 +18,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
-
-
 //TODO: cant display the slider form component
 //FIXME: blank page
 Route::get('/form', SliderBanner::class);
+
+Route::get('/about', function () {
+    return view('pages.about');
+});
