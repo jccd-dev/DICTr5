@@ -20,6 +20,7 @@
 
 <x-forms.input required="true" name="Name" type="text" placeholder="Enter name" />
 
+@include('layouts.home.section.details-section')
 
 <div class="flex justify-center items-center h-screen w-screen">
 
