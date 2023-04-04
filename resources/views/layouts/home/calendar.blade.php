@@ -2,7 +2,7 @@
     <div class="max-w-lg w-full shadow-lg">
         <div class="md:p-8 p-5 dark:bg-gray-800 bg-white rounded-t">
             <div class="px-4 flex items-center justify-between">
-                <span  tabindex="0" class="focus:outline-none  text-base font-bold dark:text-gray-100 text-gray-800">
+                <span  tabindex="0" class="focus:outline-none  text-xl font-bold dark:text-gray-100 text-gray-800">
                     <span x-text="MONTH_NAMES[month]"></span>
                     <span x-text="year"></span>
                 </span>
