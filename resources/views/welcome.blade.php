@@ -24,6 +24,8 @@
 
 {{-- @include('layouts.home.calendar-v2') --}}
 
+@include('layouts.home.section.details-section')
+
 <div class="flex justify-center items-center h-screen w-screen">
 
     <h1 class="text-4xl">Hello World</h1>

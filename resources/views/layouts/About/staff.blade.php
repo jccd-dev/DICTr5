@@ -1,4 +1,4 @@
-<div class = 'flex flex-col w-full py-[7rem] gap-10 justify-center'>
+<div class = 'flex flex-col w-full py-[20rem] gap-10 justify-center'>
         <div class = ' text-center'>
             <div class = 'flex justify-center'>
                 <img src="#" class = 'w-[5rem] h-[5rem] rounded-full bg-slate-400'>
@@ -31,7 +31,7 @@
             </div>
         </div>
     </div>
-        <div class = 'w-full bg-[#18375a] h-0.5'>
+        <div class = 'w-full bg-[#18375a] h-[0.25rem]'>
         </div>
 
 
