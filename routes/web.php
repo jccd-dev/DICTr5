@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Livewire\CMS\SliderBanner;
+use App\Http\Livewire\ContactForm;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,3 +17,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+
+
+//TODO: cant display the slider form component
+//FIXME: blank page
+Route::get('/form', SliderBanner::class);
