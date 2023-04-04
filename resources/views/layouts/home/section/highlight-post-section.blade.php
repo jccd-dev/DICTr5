@@ -1,7 +1,7 @@
 <div class="w-full mt-32" x-data="{ data: [1,2,3] }">
     <div class="w-full flex flex-col justify-center">
         <h1 class="text-center font-bold font-inter text-3xl">Highlight Posts</h1>
-        <p class="text-center text-lg mt-7">Lorem ipsum dolor sit amet consectetur. Adipiscing pretium quam sapien leo magna.</p>
+        <p class="text-center text-lg mt-3">Lorem ipsum dolor sit amet consectetur. Adipiscing pretium quam sapien leo magna.</p>
     </div>
     <div class="flex justify-center">
         <div class="mt-20 flex gap-10">

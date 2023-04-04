@@ -18,6 +18,8 @@
 
 @include('layouts.home.section.services-section')
 
+@include('layouts.home.section.contact-center-section')
+
 
 {{-- @include('layouts.home.calendar-v3') --}}
 

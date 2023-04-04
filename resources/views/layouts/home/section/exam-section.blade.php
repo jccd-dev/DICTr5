@@ -14,7 +14,7 @@
                 </div>
             </div>
             <div class="right w-1/3 flex justify-center mt-32">
-                <a href="#" class="font-quicksand font-bold bg-white rounded-xl px-10 py-5">APPLY NOW</a>
+                <a href="#" class="font-quicksand font-bold bg-white rounded-xl px-10 py-5 text-darker-blue">APPLY NOW</a>
             </div>
         </div>
     </div>
