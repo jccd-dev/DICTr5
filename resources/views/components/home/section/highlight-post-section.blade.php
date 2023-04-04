@@ -4,7 +4,7 @@
         <p class="text-center text-lg mt-3">Lorem ipsum dolor sit amet consectetur. Adipiscing pretium quam sapien leo magna.</p>
     </div>
     <div class="flex justify-center">
-        <div class="mt-20 flex gap-10">
+        <div class="mt-20 flex gap-10 flex-wrap justify-center">
             <template x-for="i in data">
                 <div class="card w-[23rem] rounded-xl border-b-4 border-custom-red">
                     <div class="flex flex-col justify-between">
