@@ -16,6 +16,8 @@
 
 @include('layouts.home.section.highlight-post-section')
 
+@include('layouts.home.section.services-section')
+
 
 {{-- @include('layouts.home.calendar-v3') --}}
 
