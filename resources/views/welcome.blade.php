@@ -10,7 +10,16 @@
 
 @include('layouts.home.home-slider')
 
-@include('layouts.home.calendar')
+@include('layouts.home.section.exam-section')
+
+@include('layouts.home.section.calendar-section')
+
+@include('layouts.home.section.highlight-post-section')
+
+@include('layouts.home.section.services-section')
+
+
+{{-- @include('layouts.home.calendar-v3') --}}
 
 {{-- @include('layouts.home.calendar-v2') --}}
 

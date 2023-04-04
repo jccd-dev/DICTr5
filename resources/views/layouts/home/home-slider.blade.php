@@ -1,6 +1,6 @@
 <!-- Slider main container -->
 
-<div class="swiper w-full h-[40rem]">
+<div class="swiper w-full h-[40rem] border-b-4 border-b-[#FDC500]">
     <!-- Additional required wrapper -->
     <div class="swiper-wrapper">
         <!-- Slides -->
