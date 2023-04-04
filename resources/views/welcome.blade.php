@@ -4,7 +4,7 @@
 
 <div class="mt-16"></div>
 
-<x-layouts.banner />
+{{-- <x-layouts.banner />
 
 <x-layouts.announcement-marquee />
 
@@ -20,8 +20,10 @@
 
 <x-forms.input required="true" name="Name" type="text" placeholder="Enter name" />
 
-<x-home.section.details-section />
+<x-forms.textarea required="true" name="Name" placeholder="Enter name" />
 
+<x-home.section.details-section /> --}}
+@livewire('cms.slider')
 <div class="flex justify-center items-center h-screen w-screen">
 
     <h1 class="text-4xl">Hello World</h1>
