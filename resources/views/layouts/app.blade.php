@@ -11,10 +11,12 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
+    @livewireStyles
 </head>
 <body>
     <div class="container">
-        @yield('content')
+        @livewire('cms.slider-banner')
     </div>
+    @livewireScripts
 </body>
 </html>

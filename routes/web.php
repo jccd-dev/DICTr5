@@ -20,7 +20,9 @@ Route::get('/', function () {
 
 //TODO: cant display the slider form component
 //FIXME: blank page
-Route::get('/form', SliderBanner::class);
+Route::get('/form', function() {
+    return view('layouts.app');
+});
 
 Route::get('/about', function () {
     return view('pages.about');

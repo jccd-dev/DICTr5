@@ -15,6 +15,11 @@ echo "${GREEN}-------------------------------------------${RESET}"
 echo "Composer packages installation is complete."
 echo "${GREEN}-------------------------------------------${RESET}"
 
+
+echo " "
+echo " "
+echo "Yarn Installing"
+echo "${GREEN}-------------------------------------------${RESET}"
 # Install Yarn packages
 yarn install
 # Notify that Composer installation is complete

@@ -3,14 +3,17 @@ RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
 RESET=$(tput sgr0)
 
-# Prompt the user for a commit message
-read -p "Enter EMOTIONAL commit message: " message
 
-# Commit the changes with the provided commit message
-git commit -m "$message"
 
 # Add all changes to the staging area
 git add -A
+echo " "
+# Prompt the user for a commit message
+read -p "Enter ${GREEN}EMOTIONAL${RESET} commit message${RED}:${RESET} " message
+# Commit the changes with the provided commit message
+git commit -m "$message"
+
+
 
 # Attempt to push the changes to the remote repository
 if git push -u origin dict; then

@@ -2,13 +2,12 @@
 
 namespace App\Http\Livewire\Cms;
 
-use App\Models\CMS\HomeBanner;
+// use App\Models\CMS\HomeBanner;
 use Livewire\Component;
 
-class SliderBanner extends Component
+class XSliderBanner extends Component
 {
 
-    public $layout = 'layouts.app';
     public $title;
     public $description;
     public $image;
@@ -50,7 +49,7 @@ class SliderBanner extends Component
     //TODO: cant display the slider form component
     public function render()
     {
-        return view('livewire.cms.slider');
+        return view('livewire.cms.slider-banner');
     }
 
 
