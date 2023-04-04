@@ -3,10 +3,11 @@
         <div class="mb-20">
             <h1 class="text-3xl font-bold font-inter">Calendar of Activities</h1>
         </div>
-        <div class="flex justify-center gap-10">
-            @include('layouts.home.calendar')
+        <div class="flex justify-center gap-10 flex-col lg:flex-row">
 
-            <div class="w-[35rem] bg-yellow-300 rounded-xl p-10">
+            <x-home.section.calendar />
+
+            <div class="w-[35rem] bg-yellow-300 rounded-xl p-10 hidden lg:block ">
                 <h1 class="font-bold text-2xl font-quicksand">April 2023 Highlight Activities</h1>
                 <div class="legends flex gap-5 mt-2">
                     <div class="flex gap-2 items-center">
