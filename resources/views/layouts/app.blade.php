@@ -15,7 +15,7 @@
 </head>
 <body>
     <div class="container">
-        @livewire('cms.slider-banner')
+        @livewire('cms.slider')
     </div>
     @livewireScripts
 </body>

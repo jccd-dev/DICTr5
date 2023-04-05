@@ -1,4 +1,3 @@
 <div>
-    {{-- Because she competes with no one, no one can compete with her. --}}
-    asdasd
+    {{ //TODO: slider banner form accept String title, File image, Text description, and String button_links}}
 </div>
