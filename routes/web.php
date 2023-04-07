@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\CMS\SliderBanner;
 use App\Http\Livewire\ContactForm;
+use App\Http\Livewire\CMS\Announcements;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -27,3 +28,8 @@ Route::get('/form', function() {
 Route::get('/about', function () {
     return view('pages.about');
 });
+
+Route::prefix('admin')->group(function () {
+    Route::get('/cms/announcement', Announcements::class)->name('admin.cms.announcement');
+});
+
