@@ -6,6 +6,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 // init Swiper:
+
 const swiper = new Swiper(".swiper", {
     loop: true,
     direction: "horizontal",
