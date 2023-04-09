@@ -109,6 +109,7 @@ class Announcement extends Model
                                             ->select('announcements.*', 'dict_admins.name as author_name', 'post_categories.category as category')
                                             ->where('announcements.timestamp', '<=', $to)
                                             ->where('announcements.timestamp', '>=', $from)
+                                            ->orderBy('announcements.timestamp', 'desc')
                                             ->get();
             else
                 return DB::table($this->table)->join('dict_admins', 'announcements.author', '=', 'dict_admins.id')
@@ -117,6 +118,7 @@ class Announcement extends Model
                                             ->where('announcements.timestamp', '<=', $to)
                                             ->where('announcements.timestamp', '>=', $from)
                                             ->where('announcements.cat_id', $category)
+                                            ->orderBy('announcements.timestamp', 'desc')
                                             ->get();
         }else{
             return $this->search_announcement($search);
@@ -137,6 +139,7 @@ class Announcement extends Model
                                     ->where('announcements.title', 'like', '%'.$data.'%')
                                     ->orWhere('announcements.excerpt', 'like', '%'.$data.'%')
                                     ->orWhere('announcements.content', 'like', '%'.$data.'%')
+                                    ->orderBy('announcements.timestamp', 'desc')
                                     ->get();
     }
 
