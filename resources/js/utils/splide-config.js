@@ -3,13 +3,17 @@ import "@splidejs/splide/css/skyblue";
 import Splide from "@splidejs/splide";
 import { AutoScroll } from "@splidejs/splide-extension-auto-scroll";
 
-const splide = new Splide(".splide", {
-    type: "loop",
-    drag: "free",
-    focus: "center",
-    autoScroll: {
-        speed: 1,
-    },
-});
+const splideCon = document.querySelector(".splide");
 
-splide.mount({ AutoScroll });
+if (splideCon) {
+    const splide = new Splide(".splide", {
+        type: "loop",
+        drag: "free",
+        focus: "center",
+        autoScroll: {
+            speed: 1,
+        },
+    });
+
+    splide.mount({ AutoScroll });
+}

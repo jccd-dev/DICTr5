@@ -1,4 +1,4 @@
-<section class="w-full 2xl:h-16 pl-14 sm:pl-16 md:pl-36 xl:pl-48 bg-yellow-300 overflow-x-hidden">
+<section class="w-full h-12 2xl:h-16 pl-14 sm:pl-16 md:pl-36 xl:pl-48  bg-gradient-to-r from-yellow-400 from-50% via-yellow-400 via-10% to-orange-400 to-40% overflow-x-hidden">
     <div class="w-full h-full flex items-center ">
         <div class="flex w-full">
             <div class="left font-semibold mr-5 xl:mr-20 text-lg">Announcements:</div>

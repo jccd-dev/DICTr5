@@ -5,8 +5,6 @@
     </head>
     <body class="overflow-y-scroll overflow-x-hidden">
 
-        <x-layouts.navbar />
-
         {{-- Add Content --}}
         @yield('content')
 
@@ -14,5 +12,7 @@
         @hasSection ('components.footer')
             @include('components.footer')
         @endif
+
+        <x-layouts.accesability />
     </body>
 </html>

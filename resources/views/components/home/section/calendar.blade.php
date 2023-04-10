@@ -31,33 +31,6 @@
                 </div>
             </div>
             <div class="flex items-center justify-between pt-12">
-                {{-- <table class="w-full">
-                    <thead>
-                        <tr>
-                            <template x-for="(day, index) in DAYS" :key="index">
-                                <th>
-                                    <div class="w-full flex justify-center">
-                                        <p x-text="day" class="text-base font-medium text-center text-gray-800 dark:text-gray-100"></p>
-                                    </div>
-                                </th>
-                            </template>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <templpate x-for="blankday in blankdays">
-                                <td class="pt-6">
-                                    <div class="px-2 py-2 cursor-pointer flex w-full justify-center"></div>
-                                </td>
-                            </templpate>
-                            <td class="pt-6">
-                                <div class="px-2 py-2 cursor-pointer flex w-full justify-center">
-                                    <p class="text-base text-gray-500 dark:text-gray-100 font-medium">1</p>
-                                </div>
-                            </td>
-
-                    </tbody>
-                </table> --}}
                 <div class="-mx-1 -mb-1">
                     <div class="flex flex-wrap">
                         <template x-for="(day, index) in DAYS" :key="index">
@@ -75,26 +48,16 @@
                                 class="text-center px-4 pt-2"
                             ></div>
                         </template>
-                        {{-- <div style="width: 14.28%; height: 70px" class="px-4 pt-2 relative">
-                            <div
-                                x-text="date"
-                                class="text-base text-gray-500 dark:text-gray-100 font-medium"
-                                :class="{'bg-blue-500 text-white': isToday(date) == true, 'text-gray-700 hover:bg-blue-200': isToday(date) == false }"
-                            ></div>
-                        </div> --}}
                         <template x-for="(date, dateIndex) in no_of_days" :key="dateIndex">
                             <div style="width: 14.28%; height: 70px" class="flex justify-center items-center">
                                 <div x-show="isToday(date)" class="flex items-center justify-center w-full rounded-full cursor-pointer">
-                                    <a role="link" x-text="date" tabindex="0" class="focus:outline-none  focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 focus:bg-indigo-500 hover:bg-indigo-500 text-base w-8 h-8 flex items-center justify-center font-medium text-white bg-indigo-700 rounded-full"></a>
+                                    <a role="link" x-text="date" tabindex="0" class="focus:outline-none select-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 focus:bg-indigo-500 hover:bg-indigo-500 text-base w-8 h-8 flex items-center justify-center font-medium text-white bg-indigo-700 rounded-full"></a>
                                 </div>
                                 <div x-show="!isToday(date)" class="flex items-center justify-center w-full rounded-full cursor-pointer">
-                                    <p class="text-base text-gray-500 dark:text-gray-100 font-medium hover:bg-slate-200 w-8 h-8 rounded-full flex justify-center items-center" x-text="date"></p>
+                                    <p class="text-base text-gray-500 dark:text-gray-100 font-medium hover:bg-slate-200 w-8 h-8 rounded-full flex justify-center items-center select-none" x-text="date"></p>
                                 </div>
                             </div>
                         </template>
-                        {{-- <div class="px-2 py-2 cursor-pointer flex w-full justify-center">
-                            <p class="text-base text-gray-500 dark:text-gray-100 font-medium">1</p>
-                        </div> --}}
                     </div>
                 </div>
             </div>

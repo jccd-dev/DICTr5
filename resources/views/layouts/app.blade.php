@@ -6,16 +6,12 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>
 <body>
-    <div class="container">
-        @livewire('cms.slider')
+    <div class="container mx-auto flex justify-center">
+        <livewire:cms.slider />
     </div>
     @livewireScripts
 </body>

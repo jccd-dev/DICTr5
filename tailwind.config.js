@@ -24,4 +24,9 @@ module.exports = {
         },
     },
     plugins: [],
+    variants: {
+        extend: {
+            textColor: ["custom"], // Define custom state for text color
+        },
+    },
 };
