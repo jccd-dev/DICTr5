@@ -8,6 +8,7 @@ class EventCalendar extends Component
 {
     public function render()
     {
-        return view('livewire.cms.event-calendar');
+        return view('livewire.cms.event-calendar')
+                ->layout('livewire.layout.laravel_layout');;
     }
 }
