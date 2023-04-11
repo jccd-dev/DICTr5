@@ -1,6 +1,6 @@
 <?php
 //  ADDED 'status' COLUMN IN THE ANNOUNCEMENT TABLE
-//  SQL COMMAND: ALTER TABLE `announcements` ADD `status` VARCHAR(15) NOT NULL DEFAULT 'Unpublished' AFTER `author`;
+//  SQL COMMAND: ALTER TABLE `announcements` ADD `status` TINYINT(2) NOT NULL AFTER `author`;
 
 namespace App\Models\CMS;
 
