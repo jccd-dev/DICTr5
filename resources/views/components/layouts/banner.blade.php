@@ -1,6 +1,8 @@
 <style>
-background:rgb(2,0,36);
-background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
+div {
+  background: rgb(2,0,36);
+  background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
+}
 </style>
 
 <div class="banner-con w-full h-[5.5rem] md:h-[7rem] flex justify-center items-center">
