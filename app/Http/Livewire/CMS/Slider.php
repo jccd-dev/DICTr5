@@ -4,9 +4,13 @@ namespace App\Http\Livewire\Cms;
 
 use App\Models\CMS\HomeBanner;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class Slider extends Component
 {
+
+    use WithFileUploads;
+
     public $title;
     public $description;
     public $image;
@@ -44,9 +48,9 @@ class Slider extends Component
     public function submit() {
 
         //validate Inputs data before inserting to database
-        $validatedData = $this->validate();
-
-        return response()->json($validatedData);
+        //$validatedData = $this->validate();
+        dd(['title' => $this->title, 'description' => $this->description, 'image' => $this->image, 'button_links' => $this->button_links]);
+        //return response()->json($validatedData);
     }
 
     public function render()
