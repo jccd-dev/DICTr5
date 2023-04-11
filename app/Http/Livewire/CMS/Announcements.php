@@ -72,9 +72,9 @@ class Announcements extends Component
         ])->validate();
 
         if($this->isPublished){
-            $this->insertAnnArray['status'] = 'Published';
+            $this->insertAnnArray['status'] = 1;
         }else{
-            $this->insertAnnArray['status'] = 'Unpublished';
+            $this->insertAnnArray['status'] = 0;
         }
 
 
@@ -99,7 +99,7 @@ class Announcements extends Component
         $this->updateAnnArray['title'] = $ann->title;
         $this->updateAnnArray['excerpt'] = $ann->excerpt;
         $this->updateAnnArray['cat_id'] = $ann->cat_id;
-        $this->isUpdatedPublished = ($ann->status == 'Published') ? true : false;
+        $this->isUpdatedPublished = $ann->status;
         $this->dispatchBrowserEvent('update_content', $ann->content);
     }
 
@@ -117,9 +117,9 @@ class Announcements extends Component
         ])->validate();
 
         if($this->isUpdatedPublished){
-            $this->updateAnnArray['status'] = 'Published';
+            $this->updateAnnArray['status'] = 1;
         }else{
-            $this->updateAnnArray['status'] = 'Unpublished';
+            $this->updateAnnArray['status'] = 0;
         }
 
         // TODO: get admin id

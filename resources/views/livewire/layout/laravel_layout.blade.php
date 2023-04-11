@@ -17,6 +17,7 @@
     {{-- CKEDITOR --}}
     <script src="//cdn.ckeditor.com/4.21.0/standard/ckeditor.js"></script>
     @vite('resources/css/app.css')
+    @vite('resources/js/fullcalendar.js')
     @livewireStyles
 </head>
 <body>
