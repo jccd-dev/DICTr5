@@ -4,31 +4,21 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
+use App\Rules\WordCount;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
-    public function register(): void
+    public function boot()
     {
-        //
-    }
-
-    /**
-     * Bootstrap any application services.
-     */
-    public function boot(): void
-    {
-        Validator::extend('wordC', function ($attribute, $value, $parameters, $validator) {
-            $maxWords = (int) $parameters[0];
-            $wordCount = str_word_count($value);
-            return $wordCount <= $maxWords;
+        Validator::extend('word_count', function ($attribute, $value, $parameters, $validator) {
+            $count = $parameters[0] ?? null;
+            $rule = new WordCount($count);
+            return $rule->passes($attribute, $value);
         });
 
-        Validator::replacer('wordC', function ($message, $attribute, $rule, $parameters) {
-            return str_replace(':max_words', $parameters[0], $message);
-            }
-        );
+        Validator::replacer('word_count', function ($message, $attribute, $rule, $parameters) {
+            return str_replace(':count', $parameters[0], $message);
+        });
     }
 }
+

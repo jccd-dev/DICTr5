@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Livewire\CMS\SliderBanner;
-use App\Http\Livewire\ContactForm;
 /*
 |--------------------------------------------------------------------------
 | Web Routes

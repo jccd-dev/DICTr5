@@ -17,6 +17,5 @@
     <div class="container">
         @livewire('cms.slider')
     </div>
-    @livewireScripts
 </body>
 </html>
