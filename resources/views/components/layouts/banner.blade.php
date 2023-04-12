@@ -5,17 +5,17 @@
     }
 </style>
 
-<div id="banner-con" class="banner-con w-full h-[5.5rem] md:h-[7rem] flex justify-center items-center">
+<div id="banner-con" class="banner-con w-full h-[5rem] 2xl:h-[7rem] flex justify-center items-center">
     <div class="mx-10 w-full flex items-center justify-between">
         <div class="left">
-            <img src="{{ asset('img/DICT Standard Logos-06 1.png') }}" class="h-[4rem] md:h-[5rem]" alt="">
+            <img src="{{ asset('img/DICT Standard Logos-06 1.png') }}" class="h-[4rem] 2xl:h-[5rem]" alt="">
         </div>
         <div class="right hidden lg:flex gap-20 ">
             <div class="ph-time flex flex-col items-center justify-center text-lg font-quicksand">
-                <h3 class="text-sm">Tuesday, March 21, 2023</h3>
-                <h3 class="text-3xl">03:54:56 PM</h3>
+                <h3 class="text-xs 2xl:text-sm">Tuesday, March 21, 2023</h3>
+                <h3 class="text-xl 2xl:text-3xl">03:54:56 PM</h3>
             </div>
-            <div class="qoute flex flex-col items-center font-lucida text-xl">
+            <div class="qoute flex flex-col items-center font-lucida text-base 2xl:text-xl">
                 <h1>DICT to the People</h1>
                 <h1>DICT for the People</h1>
             </div>
