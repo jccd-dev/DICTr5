@@ -3,7 +3,7 @@
     /*    height: 3rem;*/
     /*}*/
 </style>
-<section id="announcement-marquee" class="w-full h-9 2xl:h-16 pl-10 bg-gradient-to-r from-yellow-400 from-50% via-yellow-400 via-10% to-orange-400 to-40% overflow-x-hidden">
+<section id="announcement-marquee" class="w-full h-9 2xl:h-16 pl-10 xl:pl-24 bg-gradient-to-r from-yellow-400 from-50% via-yellow-400 via-10% to-orange-400 to-40% overflow-x-hidden">
     <div class="w-full h-full flex items-center ">
         <div class="flex w-full">
             <div class="left font-semibold mr-5 xl:mr-20 text-sm 2xl:text-lg">Announcements:</div>

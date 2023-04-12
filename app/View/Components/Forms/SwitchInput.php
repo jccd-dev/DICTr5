@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class Switch extends Component
+class SwitchInput extends Component
 {
     /**
      * Create a new component instance.
@@ -21,6 +21,6 @@ class Switch extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.forms.switch');
+        return view('components.forms.switch-input');
     }
 }
