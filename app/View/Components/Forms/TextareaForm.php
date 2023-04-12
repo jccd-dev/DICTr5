@@ -6,19 +6,17 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class InputForm extends Component
+class TextareaForm extends Component
 {
+
     public string $name;
     public bool $isRequired;
-    public string $type;
     public string $placeholder;
     public string $model;
-    public string $insideText;
 
     protected array $rules = [
         'name' => 'required',
         'isRequired' => 'required',
-        'type' => 'required',
         'placeholder' => 'required',
         'model' => 'required',
     ];
@@ -26,18 +24,12 @@ class InputForm extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct(string $name, bool $required, string $type, string $placeholder, string $model, string $insideText = "")
+    public function __construct(string $name, bool $required, string $placeholder, string $model)
     {
         $this->name = $name;
         $this->isRequired = $required;
-        $this->type = $type;
         $this->placeholder = $placeholder;
         $this->model = $model;
-        $this->insideText = $insideText;
-    }
-
-    public function submit(): void {
-        $this->validate();
     }
 
     /**
@@ -45,6 +37,6 @@ class InputForm extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.forms.input-form');
+        return view('components.forms.textarea-form');
     }
 }

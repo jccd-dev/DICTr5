@@ -28,7 +28,7 @@ Route::get('/form', function() {
 
 Route::get('/about', function () {
     return view('pages.about');
-});
+    });
 
 Route::prefix('admin')->group(function () {
     Route::prefix('cms')->group(function (){

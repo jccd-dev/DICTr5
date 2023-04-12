@@ -6,7 +6,7 @@
   </style>
 
 <div id="banner-con" class="banner-con w-full h-[5.5rem] md:h-[7rem] flex justify-center items-center">
-    <div class="mx-10 w-full flex items-center justify-between">
+    <div class="mx:10 xl:mx-24 w-full flex items-center justify-between">
         <div class="left">
             <img src="{{ asset('img/DICT Standard Logos-06 1.png') }}" class="h-[4rem] 2xl:h-[5rem]" alt="">
         </div>
