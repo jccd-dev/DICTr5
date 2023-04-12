@@ -1,13 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-<<<<<<< HEAD
-=======
 use App\Http\Livewire\CMS\SliderBanner;
 use App\Http\Livewire\ContactForm;
 use App\Http\Livewire\CMS\Announcements;
 use App\Http\Livewire\CMS\EventCalendar;
->>>>>>> 790fb20152c2c56c1e6d6b1749c666499f0e54f6
 /*
 |--------------------------------------------------------------------------
 | Web Routes

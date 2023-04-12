@@ -35,11 +35,12 @@ class Announcement extends Model
      * @return instance of the Illuminate\Database\Eloquent\Collection class
      */
     public function get_all_announcement(){
-        return DB::table($this->table)->orderBy('timestamp', 'desc')
-                                    ->join('dict_admins', 'announcements.author', '=', 'dict_admins.id')
-                                    ->join('post_categories', 'announcements.cat_id', '=', 'post_categories.id')
-                                    ->select('announcements.*', 'dict_admins.name as author_name', 'post_categories.category as category')
-                                    ->get();
+        return DB::table($this->table)
+            ->orderBy('timestamp', 'desc')
+            ->join('dict_admins', 'announcements.author', '=', 'dict_admins.id')
+            ->join('post_categories', 'announcements.cat_id', '=', 'post_categories.id')
+            ->select('announcements.*', 'dict_admins.name as author_name', 'post_categories.category as category')
+            ->get();
     }
 
     /**
@@ -98,7 +99,7 @@ class Announcement extends Model
      * @param string $to: date range to
      * @param int $category: post_category id
      * @param string $search: search text
-     * 
+     *
      * @return instance of the Illuminate\Database\Eloquent\Collection class
      */
     public function filter_search(string $from, string $to, int $category = null, string $search = null){
