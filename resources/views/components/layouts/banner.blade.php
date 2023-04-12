@@ -1,11 +1,11 @@
 <style>
     #banner-con {
-        background:rgb(2,0,36);
+        background: rgb(2,0,36);
         background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
     }
-</style>
+  </style>
 
-<div id="banner-con" class="banner-con w-full h-[5rem] 2xl:h-[7rem] flex justify-center items-center">
+<div id="banner-con" class="banner-con w-full h-[5.5rem] md:h-[7rem] flex justify-center items-center">
     <div class="mx-10 w-full flex items-center justify-between">
         <div class="left">
             <img src="{{ asset('img/DICT Standard Logos-06 1.png') }}" class="h-[4rem] 2xl:h-[5rem]" alt="">
