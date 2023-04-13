@@ -1,5 +1,5 @@
 <div>
-    <label for="{{ $name }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Title</label>
+    <label for="{{ $name }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">${{ $name }}</label>
 
     @if($insideText)
         <div class="flex">
@@ -26,5 +26,6 @@
             wire:model="{{ $model }}"
         >
     @endif
-{{--    <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $err }}</p>--}}
+
+    @error($model) <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p> @enderror
 </div>
