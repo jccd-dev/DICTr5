@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Livewire\WithFileUploads;
 use App\Models\CMS\HomeBanner;
 use Illuminate\Support\Facades\Storage;
+use mysql_xdevapi\Session;
 
 class Slider extends Component
 {
@@ -21,7 +22,8 @@ class Slider extends Component
     public string $image_name = '';
     public string $button_links;
     private $banner_model;
-    public $banner_data = [];
+    private $banner_id = null;
+    private $banner_data = [];
 
     //Input validation rules
     protected $rules = [
@@ -38,17 +40,14 @@ class Slider extends Component
         'image.dimensions'   => 'Image minimum width and height should be 950 x 635 pixels'
     ];
 
-
-    /**
-     * Description: Initialized the HomeBanner Model Class responsible for
-     *              CRUD operations connected to database.
-     */
     public function __construct() {
         $this->banner_model = new HomeBanner();
     }
 
     /**
+     * TITLE: SUBMIT
      * Description: Handle the data submitted from the form
+     * @return Session (flash session) use for to display message to user.
      */
     public function submit() {
 
@@ -58,22 +57,61 @@ class Slider extends Component
         $validatedData['image'] = $this->image_name;
 
         $this->banner_data = $validatedData;
-        //insert image to database
-
+        //insert data into database
         $this->banner_model->make_banner($validatedData) ? session()->flash('success', 'Slider Banner Created!') : session()->flash('error', 'Please try Again Later!');
     }
 
+    /**
+     * Description: Store the image file in the designated folder in the server
+     */
     public function storeImage(): void
     {
+        //delete the old image when it updated
         if($this->image_name && Storage::exists('/public/images/'.$this->image_name)) {
             Storage::delete('public/images/'.$this->image_name);
         }
 
-        $time = time(); $rand_num = Str::random(8); $extension = $this->image->getClientOriginalExtension();
+        $time = time();
+        $rand_num = Str::random(8);
+        $extension = $this->image->getClientOriginalExtension();
+
         $image_name = "{$time}_{$rand_num}.{$extension}";
         $this->image->storeAs('/public/images', $image_name);
 
         $this->image_name = $image_name;
+    }
+
+    /**
+     * TITLE: UPDATE BANNER
+     * Description: Update specific banner identified using its unique ID
+     *              to database.
+     * @param string|int $banner_id unique identification for every slider banner
+     * @return Session (flash session) use for to display message to user.
+     */
+    public function update_banner(string|int $banner_id) {
+        //validate Inputs data before inserting to database
+        $validatedData = $this->validate();
+
+        //get the prev banner data (image name and id)
+        $banner_data = $this->banner_model->get_banner($banner_id);
+        $this->image_name = $banner_data->image;
+        $this->banner_id = $banner_data->id;
+
+        //save image into the designated folder in the server
+        $this->storeImage();
+        $validatedData['image'] = $this->image_name;
+
+        //inert or save into database
+        $this->banner_data = $validatedData;
+        $this->banner_model->update_banner($validatedData, $this->banner_id) ? session()->flash('success', 'Slider Banner Created!') : session()->flash('error', 'Please try Again Later!');
+    }
+
+    /**
+     * @param string|int $banner_id
+     * @return bool
+     */
+    public function delete_banner(string|int $banner_id) :bool {
+        return $this->banner_model->delete_banner($banner_id);
     }
 
     public function render()
