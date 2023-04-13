@@ -22,11 +22,20 @@
 
 <x-home.section.contact-center-section />
 
-<x-forms.input required="true" name="Name" type="text" placeholder="Enter name" />
 
-<x-forms.textarea required="true" name="Name" placeholder="Enter name" />
 
 <x-home.section.details-section />
+
+<x-layouts.modal-button name="Modal" target="modal1" />
+
+<x-layouts.modal title="Modal1" target="modal1" method="POST" action="#">
+
+    <x-forms.input required="true" name="Name" type="text" placeholder="Enter name" />
+
+    <x-forms.textarea required="true" name="Name" placeholder="Enter name" />
+
+</x-layouts.modal>
+
 
 @endsection
 

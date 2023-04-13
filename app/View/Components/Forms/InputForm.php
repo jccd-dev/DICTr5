@@ -26,6 +26,14 @@ class InputForm extends Component
     /**
      * Create a new component instance.
      */
+    /**
+     * @param string $name
+     * @param bool $required
+     * @param string $type
+     * @param string $placeholder
+     * @param string $model
+     * @param string $insideText
+     */
     public function __construct(string $name, bool $required, string $type, string $placeholder, string $model, string $insideText = "")
     {
         $this->name = $name;
