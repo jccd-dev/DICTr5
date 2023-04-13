@@ -4,6 +4,7 @@ module.exports = {
         "./resources/**/*.blade.php",
         "./resources/**/*.js",
         "./resources/**/*.vue",
+        "./node_modules/flowbite/**/*.js",
     ],
     theme: {
         fontFamily: {
@@ -23,7 +24,7 @@ module.exports = {
             },
         },
     },
-    plugins: [],
+    plugins: [require("flowbite/plugin")],
     variants: {
         extend: {
             textColor: ["custom"], // Define custom state for text color

@@ -8,12 +8,30 @@ use Illuminate\View\Component;
 
 class Modal extends Component
 {
+
+    public string $title;
+    public string $target;
+    public string $method;
+    public string $action;
+    public string $class;
+
+    public array $rules = [
+        'title' => 'required',
+        'target' => 'required',
+        'method' => 'required',
+        'action' => 'required',
+    ];
+
     /**
      * Create a new component instance.
      */
-    public function __construct()
+    public function __construct(string $title, string $target, string $method, string $action, string $class = "")
     {
-        //
+        $this->title = $title;
+        $this->target = $target;
+        $this->method = $method;
+        $this->action = $action;
+        $this->class = $class;
     }
 
     /**
@@ -22,5 +40,9 @@ class Modal extends Component
     public function render(): View|Closure|string
     {
         return view('components.layouts.modal');
+    }
+
+    public function submit()
+    {
     }
 }
