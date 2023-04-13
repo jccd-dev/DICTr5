@@ -26,7 +26,7 @@ class Announcements extends Component
         $announcementModel = new AnnouncementModel();
         $postCategoryModel = new PostCategoryModel();
         return view('livewire.cms.announcements', [
-                        'announcements' => $announcementModel->filter_search($this->from, date('Y-m-d', strtotime($this->to.' +1 day')), $this->category, $this->search), 
+                        'announcements' => $announcementModel->filter_search($this->from, date('Y-m-d', strtotime($this->to.' +1 day')), $this->category, $this->search),
                         'categories' => $postCategoryModel->all()
                     ])
                 ->layout('livewire.layout.laravel_layout');
@@ -124,7 +124,7 @@ class Announcements extends Component
 
         // TODO: get admin id
         $this->updateAnnArray['author'] = 1;
-        
+
         $announcementModel = new AnnouncementModel();
         $ann = $announcementModel->update_announcement($this->updateAnnArray, $this->to_update_id);
         if($ann){
