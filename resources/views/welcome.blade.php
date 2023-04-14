@@ -23,6 +23,7 @@
 <x-home.section.contact-center-section />
 
 <x-home.section.details-section />
+<x-layouts.footer/>
 
 <x-layouts.modal.button name="classic" target="classic" />
 
@@ -62,5 +63,4 @@ lakskldjlaksjdl
 
 <x-layouts.modal.alert title="Alert" target="alert" />
 @endsection
-
 
