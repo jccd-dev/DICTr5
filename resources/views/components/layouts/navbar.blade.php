@@ -1,9 +1,9 @@
 <nav x-data="{ open: false }" @keydown.window.escape="open = false" class="bg-white font-quicksand border-b-4 border-b-blue-700 sticky top-0 left-0 w-full z-[1000]">
-  <div class="mx-10">
-    <div class="flex items-center justify-between h-16">
+  <div class="mx-5 sm:mx-10 xl:mx-24">
+    <div class="flex items-center justify-between h-12 2xl:h-16">
       <div class="flex items-center flex-grow">
         <div class="flex-shrink-0">
-          <h1 class="text-lg font-bold tracking-wider text-black uppercase">
+          <h1 class="text-base 2xl:text-lg font-bold tracking-wider text-black uppercase">
             <a href="#">GOVPH</a>
             <span class="mx-3 font-semibold hidden xl:inline-block">|</span>
           </h1>

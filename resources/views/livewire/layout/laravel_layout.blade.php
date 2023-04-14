@@ -6,7 +6,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{request()->routeIs('admin.cms.announcement') ? 'Announcement' : ''}}</title>
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css">
     {{-- JQuery --}}
@@ -17,8 +16,19 @@
     {{-- CKEDITOR --}}
     <script src="//cdn.ckeditor.com/4.21.0/standard/ckeditor.js"></script>
     @vite('resources/css/app.css')
-    @vite('resources/js/fullcalendar.js')
+    @vite('resources/js/fullcalendar.js') {{-- Not working --}}
+    @vite('resources/js/moment.js') {{-- Not working --}}
+    {{-- Moment JS --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    {{-- Fullcalendar --}}
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
     @livewireStyles
+
+    <title>
+        @if(request()->routeIs('admin.cms.announcement')) {{'Announcement'}} 
+        @elseif(request()->routeIs('admin.cms.calendar')) {{'Event Calendar'}}
+        @endif
+    </title>
 </head>
 <body>
     <div class="container mx-auto">

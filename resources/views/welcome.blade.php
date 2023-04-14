@@ -2,22 +2,7 @@
 
 @section("content")
 
-<div class="h-6 w-full bg-custom-blue flex justify-end">
-    <div class="flex items-center gap-5 h-full px-10">
-        <a href="#" class="w-5 opacity-50 hover:opacity-100">
-            <img src="{{ asset('img/Facebook.png') }}" class="w-full" alt="">
-        </a>
-        <a href="#" class="w-5 opacity-50 hover:opacity-100">
-            <img src="{{ asset('img/Twitter Squared.png') }}" class="w-full" alt="">
-        </a>
-        <a href="#" class="w-5 opacity-50 hover:opacity-100">
-            <img src="{{ asset('img/Youtube.png') }}" class="w-full" alt="">
-        </a>
-        <a href="#" class="w-5 opacity-50 custom:opacity-90 hover:opacity-100">
-            <img src="{{ asset('img/Instagram.png') }}" class="w-full" alt="">
-        </a>
-    </div>
-</div>
+<x-layouts.top-banner />
 
 <x-layouts.banner />
 
@@ -37,12 +22,21 @@
 
 <x-home.section.contact-center-section />
 
-<x-forms.input required="true" name="Name" type="text" placeholder="Enter name" />
 
-<x-forms.textarea required="true" name="Name" placeholder="Enter name" />
 
 <x-home.section.details-section />
 <x-layouts.footer/>
+
+<x-layouts.modal-button name="Modal" target="modal1" />
+
+<x-layouts.modal title="Modal1" target="modal1" method="POST" action="#">
+
+    <x-forms.input required="true" name="Name" type="text" placeholder="Enter name" />
+
+    <x-forms.textarea required="true" name="Name" placeholder="Enter name" />
+
+</x-layouts.modal>
+
 
 @endsection
 

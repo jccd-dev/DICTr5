@@ -8,6 +8,5 @@
     <div class="container mx-auto flex justify-center">
         <livewire:cms.slider />
     </div>
-    @livewireScripts
 </body>
 </html>
