@@ -38,8 +38,8 @@
                             @error('end_date') <p class="text-xs text-red-600 italic">{{ $message }}</p> @enderror
                         </div>
                     </div>
-                 
-                
+
+
                     <label for="event" class="text-gray-800 text-sm font-bold leading-tight tracking-normal">Event Description</label>
                     <div class="mb-5 mt-2" wire:ignore>
                         <textarea id="event_field" class="text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 rounded border"></textarea>
@@ -123,7 +123,7 @@
         editor.on('blur', function(event){
             console.log(event.editor.getData())
             @this.set('createEventArr.event', event.editor.getData());
-            
+
         })
     </script>
 </div>

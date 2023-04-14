@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Cms;
+namespace App\Http\Livewire\CMS;
 
 use Livewire\Component;
 use Illuminate\Support\Str;
@@ -17,7 +17,7 @@ class Slider extends Component
      INITIALIZED variable to hold value from the form submit
      */
     public string $title;
-    public $description = "asdasd";
+    public $description;
     public $image;
     public string $image_name = '';
     public string $button_links;
