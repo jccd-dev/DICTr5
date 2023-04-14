@@ -32,18 +32,23 @@ class Posts extends Component
         'thumbnail' => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:3072|dimensions:min_width=674,min_height=506',
         'content' => 'required',
         'images.*' => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
-        'vid_link' => 'required|url',
+        'vid_link' => 'nullable|url',
         'author' => 'required',
         'status' => 'required|numeric'
     ];
     private $post_model;
-    public function __construct(int|string $cat_id, int|string $admin_id, string $title, string $excerpt, string $thumbnail, string $content, )
+    public function __construct()
     {
         $this->post_model = new PostModel();
     }
 
     public function create_post() :bool {
 
+        foreach ($this->images as $image) {
+            // handle images here
+        }
+
+        return false;
     }
 
     public function render()
