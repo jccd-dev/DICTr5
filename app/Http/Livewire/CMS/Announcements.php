@@ -2,11 +2,11 @@
 
 namespace App\Http\Livewire\Cms;
 
-use Livewire\Component;
 use App\Models\CMS\Announcement as AnnouncementModel;
-use App\Models\CMS\PostCategory as PostCategoryModel;
+use App\Models\CMS\POST\PostCategory as PostCategoryModel;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Livewire\Component;
 
 class Announcements extends Component
 {
