@@ -10,9 +10,11 @@
             <div class="w-full">
                 <div class="content font-quicksand font-medium w-full h-full">
                     <div class="splide w-full h-full" role="group" aria-label="annoucment">
-                        <div class="splide__track h-full flex items-center">
-                            <ul class="splide__list">
-                                <li class="splide__slide w-fit whitespace-nowrap text-xs 2xl:text-lg">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Incidunt, explicabo.</li>
+                        <div class="splide__track h-full w-full flex items-center">
+                            <ul class="splide__list w-full ">
+                                <li class="splide__slide text-xs 2xl:text-lg">
+                                    <p class="whitespace-nowrap">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Incidunt, explicabo.</p>
+                                </li>
                             </ul>
                         </div>
                     </div>
