@@ -15,6 +15,7 @@ class Posts extends Component
     public string $excerpt;
     public string $thumbnail;
     public string $content;
+    public array $images = [];
     public array $image_names = [];
     public string $vid_link;
     public string $author;
