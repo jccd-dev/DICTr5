@@ -36,7 +36,7 @@ class Posts extends Component
         'status' => 'required|numeric'
     ];
     private $post_model;
-    public function __construct()
+    public function __construct(int|string $cat_id, int|string $admin_id, string $title, string $excerpt, string $thumbnail, string $content, )
     {
         $this->post_model = new PostModel();
     }
