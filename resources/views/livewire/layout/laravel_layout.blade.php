@@ -16,7 +16,11 @@
     {{-- CKEDITOR --}}
     <script src="//cdn.ckeditor.com/4.21.0/standard/ckeditor.js"></script>
     @vite('resources/css/app.css')
-    @vite('resources/js/fullcalendar.js')
+    @vite('resources/js/fullcalendar.js') {{-- Not working --}}
+    @vite('resources/js/moment.js') {{-- Not working --}}
+    {{-- Moment JS --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    {{-- Fullcalendar --}}
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
     @livewireStyles
 

@@ -25,6 +25,7 @@
         "date-and-time": "^2.4.3",
         "flatpickr": "^4.6.13",
         "fullcalendar": "^6.1.5",
+        "moment": "^2.29.4",
         "select-philippines-address": "^1.0.6",
         "swiper": "^9.1.1"
     }
