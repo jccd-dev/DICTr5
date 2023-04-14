@@ -8,9 +8,9 @@
 
             <x-forms.input-form name="Name" required="false" type="text" placeholder="Name" model="title"  />
 
-            <x-forms.input-form name="website" required="false" type="url" placeholder="sample.link" model="button_links"  />
+            <x-forms.input-form name="Website" required="false" type="url" placeholder="sample.link" model="button_links"  />
 
-            <x-forms.textarea-form name="desc" required="false" placeholder="" model="description"  />
+            <x-forms.textarea-form name="Description" required="false" placeholder="" model="description"  />
 
         </div>
 
@@ -30,8 +30,7 @@
                         </div>
                     @endif
                 </div>
-                <input x-ref="fileInput"
-                       id="dropzone-file"
+                <input id="dropzone-file"
                        type="file"
                        accept="image/*"
                        class="hidden"
