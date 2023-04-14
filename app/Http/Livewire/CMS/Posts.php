@@ -4,10 +4,11 @@ namespace App\Http\Livewire\CMS;
 
 use App\Models\CMS\POST\PostModel;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class Posts extends Component
 {
-
+    use WithFileUploads;
     //initialized variable that will hold values from input form
     public string|int $cat_id;
     public string|int $admin_id;
@@ -15,7 +16,7 @@ class Posts extends Component
     public string $excerpt;
     public string $thumbnail;
     public string $content;
-    public array $images = [];
+    public $images = [];
     public array $image_names = [];
     public string $vid_link;
     public string $author;
@@ -44,6 +45,7 @@ class Posts extends Component
 
     public function create_post() :bool {
 
+            dd($this->images);
         foreach ($this->images as $image) {
             // handle images here
         }
