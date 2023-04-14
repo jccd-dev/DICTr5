@@ -4,15 +4,14 @@ GREEN=$(tput setaf 2)
 RESET=$(tput sgr0)
 
 
-
 # Add all changes to the staging area
 git add -A
 echo " "
 # Prompt the user for a commit message
+# shellcheck disable=SC2162
 read -p "Enter ${GREEN}EMOTIONAL${RESET} commit message${RED}:${RESET} " message
 # Commit the changes with the provided commit message
 git commit -m "$message"
-
 
 
 # Attempt to push the changes to the remote repository
@@ -31,7 +30,23 @@ else
   echo " "
 
   git pull origin dict
-
+  echo " "
+    echo "${GREEN}--------------------------------------------------------------------${RESET}"
+    echo "Pull success, Begin to install other dependencies"
+    echo "${GREEN}--------------------------------------------------------------------${RESET}"
+    echo " "
+  echo " "
+  yarn install
+  echo " "
+      echo "${GREEN}--------------------------------------------------------------------${RESET}"
+      echo "yarn dependencies installed"
+      echo "${GREEN}--------------------------------------------------------------------${RESET}"
+  echo " "
+  composer install
+  echo " "
+      echo "${GREEN}--------------------------------------------------------------------${RESET}"
+      echo "composer dependencies installed"
+      echo "${GREEN}--------------------------------------------------------------------${RESET}"
   echo " "
   # Attempt to push the changes to the remote repository again
   if git push -u origin dict; then
