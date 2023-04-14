@@ -42,7 +42,7 @@
 <x-forms.textarea required="true" name="Name" placeholder="Enter name" />
 
 <x-home.section.details-section />
+<x-layouts.footer/>
 
 @endsection
-
 
