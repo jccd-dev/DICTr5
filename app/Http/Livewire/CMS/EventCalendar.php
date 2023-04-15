@@ -20,7 +20,7 @@ class EventCalendar extends Component
                                                 ->where('end_date', '>=', date('Y-m-01'))
                                                 ->get(),
                 ])
-                ->layout('livewire.layout.laravel_layout');;
+                ->layout('livewire.layout.laravel_layout');
     }
 
     public function mount(){

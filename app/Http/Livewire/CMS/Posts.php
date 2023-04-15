@@ -3,11 +3,14 @@
 namespace App\Http\Livewire\CMS;
 
 use App\Models\CMS\POST\PostModel;
+use Illuminate\Support\Str;
 use Livewire\Component;
+use Illuminate\Support\Facades\Storage;
+use Livewire\WithFileUploads;
 
 class Posts extends Component
 {
-
+    use WithFileUploads;
     //initialized variable that will hold values from input form
     public string|int $cat_id;
     public string|int $admin_id;
@@ -29,14 +32,14 @@ class Posts extends Component
         'admin_id' => 'required',
         'title' => 'required|word_count:15',
         'excerpt' => 'required',
-        'thumbnail' => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:3072|dimensions:min_width=674,min_height=506',
+        'thumbnail' => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
         'content' => 'required',
-        'images.*' => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
-        'vid_link' => 'required|url',
+        'images.*' => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
+        'vid_link' => 'nullable|url',
         'author' => 'required',
         'status' => 'required|numeric'
     ];
-    private $post_model;
+    private PostModel $post_model;
     public function __construct()
     {
         $this->post_model = new PostModel();
@@ -44,7 +47,29 @@ class Posts extends Component
 
     public function create_post() :bool {
 
+        $validated_data = $this->validate();
+        dd($validated_data);
     }
+
+    public function storeImage(): void
+    {
+        foreach ($this->images as $image) {
+
+            $time = time();
+            $rand_num = Str::random(8);
+            $extension = $image->getClientOriginalExtension();
+
+            $image_name = "{$time}_{$rand_num}.{$extension}";
+            $image->storeAs('/public/images', $image_name);
+
+            $this->image_names[] = $image_name;
+        }
+    }
+
+    public function deleteImages() {
+        
+    }
+
 
     public function render()
     {
