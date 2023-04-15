@@ -1,6 +1,6 @@
-<div class="flex w-[30rem]" x-data="{ hasVidData: false, showImg: false, showContent: true, showOthers: false }">
+<div class="flex w-[30rem]" x-data="{ state: 1, hasVidData: false }">
     <form action="#" method="POST" wire:submit.prevent="create_post" class="w-full flex flex-col">
-        <div x-show="showContent">
+        <div x-show="state == 1">
             <div class="mb-6">
                 <label for="post-title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Title</label>
                 <input
@@ -32,7 +32,7 @@
                 @error('content') <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p> @enderror
             </div>
         </div>
-        <div x-show="showImg">
+        <div x-show="state == 2">
             <div class="mb-6 flex-1">
                 <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="user_avatar">Thumbnail</label>
                 <input
@@ -50,7 +50,7 @@
                 </label>
                 <div class="pt-2">
                     <label class="relative inline-flex items-center mb-4 cursor-pointer">
-                        <input type="checkbox" value="" class="sr-only peer" wire:model="status">
+                        <input type="checkbox" class="sr-only peer" wire:model="status">
                         <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
                         <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
                         @if(!$status)
@@ -93,33 +93,38 @@
                 @error('images.*') <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p> @enderror
             </div>
         </div>
-        <div class="flex items-start my-6">
-            <div class="flex items-center h-5">
-                <input id="vidData" type="checkbox" @change="hasVidData = $event.target.checked" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800">
+        <div x-show="state == 3">
+{{--            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="vidData">--}}
+{{--                Add Video <span class="text-xs">(optional)</span>--}}
+{{--            </label>--}}
+{{--            <div class="flex items-start my-6">--}}
+{{--                <div class="flex items-center h-5">--}}
+{{--                    <input id="vidData" type="checkbox" @change="hasVidData = $event.target.checked" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800">--}}
+{{--                </div>--}}
+{{--                <label for="vidData" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300 cursor-pointer">Add Video</label>--}}
+{{--            </div>--}}
+            <div class="mb-6">
+                <label for="post-vid_link" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Video Url (optional)</label>
+                <input
+                    type="url"
+                    id="post-vid_link"
+                    wire:model="vid_link"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    required
+                />
+                @error('vid_link') <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p> @enderror
             </div>
-            <label for="vidData" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300 cursor-pointer">Add Video</label>
-        </div>
-        <div class="mb-6" x-show="hasVidData">
-            <label for="post-vid_link" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Video Url</label>
-            <input
-                type="url"
-                id="post-vid_link"
-                wire:model="vid_link"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                required
-            />
-            @error('vid_link') <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p> @enderror
         </div>
 
-        <div class="flex gap-3">
-            <button :class="showContent ? 'cursor-not-allowed' : ''" :disabled="showContent" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600 flex-1">
+        <div class="flex gap-3 mt-5">
+            <button :class="state == 1 ? 'cursor-not-allowed' : ''" :disabled="state == 1" @click="state--" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600 flex-1">
                 Back
             </button>
-            <button x-show="!showOthers" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 flex-1">
+            <button x-show="state != 3" type="button" @click="state++;" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 flex-1">
                 Next
             </button>
 
-            <button x-show="showOthers" type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+            <button x-show="state == 3" type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 flex-1">
                 Add Post
             </button>
         </div>

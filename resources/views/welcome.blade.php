@@ -62,5 +62,7 @@ lakskldjlaksjdl
 <x-layouts.modal.button name="alert" target="alert" />
 
 <x-layouts.modal.alert title="Alert" target="alert" />
+
+    <x-footer />
 @endsection
 
