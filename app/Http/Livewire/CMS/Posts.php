@@ -5,8 +5,8 @@ namespace App\Http\Livewire\CMS;
 use App\Models\CMS\POST\PostModel;
 use Illuminate\Support\Str;
 use Livewire\Component;
-use Illuminate\Support\Facades\Storage;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
 
 class Posts extends Component
 {
@@ -16,13 +16,13 @@ class Posts extends Component
     public string|int $admin_id;
     public string $title;
     public string $excerpt;
-    public string $thumbnail;
+    public $thumbnail;
     public string $content;
-    public array $images = [];
+    public $images = [];
     public array $image_names = [];
     public string $vid_link;
     public string $author;
-    public int $status;
+    public int $status = 0;
     public array $post_data = [];
     public int $post_id;
 
@@ -34,7 +34,7 @@ class Posts extends Component
         'excerpt' => 'required',
         'thumbnail' => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
         'content' => 'required',
-        'images.*' => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
+        'images.*' => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
         'vid_link' => 'nullable|url',
         'author' => 'required',
         'status' => 'required|numeric'
@@ -45,7 +45,7 @@ class Posts extends Component
         $this->post_model = new PostModel();
     }
 
-    public function create_post() :bool {
+    public function create_post() : void {
 
         $validated_data = $this->validate();
         dd($validated_data);
@@ -67,7 +67,7 @@ class Posts extends Component
     }
 
     public function deleteImages() {
-        
+
     }
 
 

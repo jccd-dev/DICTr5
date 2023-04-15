@@ -17,7 +17,7 @@
                         @forelse ($categories as $cat)
                             <option value="{{$cat->id}}">{{$cat->category}}</option>
                         @empty
-                            
+
                         @endforelse
                     </select>
                 </div>
@@ -57,7 +57,7 @@
         @forelse ($announcements as $ann)
             <tr>
                 <td>{{$ann->title}}</td>
-                <td>{{$ann->author_name}}</td>      
+                <td>{{$ann->author_name}}</td>
                 <td>{{$ann->category}}</td>
                 <td>{{$ann->timestamp}}</td>
                 <td>{{($ann->status) ? 'Published' : 'Unpublished'}}</td>
@@ -72,7 +72,7 @@
             </tr>
         @endforelse
     </table>
-    
+
     {{-- MODAL --}}
     {{-- Temporary | Got from internet --}}
     <div wire:ignore.self class="py-12 hidden bg-gray-700 bg-opacity-75 transition duration-150 ease-in-out z-10 absolute top-0 right-0 bottom-0 left-0" id="modal">
@@ -101,7 +101,7 @@
                             @forelse ($categories as $cat)
                                 <option value="{{$cat->id}}">{{$cat->category}}</option>
                             @empty
-                                
+
                             @endforelse
                         </select>
                         @error('cat_id') <p class="text-xs text-red-600 italic">{{ $message }}</p> @enderror
@@ -155,7 +155,7 @@
                             @forelse ($categories as $cat)
                                 <option value="{{$cat->id}}">{{$cat->category}}</option>
                             @empty
-                                
+
                             @endforelse
                         </select>
                         @error('cat_id') <p class="text-xs text-red-600 italic">{{ $message }}</p> @enderror
@@ -223,14 +223,14 @@
                 fadeOut(updateModal);
             }
         }
-        
+
         // CKEditor
         // Create Announcement
         const editor = CKEDITOR.replace('content');
         editor.on('blur', function(event){
             console.log(event.editor.getData())
             @this.set('insertAnnArray.content', event.editor.getData());
-            
+
         })
         // Update Announcement
         const update_editor = CKEDITOR.replace('update_content');
@@ -238,7 +238,7 @@
             console.log(update_editor.getData());
             @this.set('updateAnnArray.content', update_editor.getData());
         })
-        
+
         window.addEventListener('update_content', event => {
             update_editor.setData(event.detail);
             @this.set('updateAnnArray.content', event.detail);
@@ -288,7 +288,7 @@
 
 
     </script>
-  
+
 
 
 </div>

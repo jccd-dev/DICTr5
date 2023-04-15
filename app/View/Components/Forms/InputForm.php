@@ -44,7 +44,8 @@ class InputForm extends Component
         $this->insideText = $insideText;
     }
 
-    public function submit(): void {
+    public function submit(): void
+    {
         $this->validate();
     }
 

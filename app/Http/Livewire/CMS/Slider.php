@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Cms;
+namespace App\Http\Livewire\CMS;
 
 use Livewire\Component;
 use Illuminate\Support\Str;
@@ -17,7 +17,7 @@ class Slider extends Component
      INITIALIZED variable to hold value from the form submit
      */
     public string $title;
-    public string $description;
+    public $description;
     public $image;
     public string $image_name = '';
     public string $button_links;
@@ -40,7 +40,8 @@ class Slider extends Component
         'image.dimensions'   => 'Image minimum width and height should be 950 x 635 pixels'
     ];
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->banner_model = new HomeBanner();
     }
 
@@ -49,8 +50,8 @@ class Slider extends Component
      * Description: Handle the data submitted from the form
      * @return Session (flash session) use for to display message to user.
      */
-    public function submit() {
-
+    public function submit() :void
+    {
         //validate Inputs data before inserting to database
         $validatedData = $this->validate();
         $this->storeImage();
@@ -67,8 +68,8 @@ class Slider extends Component
     public function storeImage(): void
     {
         //delete the old image when it updated
-        if($this->image_name && Storage::exists('/public/images/'.$this->image_name)) {
-            Storage::delete('public/images/'.$this->image_name);
+        if ($this->image_name && Storage::exists('/public/images/' . $this->image_name)) {
+            Storage::delete('public/images/' . $this->image_name);
         }
 
         $time = time();
@@ -88,7 +89,8 @@ class Slider extends Component
      * @param string|int $banner_id unique identification for every slider banner
      * @return Session (flash session) use for to display message to user.
      */
-    public function update_banner(string|int $banner_id) {
+    public function update_banner(string|int $banner_id)
+    {
         //validate Inputs data before inserting to database
         $validatedData = $this->validate();
 
@@ -110,7 +112,8 @@ class Slider extends Component
      * @param string|int $banner_id
      * @return bool
      */
-    public function delete_banner(string|int $banner_id) :bool {
+    public function delete_banner(string|int $banner_id): bool
+    {
         return $this->banner_model->delete_banner($banner_id);
     }
 

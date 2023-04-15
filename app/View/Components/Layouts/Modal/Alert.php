@@ -1,27 +1,30 @@
 <?php
 
-namespace App\View\Components\Layouts;
+namespace App\View\Components\Layouts\Modal;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class ModalButton extends Component
+class Alert extends Component
 {
-    public string $name;
+    public string $title;
     public string $target;
+    public string $class;
 
     public array $rules = [
-        'name' => 'required',
-        'target' => 'required'
+        'title' => 'required',
+        'target' => 'required',
     ];
+
     /**
      * Create a new component instance.
      */
-    public function __construct(string $name, string $target)
+    public function __construct(string $title, string $target, string $class = "")
     {
-        $this->name = $name;
+        $this->title = $title;
         $this->target = $target;
+        $this->class = $class;
     }
 
     /**
@@ -29,6 +32,6 @@ class ModalButton extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.layouts.modal-button');
+        return view('components.layouts.modal.alert');
     }
 }
