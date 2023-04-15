@@ -27,6 +27,8 @@
 
 <x-layouts.modal.button name="classic" target="classic" />
 
+
+
 <x-layouts.modal.classic title="Classic" target="classic">
 lakskldjlaksjdl
 </x-layouts.modal.classic>
@@ -62,5 +64,7 @@ lakskldjlaksjdl
 <x-layouts.modal.button name="alert" target="alert" />
 
 <x-layouts.modal.alert title="Alert" target="alert" />
+
+<x-footer />
 @endsection
 
