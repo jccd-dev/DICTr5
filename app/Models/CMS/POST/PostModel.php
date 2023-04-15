@@ -13,7 +13,10 @@ class PostModel extends Model
     use HasFactory;
 
     protected $table = 'posts';
-
+    protected $guarded = [
+        'id',
+        'timestamp'
+    ];
     protected $fillable = [
       'cat_id',
       'admin_id',

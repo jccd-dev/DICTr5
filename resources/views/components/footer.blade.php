@@ -45,9 +45,15 @@
   </div>
    <div class= "w-full my-[12rem]justify-evenly bg-black text-white text-sm gap-10">
       <div class="flex flex-row gap-10">
+<section class="">
+  <footer class="bg-black text-white">
+    <div class="container p-4">
+      <div class="row">
 
-              <div class="w-[12rem]">
-             <img src="{{asset('img/gov-seal2.png')}}">
+              <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+             <img
+              src="#!"
+              class="w-100"/>
             </div>
 
              <div class="w-[20 rem]">
@@ -65,10 +71,8 @@
                 Learn more about the Philippine government, its structure, 
                 <br> how government works and the people behind it.
                 </p>
-                <br>
-                <br>
-                <br>
-              <ul class="list-none text-white">
+  
+              <ul class="list-unstyled mb-0">
                  <li>
                   <a href="#">GOV.PH</a>
                    </li>
@@ -81,11 +85,10 @@
                 </ul>
                 </div>
   
-            <div class="flex flex-col">
-               <h5 class="font-bold text-sm">GOVERNMENT LINKS</h5>
-                 
-                 <ul class="list-none text-white">
-                  <br>
+            <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+               <h5 class="text-uppercase">GOVERNMET LINKS</h5>
+
+                 <ul class="list-unstyled mb-0">
                   <li>
                     <a href="#!">Office of the President</a>
                   </li>

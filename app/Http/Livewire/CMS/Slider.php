@@ -48,9 +48,9 @@ class Slider extends Component
     /**
      * TITLE: SUBMIT
      * Description: Handle the data submitted from the form
-     * @return Session (flash session) use for to display message to user.
+     * @return \Session (flash session) use for to display message to user.
      */
-    public function submit()
+    public function submit() :void
     {
         //validate Inputs data before inserting to database
         $validatedData = $this->validate();
@@ -87,9 +87,9 @@ class Slider extends Component
      * Description: Update specific banner identified using its unique ID
      *              to database.
      * @param string|int $banner_id unique identification for every slider banner
-     * @return Session (flash session) use for to display message to user.
+     * @return \Session (flash session) use for to display message to user.
      */
-    public function update_banner(string|int $banner_id)
+    public function update_banner(string|int $banner_id) :void
     {
         //validate Inputs data before inserting to database
         $validatedData = $this->validate();
