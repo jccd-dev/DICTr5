@@ -14,13 +14,13 @@ class Posts extends Component
     public string|int $admin_id;
     public string $title;
     public string $excerpt;
-    public string $thumbnail;
+    public $thumbnail;
     public string $content;
     public $images = [];
     public array $image_names = [];
     public string $vid_link;
     public string $author;
-    public int $status;
+    public int $status = 0;
     public array $post_data = [];
     public int $post_id;
 
@@ -45,7 +45,7 @@ class Posts extends Component
 
     public function create_post() :bool {
 
-            dd($this->images);
+            dd($this->title, $this->excerpt, $this->thumbnail, $this->content, $this->images, $this->vid_link, $this->status);
         foreach ($this->images as $image) {
             // handle images here
         }
