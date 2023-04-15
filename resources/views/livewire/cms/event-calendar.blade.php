@@ -90,6 +90,7 @@
                         </div>
                     </div>
 
+<<<<<<< HEAD
                     <label class=" text-gray-800 text-sm font-bold leading-tight tracking-normal">Event Time</label>
                     <div class="mb-5 mt-2 flex flex-row">
                         <div>
@@ -106,6 +107,9 @@
                     </div>
                  
                 
+=======
+
+>>>>>>> aa7331cf9cef276a0e1db12c935d81b1ab4ff247
                     <label for="event" class="text-gray-800 text-sm font-bold leading-tight tracking-normal">Event Description</label>
                     <div class="mb-5 mt-2" wire:ignore>
                         <textarea id="event_field" class="text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 rounded border"></textarea>
@@ -255,7 +259,7 @@
         editor.on('blur', function(event){
             console.log(event.editor.getData())
             @this.set('createEventArr.event', event.editor.getData());
-            
+
         })
 
         // Alerts

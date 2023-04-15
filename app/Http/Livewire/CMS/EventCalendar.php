@@ -14,6 +14,7 @@ class EventCalendar extends Component
     public $events;
     public $search;
     public $toShowEventDetail = [];
+    public $rightSideEventList = [];
 
     public function render()
     {

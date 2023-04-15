@@ -14,5 +14,7 @@
         @endif
 
         <x-layouts.accesability />
+
+        @livewireScripts
     </body>
 </html>

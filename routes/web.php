@@ -5,6 +5,7 @@ use App\Http\Livewire\CMS\SliderBanner;
 use App\Http\Livewire\ContactForm;
 use App\Http\Livewire\CMS\Announcements;
 use App\Http\Livewire\CMS\EventCalendar;
+use App\Http\Livewire\CMS\Posts;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -28,10 +29,11 @@ Route::get('/form', function() {
 
 Route::get('/about', function () {
     return view('pages.about');
-    });
+});
 
 Route::prefix('admin')->group(function () {
     Route::prefix('cms')->group(function (){
+        Route::view('/posts', 'pages.admin.posts'); // Post::class
         Route::get('/announcement', Announcements::class)->name('admin.cms.announcement');
         Route::get('/event-calendar', EventCalendar::class)->name('admin.cms.calendar');
     });

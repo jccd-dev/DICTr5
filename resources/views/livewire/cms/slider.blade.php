@@ -5,10 +5,28 @@
         <div class="mb-6">
 
             {{--      TITLE      --}}
-
-            <x-forms.input-form name="Name" required="false" type="text" placeholder="Name" model="title"  />
-
-            <x-forms.input-form name="Website" required="false" type="url" placeholder="sample.link" model="button_links"  />
+            <div>
+                <label for="Name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
+                <input
+                    type="text"
+                    id="Name"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Name"
+                    wire:model="title"
+                >
+                @error('title') <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p> @enderror
+            </div>
+            <div>
+                <label for="Website" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Website</label>
+                <input
+                    type="url"
+                    id="Website"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="https://www.sample.link"
+                    wire:model="button_links"
+                >
+                @error('button_links') <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p> @enderror
+            </div>
 
             <x-forms.textarea-form name="Description" required="false" placeholder="" model="description"  />
 

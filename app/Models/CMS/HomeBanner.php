@@ -68,7 +68,7 @@ class HomeBanner extends Model
 
         return DB::table($this->table)
             ->updateOrInsert(
-                ['id' => $slider_id],
+            ['id' => $slider_id],
                 $data
             );
     }
