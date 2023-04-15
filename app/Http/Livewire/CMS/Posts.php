@@ -11,9 +11,10 @@ use Illuminate\Support\Facades\Storage;
 class Posts extends Component
 {
     use WithFileUploads;
+
     //initialized variable that will hold values from input form
-    public string|int $cat_id;
-    public string|int $admin_id;
+    public string|int $cat_id = 1;
+    public string|int $admin_id = 1;
     public string $title;
     public string $excerpt;
     public $thumbnail;
@@ -21,25 +22,22 @@ class Posts extends Component
     public $images = [];
     public array $image_names = [];
     public string $vid_link;
-    public string $author;
+    public string $author = 'test author';
     public int $status = 0;
     public array $post_data = [];
     public int $post_id;
 
 
     protected $rules = [
-        'cat_id' => 'required',
-        'admin_id' => 'required',
         'title' => 'required|word_count:15',
         'excerpt' => 'required',
         'thumbnail' => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
         'content' => 'required',
         'images.*' => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
         'vid_link' => 'nullable|url',
-        'author' => 'required',
         'status' => 'required|numeric'
     ];
-    private PostModel $post_model;
+    private $post_model;
     public function __construct()
     {
         $this->post_model = new PostModel();
@@ -47,11 +45,27 @@ class Posts extends Component
 
     public function create_post() : void {
 
-        $validated_data = $this->validate();
-        dd($validated_data);
+        $this->validate();
+        $this->post_data = [
+            'cat_id'      => $this->cat_id,
+            'admin_id'    => $this->admin_id,
+            'title'       => $this->title,
+            'excerpt'     => $this->excerpt,
+            'thumbnail'   => $this->thumbnail,
+            'content'     => $this->content,
+            'vid_link'    => $this->vid_link,
+            'author'      => $this->author,
+            'status'      => $this->status
+          ];
+
+        dd($this->post_data);
+        // $post = $this->post_model::create($this->post_data);
+        // if($post) {
+
+        // }
     }
 
-    public function storeImage(): void
+    public function storeImages(): void
     {
         foreach ($this->images as $image) {
 
@@ -66,11 +80,12 @@ class Posts extends Component
         }
     }
 
+    /**
+     * for deleting image for udate onyl the image_names are needed.
+     */
     public function deleteImages() {
 
     }
-
-
     public function render()
     {
         return view('livewire.cms.posts');
