@@ -34,13 +34,13 @@ class Calendar extends Model
 
     public function getEvent($id){
         return DB::table($this->table)->join('dict_admins', 'calendar.admin_id', '=', 'dict_admins.id')
-                                    ->where('id', $id)
-                                    ->select('calendar.*', 'dict_admins.name')
+                                    ->where('calendar.id', $id)
+                                    ->select('calendar.*', 'dict_admins.name as author')
                                     ->first();
     }
 
     public function createEvent($data){
-        return DB::table($this)->insert($data);
+        return DB::table($this->table)->insertGetId($data);
     }
 
     public function updateEvent($id, $data){
