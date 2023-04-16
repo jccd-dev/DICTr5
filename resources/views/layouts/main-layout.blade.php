@@ -15,6 +15,6 @@
 
         <x-layouts.accesability />
 
-        @livewireScripts
+    @livewireScripts
     </body>
 </html>

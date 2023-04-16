@@ -43,7 +43,8 @@ class Posts extends Component
         $this->post_model = new PostModel();
     }
 
-    public function create_post() : void {
+    public function create_post(): void
+    {
 
         $this->validate();
         $this->post_data = [
@@ -56,7 +57,7 @@ class Posts extends Component
             'vid_link'    => $this->vid_link,
             'author'      => $this->author,
             'status'      => $this->status
-          ];
+        ];
 
         dd($this->post_data);
         // $post = $this->post_model::create($this->post_data);
@@ -83,13 +84,17 @@ class Posts extends Component
     /**
      * for deleting image for udate onyl the image_names are needed.
      */
-    public function deleteImages() {
-
+    public function deleteImages()
+    {
     }
+
+    public function onError($errorMsg)
+    {
+        $this->dispatchBrowserEvent('livewire-error', true);
+    }
+
     public function render()
     {
         return view('livewire.cms.posts');
     }
-
-
 }
