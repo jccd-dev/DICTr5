@@ -13,7 +13,7 @@ class Alert extends Component
     public string $class;
 
     public array $rules = [
-        'title' => 'required',
+        'title' => 'nullable',
         'target' => 'required',
     ];
 

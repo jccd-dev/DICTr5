@@ -27,5 +27,6 @@
 <x-layouts.footer/>
 
 <x-footer />
+
 @endsection
 
