@@ -1,10 +1,18 @@
-<div
-    id="posts-form"
-    class="flex w-[30rem] posts-form"
-    x-data="{ state: 1, hasVidData: false, err: [] }"
-    x-init="listeners($data)"
-    wire:ignore.self
->
+<div>
+    <button onclick="modalHandler(true)" class="flex items-center gap-2 px-4 py-1 bg-[#00509D] bg-opacity-5 hover:bg-[#00509D] rounded">
+        <svg xmlns="http://www.w3.org/2000/svg" height="15" stroke="#f5f5f5" viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>
+        <span>Add</span>
+    </button>
+    <div wire:ignore.self class="py-12 hidden bg-gray-700 bg-opacity-75 transition duration-150 ease-in-out z-10 absolute top-0 right-0 bottom-0 left-0" id="modal">
+        <div role="alert" class="container mx-auto w-11/12 md:w-2/3 max-w-2xl">
+            <div class="relative py-8 px-5 md:px-10 bg-white shadow-md rounded border border-gray-400">
+    <div
+        id="posts-form"
+        class="flex w-[30rem] posts-form"
+        x-data="{ state: 1, hasVidData: false, err: [] }"
+        x-init="listeners($data)"
+        wire:ignore.self
+    >
         <form action="#" method="POST" wire:submit.prevent="create_post" class="w-full flex flex-col">
             <div x-show="state == 1">
                 <div class="mb-6">
@@ -133,38 +141,71 @@
                 </button>
             </div>
         </form>
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        // console.log(Alpine)
-        Alpine.data("posts-form", (d) => {
-           console.log(d)
-        });
-    })
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                // console.log(Alpine)
+                Alpine.data("posts-form", (d) => {
+                    console.log(d)
+                });
+            })
 
-    function listeners($data) {
-        window.addEventListener('ValidationErrors', function(event) {
-            const postsForm = document.querySelector('.posts-form');
-            let hasSectionOneError = event.detail.hasOwnProperty('title')
-                                    || event.detail.hasOwnProperty('excerpt')
-                                    || event.detail.hasOwnProperty('content');
+            function listeners($data) {
+                window.addEventListener('ValidationErrors', function(event) {
+                    const postsForm = document.querySelector('.posts-form');
+                    let hasSectionOneError = event.detail.hasOwnProperty('title')
+                        || event.detail.hasOwnProperty('excerpt')
+                        || event.detail.hasOwnProperty('content');
 
-            let hasSectionTwoError = event.detail.hasOwnProperty('thumbnail')
-                                    || event.detail.hasOwnProperty('status')
-                                    || event.detail.hasOwnProperty('images');
-            let hasSectionThreeError = event.detail.hasOwnProperty('vid_link')
-                                    || event.detail.hasOwnProperty('categories');
+                    let hasSectionTwoError = event.detail.hasOwnProperty('thumbnail')
+                        || event.detail.hasOwnProperty('status')
+                        || event.detail.hasOwnProperty('images');
+                    let hasSectionThreeError = event.detail.hasOwnProperty('vid_link')
+                        || event.detail.hasOwnProperty('categories');
 
-            if(hasSectionOneError) {
-                $data.state = 1;
-            } else if(hasSectionTwoError) {
-                $data.state = 2;
-            } else if (hasSectionThreeError) {
-                $data.state = 3;
+                    if(hasSectionOneError) {
+                        $data.state = 1;
+                    } else if(hasSectionTwoError) {
+                        $data.state = 2;
+                    } else if (hasSectionThreeError) {
+                        $data.state = 3;
+                    }
+                    console.log($data)
+                    // let d = Alpine.data('posts-form').data
+                });
             }
-            console.log($data)
-            // let d = Alpine.data('posts-form').data
-        });
-    }
-</script>
+            let modal = document.getElementById("modal");
+            function modalHandler(val) {
+                if (val) {
+                    fadeIn(modal);
+                } else {
+                    fadeOut(modal);
+                }
+            }
+            function fadeOut(el) {
+                el.style.opacity = 1;
+                (function fade() {
+                    if ((el.style.opacity -= 0.1) < 0) {
+                        el.style.display = "none";
+                    } else {
+                        requestAnimationFrame(fade);
+                    }
+                })();
+            }
+            function fadeIn(el, display) {
+                el.style.opacity = 0;
+                el.style.display = display || "flex";
+                (function fade() {
+                    let val = parseFloat(el.style.opacity);
+                    if (!((val += 0.2) > 1)) {
+                        el.style.opacity = val;
+                        requestAnimationFrame(fade);
+                    }
+                })();
+            }
+        </script>
     </div>
 
+            </div>
+        </div>
+    </div>
+        </div>

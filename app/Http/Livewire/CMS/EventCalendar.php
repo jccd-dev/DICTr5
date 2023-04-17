@@ -11,6 +11,8 @@ class EventCalendar extends Component
 {
     public $today = [];
     public $createEventArr = [];
+    public $toUpdateId;
+    public $updateEventArr = [];
     public $events;
     public $search;
     public $toShowEventDetail = [];
@@ -118,6 +120,65 @@ class EventCalendar extends Component
         }else{
             $this->toShowEventDetail['is_allDay'] = false;
         }
+    }
 
+    public function deleteEvent($id){
+        $eventModel = new EventCalendarModel();
+        return $eventModel->deleteEvent($id);
+    }
+
+    public function update_event_data($id){
+        $eventModel = new EventCalendarModel();
+        $event = $eventModel->getEvent($id);
+        $this->toUpdateId = $event->id;
+        $this->updateEventArr['event_title'] = $event->event_title;
+        $this->updateEventArr['start_date'] = date('Y-m-d', strtotime($event->start_date));
+        $this->updateEventArr['end_date'] = date('Y-m-d', strtotime($event->end_date));
+        $this->updateEventArr['start_time'] = date('H:i:s', strtotime($event->start_date));
+        $this->updateEventArr['end_time'] = date('H:i:s', strtotime($event->end_date));
+        $this->dispatchBrowserEvent('update_event_content', $event->event);
+    }
+
+    public function update_event(){
+        Validator::make($this->updateEventArr, [
+            'event_title' => 'required',
+            'start_date' => 'required',
+            'end_date' => 'required',
+            'start_time' => 'required',
+            'end_time' => 'required',
+        ],[
+            'event_title.required' => 'Event Title title field is required',
+            'start_date.required' => 'Start Date field is required',
+            'end_date.required' => 'End Date field is required',
+            'start_time.required' => 'Start Time field is required',
+            'end_time.required' => 'End Time field is required',
+        ])->validate();
+
+        // Combine Date and Time
+        $this->updateEventArr['start_date'] .= ' '.$this->updateEventArr['start_time']; 
+        $this->updateEventArr['end_date'] .= ' '.$this->updateEventArr['end_time']; 
+
+        // Removing Time in Array
+        unset($this->updateEventArr['start_time']);
+        unset($this->updateEventArr['end_time']);
+
+        // TODO: get the admin
+        $this->updateEventArr['admin_id'] = 1;
+
+        $eventModel = new EventCalendarModel();
+        $status = $eventModel->updateEvent($this->toUpdateId, $this->updateEventArr);
+        $event = $eventModel->getEvent($this->toUpdateId);
+        $response = [
+            'status' => $status,
+            'event' => [
+                'id' => $event->id,
+                'event_title' => $event->event_title,
+                'start' => $event->start_date,
+                'end' => $event->end_date,
+            ]
+        ];
+
+        $this->dispatchBrowserEvent('UpdatedEvent', $response);
+        $this->updateEventArr = [];
     }
 }

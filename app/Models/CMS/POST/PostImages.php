@@ -10,6 +10,13 @@ class PostImages extends Model
 {
     protected $table = 'post_images';
 
+    public $timestamps = false;
+
+    protected $fillable = [
+        'post_id',
+        'image_filename'
+    ];
+
     public function post() : BelongsTo {
         return $this->belongsTo(PostModel::class);
     }

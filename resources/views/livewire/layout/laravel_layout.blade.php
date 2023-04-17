@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css">
     {{-- JQuery --}}
@@ -21,6 +21,7 @@
     {{-- CKEDITOR --}}
     <script src="//cdn.ckeditor.com/4.21.0/standard/ckeditor.js"></script>
     @vite('resources/css/app.css')
+    @vite('resources/js/app.js')
 {{--    @vite('resources/js/utils/fullcalendar.js')--}}
     @vite('resources/js/utils/moment.js')
     {{-- Moment JS --}}

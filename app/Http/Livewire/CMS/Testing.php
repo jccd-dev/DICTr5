@@ -5,13 +5,12 @@ namespace App\Http\Livewire\CMS;
 use App\Helpers\ImageHandlerHelper;
 use App\Models\CMS\POST\PostImages;
 use App\Models\CMS\POST\PostModel;
-use Illuminate\Support\Str;
-use Livewire\Component;
-use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Livewire\Component;
+use Livewire\WithFileUploads;
 
-class Posts extends Component
+class Testing extends Component
 {
     use WithFileUploads;
 
@@ -245,13 +244,13 @@ class Posts extends Component
     // {
     //     return $this->imageHelper->delete_image($this->to_delete_image);
     // }
-    public function render()
-    {
-        return view('livewire.cms.posts');
-    }
 
     public function renderLayout() {
         $postModel = new PostModel();
         return view('pages.admin.posts', ['posts' => $postModel->all()]);
+    }
+    public function render()
+    {
+        return view('livewire.c-m-s.testing')->layout('livewire.layout.laravel_layout');
     }
 }

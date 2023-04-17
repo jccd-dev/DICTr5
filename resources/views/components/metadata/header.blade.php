@@ -15,7 +15,6 @@
 {{--<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>--}}
 {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script> --}}
 
-<wireui:scripts />
 
 {{-- <link
   rel="stylesheet"
@@ -26,6 +25,7 @@
 {{-- <script defer src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script> --}}
 
 <!-- Styles -->
+<wireui:scripts />
 @vite(['resources/css/app.css', 'resources/js/app.js'])
 
 @livewireStyles
