@@ -62,9 +62,17 @@ class Posts extends Component
 
         if ($validator->fails()) {
             $err_msgs = $validator->getMessageBag();
-            $this->dispatchBrowserEvent('validation-errors', $err_msgs->getMessages());
+            foreach ($err_msgs->getMessages() as $field => $messages) {
+                foreach ($messages as $message) {
+                    $this->addError($field, $message);
+                }
+            }
+            $err_msgs = $validator->getMessageBag();
+            $this->dispatchBrowserEvent('ValidationErrors', $err_msgs->getMessages());
             return;
         }
+
+
 
         //arrange data for insertion
         $this->post_data = [

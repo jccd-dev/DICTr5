@@ -1,6 +1,9 @@
 <div
-    class="flex w-[30rem]"
-    x-data="{ state: 1, hasVidData: false, err: [] }">
+    id="posts-form"
+    class="flex w-[30rem] posts-form"
+    x-data="{ state: 1, hasVidData: false, err: [] }"
+    x-init="listeners($data)"
+>
         <form action="#" method="POST" wire:submit.prevent="create_post" class="w-full flex flex-col">
             <div x-show="state == 1">
                 <div class="mb-6">
@@ -10,7 +13,6 @@
                         id="post-title"
                         wire:model="title"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        required
                     />
                 </div>
                 <div class="mb-6">
@@ -56,7 +58,7 @@
                             <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
                             <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
                             @if(!$status)
-                                    <span class="text-red-600">Unpublish</span>
+                                    <span class="text-dark-yellow">Unpublish</span>
                                 @else
                                     <span class="text-green-600">Publish</span>
                                 @endif
@@ -96,15 +98,6 @@
                 </div>
             </div>
             <div x-show="state == 3">
-    {{--            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="vidData">--}}
-    {{--                Add Video <span class="text-xs">(optional)</span>--}}
-    {{--            </label>--}}
-    {{--            <div class="flex items-start my-6">--}}
-    {{--                <div class="flex items-center h-5">--}}
-    {{--                    <input id="vidData" type="checkbox" @change="hasVidData = $event.target.checked" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800">--}}
-    {{--                </div>--}}
-    {{--                <label for="vidData" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300 cursor-pointer">Add Video</label>--}}
-    {{--            </div>--}}
                 <div class="mb-6">
                     <label for="category-post" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Category</label>
                     <select id="category-post" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -121,7 +114,6 @@
                         id="post-vid_link"
                         wire:model="vid_link"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        required
                     />
                     @error('vid_link') <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p> @enderror
                 </div>
@@ -141,15 +133,37 @@
             </div>
         </form>
 <script>
-    window.addEventListener('validation-errors', function(event) {
-        console.log(event);
-    });
-
-    window.addEventListener('livewire:load', function () {
-        Livewire.on('validation-errors', function (data) {
-            console.log(data);
+    document.addEventListener("DOMContentLoaded", () => {
+        // console.log(Alpine)
+        Alpine.data("posts-form", (d) => {
+           console.log(d)
         });
-    });
+    })
+
+    function listeners($data) {
+        window.addEventListener('ValidationErrors', function(event) {
+            const postsForm = document.querySelector('.posts-form');
+            let hasSectionOneError = event.detail.hasOwnProperty('title')
+                                    || event.detail.hasOwnProperty('excerpt')
+                                    || event.detail.hasOwnProperty('content');
+
+            let hasSectionTwoError = event.detail.hasOwnProperty('thumbnail')
+                                    || event.detail.hasOwnProperty('status')
+                                    || event.detail.hasOwnProperty('images');
+            let hasSectionThreeError = event.detail.hasOwnProperty('vid_link')
+                                    || event.detail.hasOwnProperty('categories');
+
+            if(hasSectionOneError) {
+                $data.state = 1;
+            } else if(hasSectionTwoError) {
+                $data.state = 2;
+            } else if (hasSectionThreeError) {
+                $data.state = 3;
+            }
+            console.log($data)
+            // let d = Alpine.data('posts-form').data
+        });
+    }
 </script>
     </div>
 

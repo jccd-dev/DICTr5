@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+const colors = require('tailwindcss/colors')
 module.exports = {
     presets: [
         require('./vendor/wireui/wireui/tailwind.config.js'),
@@ -27,6 +28,12 @@ module.exports = {
                 "custom-red": "#C1121F",
                 "custom-yellow": "#FDC500",
                 "dark-yellow": "#FFD500",
+                primary: '#00509D',
+                secondary: colors.gray,
+                positive: colors.emerald,
+                negative: colors.red,
+                warning: colors.amber,
+                info: colors.blue
             },
         },
     },
