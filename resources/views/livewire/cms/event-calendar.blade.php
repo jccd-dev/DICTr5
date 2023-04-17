@@ -90,7 +90,6 @@
                         </div>
                     </div>
 
-<<<<<<< HEAD
                     <label class=" text-gray-800 text-sm font-bold leading-tight tracking-normal">Event Time</label>
                     <div class="mb-5 mt-2 flex flex-row">
                         <div>
@@ -107,9 +106,6 @@
                     </div>
                  
                 
-=======
-
->>>>>>> aa7331cf9cef276a0e1db12c935d81b1ab4ff247
                     <label for="event" class="text-gray-800 text-sm font-bold leading-tight tracking-normal">Event Description</label>
                     <div class="mb-5 mt-2" wire:ignore>
                         <textarea id="event_field" class="text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 rounded border"></textarea>
@@ -121,6 +117,70 @@
                     </div>
                 </form>
                 <button class="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 transition duration-150 ease-in-out rounded focus:ring-2 focus:outline-none focus:ring-gray-600" onclick="modalHandler('create_event_modal', false)" aria-label="close modal" role="button">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  class="icon icon-tabler icon-tabler-x" width="20" height="20" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" />
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    {{-- Update Event Modal --}}
+    <div wire:ignore.self class="py-12 hidden bg-gray-700 bg-opacity-75 transition duration-150 ease-in-out z-10 absolute top-0 right-0 bottom-0 left-0" id="update_event_modal">
+        <div role="alert" class="container mx-auto w-11/12 md:w-2/3 max-w-2xl">
+            <div class="relative py-8 px-5 md:px-10 bg-white shadow-md rounded border border-gray-400">
+                <form wire:submit.prevent="update_event">
+                    @csrf
+                    <h1 class="text-gray-800 font-lg font-bold tracking-normal leading-tight mb-4">Update Event</h1>
+                    <label for="title" class="text-gray-800 text-sm font-bold leading-tight tracking-normal">Event Name</label>
+                    <input wire:model.lazy="updateEventArr.event_title" id="title" class="mt-2 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border  @error('event_title') {{'border-red-600'}} @enderror" placeholder="Enter Event Title" />
+                    @error('event_title') <p wire:ignore class="text-xs text-red-600 italic">{{ $message }}</p> @enderror
+
+                    <br>
+                    <label class=" text-gray-800 text-sm font-bold leading-tight tracking-normal">Event Date</label>
+                    <div class="mb-5 mt-2 flex flex-row">
+                        <div>
+                            <input type="date" wire:model.lazy="updateEventArr.start_date" id="create_start_date" class=" text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal h-10 pr-3 flex items-center pl-3 text-sm border-gray-300 rounded border @error('start_date') {{'border-red-600'}} @enderror" />
+                            @error('start_date') <p class="text-xs text-red-600 italic">{{ $message }}</p> @enderror
+                        </div>
+                        <div class="pt-2 mx-3">
+                            -
+                        </div>
+                        <div>
+                            <input type="date" wire:model.lazy="updateEventArr.end_date" id="create_end_date" class="text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal h-10 pr-3 flex items-center pl-3 text-sm border-gray-300 rounded border @error('end_date') {{'border-red-600'}} @enderror" />
+                            @error('end_date') <p class="text-xs text-red-600 italic">{{ $message }}</p> @enderror
+                        </div>
+                    </div>
+
+                    <label class=" text-gray-800 text-sm font-bold leading-tight tracking-normal">Event Time</label>
+                    <div class="mb-5 mt-2 flex flex-row">
+                        <div>
+                            <input type="time" wire:model.lazy="updateEventArr.start_time" id="create_start_time" class=" text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal h-10 pr-3 flex items-center pl-3 text-sm border-gray-300 rounded border @error('start_time') {{'border-red-600'}} @enderror" />
+                            @error('start_time') <p class="text-xs text-red-600 italic">{{ $message }}</p> @enderror
+                        </div>
+                        <div class="pt-2 mx-3">
+                            -
+                        </div>
+                        <div>
+                            <input type="time" wire:model.lazy="updateEventArr.end_time" id="create_end_time" class="text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal h-10 pr-3 flex items-center pl-3 text-sm border-gray-300 rounded border @error('end_time') {{'border-red-600'}} @enderror" />
+                            @error('end_time') <p class="text-xs text-red-600 italic">{{ $message }}</p> @enderror
+                        </div>
+                    </div>
+                 
+                
+                    <label for="event" class="text-gray-800 text-sm font-bold leading-tight tracking-normal">Event Description</label>
+                    <div class="mb-5 mt-2" wire:ignore>
+                        <textarea id="update_event_field" class="text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 rounded border"></textarea>
+                    </div>
+                    @error('event') <p class="text-xs text-red-600 italic mb-3">{{ $message }}</p> @enderror
+
+                    <div class="flex items-center justify-start w-full mt-3">
+                        <button type="submit" class="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 transition duration-150 ease-in-out hover:bg-indigo-600 bg-indigo-700 rounded text-white px-8 py-2 text-sm">Submit</button>
+                    </div>
+                </form>
+                <button class="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 transition duration-150 ease-in-out rounded focus:ring-2 focus:outline-none focus:ring-gray-600" onclick="modalHandler('update_event_modal', false)" aria-label="close modal" role="button">
                     <svg  xmlns="http://www.w3.org/2000/svg"  class="icon icon-tabler icon-tabler-x" width="20" height="20" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                         <path stroke="none" d="M0 0h24v24H0z" />
                         <line x1="18" y1="6" x2="6" y2="18" />
@@ -161,10 +221,10 @@
                     </div>
 
                     <div class="flex justify-center gap-3">
-                        <button class="flex justify-center bg-red-700 text-white py-2 px-4 rounded">
+                        <button class="flex justify-center bg-red-700 text-white py-2 px-4 rounded" onclick="delete_event({{$toShowEventDetail['id']}}, '{{$toShowEventDetail['event_title']}}')">
                             Delete
                         </button>
-                        <button class="flex justify-center bg-blue-500 text-white py-2 px-4 rounded">
+                        <button class="flex justify-center bg-blue-500 text-white py-2 px-4 rounded" onclick="modalHandler('event_modal', false); modalHandler('update_event_modal', true);" wire:click="update_event_data('{{$toShowEventDetail['id']}}')">
                             Update
                         </button>
                     </div>
@@ -215,12 +275,23 @@
             eventClick: function(data){
                 @this.showEvent(data.event.id);
                 modalHandler('event_modal', true);
-
+            },
+            datesSet: function (info) {
+                var startDate = info.start;
+                var time = new Date(startDate.getTime() + 7 * 24 * 60 * 60 * 1000);
+                var month = time.getMonth();
+                var year = time.getFullYear();
+                updateMonthAndYear(month, year);
             },
         });
 
         // Render the calendar
         calendar.render();
+
+        function updateMonthAndYear(month, year){
+            console.log(month);
+            console.log(year);
+        }
 
         // For Modal
         function modalHandler(modal_id, val) {
@@ -254,13 +325,58 @@
         }
 
         // CKEditor
-        // Create Announcement
+        // Create Event
         const editor = CKEDITOR.replace('event_field');
-        editor.on('blur', function(event){
+        editor.on('change', function(event){
             console.log(event.editor.getData())
             @this.set('createEventArr.event', event.editor.getData());
 
-        })
+        });
+
+        // Update Event
+        const update_editor = CKEDITOR.replace('update_event_field');
+        update_editor.on('change', function(event){
+            console.log(event.editor.getData())
+            @this.set('updateEventArr.event', event.editor.getData());
+
+        });
+
+        // For updating content of CKEditor
+        window.addEventListener('update_event_content', event => {
+            update_editor.setData(event.detail);
+            @this.set('updateEventArr.event', event.detail);
+        });
+
+        // Delete Event
+        function delete_event(id, name){
+            modalHandler('event_modal', false);
+            Swal.fire({
+            title: 'Are you sure you want to delete '+name+'?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var deleted = @this.deleteEvent(id);
+                    if(deleted){
+                        var eventToRemove = calendar.getEventById(id);
+                        // Remove the event from the calendar
+                        eventToRemove.remove();
+                        // Alert
+                        Swal.fire(
+                        'Deleted!',
+                        '\''+name+'\' has been deleted.',
+                        'success'
+                        )
+                    }else{
+                        Swal.fire("Something Went Wrong!", "Please try again later.", "error");
+                    }
+                }
+            })
+        }
 
         // Alerts
         window.addEventListener('EventCreated', event => {
@@ -282,5 +398,21 @@
                 Swal.fire("Something Went Wrong!", "Please try again later.", "error");
             }
         });
+
+        window.addEventListener('UpdatedEvent', event => {
+            modalHandler('update_event_modal', false);
+            if(event.detail['status']){
+                // Replacing the old event to the updated event in the calendar
+                var to_update_event = calendar.getEventById(event.detail['event']['id']);
+                to_update_event.setProp('title', event.detail['event']['event_title']);
+                to_update_event.setStart(event.detail['event']['start']);
+                to_update_event.setEnd(event.detail['event']['end']);
+                
+                Swal.fire("Successfully Updated Event", "You just have updated an event.", "success");
+            }else{
+                Swal.fire("Something Went Wrong!", "Please try again later.", "error");
+            }
+        });
+
     </script>
 </div>
