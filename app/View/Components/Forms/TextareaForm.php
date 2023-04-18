@@ -13,6 +13,9 @@ class TextareaForm extends Component
     public bool $isRequired;
     public string $placeholder;
     public string $model;
+    public string $classes;
+    public int $rows;
+    public string $value;
 
     protected array $rules = [
         'name' => 'required',
@@ -24,12 +27,15 @@ class TextareaForm extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct(string $name, bool $required, string $placeholder, string $model)
+    public function __construct(string $name, bool $required, string $placeholder, string $model, int $rows, string $classes = "", string $value = '')
     {
         $this->name = $name;
         $this->isRequired = $required;
         $this->placeholder = $placeholder;
         $this->model = $model;
+        $this->rows = $rows;
+        $this->classes = $classes;
+        $this->value = $value;
     }
 
     /**
