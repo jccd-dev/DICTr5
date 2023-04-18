@@ -44,7 +44,6 @@ class ImageHandlerHelper {
 
         return Storage::exists('/public/images/'.$curr_name) ? $curr_name : $this->image_namer($images);
 
-
     }
 
     public function image_namer(mixed $image) : string {

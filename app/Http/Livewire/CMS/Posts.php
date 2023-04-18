@@ -11,13 +11,14 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use function PHPUnit\Framework\isEmpty;
 
 class Posts extends Component
 {
     use WithFileUploads;
 
     //initialized variable that will hold values from input form
-    public string|int $cat_id = 1;
+    public string|int $cat_id = ;
     public string|int $admin_id = 1;
     public string $title;
     public string $excerpt;
@@ -148,13 +149,10 @@ class Posts extends Component
         $post = $this->post_model::with('images')->find($id);
         $this->post_id = $post->id;
 
-        $filename = 'cms-images/'.$post->thumbnail_img_name;
-        $thumbnail_img = file_get_contents($filename);
-
         $this->to_update_data = [
             'title'     => $post->title,
             'excerpt'   => $post->excerpt,
-            'thumbnail' => $thumbnail_img,
+            'thumbnail' => $post->thumbnail_img_name,
             'content'   => $post->content,
             'vid_link'  => $post->vid_link,
             'status'    => $post->status
@@ -222,10 +220,11 @@ class Posts extends Component
         }
 
         //handle thumbnail image
-        $this->thumbnail_img_name = $this->imageHelper->extract_image_names($this->thumbnail);
-        if(!$this->to_update_data['thumbnail'] == $this->thumbnail_img_name){
-            $this->imageHelper->del_image_on_db($this->to_update_data['thumbnail'], $this->post_id);
+        if(!$this->thumbnail == NULL) {
+            $this->thumbnail_img_name = $this->imageHelper->extract_image_names($this->thumbnail);
+            Storage::delete('public/images/' . $this->to_update_data['thumbnail']);
         }
+
         //arrange data for insertion
         $this->post_data = [
             'cat_id'    => $this->cat_id,
@@ -236,6 +235,9 @@ class Posts extends Component
             'vid_link'  => $this->vid_link,
             'status'    => $this->status
         ];
+
+        //unset thumbnail update data if no new submitted image for thumbnail
+        if(isEmpty($this->thumbnail)) unset($this->post_data['thumbnail']);
 
         $this->imageHelper->del_image_on_db($this->to_delete_image, $this->post_id);
         $this->image_names = $this->imageHelper->extract_image_names($this->images);
