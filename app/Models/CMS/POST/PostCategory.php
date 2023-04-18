@@ -17,7 +17,7 @@ class PostCategory extends Model
     ];
 
     public function post() :HasMany{
-        return $this->hasMany(PostModel::class);
+        return $this->hasMany(PostModel::class, 'cat_id', 'id');
     }
 
     /**
