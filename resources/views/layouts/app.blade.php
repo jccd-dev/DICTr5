@@ -6,7 +6,7 @@
 </head>
 <body>
     <div class="container mx-auto flex justify-center">
-        <livewire:cms.slider />
+        <livewire:c-m-s.slider />
     </div>
 @livewireScripts
 </body>

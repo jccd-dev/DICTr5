@@ -32,7 +32,7 @@ class Posts extends Component
     public int $post_id;
 
     public array $to_update_data = [];
-    public mixed $to_delete_image = null;
+    public mixed $to_delete_image = [];
     public array $to_update_images = [];
     public array $to_update_imgnames = [];
 
@@ -47,6 +47,7 @@ class Posts extends Component
         'vid_link'  => 'nullable|url',
         'status'    => 'required|numeric'
     ];
+
     public PostModel $post_model;
     private ImageHandlerHelper $imageHelper;
     public function __construct()
@@ -71,7 +72,6 @@ class Posts extends Component
         if($validator->fails()){
             $err_msg = $validator->getMessageBag();
             $this->dispatchBrowserEvent('validation-errors', $err_msg->getMessages());
-            return;
         }
 
         $this->thumbnail_img_name = $this->imageHelper->extract_image_names($this->thumbnail);
@@ -98,7 +98,7 @@ class Posts extends Component
             $images = collect($this->image_names)->map(function ($image_name) use ($post){
                 return new PostImages([
                     'post_id' => $post->id,
-                    'image' => $image_name
+                    'image_filename' => $image_name
                 ]);
             });
 
@@ -116,7 +116,7 @@ class Posts extends Component
     }
 
     //get post data from database.
-    public function get_post_data(int|string $id) {
+    public function get_post_data(int|string $id) : void{
 
         $post = $this->post_model::with('images')->find($id);
         $this->post_id = $post->id;
@@ -131,7 +131,9 @@ class Posts extends Component
 
         $post_images = [];
         foreach ($post->images as $image){
-            $post_images[$image->post_id] = $image->image_filename;
+            $post_images[] = [
+                $image->id => $image->image_filename
+            ];
         }
 
         $this->to_update_data['images'] = $post_images;
@@ -154,11 +156,13 @@ class Posts extends Component
         if($validator->fails()){
             $err_msg = $validator->getMessageBag();
             $this->dispatchBrowserEvent('validation-errors', $err_msg->getMessages());
-            return;
         }
 
+        //handle thumbnail image
         $this->thumbnail_img_name = $this->imageHelper->extract_image_names($this->thumbnail);
-
+        if(!$this->to_update_data['thumbnail'] == $this->thumbnail_img_name){
+            $this->imageHelper->del_image_on_db($this->to_update_data['thumbnail'], $this->post_id);
+        }
         //arrange data for insertion
         $this->post_data = [
             'cat_id'    => $this->cat_id,
@@ -170,14 +174,30 @@ class Posts extends Component
             'status'    => $this->status
         ];
 
+        $this->imageHelper->del_image_on_db($this->to_delete_image, $this->post_id);
+        $this->image_names = $this->imageHelper->extract_image_names($this->images);
+
         $post_update = PostModel::find($this->post_id);
 
         $post_update->fill($this->post_data);
         if($post_update->save()){
+            $new_images = collect($this->image_names)->map(function ($image_name) use ($post_update){
+                return new PostImages([
+                    'post_id' => $post_update->id,
+                    'image_filename' => $image_name
+                ]);
+            });
 
+            if($post_update->images()->saveMany($new_images)){
+
+                $this->storeImages();
+                $this->imageHelper->del_image_on_db($this->to_delete_image, $this->post_id);
+                session()->flash('success', 'Post has been created!');
+                return true;
+            }
         }
 
-        return true;
+        return false;
     }
 
 
@@ -186,16 +206,15 @@ class Posts extends Component
      */
     public function storeImages(): void
     {
-        foreach ($this->images as $imageIndex => $image) {
+        foreach ($this->images as $index => $image) {
+
             $originalName = $image->getClientOriginalName();
             $extension = $image->getClientOriginalExtension();
             $curr_name = "{$originalName}.{$extension}";
 
-            if ($curr_name && Storage::exists('/public/images/'.$curr_name)) {
-                continue;
+            if(!$curr_name == $this->image_names[$index]){
+                $image->storeAs('/public/images', $this->image_names[$index]);
             }
-
-            $image->storeAs('/public/images', $this->image_names[$imageIndex]);
         }
     }
 
@@ -204,30 +223,15 @@ class Posts extends Component
      */
     public function storeThumbnailImage() :void
     {
-
-        //delete the old image when it updated or when it already exists
-        if ($this->thumbnail_img_name && Storage::exists('/public/images/' . $this->thumbnail_img_name)) {
-            Storage::delete('public/images/' . $this->thumbnail_img_name);
-        }
-
         $this->thumbnail->storeAs('/public/images', $this->thumbnail_img_name);
     }
 
-    // public function remove_img_to_process() {
-    //     foreach ($this->images as $imageIndex => $image) {
-    //         $originalName = $image->getClientOriginalName();
-    //         $extension = $image->getClientOriginalExtension();
-    //         $curr_name = "{$originalName}.{$extension}";
-
-    //         if ($curr_name && Storage::exists('/public/images/'.$curr_name)) {
-    //             unset($this->images)
-    //         }
-    //     }
-    // }
-
-    public function deleteImage(): bool {
-        return $this->imageHelper->delete_image($this->to_delete_image);
+    public function delete_post(string|int $post_id) :bool {
+        $post = PostModel::findOrFail($post_id);
+        // Delete the post and its related images
+        return $post->delete() > 0;
     }
+
     public function render()
     {
         return view('livewire.cms.posts');

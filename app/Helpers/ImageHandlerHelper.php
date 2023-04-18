@@ -12,6 +12,7 @@ class ImageHandlerHelper {
     public array $image_names = [];
 
 
+
     public function extract_image_names(mixed $images): array|string
     {
 
@@ -24,8 +25,8 @@ class ImageHandlerHelper {
                 $extension = $image->getClientOriginalExtension();
                 $curr_name = "{$originalName}.{$extension}";
 
-                if ($curr_name && Storage::exists('/public/images/'.$curr_name)) {
-                    continue;
+                if (Storage::exists('/public/images/'.$curr_name)) {
+                    $this->image_names[] = $curr_name;
                 }
                 else {
                     $image_name = $this->image_namer($image);
@@ -37,7 +38,11 @@ class ImageHandlerHelper {
             return $this->image_names;
         }
 
-        return $this->image_namer($images);
+        $originalName = $images->getClientOriginalName();
+        $extension = $images->getClientOriginalExtension();
+        $curr_name = "{$originalName}.{$extension}";
+
+        return Storage::exists('/public/images/'.$curr_name) ? $curr_name : $this->image_namer($images);
 
 
     }
@@ -52,27 +57,21 @@ class ImageHandlerHelper {
 
     }
 
-    public function delete_image(mixed $image_names, string|int $post_id) :bool {
+    //delete on folder and database
+    public function del_image_on_db(mixed $images, string|int $post_id) : bool{
+        $post = PostModel::find($post_id);
 
+        if($post) {
+            $images = $post->images()->whereIn('image_filename', $images)->get();
 
-        if(is_array($image_names)){
-            foreach ($image_names as $names) {
-                if ($names && Storage::exists('/public/images/' . $names)) {
-
-                    Storage::delete('public/images/' . $names);
-
+            foreach ($images as $image) {
+                if ($image && Storage::exists('/public/images/' . $image)) {
+                    Storage::delete('public/images/' . $image);
                 }
             }
-            return true;
-        }
 
-        if ($image_names && Storage::exists('/public/images/' . $image_names)) {
-            Storage::delete('public/images/' . $image_names);
-            return true;
+            return $images->delete() > 0;
         }
-
-        $post = PostModel::find($post_id);
-        $post->images()->whereIn('image_filename', $image_names)->delete();
 
         return false;
     }

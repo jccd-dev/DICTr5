@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class PostImages extends Model
 {
     protected $table = 'post_images';
+    public $timestamps = false;
+
 
     public function post() : BelongsTo {
         return $this->belongsTo(PostModel::class);

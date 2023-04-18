@@ -17,9 +17,10 @@ class PostModel extends Model
     use HasFactory;
 
     protected $table = 'posts';
+    public $timestamps = false;
     protected $guarded = [
         'id',
-        'timestamp'
+        'timestamp',
     ];
     protected $fillable = [
       'cat_id',
