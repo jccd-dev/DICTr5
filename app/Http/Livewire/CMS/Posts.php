@@ -54,6 +54,17 @@ class Posts extends Component
         'status'    => 'required|numeric',
         'category'    => 'required',
     ];
+    protected $update_rules = [
+        'cat_id'    => 'required|numeric',
+        'title'     => 'required|word_count:15',
+        'excerpt'   => 'required',
+        'thumbnail' => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
+        'content'   => 'required',
+        'images.*'  => 'nullable|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
+        'vid_link'  => 'nullable|url',
+        'status'    => 'required|numeric',
+        'category'    => 'required',
+    ];
 
     public PostModel $post_model;
     private ImageHandlerHelper $imageHelper;
@@ -121,7 +132,7 @@ class Posts extends Component
             $images = collect($this->image_names)->map(function ($image_name) use ($post) {
                 return new PostImages([
                     'post_id' => $post->id,
-                    'image_filename_filename' => $image_name
+                    'image_filename' => $image_name
                 ]);
             });
 
@@ -137,13 +148,6 @@ class Posts extends Component
         return;
     }
 
-    public function postModalPopulator($id)
-    {
-        $this->prev_data = (array) DB::table('posts')->where('id', $id)->first();
-
-        //        dd($this->prev_data);
-    }
-
     //get post data from database.
     public function get_post_data(int|string $id): void
     {
@@ -153,7 +157,7 @@ class Posts extends Component
         $this->to_update_data = [
             'title'     => $post->title,
             'excerpt'   => $post->excerpt,
-            'thumbnail' => $post->thumbnail_img_name,
+            'thumbnail' => $post->thumbnail,
             'content'   => $post->content,
             'vid_link'  => $post->vid_link,
             'status'    => $post->status,
@@ -177,21 +181,23 @@ class Posts extends Component
 
     public function updatePost(): bool
     {
+
         $validator = Validator::make([
             'cat_id'    => $this->cat_id,
             'title'     => $this->to_update_data['title'],
             'excerpt'   => $this->to_update_data['excerpt'],
             'thumbnail' => $this->to_update_data['thumbnail'],
             'content'   => $this->to_update_data['content'],
-            'images'    => $this->to_update_data['images'],
+            'images'    => $this->images,
             'vid_link'  => $this->to_update_data['vid_link'],
             'status'    => $this->to_update_data['status'],
-            'category'    => $this->to_update_data['category']
-        ], $this->rules);
+            'category'  => $this->to_update_data['category']
+        ], $this->update_rules);
 
         if ($validator->fails()) {
             $err_msg = $validator->getMessageBag();
-            $this->dispatchBrowserEvent('validation-errors', $err_msg->getMessages());
+            $this->dispatchBrowserEvent('validation-errors-update', $err_msg->getMessages());
+
             return false;
         }
 

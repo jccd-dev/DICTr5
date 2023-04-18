@@ -84,7 +84,7 @@
                             </div>
                         </td>
                         <td class="px-6 py-4">
-                            <a href="#" type="button" wire:click="get_prevdata({{ $post->id }})" data-modal-target="update-post" data-modal-show="update-post" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit user</a>
+                            <a href="#" type="button" wire:click="get_post_data({{ $post->id }})" data-modal-target="update-post" data-modal-show="update-post" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit user</a>
                             <a href="#" type="button" data-modal-target="deleteModal" data-modal-show="deleteModal" class="font-medium text-red-600 dark:text-red-500 hover:underline">Delete user</a>
                         </td>
                     </tr>
@@ -221,7 +221,7 @@
                         x-init="listeners($data)"
                         {{--    wire:ignore--}}
                     >
-                        <form action="#" method="POST" wire:submit.prevent="update_post" class="w-full flex flex-col">
+                        <form action="#" method="POST" wire:submit.prevent="updatePost" class="w-full flex flex-col" >
                             <div x-show="state == 1">
 
                                 <x-forms.input-form name="Title" required="false" type="text" placeholder="Title" model="to_update_data.title" classes="mb-6" value="to_update_data.title" />
@@ -251,9 +251,11 @@
                                             {{ print_r($to_update_data['images']) }}
                                             <div id="img-thumbnail" class="flex flex-wrap w-full h-full gap-2 p-2">
                                                 @foreach($to_update_data['images'] as $key => $val)
-                                                    <div class="w-24 h-24">
-                                                        <img src="{{ asset('cms-images/'.$val) }}" class="w-full h-full object-cover" alt="">
-                                                    </div>
+                                                    @foreach($val as $k => $v)
+                                                        <div class="w-24 h-24">
+                                                            <img src="{{ asset('cms-images/'.$v) }}" class="w-full h-full object-cover" alt="">
+                                                        </div>
+                                                    @endforeach
                                                 @endforeach
                                                     @foreach($images as $img)
                                                         <div class="w-24 h-24">
@@ -321,7 +323,11 @@
         })
 
         function listeners($data) {
-            window.addEventListener('ValidationErrors', function(event) {
+
+            window.addEventListener('validation-errors', validationHandler);
+            window.addEventListener('validation-errors-update', validationHandler);
+
+            function validationHandler(event) {
                 const postsForm = document.querySelector('.posts-form');
                 let hasSectionOneError = event.detail.hasOwnProperty('title')
                     || event.detail.hasOwnProperty('excerpt')
@@ -340,9 +346,9 @@
                 } else if (hasSectionThreeError) {
                     $data.state = 3;
                 }
-                console.log($data)
+                console.log(event.detail)
                 // let d = Alpine.data('posts-form').data
-            });
+            }
         }
     </script>
 </div>
