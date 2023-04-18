@@ -20,6 +20,9 @@
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.min.css" rel="stylesheet">
     {{-- CKEDITOR --}}
     <script src="//cdn.ckeditor.com/4.21.0/standard/ckeditor.js"></script>
+    {{-- Wire UI --}}
+    <wireui:styles />
+    <wireui:scripts />
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
 {{--    @vite('resources/js/utils/fullcalendar.js')--}}
@@ -28,11 +31,13 @@
 {{--    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>--}}
     {{-- Fullcalendar --}}
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
+
     @livewireStyles
 
     <title>
         @if(request()->routeIs('admin.cms.announcement')) {{'Announcement'}}
         @elseif(request()->routeIs('admin.cms.calendar')) {{'Event Calendar'}}
+        @elseif(request()->routeIs('admin.exam-schedule')) {{'Exam Schedule'}}
         @endif
     </title>
 </head>

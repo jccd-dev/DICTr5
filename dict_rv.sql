@@ -175,6 +175,12 @@ CREATE TABLE `exam_schedules` (
   `datetime` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Alter exam_schedule table
+--
+
+ALTER TABLE `exam_schedules` ADD `exam_set` VARCHAR(15) NOT NULL AFTER `id`, ADD `venue` VARCHAR(255) NOT NULL AFTER `exam_set`;
+
 -- --------------------------------------------------------
 
 --
