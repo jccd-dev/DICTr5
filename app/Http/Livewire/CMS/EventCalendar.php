@@ -13,32 +13,37 @@ class EventCalendar extends Component
     public $createEventArr = [];
     public $toUpdateId;
     public $updateEventArr = [];
-    public $events;
+    public $events = [];
     public $search;
     public $toShowEventDetail = [];
     public $rightSideEventList = [];
 
     public function render()
     {
-        $this->events = Calendar::join('dict_admins', 'calendar.admin_id', '=', 'dict_admins.id')
-        ->select(['calendar.id', 'calendar.event_title as title', 'calendar.start_date as start', 'calendar.end_date as end'])
-        ->get();
+        if($this->search == '' || $this->search == NULL){
+            $this->events = Calendar::join('dict_admins', 'calendar.admin_id', '=', 'dict_admins.id')
+                                ->select(['calendar.id', 'calendar.event_title as title', 'calendar.start_date as start', 'calendar.end_date as end'])
+                                ->where('calendar.start_date', '<=', $this->today['last_day_of_month'])
+                                ->where('calendar.end_date', '>=', $this->today['first_day_of_month'])
+                                ->orderBy('calendar.start_date', 'desc')
+                                ->get();
+        }else{
+            $this->events = Calendar::join('dict_admins', 'calendar.admin_id', '=', 'dict_admins.id')
+                                ->select(['calendar.id', 'calendar.event_title as title', 'calendar.start_date as start', 'calendar.end_date as end'])
+                                ->where('calendar.event_title', 'like', '%'.$this->search.'%')
+                                ->get(); 
+        }
 
-        return view('livewire.cms.event-calendar', [
-                    'events' => $this->events,
-                    'thisMonthEvents' => Calendar::join('dict_admins', 'calendar.admin_id', '=', 'dict_admins.id')
-                                                ->select('calendar.*', 'dict_admins.name')
-                                                ->where('start_date', '<=', date('Y-m-t'))
-                                                ->where('end_date', '>=', date('Y-m-01'))
-                                                ->get(),
-                ])
+        return view('livewire.cms.event-calendar')
                 ->layout('livewire.layout.laravel_layout');
     }
 
     public function mount(){
         date_default_timezone_set('Asia/Manila');
-        $this->today['month'] = date('F');
-        $this->today['year'] = date('Y');
+        // $this->today['month'] = date('F');
+        // $this->today['year'] = date('Y');
+        $this->today['first_day_of_month'] = date('Y-m-01 00:00:00');
+        $this->today['last_day_of_month'] = date('Y-m-t 23:59:00');
 
         $this->toShowEventDetail['id'] = '';
         $this->toShowEventDetail['event_title'] = '';
@@ -180,5 +185,17 @@ class EventCalendar extends Component
 
         $this->dispatchBrowserEvent('UpdatedEvent', $response);
         $this->updateEventArr = [];
+    }
+
+    public function updateMonthAndYear($date){
+        $this->today['first_day_of_month'] = $date;
+        $this->today['last_day_of_month'] = date('Y-m-t 23:59:00', strtotime($date));
+    }
+
+    public function reschedule($id, $start, $end){
+        $updateEvent = Calendar::find($id);
+        $updateEvent->start_date = $start;
+        $updateEvent->end_date = $end;
+        $updateEvent->save();
     }
 }

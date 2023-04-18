@@ -18,7 +18,7 @@
                 </div>
             </div>
             <div class="w-full bg-yellow-300 rounded-lg p-5 hidden lg:block ">
-                <h1 class="font-bold text-2xl font-quicksand">{{$today['month']}}, {{$today['year']}}</h1>
+                <h1 class="font-bold text-2xl font-quicksand">{{date('F', strtotime($today['first_day_of_month']))}}, {{date('Y', strtotime($today['first_day_of_month']))}}</h1>
                 <div class="legends flex gap-5 mt-2  text-sm">
                     <div class="flex gap-2 items-center">
                         <div class="legend-icon rounded-full bg-[#51B800] w-2 h-2"></div>
@@ -34,30 +34,46 @@
                     </div>
                 </div>
                 <div class="flex flex-col mt-5 gap-3">
-                    <div class="bg-white rounded-xl px-5 py-3 flex items-center gap-5">
-                        <div class="legend-icon rounded-full bg-[#51B800] w-3 h-3"></div>
-                        <div>
-                            <h1 class="font-bold font-quicksand text-base mb-1">LGU Pili Tech4ED Center Launching</h1>
-                            <p class="font-quicksand text-xs">March 28, 2023</p>
-                            <p class="mt-0 font-quicksand text-xs">08:00AM - 5:00AM</p>
+                    @forelse ($events as $event)
+                        @php
+                            if(date('Y-m-d', strtotime($event->start)) == date('Y-m-d', strtotime($event->end))){
+                                $is_single_day = true;
+                            }else{
+                                $is_single_day = false;
+                            }
+                            if(date('H:i:s', strtotime($event->start)) == '00:00:00' && date('H:i:s', strtotime($event->end)) == '23:59:00'){
+                                $is_all_day = true;
+                            }else{
+                                $is_all_day = false;
+                            }
+
+                            if(date('Y-m-d H:i:s', strtotime($event->end)) < date('Y-m-d H:i:s')){
+                                $status = 0;
+                            }elseif(date('Y-m-d H:i:s', strtotime($event->start)) <= date('Y-m-d H:i:s') && date('Y-m-d H:i:s', strtotime($event->end)) >= date('Y-m-d H:i:s')){
+                                $status = 1;
+                            }else{
+                                $status = 2;
+                            }
+                        @endphp
+                        <div class="bg-white rounded-xl px-5 py-3 flex items-center gap-5">
+                            @if ($status == 0)
+                                <div class="legend-icon rounded-full bg-[#C1121F] w-3 h-3"></div>
+                            @elseif($status == 1)
+                                <div class="legend-icon rounded-full bg-[#51B800] w-3 h-3"></div>
+                            @else
+                                <div class="legend-icon rounded-full bg-[#00296B] w-3 h-3"></div>
+                            @endif
+                            <div>
+                                <h1 class="font-bold font-quicksand text-base mb-1 cursor-pointer" wire:click="showEvent({{$event->id}})" onclick="modalHandler('event_modal', true)">{{$event->title}}</h1>
+                                <p class="font-quicksand text-xs">{{($is_single_day) ? date('F d, Y', strtotime($event->start)) : date('M d, Y', strtotime($event->start)).' - '.date('M d, Y', strtotime($event->end)) }}</p>
+                                <p class="mt-0 font-quicksand text-xs">{{($is_all_day) ? 'All Day' : date('h:iA', strtotime($event->start)).' - '.date('h:iA', strtotime($event->end))}}</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="bg-white rounded-xl px-5 py-3 flex items-center gap-5">
-                        <div class="legend-icon rounded-full bg-[#00296B] w-3 h-3"></div>
-                        <div>
-                            <h1 class="font-bold font-quicksand text-lg mb-1">LGU Pili Tech4ED Center Launching</h1>
-                            <p class="font-quicksand text-xs">March 28, 2023</p>
-                            <p class="mt-0 font-quicksand text-xs">08:00AM - 5:00AM</p>
+                    @empty
+                        <div class="">
+                            <span>No Event</span>
                         </div>
-                    </div>
-                    <div class="bg-white rounded-xl px-5 py-3 flex items-center gap-5">
-                        <div class="legend-icon rounded-full bg-[#C1121F] w-3 h-3"></div>
-                        <div>
-                            <h1 class="font-bold font-quicksand text-lg mb-1">LGU Pili Tech4ED Center Launching</h1>
-                            <p class="font-quicksand text-xs">March 28, 2023</p>
-                            <p class="mt-0 font-quicksand text-xs">08:00AM - 5:00AM</p>
-                        </div>
-                    </div>
+                    @endforelse
                 </div>
             </div>
         </div>
@@ -242,6 +258,7 @@
     </div>
 
     <script>
+        var calendar_counter = 0;
         // Initialize the calendar
         const allEvents = @json($events);
         var calendarEl = document.getElementById('calendar');
@@ -278,20 +295,43 @@
             },
             datesSet: function (info) {
                 var startDate = info.start;
-                var time = new Date(startDate.getTime() + 7 * 24 * 60 * 60 * 1000);
-                var month = time.getMonth();
+                var time = new Date(startDate.getTime() + 6 * 24 * 60 * 60 * 1000);
+                var month = time.getMonth() + 1;
                 var year = time.getFullYear();
-                updateMonthAndYear(month, year);
+                if(calendar_counter != 0){
+                    const formatter = new Intl.NumberFormat('en-US', { minimumIntegerDigits: 2 });
+                    @this.updateMonthAndYear(year+'-'+formatter.format(month)+'-01'+' 00:00:00');
+                }
+                calendar_counter++;
             },
+            eventDrop: function(event, delta, revert){
+                var update_start = moment(event.event.start).format('YYYY-MM-DD HH:mm:ss');
+                var update_end = moment(event.event.end).format('YYYY-MM-DD HH:mm:ss');
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, reschedule it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        @this.reschedule(event.event.id, update_start, update_end);
+                        Swal.fire(
+                            'Rescheduled!',
+                            'The event was rescheduled.',
+                            'success'
+                        )
+                    }else{
+                        event.revert();
+                    }
+                })
+            }
         });
 
         // Render the calendar
         calendar.render();
-
-        function updateMonthAndYear(month, year){
-            console.log(month);
-            console.log(year);
-        }
 
         // For Modal
         function modalHandler(modal_id, val) {
