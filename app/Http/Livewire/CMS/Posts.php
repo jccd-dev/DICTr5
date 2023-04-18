@@ -147,10 +147,14 @@ class Posts extends Component
 
         $post = $this->post_model::with('images')->find($id);
         $this->post_id = $post->id;
+
+        $filename = 'cms-images/'.$post->thumbnail_img_name;
+        $thumbnail_img = file_get_contents($filename);
+
         $this->to_update_data = [
             'title'     => $post->title,
             'excerpt'   => $post->excerpt,
-            'thumbnail' => $post->thumbnail_img_name,
+            'thumbnail' => $thumbnail_img,
             'content'   => $post->content,
             'vid_link'  => $post->vid_link,
             'status'    => $post->status
