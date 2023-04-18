@@ -9,7 +9,7 @@ git add -A
 echo " "
 # Prompt the user for a commit message
 # shellcheck disable=SC2162
-read -p "Enter ${GREEN}MEANINGFUL${RESET} commit message${RED}:${RESET} " message
+read -e -p $'Enter commit message:' message
 # Commit the changes with the provided commit message
 git commit -m "$message"
 

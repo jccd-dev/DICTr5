@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class PostImages extends Model
 {
     protected $table = 'post_images';
-
     public $timestamps = false;
 
     protected $fillable = [

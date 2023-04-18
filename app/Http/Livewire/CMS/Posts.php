@@ -37,7 +37,7 @@ class Posts extends Component
     public array $prev_data;
 
     public array $to_update_data = [];
-    public mixed $to_delete_image = null;
+    public mixed $to_delete_image = [];
     public array $to_update_images = [];
     public array $to_update_imgnames = [];
 
@@ -54,6 +54,7 @@ class Posts extends Component
         'status'    => 'required|numeric',
         'category'    => 'required',
     ];
+
     public PostModel $post_model;
     private ImageHandlerHelper $imageHelper;
     public function __construct()
@@ -62,7 +63,8 @@ class Posts extends Component
         $this->imageHelper = new ImageHandlerHelper();
     }
 
-    public function mount() {
+    public function mount()
+    {
         $this->listeners['postModalPopulator'] = 'postModalPopulator';
         $this->to_update_data['images'] = '';
     }
@@ -119,7 +121,7 @@ class Posts extends Component
             $images = collect($this->image_names)->map(function ($image_name) use ($post) {
                 return new PostImages([
                     'post_id' => $post->id,
-                    'image_filename' => $image_name
+                    'image_filename_filename' => $image_name
                 ]);
             });
 
@@ -135,14 +137,15 @@ class Posts extends Component
         return;
     }
 
-    public function postModalPopulator($id) {
+    public function postModalPopulator($id)
+    {
         $this->prev_data = (array) DB::table('posts')->where('id', $id)->first();
 
-//        dd($this->prev_data);
+        //        dd($this->prev_data);
     }
 
     //get post data from database.
-    public function get_prevdata(int|string $id)
+    public function get_post_data(int|string $id): void
     {
 
         $post = $this->post_model::with('images')->find($id);
@@ -159,7 +162,9 @@ class Posts extends Component
 
         $post_images = [];
         foreach ($post->images as $image) {
-            $post_images[$image->post_id] = $image->image_filename;
+            $post_images[] = [
+                $image->id => $image->image_filename
+            ];
         }
 
         $this->to_update_data['images'] = $post_images;
@@ -167,7 +172,7 @@ class Posts extends Component
 
 
 
-//        dd($this->to_update_data);
+        //        dd($this->to_update_data);
     }
 
     public function updatePost(): bool
@@ -190,8 +195,11 @@ class Posts extends Component
             return false;
         }
 
-        $this->thumbnail_img_name = $this->imageHelper->extract_image_names($this->to_update_data['thumbnail']);
-
+        //handle thumbnail image
+        $this->thumbnail_img_name = $this->imageHelper->extract_image_names($this->thumbnail);
+        if (!$this->to_update_data['thumbnail'] == $this->thumbnail_img_name) {
+            $this->imageHelper->del_image_on_db($this->to_update_data['thumbnail'], $this->post_id);
+        }
         //arrange data for insertion
         $this->post_data = [
             'cat_id'    => $this->cat_id,
@@ -205,13 +213,30 @@ class Posts extends Component
             'category'    => $this->to_update_data['category']
         ];
 
+        $this->imageHelper->del_image_on_db($this->to_delete_image, $this->post_id);
+        $this->image_names = $this->imageHelper->extract_image_names($this->images);
+
         $post_update = PostModel::find($this->post_id);
 
         $post_update->fill($this->post_data);
         if ($post_update->save()) {
+            $new_images = collect($this->image_names)->map(function ($image_name) use ($post_update) {
+                return new PostImages([
+                    'post_id' => $post_update->id,
+                    'image_filename' => $image_name
+                ]);
+            });
+
+            if ($post_update->images()->saveMany($new_images)) {
+
+                $this->storeImages();
+                $this->imageHelper->del_image_on_db($this->to_delete_image, $this->post_id);
+                session()->flash('success', 'Post has been created!');
+                return true;
+            }
         }
 
-        return true;
+        return false;
     }
 
 
@@ -220,16 +245,15 @@ class Posts extends Component
      */
     public function storeImages(): void
     {
-        foreach ($this->images as $imageIndex => $image) {
+        foreach ($this->images as $index => $image) {
+
             $originalName = $image->getClientOriginalName();
             $extension = $image->getClientOriginalExtension();
             $curr_name = "{$originalName}.{$extension}";
 
-            if ($curr_name && Storage::exists('/public/images/' . $curr_name)) {
-                continue;
+            if (!$curr_name == $this->image_names[$index]) {
+                $image->storeAs('/public/images', $this->image_names[$index]);
             }
-
-            $image->storeAs('/public/images', $this->image_names[$imageIndex]);
         }
     }
 
@@ -238,38 +262,24 @@ class Posts extends Component
      */
     public function storeThumbnailImage(): void
     {
-
-        //delete the old image when it updated or when it already exists
-        if ($this->thumbnail_img_name && Storage::exists('/public/images/' . $this->thumbnail_img_name)) {
-            Storage::delete('public/images/' . $this->thumbnail_img_name);
-        }
-
         $this->thumbnail->storeAs('/public/images', $this->thumbnail_img_name);
     }
 
-    // public function remove_img_to_process() {
-    //     foreach ($this->images as $imageIndex => $image) {
-    //         $originalName = $image->getClientOriginalName();
-    //         $extension = $image->getClientOriginalExtension();
-    //         $curr_name = "{$originalName}.{$extension}";
+    public function delete_post(string|int $post_id): bool
+    {
+        $post = PostModel::findOrFail($post_id);
+        // Delete the post and its related images
+        return $post->delete() > 0;
+    }
 
-    //         if ($curr_name && Storage::exists('/public/images/'.$curr_name)) {
-    //             unset($this->images)
-    //         }
-    //     }
-    // }
-
-    // public function deleteImage(): bool
-    // {
-    //     return $this->imageHelper->delete_image($this->to_delete_image);
-    // }
     public function render()
     {
         $postModel = new PostModel();
         return view('livewire.cms.posts', ['posts' => $postModel->all()])->layout('layouts.layout');
     }
 
-    public function renderLayout() {
+    public function renderLayout()
+    {
         return view('pages.admin.posts');
     }
 }

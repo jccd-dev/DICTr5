@@ -20,7 +20,7 @@ class PostModel extends Model
     public $timestamps = false;
     protected $guarded = [
         'id',
-        'timestamp'
+        'timestamp',
     ];
     protected $fillable = [
       'cat_id',
