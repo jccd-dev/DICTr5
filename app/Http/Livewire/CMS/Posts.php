@@ -126,6 +126,7 @@ class Posts extends Component
             if ($post->images()->saveMany($images)) {
 
                 $this->storeImages();
+                $this->storeThumbnailImage();
                 session()->flash('success', 'Post has been created!');
             }
         }
@@ -249,6 +250,7 @@ class Posts extends Component
             if($post_update->images()->saveMany($new_images)){
 
                 $this->storeImages();
+                $this->storeThumbnailImage();
                 $this->imageHelper->del_image_on_db($this->to_delete_image, $this->post_id);
                 session()->flash('success', 'Post has been created!');
                 return true;
@@ -275,16 +277,6 @@ class Posts extends Component
 
             $image->storeAs('/public/images', $this->image_names[$imageIndex]);
         }
-//        foreach ($this->images as $index => $image) {
-//
-//            $originalName = $image->getClientOriginalName();
-//            $extension = $image->getClientOriginalExtension();
-//            $curr_name = "{$originalName}.{$extension}";
-//
-//            if(!$curr_name == $this->image_names[$index]){
-//                $image->storeAs('/public/images', $this->image_names[$index]);
-//            }
-//        }
     }
 
     /**
