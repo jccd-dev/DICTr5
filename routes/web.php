@@ -6,6 +6,7 @@ use App\Http\Livewire\ContactForm;
 use App\Http\Livewire\CMS\Announcements;
 use App\Http\Livewire\CMS\EventCalendar;
 use App\Http\Livewire\CMS\Posts;
+use App\Http\Livewire\Admin\ExamSchedule;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -38,5 +39,6 @@ Route::prefix('admin')->group(function () {
         Route::get('/announcement', Announcements::class)->name('admin.cms.announcement');
         Route::get('/event-calendar', EventCalendar::class)->name('admin.cms.calendar');
     });
+    Route::get('/exam-schedule', ExamSchedule::class)->name('admin.exam-schedule');
 });
 

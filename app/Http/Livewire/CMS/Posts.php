@@ -145,6 +145,7 @@ class Posts extends Component
             if ($post->images()->saveMany($images)) {
 
                 $this->storeImages();
+                $this->storeThumbnailImage();
                 session()->flash('success', 'Post has been created!');
             }
 
@@ -169,6 +170,10 @@ class Posts extends Component
 
         $post = $this->post_model::with('images')->find($id);
         $this->post_id = $post->id;
+
+        $filename = 'cms-images/' . $post->thumbnail_img_name;
+        $thumbnail_img = file_get_contents($filename);
+
         $this->to_update_data = [
             'title'     => $post->title,
             'excerpt'   => $post->excerpt,
@@ -249,7 +254,7 @@ class Posts extends Component
                     $this->addError($field, $message);
                 }
             }
-//            $err_msgs = $validator->getMessageBag();
+            //            $err_msgs = $validator->getMessageBag();
             $this->dispatchBrowserEvent('validation-errors-update', $err_msgs->getMessages());
             return false;
         }
@@ -289,6 +294,7 @@ class Posts extends Component
             if ($post_update->images()->saveMany($new_images)) {
 
                 $this->storeImages();
+                $this->storeThumbnailImage();
                 $this->imageHelper->del_image_on_db($this->to_delete_image, $this->post_id);
                 session()->flash('success', 'Post has been created!');
                 return true;
