@@ -26,6 +26,8 @@ class Calendar extends Model
         'timestamp',
     ];
 
+    public $timestamps = false; 
+
     public function getAllEvent(){
         return DB::table($this->table)->join('dict_admins', 'calendar.admin_id', '=', 'dict_admins.id')
                                     ->select('calendar.*', 'dict_admins.name')

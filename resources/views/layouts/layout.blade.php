@@ -5,7 +5,9 @@
 </head>
 <body class="overflow-y-scroll overflow-x-hidden">
 
-    {{ $slot }}
+    <div>
+        {{ $slot }}
+    </div>
 
 
     @livewireScripts

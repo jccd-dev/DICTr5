@@ -20,6 +20,7 @@ use App\Http\Livewire\CMS\Posts;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/testing', \App\Http\Livewire\CMS\Testing::class);
 
 //TODO: cant display the slider form component
 //FIXME: blank page
@@ -33,7 +34,7 @@ Route::get('/about', function () {
 
 Route::prefix('admin')->group(function () {
     Route::prefix('cms')->group(function (){
-        Route::view('/posts', 'pages.admin.posts'); // Post::class
+        Route::get('/posts', [Posts::class, 'renderLayout'])->name('admin.cms.posts'); // Post::class
         Route::get('/announcement', Announcements::class)->name('admin.cms.announcement');
         Route::get('/event-calendar', EventCalendar::class)->name('admin.cms.calendar');
     });

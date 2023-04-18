@@ -36,7 +36,7 @@ class PostModel extends Model
 
     // images is connected to post table by foreign key and post can have multiple images
     public function images(): HasMany {
-        return $this->hasMany(PostImages::class);
+        return $this->hasMany(PostImages::class, 'post_id', 'id');
     }
 
     // post table is connected to category by foreign key and a category can have many post

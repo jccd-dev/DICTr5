@@ -5,13 +5,12 @@ namespace App\Http\Livewire\CMS;
 use App\Helpers\ImageHandlerHelper;
 use App\Models\CMS\POST\PostImages;
 use App\Models\CMS\POST\PostModel;
-use Illuminate\Support\Str;
-use Livewire\Component;
-use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Livewire\Component;
+use Livewire\WithFileUploads;
 
-class Posts extends Component
+class Testing extends Component
 {
     use WithFileUploads;
 
@@ -34,7 +33,7 @@ class Posts extends Component
     public $postData;
 
     public array $to_update_data = [];
-    public mixed $to_delete_image = [];
+    public mixed $to_delete_image = null;
     public array $to_update_images = [];
     public array $to_update_imgnames = [];
 
@@ -49,7 +48,6 @@ class Posts extends Component
         'vid_link'  => 'nullable|url',
         'status'    => 'required|numeric'
     ];
-
     public PostModel $post_model;
     private ImageHandlerHelper $imageHelper;
     public function __construct()
@@ -112,7 +110,7 @@ class Posts extends Component
             $images = collect($this->image_names)->map(function ($image_name) use ($post) {
                 return new PostImages([
                     'post_id' => $post->id,
-                    'image_filename_filename' => $image_name
+                    'image_filename' => $image_name
                 ]);
             });
 
@@ -134,7 +132,8 @@ class Posts extends Component
     }
 
     //get post data from database.
-    public function get_post_data(int|string $id) : void{
+    public function get_post_data(int|string $id)
+    {
 
         $post = $this->post_model::with('images')->find($id);
         $this->post_id = $post->id;
@@ -148,10 +147,8 @@ class Posts extends Component
         ];
 
         $post_images = [];
-        foreach ($post->images as $image){
-            $post_images[] = [
-                $image->id => $image->image_filename
-            ];
+        foreach ($post->images as $image) {
+            $post_images[$image->post_id] = $image->image_filename;
         }
 
         $this->to_update_data['images'] = $post_images;
@@ -176,11 +173,8 @@ class Posts extends Component
             return false;
         }
 
-        //handle thumbnail image
         $this->thumbnail_img_name = $this->imageHelper->extract_image_names($this->thumbnail);
-        if(!$this->to_update_data['thumbnail'] == $this->thumbnail_img_name){
-            $this->imageHelper->del_image_on_db($this->to_update_data['thumbnail'], $this->post_id);
-        }
+
         //arrange data for insertion
         $this->post_data = [
             'cat_id'    => $this->cat_id,
@@ -192,30 +186,13 @@ class Posts extends Component
             'status'    => $this->status
         ];
 
-        $this->imageHelper->del_image_on_db($this->to_delete_image, $this->post_id);
-        $this->image_names = $this->imageHelper->extract_image_names($this->images);
-
         $post_update = PostModel::find($this->post_id);
 
         $post_update->fill($this->post_data);
-        if($post_update->save()){
-            $new_images = collect($this->image_names)->map(function ($image_name) use ($post_update){
-                return new PostImages([
-                    'post_id' => $post_update->id,
-                    'image_filename' => $image_name
-                ]);
-            });
-
-            if($post_update->images()->saveMany($new_images)){
-
-                $this->storeImages();
-                $this->imageHelper->del_image_on_db($this->to_delete_image, $this->post_id);
-                session()->flash('success', 'Post has been created!');
-                return true;
-            }
+        if ($post_update->save()) {
         }
 
-        return false;
+        return true;
     }
 
 
@@ -224,15 +201,16 @@ class Posts extends Component
      */
     public function storeImages(): void
     {
-        foreach ($this->images as $index => $image) {
-
+        foreach ($this->images as $imageIndex => $image) {
             $originalName = $image->getClientOriginalName();
             $extension = $image->getClientOriginalExtension();
             $curr_name = "{$originalName}.{$extension}";
 
-            if(!$curr_name == $this->image_names[$index]){
-                $image->storeAs('/public/images', $this->image_names[$index]);
+            if ($curr_name && Storage::exists('/public/images/' . $curr_name)) {
+                continue;
             }
+
+            $image->storeAs('/public/images', $this->image_names[$imageIndex]);
         }
     }
 
@@ -241,22 +219,38 @@ class Posts extends Component
      */
     public function storeThumbnailImage(): void
     {
+
+        //delete the old image when it updated or when it already exists
+        if ($this->thumbnail_img_name && Storage::exists('/public/images/' . $this->thumbnail_img_name)) {
+            Storage::delete('public/images/' . $this->thumbnail_img_name);
+        }
+
         $this->thumbnail->storeAs('/public/images', $this->thumbnail_img_name);
     }
 
-    public function delete_post(string|int $post_id) :bool {
-        $post = PostModel::findOrFail($post_id);
-        // Delete the post and its related images
-        return $post->delete() > 0;
-    }
+    // public function remove_img_to_process() {
+    //     foreach ($this->images as $imageIndex => $image) {
+    //         $originalName = $image->getClientOriginalName();
+    //         $extension = $image->getClientOriginalExtension();
+    //         $curr_name = "{$originalName}.{$extension}";
 
-    public function render()
-    {
-        return view('livewire.cms.posts');
-    }
+    //         if ($curr_name && Storage::exists('/public/images/'.$curr_name)) {
+    //             unset($this->images)
+    //         }
+    //     }
+    // }
+
+    // public function deleteImage(): bool
+    // {
+    //     return $this->imageHelper->delete_image($this->to_delete_image);
+    // }
 
     public function renderLayout() {
         $postModel = new PostModel();
         return view('pages.admin.posts', ['posts' => $postModel->all()]);
+    }
+    public function render()
+    {
+        return view('livewire.c-m-s.testing')->layout('livewire.layout.laravel_layout');
     }
 }
