@@ -31,7 +31,10 @@ class Category extends Component
             return false;
         }
 
-        $category = $this->postCategoryModel:firstOrCreate(['category' => ucfirst($this->category)]);
+        $category = $this->postCategoryModel::firstOrCreate(
+            [
+                'category' => ucfirst($this->category)
+            ]);
 
         if ($category) {
             //the category is already used.
