@@ -1,4 +1,5 @@
-<div>
+<div x-data="{ state: 1, hasVidData: false, err: [], stateUpdate: 1, hasVidDataUpdate: false, errUpdate: [] }"
+     x-init="listeners($data); listenerUpdate($data)">
     <x-layouts.modal.button name="Add Post" target="add-post" />
 
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -84,7 +85,7 @@
                             </div>
                         </td>
                         <td class="px-6 py-4">
-                            <a href="#" type="button" wire:click="get_post_data({{ $post->id }})" data-modal-target="update-post" data-modal-show="update-post" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit user</a>
+                            <a href="#" type="button" wire:click="get_post_data({{ $post->id }})" @click="state=1; stateUpdate=1;" data-modal-target="update-post" data-modal-show="update-post" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit user</a>
                             <a href="#" type="button" data-modal-target="deleteModal" data-modal-show="deleteModal" class="font-medium text-red-600 dark:text-red-500 hover:underline">Delete user</a>
                         </td>
                     </tr>
@@ -116,8 +117,7 @@
                     <div
                         id="posts-form"
                         class="flex w-[30rem] posts-form"
-                        x-data="{ state: 1, hasVidData: false, err: [] }"
-                        x-init="listeners($data)"
+
                         {{--    wire:ignore--}}
                     >
                         <form action="#" method="POST" wire:submit.prevent="create_post" class="w-full flex flex-col">
@@ -217,12 +217,11 @@
                     <div
                         id="posts-form"
                         class="flex w-[30rem] posts-form"
-                        x-data="{ state: 1, hasVidData: false, err: [] }"
-                        x-init="listeners($data)"
+
                         {{--    wire:ignore--}}
                     >
                         <form action="#" method="POST" wire:submit.prevent="updatePost" class="w-full flex flex-col" >
-                            <div x-show="state == 1">
+                            <div x-show="stateUpdate == 1">
 
                                 <x-forms.input-form name="Title" required="false" type="text" placeholder="Title" model="to_update_data.title" classes="mb-6" value="to_update_data.title" />
 
@@ -231,8 +230,9 @@
                                 <x-forms.textarea-form name="Content" required="false" placeholder="Content" model="to_update_data.content" rows="5" classes="mb-6" value="to_update_data.content" />
 
                             </div>
-                            <div x-show="state == 2">
-                                <x-forms.file name="Thumbnail" required="false" placeholder="Thumbnail" model="thumbnail" classes="mb-6" />
+                            <div x-show="stateUpdate == 2">
+
+                                <x-forms.file name="Thumbnails" required="false" placeholder="Thumbnail" model="to_update_data.thumbnail" classes="mb-6" :th="$to_update_data['thumbnail']" />
 
                                 <div class="mb-6 flex-1">
                                     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="post-status">
@@ -248,7 +248,6 @@
                                 <div class="flex flex-col items-center justify-center w-full">
                                     <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
                                         @if($to_update_data['images'])
-                                            {{ print_r($to_update_data['images']) }}
                                             <div id="img-thumbnail" class="flex flex-wrap w-full h-full gap-2 p-2">
                                                 @foreach($to_update_data['images'] as $key => $val)
                                                     @foreach($val as $k => $v)
@@ -281,10 +280,10 @@
                                                multiple
                                         />
                                     </label>
-                                    @error('images.*') <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p> @enderror
+                                    @error('to_update_data.images.*') <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p> @enderror
                                 </div>
                             </div>
-                            <div x-show="state == 3">
+                            <div x-show="stateUpdate == 3">
 
                                 <x-forms.select name="Category" required="false" model="to_update_data.category" :options="['news' => 'News', 'announcements' => 'Announcements', 'report' => 'Report']" classes="mb-6" value="to_update_data.category" />
 
@@ -293,14 +292,14 @@
                             </div>
 
                             <div class="flex gap-3 mt-5">
-                                <button :class="state == 1 ? 'cursor-not-allowed' : ''" :disabled="state == 1" @click="state--" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600 flex-1">
+                                <button :class="stateUpdate == 1 ? 'cursor-not-allowed' : ''" :disabled="stateUpdate == 1" @click="stateUpdate--" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600 flex-1">
                                     Back
                                 </button>
-                                <button x-show="state != 3" type="button" @click="state++;" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 flex-1">
+                                <button x-show="stateUpdate != 3" type="button" @click="stateUpdate++;" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 flex-1">
                                     Next
                                 </button>
 
-                                <button x-show="state == 3" type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 flex-1">
+                                <button x-show="stateUpdate == 3" type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 flex-1">
                                     Add Post
                                 </button>
                             </div>
@@ -324,8 +323,10 @@
 
         function listeners($data) {
 
-            window.addEventListener('validation-errors', validationHandler);
-            window.addEventListener('validation-errors-update', validationHandler);
+            window.addEventListener('ValidationErrors', validationHandler);
+            window.addEventListener('ValidationSuccess', (event) => {
+                location.reload();
+            });
 
             function validationHandler(event) {
                 const postsForm = document.querySelector('.posts-form');
@@ -346,8 +347,31 @@
                 } else if (hasSectionThreeError) {
                     $data.state = 3;
                 }
-                console.log(event.detail)
-                // let d = Alpine.data('posts-form').data
+            }
+        }
+
+        function listenerUpdate($data) {
+            window.addEventListener('validation-errors-update', validationHandler2);
+
+            function validationHandler2(event) {
+                const postsForm = document.querySelector('.posts-form');
+                let hasSectionOneError = event.detail.hasOwnProperty('to_update_data.title')
+                    || event.detail.hasOwnProperty('to_update_data.excerpt')
+                    || event.detail.hasOwnProperty('to_update_data.content');
+
+                let hasSectionTwoError = event.detail.hasOwnProperty('to_update_data.thumbnail')
+                    || event.detail.hasOwnProperty('to_update_data.status')
+                    || event.detail.hasOwnProperty('to_update_data.images');
+                let hasSectionThreeError = event.detail.hasOwnProperty('to_update_data.vid_link')
+                    || event.detail.hasOwnProperty('to_update_data.categories');
+
+                if(hasSectionOneError) {
+                    $data.stateUpdate = 1;
+                } else if(hasSectionTwoError) {
+                    $data.stateUpdate = 2;
+                } else if (hasSectionThreeError) {
+                    $data.stateUpdate = 3;
+                }
             }
         }
     </script>

@@ -14,6 +14,7 @@ class File extends Component
     public string $model;
     public string $classes;
     public string $value;
+    public $th;
 
     protected array $rules = [
         'name' => 'required',
@@ -25,12 +26,13 @@ class File extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct(string $name, bool $required, string $placeholder, string $model, string $classes = "", string $value = "")
+    public function __construct(string $name, bool $required, string $placeholder, string $model, $th = null, string $classes = "", string $value = "")
     {
         $this->name = $name;
         $this->isRequired = $required;
         $this->placeholder = $placeholder;
         $this->model = $model;
+        $this->th = $th;
         $this->classes = $classes;
         $this->value = $value;
     }

@@ -4,6 +4,7 @@ namespace App\Http\Livewire\CMS;
 
 use App\Helpers\ImageHandlerHelper;
 use App\Models\CMS\POST\PostImages;
+use App\Models\CMS\POST\PostCategory;
 use App\Models\CMS\POST\PostModel;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -27,8 +28,6 @@ class Posts extends Component
     public $images = [];
     public array $image_names = [];
     public string $vid_link;
-
-    public string $category = '';
     public string $author = 'test author';
     public int $status = 0;
     public array $post_data = [];
@@ -40,6 +39,12 @@ class Posts extends Component
     public mixed $to_delete_image = [];
     public array $to_update_images = [];
     public array $to_update_imgnames = [];
+
+    //for filters variables
+    public string $search = '';
+    public string $from = '';
+    public string $to = '';
+    public string $category;
 
 
 
@@ -58,7 +63,7 @@ class Posts extends Component
         'cat_id'    => 'required|numeric',
         'title'     => 'required|word_count:15',
         'excerpt'   => 'required',
-        'thumbnail' => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
+        'to_update_data.thumbnail' => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
         'content'   => 'required',
         'images.*'  => 'nullable|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
         'vid_link'  => 'nullable|url',
@@ -78,6 +83,7 @@ class Posts extends Component
     {
         $this->listeners['postModalPopulator'] = 'postModalPopulator';
         $this->to_update_data['images'] = '';
+        $this->to_update_data['thumbnail'] = '';
     }
 
     public function create_post(): void
@@ -140,15 +146,24 @@ class Posts extends Component
 
                 $this->storeImages();
                 session()->flash('success', 'Post has been created!');
-                return;
             }
+
+            $this->dispatchBrowserEvent('ValidationSuccess', ['success' => 'success']);
         }
 
         session()->flash('error', 'Something went wrong please try again later!');
-        return;
     }
 
-    //get post data from database.
+
+
+    public function postModalPopulator($id)
+    {
+        $this->postData = DB::table('posts')->where('id', $id)->first();
+        dd($this->postData);
+    }
+
+    //for update modal
+    //get post data and its images from database base from database
     public function get_post_data(int|string $id): void
     {
 
@@ -175,8 +190,41 @@ class Posts extends Component
 
 
 
-
+        $this->resetValidation();
         //        dd($this->to_update_data);
+    }
+
+    public function search_post()
+    {
+        $posts = $this->post_model::query();
+        $search_term = $this->search;
+        $category_id = $this->category;
+        $from = date('Y-m-d', strtotime($this->from));
+        $current = date('Y-m-d', strtotime(now()));
+        $to_date = $this->to;
+
+        if (!$search_term == NULL) {
+            $posts = $posts->where(function ($query) use ($search_term) {
+                $query->where('title', 'like', '%' . $search_term . '%')
+                    ->orWhere('content', 'like', '%' . $search_term . '%');
+            });
+
+            //return $posts->with('images')->get();
+        }
+        if ($category_id != NULL) {
+            $posts = $posts->whereHas('category', function ($query) use ($category_id) {
+                $query->where('id', $category_id);
+            });
+        }
+
+        if (!$from != NULL && $to_date == NULL) {
+            $posts = $posts->whereBetween('timestamp', [$from, $current]);
+        }
+        if (!$from != NULL && !$to_date != NULL) {
+            $posts = $posts->whereBetween('timestamp', [$from, $to_date]);
+        }
+
+        return $posts->get();
     }
 
     public function updatePost(): bool
@@ -195,9 +243,14 @@ class Posts extends Component
         ], $this->update_rules);
 
         if ($validator->fails()) {
-            $err_msg = $validator->getMessageBag();
-            $this->dispatchBrowserEvent('validation-errors-update', $err_msg->getMessages());
-
+            $err_msgs = $validator->getMessageBag();
+            foreach ($err_msgs->getMessages() as $field => $messages) {
+                foreach ($messages as $message) {
+                    $this->addError($field, $message);
+                }
+            }
+//            $err_msgs = $validator->getMessageBag();
+            $this->dispatchBrowserEvent('validation-errors-update', $err_msgs->getMessages());
             return false;
         }
 
@@ -251,16 +304,27 @@ class Posts extends Component
      */
     public function storeImages(): void
     {
-        foreach ($this->images as $index => $image) {
-
+        foreach ($this->images as $imageIndex => $image) {
             $originalName = $image->getClientOriginalName();
             $extension = $image->getClientOriginalExtension();
             $curr_name = "{$originalName}.{$extension}";
 
-            if (!$curr_name == $this->image_names[$index]) {
-                $image->storeAs('/public/images', $this->image_names[$index]);
+            if (Storage::exists('/public/images/' . $curr_name)) {
+                continue;
             }
+
+            $image->storeAs('/public/images', $this->image_names[$imageIndex]);
         }
+        //        foreach ($this->images as $index => $image) {
+        //
+        //            $originalName = $image->getClientOriginalName();
+        //            $extension = $image->getClientOriginalExtension();
+        //            $curr_name = "{$originalName}.{$extension}";
+        //
+        //            if(!$curr_name == $this->image_names[$index]){
+        //                $image->storeAs('/public/images', $this->image_names[$index]);
+        //            }
+        //        }
     }
 
     /**
