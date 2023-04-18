@@ -6,6 +6,7 @@ use App\Helpers\ImageHandlerHelper;
 use App\Models\CMS\POST\PostImages;
 use App\Models\CMS\POST\PostCategory;
 use App\Models\CMS\POST\PostModel;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -32,7 +33,7 @@ class Posts extends Component
     public array $post_data = [];
     public int $post_id;
 
-    public $postData;
+    public array $prev_data;
 
     public array $to_update_data = [];
     public mixed $to_delete_image = [];
@@ -46,6 +47,7 @@ class Posts extends Component
     public string $category;
 
 
+
     protected $rules = [
         'cat_id'    => 'required|numeric',
         'title'     => 'required|word_count:15',
@@ -54,7 +56,19 @@ class Posts extends Component
         'content'   => 'required',
         'images.*'  => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
         'vid_link'  => 'nullable|url',
-        'status'    => 'required|numeric'
+        'status'    => 'required|numeric',
+        'category'    => 'required',
+    ];
+    protected $update_rules = [
+        'cat_id'    => 'required|numeric',
+        'title'     => 'required|word_count:15',
+        'excerpt'   => 'required',
+        'to_update_data.thumbnail' => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
+        'content'   => 'required',
+        'images.*'  => 'nullable|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
+        'vid_link'  => 'nullable|url',
+        'status'    => 'required|numeric',
+        'category'    => 'required',
     ];
 
     public PostModel $post_model;
@@ -65,8 +79,11 @@ class Posts extends Component
         $this->imageHelper = new ImageHandlerHelper();
     }
 
-    public function mount() {
+    public function mount()
+    {
         $this->listeners['postModalPopulator'] = 'postModalPopulator';
+        $this->to_update_data['images'] = '';
+        $this->to_update_data['thumbnail'] = '';
     }
 
     public function create_post(): void
@@ -80,7 +97,8 @@ class Posts extends Component
             'content'   => $this->content,
             'images'    => $this->images,
             'vid_link'  => $this->vid_link,
-            'status'    => $this->status
+            'status'    => $this->status,
+            'category'    => $this->category
         ], $this->rules);
 
         if ($validator->fails()) {
@@ -107,7 +125,8 @@ class Posts extends Component
             'content'   => $this->content,
             'vid_link'  => $this->vid_link,
             'author'    => $this->author,
-            'status'    => $this->status
+            'status'    => $this->status,
+            'category'    => $this->category
         ];
 
 
@@ -119,7 +138,7 @@ class Posts extends Component
             $images = collect($this->image_names)->map(function ($image_name) use ($post) {
                 return new PostImages([
                     'post_id' => $post->id,
-                    'image_filename_filename' => $image_name
+                    'image_filename' => $image_name
                 ]);
             });
 
@@ -129,6 +148,8 @@ class Posts extends Component
                 $this->storeThumbnailImage();
                 session()->flash('success', 'Post has been created!');
             }
+
+            $this->dispatchBrowserEvent('ValidationSuccess', ['success' => 'success']);
         }
 
         session()->flash('error', 'Something went wrong please try again later!');
@@ -136,66 +157,75 @@ class Posts extends Component
 
 
 
-    public function postModalPopulator($id) {
+    public function postModalPopulator($id)
+    {
         $this->postData = DB::table('posts')->where('id', $id)->first();
         dd($this->postData);
     }
 
     //for update modal
     //get post data and its images from database base from database
-    public function get_post_data(int|string $id) : void{
+    public function get_post_data(int|string $id): void
+    {
 
         $post = $this->post_model::with('images')->find($id);
         $this->post_id = $post->id;
 
-        $filename = 'cms-images/'.$post->thumbnail_img_name;
+        $filename = 'cms-images/' . $post->thumbnail_img_name;
         $thumbnail_img = file_get_contents($filename);
 
         $this->to_update_data = [
             'title'     => $post->title,
             'excerpt'   => $post->excerpt,
-            'thumbnail' => $thumbnail_img,
+            'thumbnail' => $post->thumbnail,
             'content'   => $post->content,
             'vid_link'  => $post->vid_link,
-            'status'    => $post->status
+            'status'    => $post->status,
+            'category'    => $post->category
         ];
 
         $post_images = [];
-        foreach ($post->images as $image){
+        foreach ($post->images as $image) {
             $post_images[] = [
                 $image->id => $image->image_filename
             ];
         }
 
         $this->to_update_data['images'] = $post_images;
+
+
+
+        $this->resetValidation();
+        //        dd($this->to_update_data);
     }
 
-    public function search_post () {
-        $posts =$this->post_model::query();
+    public function search_post()
+    {
+        $posts = $this->post_model::query();
         $search_term = $this->search;
         $category_id = $this->category;
         $from = date('Y-m-d', strtotime($this->from));
-        $current = date('Y-m-d',strtotime(now()));
+        $current = date('Y-m-d', strtotime(now()));
         $to_date = $this->to;
 
-        if(!$search_term == NULL) {
-            $posts = $posts->where(function($query) use ($search_term) {
+        if (!$search_term == NULL) {
+            $posts = $posts->where(function ($query) use ($search_term) {
                 $query->where('title', 'like', '%' . $search_term . '%')
                     ->orWhere('content', 'like', '%' . $search_term . '%');
             });
 
-        //return $posts->with('images')->get();
+            //return $posts->with('images')->get();
         }
-        if($category_id != NULL) {
+        if ($category_id != NULL) {
             $posts = $posts->whereHas('category', function ($query) use ($category_id) {
                 $query->where('id', $category_id);
             });
         }
 
-        if(!$from != NULL && $to_date == NULL) {
+        if (!$from != NULL && $to_date == NULL) {
             $posts = $posts->whereBetween('timestamp', [$from, $current]);
         }
-        if(!$from != NULL && !$to_date != NULL){
+        if (!$from != NULL && !$to_date != NULL) {
             $posts = $posts->whereBetween('timestamp', [$from, $to_date]);
         }
 
@@ -204,37 +234,47 @@ class Posts extends Component
 
     public function updatePost(): bool
     {
+
         $validator = Validator::make([
             'cat_id'    => $this->cat_id,
-            'title'     => $this->title,
-            'excerpt'   => $this->excerpt,
-            'thumbnail' => $this->thumbnail,
-            'content'   => $this->content,
+            'title'     => $this->to_update_data['title'],
+            'excerpt'   => $this->to_update_data['excerpt'],
+            'thumbnail' => $this->to_update_data['thumbnail'],
+            'content'   => $this->to_update_data['content'],
             'images'    => $this->images,
-            'vid_link'  => $this->vid_link,
-            'status'    => $this->status
-        ], $this->rules);
+            'vid_link'  => $this->to_update_data['vid_link'],
+            'status'    => $this->to_update_data['status'],
+            'category'  => $this->to_update_data['category']
+        ], $this->update_rules);
 
         if ($validator->fails()) {
-            $err_msg = $validator->getMessageBag();
-            $this->dispatchBrowserEvent('validation-errors', $err_msg->getMessages());
+            $err_msgs = $validator->getMessageBag();
+            foreach ($err_msgs->getMessages() as $field => $messages) {
+                foreach ($messages as $message) {
+                    $this->addError($field, $message);
+                }
+            }
+            //            $err_msgs = $validator->getMessageBag();
+            $this->dispatchBrowserEvent('validation-errors-update', $err_msgs->getMessages());
             return false;
         }
 
         //handle thumbnail image
         $this->thumbnail_img_name = $this->imageHelper->extract_image_names($this->thumbnail);
-        if(!$this->to_update_data['thumbnail'] == $this->thumbnail_img_name){
+        if (!$this->to_update_data['thumbnail'] == $this->thumbnail_img_name) {
             $this->imageHelper->del_image_on_db($this->to_update_data['thumbnail'], $this->post_id);
         }
         //arrange data for insertion
         $this->post_data = [
             'cat_id'    => $this->cat_id,
-            'title'     => $this->title,
-            'excerpt'   => $this->excerpt,
-            'thumbnail' => $this->thumbnail_img_name,
-            'content'   => $this->content,
-            'vid_link'  => $this->vid_link,
-            'status'    => $this->status
+            'title'     => $this->to_update_data['title'],
+            'excerpt'   => $this->to_update_data['excerpt'],
+            'thumbnail' => $this->to_update_data['thumbnail'],
+            'content'   => $this->to_update_data['content'],
+            'images'    => $this->to_update_data['images'],
+            'vid_link'  => $this->to_update_data['vid_link'],
+            'status'    => $this->to_update_data['status'],
+            'category'    => $this->to_update_data['category']
         ];
 
         $this->imageHelper->del_image_on_db($this->to_delete_image, $this->post_id);
@@ -243,15 +283,15 @@ class Posts extends Component
         $post_update = PostModel::find($this->post_id);
 
         $post_update->fill($this->post_data);
-        if($post_update->save()){
-            $new_images = collect($this->image_names)->map(function ($image_name) use ($post_update){
+        if ($post_update->save()) {
+            $new_images = collect($this->image_names)->map(function ($image_name) use ($post_update) {
                 return new PostImages([
                     'post_id' => $post_update->id,
                     'image_filename' => $image_name
                 ]);
             });
 
-            if($post_update->images()->saveMany($new_images)){
+            if ($post_update->images()->saveMany($new_images)) {
 
                 $this->storeImages();
                 $this->storeThumbnailImage();
@@ -275,12 +315,22 @@ class Posts extends Component
             $extension = $image->getClientOriginalExtension();
             $curr_name = "{$originalName}.{$extension}";
 
-            if (Storage::exists('/public/images/'.$curr_name)) {
+            if (Storage::exists('/public/images/' . $curr_name)) {
                 continue;
             }
 
             $image->storeAs('/public/images', $this->image_names[$imageIndex]);
         }
+        //        foreach ($this->images as $index => $image) {
+        //
+        //            $originalName = $image->getClientOriginalName();
+        //            $extension = $image->getClientOriginalExtension();
+        //            $curr_name = "{$originalName}.{$extension}";
+        //
+        //            if(!$curr_name == $this->image_names[$index]){
+        //                $image->storeAs('/public/images', $this->image_names[$index]);
+        //            }
+        //        }
     }
 
     /**
@@ -291,7 +341,8 @@ class Posts extends Component
         $this->thumbnail->storeAs('/public/images', $this->thumbnail_img_name);
     }
 
-    public function delete_post(string|int $post_id) :bool {
+    public function delete_post(string|int $post_id): bool
+    {
         $post = PostModel::findOrFail($post_id);
         // Delete the post and its related images
         return $post->delete() > 0;
@@ -299,11 +350,12 @@ class Posts extends Component
 
     public function render()
     {
-        return view('livewire.cms.posts');
+        $postModel = new PostModel();
+        return view('livewire.cms.posts', ['posts' => $postModel->all()])->layout('layouts.layout');
     }
 
-    public function renderLayout() {
-        $postModel = new PostModel();
-        return view('pages.admin.posts', ['posts' => $this->search_post()]);
+    public function renderLayout()
+    {
+        return view('pages.admin.posts');
     }
 }
