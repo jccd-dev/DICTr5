@@ -5,6 +5,7 @@ namespace App\Http\Livewire\CMS;
 use App\Helpers\ImageHandlerHelper;
 use App\Models\CMS\POST\PostImages;
 use App\Models\CMS\POST\PostModel;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -26,17 +27,20 @@ class Posts extends Component
     public $images = [];
     public array $image_names = [];
     public string $vid_link;
+
+    public string $category = '';
     public string $author = 'test author';
     public int $status = 0;
     public array $post_data = [];
     public int $post_id;
 
-    public $postData;
+    public array $prev_data;
 
     public array $to_update_data = [];
     public mixed $to_delete_image = null;
     public array $to_update_images = [];
     public array $to_update_imgnames = [];
+
 
 
     protected $rules = [
@@ -47,7 +51,8 @@ class Posts extends Component
         'content'   => 'required',
         'images.*'  => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
         'vid_link'  => 'nullable|url',
-        'status'    => 'required|numeric'
+        'status'    => 'required|numeric',
+        'category'    => 'required',
     ];
     public PostModel $post_model;
     private ImageHandlerHelper $imageHelper;
@@ -59,6 +64,7 @@ class Posts extends Component
 
     public function mount() {
         $this->listeners['postModalPopulator'] = 'postModalPopulator';
+        $this->to_update_data['images'] = '';
     }
 
     public function create_post(): void
@@ -72,7 +78,8 @@ class Posts extends Component
             'content'   => $this->content,
             'images'    => $this->images,
             'vid_link'  => $this->vid_link,
-            'status'    => $this->status
+            'status'    => $this->status,
+            'category'    => $this->category
         ], $this->rules);
 
         if ($validator->fails()) {
@@ -99,7 +106,8 @@ class Posts extends Component
             'content'   => $this->content,
             'vid_link'  => $this->vid_link,
             'author'    => $this->author,
-            'status'    => $this->status
+            'status'    => $this->status,
+            'category'    => $this->category
         ];
 
 
@@ -128,12 +136,13 @@ class Posts extends Component
     }
 
     public function postModalPopulator($id) {
-        $this->postData = DB::table('posts')->where('id', $id)->first();
-        dd($this->postData);
+        $this->prev_data = (array) DB::table('posts')->where('id', $id)->first();
+
+//        dd($this->prev_data);
     }
 
     //get post data from database.
-    public function get_post_data(int|string $id)
+    public function get_prevdata(int|string $id)
     {
 
         $post = $this->post_model::with('images')->find($id);
@@ -144,7 +153,8 @@ class Posts extends Component
             'thumbnail' => $post->thumbnail_img_name,
             'content'   => $post->content,
             'vid_link'  => $post->vid_link,
-            'status'    => $post->status
+            'status'    => $post->status,
+            'category'    => $post->category
         ];
 
         $post_images = [];
@@ -153,19 +163,25 @@ class Posts extends Component
         }
 
         $this->to_update_data['images'] = $post_images;
+
+
+
+
+//        dd($this->to_update_data);
     }
 
     public function updatePost(): bool
     {
         $validator = Validator::make([
             'cat_id'    => $this->cat_id,
-            'title'     => $this->title,
-            'excerpt'   => $this->excerpt,
-            'thumbnail' => $this->thumbnail,
-            'content'   => $this->content,
-            'images'    => $this->images,
-            'vid_link'  => $this->vid_link,
-            'status'    => $this->status
+            'title'     => $this->to_update_data['title'],
+            'excerpt'   => $this->to_update_data['excerpt'],
+            'thumbnail' => $this->to_update_data['thumbnail'],
+            'content'   => $this->to_update_data['content'],
+            'images'    => $this->to_update_data['images'],
+            'vid_link'  => $this->to_update_data['vid_link'],
+            'status'    => $this->to_update_data['status'],
+            'category'    => $this->to_update_data['category']
         ], $this->rules);
 
         if ($validator->fails()) {
@@ -174,17 +190,19 @@ class Posts extends Component
             return false;
         }
 
-        $this->thumbnail_img_name = $this->imageHelper->extract_image_names($this->thumbnail);
+        $this->thumbnail_img_name = $this->imageHelper->extract_image_names($this->to_update_data['thumbnail']);
 
         //arrange data for insertion
         $this->post_data = [
             'cat_id'    => $this->cat_id,
-            'title'     => $this->title,
-            'excerpt'   => $this->excerpt,
-            'thumbnail' => $this->thumbnail_img_name,
-            'content'   => $this->content,
-            'vid_link'  => $this->vid_link,
-            'status'    => $this->status
+            'title'     => $this->to_update_data['title'],
+            'excerpt'   => $this->to_update_data['excerpt'],
+            'thumbnail' => $this->to_update_data['thumbnail'],
+            'content'   => $this->to_update_data['content'],
+            'images'    => $this->to_update_data['images'],
+            'vid_link'  => $this->to_update_data['vid_link'],
+            'status'    => $this->to_update_data['status'],
+            'category'    => $this->to_update_data['category']
         ];
 
         $post_update = PostModel::find($this->post_id);
@@ -247,11 +265,11 @@ class Posts extends Component
     // }
     public function render()
     {
-        return view('livewire.cms.posts');
+        $postModel = new PostModel();
+        return view('livewire.cms.posts', ['posts' => $postModel->all()])->layout('layouts.layout');
     }
 
     public function renderLayout() {
-        $postModel = new PostModel();
-        return view('pages.admin.posts', ['posts' => $postModel->all()]);
+        return view('pages.admin.posts');
     }
 }

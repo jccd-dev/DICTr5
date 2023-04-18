@@ -31,6 +31,7 @@ class PostModel extends Model
       'content',
       'vid_link',
       'author',
+      'category',
       'status'
     ];
 
