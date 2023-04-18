@@ -4,6 +4,7 @@ namespace App\Http\Livewire\CMS;
 
 use App\Helpers\ImageHandlerHelper;
 use App\Models\CMS\POST\PostImages;
+use App\Models\CMS\POST\PostCategory;
 use App\Models\CMS\POST\PostModel;
 use Illuminate\Support\Str;
 use Livewire\Component;
@@ -37,6 +38,12 @@ class Posts extends Component
     public mixed $to_delete_image = [];
     public array $to_update_images = [];
     public array $to_update_imgnames = [];
+
+    //for filters variables
+    public string $search = '';
+    public string $from = '';
+    public string $to = '';
+    public string $category;
 
 
     protected $rules = [
@@ -120,20 +127,21 @@ class Posts extends Component
 
                 $this->storeImages();
                 session()->flash('success', 'Post has been created!');
-                return;
             }
         }
 
         session()->flash('error', 'Something went wrong please try again later!');
-        return;
     }
+
+
 
     public function postModalPopulator($id) {
         $this->postData = DB::table('posts')->where('id', $id)->first();
         dd($this->postData);
     }
 
-    //get post data from database.
+    //for update modal
+    //get post data and its images from database base from database
     public function get_post_data(int|string $id) : void{
 
         $post = $this->post_model::with('images')->find($id);
@@ -155,6 +163,38 @@ class Posts extends Component
         }
 
         $this->to_update_data['images'] = $post_images;
+    }
+
+    public function search_post () {
+        $posts =$this->post_model::query();
+        $search_term = $this->search;
+        $category_id = $this->category;
+        $from = date('Y-m-d', strtotime($this->from));
+        $current = date('Y-m-d',strtotime(now()));
+        $to_date = $this->to;
+
+        if(!$search_term == NULL) {
+            $posts = $posts->where(function($query) use ($search_term) {
+                $query->where('title', 'like', '%' . $search_term . '%')
+                    ->orWhere('content', 'like', '%' . $search_term . '%');
+            });
+
+        //return $posts->with('images')->get();
+        }
+        if($category_id != NULL) {
+            $posts = $posts->whereHas('category', function ($query) use ($category_id) {
+                $query->where('id', $category_id);
+            });
+        }
+
+        if(!$from != NULL && $to_date == NULL) {
+            $posts = $posts->whereBetween('timestamp', [$from, $current]);
+        }
+        if(!$from != NULL && !$to_date != NULL){
+            $posts = $posts->whereBetween('timestamp', [$from, $to_date]);
+        }
+
+        return $posts->get();
     }
 
     public function updatePost(): bool
@@ -224,16 +264,27 @@ class Posts extends Component
      */
     public function storeImages(): void
     {
-        foreach ($this->images as $index => $image) {
-
+        foreach ($this->images as $imageIndex => $image) {
             $originalName = $image->getClientOriginalName();
             $extension = $image->getClientOriginalExtension();
             $curr_name = "{$originalName}.{$extension}";
 
-            if(!$curr_name == $this->image_names[$index]){
-                $image->storeAs('/public/images', $this->image_names[$index]);
+            if (Storage::exists('/public/images/'.$curr_name)) {
+                continue;
             }
+
+            $image->storeAs('/public/images', $this->image_names[$imageIndex]);
         }
+//        foreach ($this->images as $index => $image) {
+//
+//            $originalName = $image->getClientOriginalName();
+//            $extension = $image->getClientOriginalExtension();
+//            $curr_name = "{$originalName}.{$extension}";
+//
+//            if(!$curr_name == $this->image_names[$index]){
+//                $image->storeAs('/public/images', $this->image_names[$index]);
+//            }
+//        }
     }
 
     /**
@@ -257,6 +308,6 @@ class Posts extends Component
 
     public function renderLayout() {
         $postModel = new PostModel();
-        return view('pages.admin.posts', ['posts' => $postModel->all()]);
+        return view('pages.admin.posts', ['posts' => $this->search_post()]);
     }
 }
