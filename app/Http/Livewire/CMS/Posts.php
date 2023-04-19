@@ -19,7 +19,7 @@ class Posts extends Component
     use WithFileUploads;
 
     //initialized variable that will hold values from input form
-    public string|int $cat_id;
+    public string|int $category_id;
     public string|int $admin_id = 1;
     public string $title;
     public string $excerpt;
@@ -50,7 +50,7 @@ class Posts extends Component
 
 
     protected $rules = [
-        'cat_id'    => 'required|numeric',
+        'category_id'    => 'required|numeric',
         'title'     => 'required|word_count:15',
         'excerpt'   => 'required',
         'thumbnail' => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
@@ -61,7 +61,7 @@ class Posts extends Component
         'category'    => 'required',
     ];
     protected $update_rules = [
-        'cat_id'    => 'required|numeric',
+        'category_id'    => 'required|numeric',
         'title'     => 'required|word_count:15',
         'excerpt'   => 'required',
         'to_update_data.thumbnail' => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
@@ -91,7 +91,7 @@ class Posts extends Component
     {
 
         $validator = Validator::make([
-            'cat_id'    => $this->cat_id,
+            'category_id'    => $this->category_id,
             'title'     => $this->title,
             'excerpt'   => $this->excerpt,
             'thumbnail' => $this->thumbnail,
@@ -118,7 +118,7 @@ class Posts extends Component
 
         //arrange data for insertion
         $this->post_data = [
-            'cat_id'    => $this->cat_id,
+            'category_id'    => $this->category_id,
             'admin_id'  => $this->admin_id,
             'title'     => $this->title,
             'excerpt'   => $this->excerpt,
@@ -219,7 +219,7 @@ class Posts extends Component
         }
         if ($category_id != NULL) {
             $posts = $posts->whereHas('category', function ($query) use ($category_id) {
-                $query->where('cat_id', $category_id);
+                $query->where('id', $category_id);
             });
         }
 
@@ -237,15 +237,15 @@ class Posts extends Component
     {
 
         $validator = Validator::make([
-            'cat_id'    => $this->cat_id,
-            'title'     => $this->to_update_data['title'],
-            'excerpt'   => $this->to_update_data['excerpt'],
-            'thumbnail' => $this->to_update_data['thumbnail'],
-            'content'   => $this->to_update_data['content'],
-            'images'    => $this->images,
-            'vid_link'  => $this->to_update_data['vid_link'],
-            'status'    => $this->to_update_data['status'],
-            'category'  => $this->to_update_data['category']
+            'category_id' => $this->category_id,
+            'title'       => $this->to_update_data['title'],
+            'excerpt'     => $this->to_update_data['excerpt'],
+            'thumbnail'   => $this->to_update_data['thumbnail'],
+            'content'     => $this->to_update_data['content'],
+            'images'      => $this->images,
+            'vid_link'    => $this->to_update_data['vid_link'],
+            'status'      => $this->to_update_data['status'],
+            'category'    => $this->to_update_data['category']
         ], $this->update_rules);
 
         if ($validator->fails()) {
@@ -268,7 +268,7 @@ class Posts extends Component
 
         //arrange data for insertion
         $this->post_data = [
-            'cat_id'    => $this->cat_id,
+            'category_id'    => $this->category_id,
             'title'     => $this->to_update_data['title'],
             'excerpt'   => $this->to_update_data['excerpt'],
             'thumbnail' => $this->to_update_data['thumbnail'],
