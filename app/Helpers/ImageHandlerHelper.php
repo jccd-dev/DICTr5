@@ -57,21 +57,24 @@ class ImageHandlerHelper {
     }
 
     //delete on folder and database
-    public function del_image_on_db(mixed $images, string|int $post_id) : bool{
-        $post = PostModel::find($post_id);
+        public function del_image_on_db(mixed $images, string|int $post_id) : bool{
+            $post = PostModel::find($post_id);
 
-        if($post) {
-            $images = $post->images()->whereIn('image_filename', $images)->get();
+            if($post) {
+                $images = $post->images()->whereIn('image_filename', $images)->get();
 
-            foreach ($images as $image) {
-                if ($image && Storage::exists('/public/images/' . $image)) {
-                    Storage::delete('public/images/' . $image);
+                foreach ($images as $image) {
+
+                    $image->delete();
+                    if (Storage::exists('/public/images/' . $image)) {
+                        Storage::delete('public/images/' . $image);
+                    }
+
                 }
+
+                return true;
             }
 
-            return $images->delete() > 0;
+            return false;
         }
-
-        return false;
-    }
 }
