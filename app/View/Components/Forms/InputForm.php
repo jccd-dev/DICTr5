@@ -16,6 +16,7 @@ class InputForm extends Component
     public string $insideText;
     public string $classes;
     public string $value;
+    public $err;
 
     protected array $rules = [
         'name' => 'required',
@@ -36,7 +37,7 @@ class InputForm extends Component
      * @param string $model
      * @param string $insideText
      */
-    public function __construct(string $name, bool $required, string $type, string $placeholder, string $model, string $insideText = "", string $classes = "", string $value = "")
+    public function __construct(string $name, bool $required, string $type, string $placeholder, string $model, string $insideText = "", string $classes = "", string $value = "", $err = null)
     {
         $this->name = $name;
         $this->isRequired = $required;
@@ -46,6 +47,7 @@ class InputForm extends Component
         $this->insideText = $insideText;
         $this->classes = $classes;
         $this->value = $value;
+        $this->err = $err;
     }
 
     public function submit(): void
