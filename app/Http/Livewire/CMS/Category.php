@@ -10,7 +10,7 @@ class Category extends Component
 {
 
     public string $category;
-    private $postCategoryModel;
+    private PostCategory $postCategoryModel;
 
     public function __construct() {
         $this->postCategoryModel = new PostCategory();

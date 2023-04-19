@@ -19,7 +19,7 @@ class Posts extends Component
     use WithFileUploads;
 
     //initialized variable that will hold values from input form
-    public string|int $cat_id;
+    public string|int $category_id = '1';
     public string|int $admin_id = 1;
     public string $title;
     public string $excerpt;
@@ -45,12 +45,10 @@ class Posts extends Component
     public string $search = '';
     public string $from = '';
     public string $to = '';
-    public string $category = '';
-
 
 
     protected $rules = [
-        'cat_id'    => 'required|numeric',
+        'category_id'    => 'required|numeric',
         'title'     => 'required|word_count:15',
         'excerpt'   => 'required',
         'thumbnail' => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
@@ -58,18 +56,16 @@ class Posts extends Component
         'images.*'  => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
         'vid_link'  => 'nullable|url',
         'status'    => 'required|numeric',
-        'category'    => 'required',
     ];
     protected $update_rules = [
-        'cat_id'    => 'required|numeric',
+        'category_id'    => 'required|numeric',
         'title'     => 'required|word_count:15',
         'excerpt'   => 'required',
-        'to_update_data.thumbnail' => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
+        'to_update_data.thumbnail' => 'nullable|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
         'content'   => 'required',
         'images.*'  => 'nullable|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
         'vid_link'  => 'nullable|url',
         'status'    => 'required|numeric',
-        'category'    => 'required',
     ];
 
     public PostModel $post_model;
@@ -91,7 +87,7 @@ class Posts extends Component
     {
 
         $validator = Validator::make([
-            'cat_id'    => $this->cat_id,
+            'category_id'    => $this->category_id,
             'title'     => $this->title,
             'excerpt'   => $this->excerpt,
             'thumbnail' => $this->thumbnail,
@@ -99,7 +95,6 @@ class Posts extends Component
             'images'    => $this->images,
             'vid_link'  => $this->vid_link,
             'status'    => $this->status,
-            'category'    => $this->category
         ], $this->rules);
 
         if ($validator->fails()) {
@@ -118,7 +113,7 @@ class Posts extends Component
 
         //arrange data for insertion
         $this->post_data = [
-            'cat_id'    => $this->cat_id,
+            'category_id'    => $this->category_id,
             'admin_id'  => $this->admin_id,
             'title'     => $this->title,
             'excerpt'   => $this->excerpt,
@@ -127,11 +122,10 @@ class Posts extends Component
             'vid_link'  => $this->vid_link,
             'author'    => $this->author,
             'status'    => $this->status,
-            'category'    => $this->category
         ];
 
-
         $post = $this->post_model->fill($this->post_data);
+//        dd($post);
         if ($post->save()) {
 
             $this->image_names = $this->imageHelper->extract_image_names($this->images);
@@ -172,9 +166,6 @@ class Posts extends Component
         $post = $this->post_model::with('images')->find($id);
         $this->post_id = $post->id;
 
-        $filename = 'app/public/images/' . $post->thumbnail;
-        $thumbnail_img = file_get_contents($filename);
-
         $this->to_update_data = [
             'title'     => $post->title,
             'excerpt'   => $post->excerpt,
@@ -182,7 +173,7 @@ class Posts extends Component
             'content'   => $post->content,
             'vid_link'  => $post->vid_link,
             'status'    => $post->status,
-            'category'    => $post->category
+            'category_id'    => $post->category_id
         ];
 
         $post_images = [];
@@ -204,7 +195,7 @@ class Posts extends Component
     {
         $posts = $this->post_model::query();
         $search_term = $this->search;
-        $category_id = $this->category;
+        $category_id = $this->category_id;
         $from = date('Y-m-d', strtotime($this->from));
         $current = date('Y-m-d', strtotime(now()));
         $to_date = $this->to;
@@ -217,9 +208,9 @@ class Posts extends Component
 
             //return $posts->with('images')->get();
         }
-        if ($category_id != NULL) {
+        if (!$category_id) {
             $posts = $posts->whereHas('category', function ($query) use ($category_id) {
-                $query->where('id', $category_id);
+                $query->where('category_id', $category_id);
             });
         }
 
@@ -237,7 +228,7 @@ class Posts extends Component
     {
 
         $validator = Validator::make([
-            'cat_id'    => $this->cat_id,
+            'category_id'    => $this->category_id,
             'title'     => $this->to_update_data['title'],
             'excerpt'   => $this->to_update_data['excerpt'],
             'thumbnail' => $this->to_update_data['thumbnail'],
@@ -245,7 +236,6 @@ class Posts extends Component
             'images'    => $this->images,
             'vid_link'  => $this->to_update_data['vid_link'],
             'status'    => $this->to_update_data['status'],
-            'category'  => $this->to_update_data['category']
         ], $this->update_rules);
 
         if ($validator->fails()) {
@@ -262,7 +252,7 @@ class Posts extends Component
 
         if ($this->to_update_data['thumbnail'] !== $this->prev_data['thumbnail']) {
             //handle thumbnail image
-            if(!$this->thumbnail == NULL) {
+            if($this->thumbnail) {
                 $this->thumbnail_img_name = $this->imageHelper->extract_image_names($this->thumbnail);
                 Storage::delete('public/images/' . $this->to_update_data['thumbnail']);
             }
@@ -270,7 +260,7 @@ class Posts extends Component
 
         //arrange data for insertion
         $this->post_data = [
-            'cat_id'    => $this->cat_id,
+            'category_id'    => $this->category_id,
             'title'     => $this->to_update_data['title'],
             'excerpt'   => $this->to_update_data['excerpt'],
             'thumbnail' => $this->to_update_data['thumbnail'],
@@ -278,7 +268,6 @@ class Posts extends Component
             'images'    => $this->to_update_data['images'],
             'vid_link'  => $this->to_update_data['vid_link'],
             'status'    => $this->to_update_data['status'],
-            'category'    => $this->to_update_data['category']
         ];
 
         //unset thumbnail update data if no new submitted image for thumbnail
@@ -328,16 +317,6 @@ class Posts extends Component
 
             $image->storeAs('/public/images', $this->image_names[$imageIndex]);
         }
-        //        foreach ($this->images as $index => $image) {
-        //
-        //            $originalName = $image->getClientOriginalName();
-        //            $extension = $image->getClientOriginalExtension();
-        //            $curr_name = "{$originalName}.{$extension}";
-        //
-        //            if(!$curr_name == $this->image_names[$index]){
-        //                $image->storeAs('/public/images', $this->image_names[$index]);
-        //            }
-        //        }
     }
 
     /**
@@ -353,6 +332,15 @@ class Posts extends Component
         $post = PostModel::findOrFail($post_id);
         // Delete the post and its related images
         return $post->delete() > 0;
+    }
+
+    public function insertDeleteImg($data) {
+        collect(json_decode($data, true))->each(function ($value, $key) {
+            $this->to_update_data['images'] = collect($this->to_update_data['images'])->filter(function ($item) use ($value) {
+                return !in_array($value, $item);
+            })->values()->all();
+            $this->to_delete_image[$key] = $value;
+        });
     }
 
     public function render()

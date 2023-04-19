@@ -23,7 +23,7 @@ class PostModel extends Model
         'timestamp',
     ];
     protected $fillable = [
-      'cat_id',
+      'category_id',
       'admin_id',
       'title',
       'excerpt',
@@ -31,7 +31,6 @@ class PostModel extends Model
       'content',
       'vid_link',
       'author',
-      'category',
       'status'
     ];
 
