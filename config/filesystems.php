@@ -74,4 +74,5 @@ return [
         public_path('cms-images') => storage_path(('app/public/images'))
     ],
 
+
 ];

@@ -23,7 +23,7 @@ class PostModel extends Model
         'timestamp',
     ];
     protected $fillable = [
-      'cat_id',
+      'category_id',
       'admin_id',
       'title',
       'excerpt',
@@ -31,6 +31,7 @@ class PostModel extends Model
       'content',
       'vid_link',
       'author',
+      'category',
       'status'
     ];
 
@@ -41,7 +42,7 @@ class PostModel extends Model
 
     // post table is connected to category by foreign key and a category can have many post
     public function category(): BelongsTo {
-        return $this->belongsTo(PostCategory::class);
+        return $this->belongsTo(PostCategory::class, 'category_id');
     }
 
     /**

@@ -12,12 +12,15 @@ class PostCategory extends Model
     use HasFactory;
 
     protected $table = 'post_categories';
+    protected $guarded = [
+      'id'
+    ];
     protected $fillable = [
         'category'
     ];
 
     public function post() :HasMany{
-        return $this->hasMany(PostModel::class, 'cat_id', 'id');
+        return $this->hasMany(PostModel::class, 'category_id', 'id');
     }
 
     /**

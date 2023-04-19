@@ -1,4 +1,4 @@
-<div>
+<div class="{{ $classes }}">
     <label for="{{ $name }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ $name }}</label>
     <textarea
         id="{{ $name }}"
@@ -6,6 +6,7 @@
         placeholder="{{ $placeholder }}"
         required="{{ $isRequired }}"
         wire:model="{{ $model }}"
-    ></textarea>
+        rows="{{ $rows }}"
+    >{{ $value }}</textarea>
     @error($model) <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p> @enderror
 </div>

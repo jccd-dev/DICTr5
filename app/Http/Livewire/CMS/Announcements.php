@@ -26,10 +26,11 @@ class Announcements extends Component
         $announcementModel = new AnnouncementModel();
         $postCategoryModel = new PostCategoryModel();
         return view('livewire.cms.announcements', [
-                        'announcements' => $announcementModel->filter_search($this->from, date('Y-m-d', strtotime($this->to.' +1 day')), $this->category, $this->search),
-                        'categories' => $postCategoryModel->all()
-                    ])
-                ->layout('livewire.layout.laravel_layout');
+            'announcements' => $announcementModel->filter_search($this->from,
+            date('Y-m-d', strtotime($this->to.' +1 day')),
+            $this->category, $this->search),
+            'categories' => $postCategoryModel->all()
+        ])->layout('livewire.layout.laravel_layout');
     }
 
     public function mount(): void{
