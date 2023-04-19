@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Examinee\GoogleAuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\CMS\SliderBanner;
 use App\Http\Livewire\ContactForm;
@@ -7,6 +8,7 @@ use App\Http\Livewire\CMS\Announcements;
 use App\Http\Livewire\CMS\EventCalendar;
 use App\Http\Livewire\CMS\Posts;
 use App\Http\Livewire\Admin\ExamSchedule;
+use App\Http\Controllers\Examinee\DashboardController as UserDashboardController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -42,3 +44,18 @@ Route::prefix('admin')->group(function () {
     Route::get('/exam-schedule', ExamSchedule::class)->name('admin.exam-schedule');
 });
 
+// Google OAuth
+Route::prefix('auth')->group(function () {
+    Route::get('/redirect', [GoogleAuthController::class, 'redirect'])->name('redirect.google');
+    Route::get('/google/callback-url', [GoogleAuthController::class, 'callback']);
+});
+
+// Diagnostic Exam
+Route::prefix('exam')->group(function () {
+    Route::get('/login', [GoogleAuthController::class, 'user_login']);
+    Route::get('/dashboard', [UserDashboardController::class, 'dashboard'])->name('examinee.dashboard');
+});
+
+Route::get('/logout', function(){
+    session()->flush();
+});

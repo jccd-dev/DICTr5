@@ -368,24 +368,27 @@ CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `fname` varchar(250) NOT NULL,
   `lname` varchar(250) NOT NULL,
-  `mname` varchar(250) NOT NULL,
-  `password` mediumtext NOT NULL,
-  `place_of_birth` varchar(250) NOT NULL,
-  `gender` varchar(250) NOT NULL,
-  `citizenship` varchar(250) NOT NULL,
-  `civil_status` varchar(250) NOT NULL,
-  `contact_number` varchar(250) NOT NULL,
-  `present_office` varchar(250) NOT NULL,
-  `designation` varchar(250) NOT NULL,
-  `telephone_number` varchar(250) NOT NULL,
-  `office_address` varchar(250) NOT NULL,
-  `office_category` varchar(250) NOT NULL,
-  `no_of_years_in_pos` int(11) NOT NULL,
-  `programming _langs` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`programming _langs`)),
-  `e_sign` varchar(250) NOT NULL,
-  `date_accomplish` datetime NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
+  `mname` varchar(250) NULL,
+  `password` mediumtext NULL,
+  `place_of_birth` varchar(250) NULL,
+  `gender` varchar(250) NULL,
+  `citizenship` varchar(250) NULL,
+  `civil_status` varchar(250) NULL,
+  `contact_number` varchar(250) NULL,
+  `present_office` varchar(250) NULL,
+  `designation` varchar(250) NULL,
+  `telephone_number` varchar(250) NULL,
+  `office_address` varchar(250) NULL,
+  `office_category` varchar(250) NULL,
+  `no_of_years_in_pos` int(11) NULL,
+  `programming _langs` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL CHECK (json_valid(`programming _langs`)),
+  `e_sign` varchar(250) NULL,
+  `date_accomplish` datetime NULL,
+  `timestamp` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+ALTER TABLE `users` ADD `email` VARCHAR(100) NOT NULL AFTER `id`;
+ALTER TABLE `users` ADD `google_id` VARCHAR(255) NOT NULL AFTER `id`;
 
 -- --------------------------------------------------------
 
