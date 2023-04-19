@@ -219,7 +219,7 @@ class Posts extends Component
         }
         if ($category_id != NULL) {
             $posts = $posts->whereHas('category', function ($query) use ($category_id) {
-                $query->where('id', $category_id);
+                $query->where('cat_id', $category_id);
             });
         }
 
@@ -326,16 +326,6 @@ class Posts extends Component
 
             $image->storeAs('/public/images', $this->image_names[$imageIndex]);
         }
-        //        foreach ($this->images as $index => $image) {
-        //
-        //            $originalName = $image->getClientOriginalName();
-        //            $extension = $image->getClientOriginalExtension();
-        //            $curr_name = "{$originalName}.{$extension}";
-        //
-        //            if(!$curr_name == $this->image_names[$index]){
-        //                $image->storeAs('/public/images', $this->image_names[$index]);
-        //            }
-        //        }
     }
 
     /**
