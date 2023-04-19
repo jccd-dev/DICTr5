@@ -172,7 +172,7 @@ class Posts extends Component
         $post = $this->post_model::with('images')->find($id);
         $this->post_id = $post->id;
 
-        $filename = 'cms-images/' . $post->thumbnail_img_name;
+        $filename = 'app/public/images/' . $post->thumbnail;
         $thumbnail_img = file_get_contents($filename);
 
         $this->to_update_data = [
@@ -194,7 +194,7 @@ class Posts extends Component
 
         $this->to_update_data['images'] = $post_images;
 
-
+        $this->prev_data = $this->to_update_data;
 
         $this->resetValidation();
         //        dd($this->to_update_data);
@@ -260,10 +260,12 @@ class Posts extends Component
             return false;
         }
 
-        //handle thumbnail image
-        if(!$this->thumbnail == NULL) {
-            $this->thumbnail_img_name = $this->imageHelper->extract_image_names($this->thumbnail);
-            Storage::delete('public/images/' . $this->to_update_data['thumbnail']);
+        if ($this->to_update_data['thumbnail'] !== $this->prev_data['thumbnail']) {
+            //handle thumbnail image
+            if(!$this->thumbnail == NULL) {
+                $this->thumbnail_img_name = $this->imageHelper->extract_image_names($this->thumbnail);
+                Storage::delete('public/images/' . $this->to_update_data['thumbnail']);
+            }
         }
 
         //arrange data for insertion

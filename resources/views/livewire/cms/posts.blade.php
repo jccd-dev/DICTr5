@@ -177,7 +177,7 @@
                             </div>
                             <div x-show="state == 3">
 
-                                <x-forms.select name="Category" required="false" model="category" :options="['news' => 'News', 'announcements' => 'Announcements', 'report' => 'Report']" classes="mb-6" />
+                                <x-forms.select name="Category" required="false" model="category" :options="['1' => 'News', '2' => 'Announcements', '3' => 'Report']" classes="mb-6" />
 
                                 <x-forms.input-form name="Link" required="false" type="url" placeholder="Video Link" model="vid_link" classes="mb-6" />
 
