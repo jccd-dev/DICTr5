@@ -21,20 +21,20 @@ class Posts extends Component
     //initialized variable that will hold values from input form
     public string|int $category_id = '1';
     public string|int $admin_id = 1;
-    public string $title;
-    public string $excerpt;
-    public $thumbnail;
+    public string $title = '';
+    public string $excerpt = '';
+    public $thumbnail = null;
     public string $thumbnail_img_name = '';
-    public string $content;
+    public string $content = '';
     public $images = [];
     public array $image_names = [];
-    public string $vid_link;
+    public string $vid_link = '';
     public string $author = 'test author';
     public int $status = 0;
     public array $post_data = [];
-    public int $post_id;
+    public int $post_id = 0;
 
-    public array $prev_data;
+    public array $prev_data = [];
 
     public array $to_update_data = [];
     public mixed $to_delete_image = [];
@@ -61,7 +61,7 @@ class Posts extends Component
         'category_id'    => 'required|numeric',
         'title'     => 'required|word_count:15',
         'excerpt'   => 'required',
-        'to_update_data.thumbnail' => 'nullable|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
+        'thumbnail' => 'nullable|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
         'content'   => 'required',
         'images.*'  => 'nullable|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
         'vid_link'  => 'nullable|url',
@@ -79,7 +79,7 @@ class Posts extends Component
     public function mount()
     {
         $this->listeners['postModalPopulator'] = 'postModalPopulator';
-        $this->to_update_data['images'] = '';
+        $this->to_update_data['images'] = [];
         $this->to_update_data['thumbnail'] = '';
     }
 
@@ -125,7 +125,7 @@ class Posts extends Component
         ];
 
         $post = $this->post_model->fill($this->post_data);
-//        dd($post);
+        //        dd($post);
         if ($post->save()) {
 
             $this->image_names = $this->imageHelper->extract_image_names($this->images);
@@ -155,7 +155,6 @@ class Posts extends Component
     public function postModalPopulator($id)
     {
         $this->postData = DB::table('posts')->where('id', $id)->first();
-        dd($this->postData);
     }
 
     //for update modal
@@ -176,6 +175,14 @@ class Posts extends Component
             'category_id'    => $post->category_id
         ];
 
+        $this->title     = $post->title;
+        $this->excerpt   = $post->excerpt;
+        $this->thumbnail = $post->thumbnail;
+        $this->content   = $post->content;
+        $this->vid_link  = $post->vid_link;
+        $this->status    = $post->status;
+        $this->category_id    = $post->category_id;
+
         $post_images = [];
         foreach ($post->images as $image) {
             $post_images[] = [
@@ -184,11 +191,15 @@ class Posts extends Component
         }
 
         $this->to_update_data['images'] = $post_images;
+//        $this->images = $post_images;
 
         $this->prev_data = $this->to_update_data;
 
         $this->resetValidation();
-        //        dd($this->to_update_data);
+    }
+
+    public function resetFields() {
+        $this->reset();
     }
 
     public function search_post()
@@ -226,52 +237,61 @@ class Posts extends Component
 
     public function updatePost(): bool
     {
+        if (gettype($this->thumbnail) === 'object') {
+            $validator = Validator::make([
+                'category_id'    => $this->category_id,
+                'title'     => $this->title,
+                'excerpt'   => $this->excerpt,
+                'thumbnail' => $this->thumbnail,
+                'content'   => $this->content,
+                'images'    => $this->images,
+                'vid_link'  => $this->vid_link,
+                'status'    => $this->status,
+            ], $this->update_rules);
+        } else {
+            $validator = Validator::make([
+                'category_id'    => $this->category_id,
+                'title'     => $this->title,
+                'excerpt'   => $this->excerpt,
+                'content'   => $this->content,
+                'images'    => $this->images,
+                'vid_link'  => $this->vid_link,
+                'status'    => $this->status,
+            ], $this->update_rules);
+        }
 
-        $validator = Validator::make([
-            'category_id'    => $this->category_id,
-            'title'     => $this->to_update_data['title'],
-            'excerpt'   => $this->to_update_data['excerpt'],
-            'thumbnail' => $this->to_update_data['thumbnail'],
-            'content'   => $this->to_update_data['content'],
-            'images'    => $this->images,
-            'vid_link'  => $this->to_update_data['vid_link'],
-            'status'    => $this->to_update_data['status'],
-        ], $this->update_rules);
+
 
         if ($validator->fails()) {
             $err_msgs = $validator->getMessageBag();
             foreach ($err_msgs->getMessages() as $field => $messages) {
                 foreach ($messages as $message) {
-                    $this->addError($field, $message);
+                    $this->addError('update.'.$field, $message);
                 }
             }
-            //            $err_msgs = $validator->getMessageBag();
             $this->dispatchBrowserEvent('validation-errors-update', $err_msgs->getMessages());
             return false;
         }
 
-        if ($this->to_update_data['thumbnail'] !== $this->prev_data['thumbnail']) {
+        if ($this->thumbnail !== $this->prev_data['thumbnail']) {
             //handle thumbnail image
-            if($this->thumbnail) {
+            if (gettype($this->thumbnail) === 'object') {
                 $this->thumbnail_img_name = $this->imageHelper->extract_image_names($this->thumbnail);
-                Storage::delete('public/images/' . $this->to_update_data['thumbnail']);
+                Storage::delete('public/images/' . $this->prev_data['thumbnail']);
             }
         }
 
         //arrange data for insertion
         $this->post_data = [
             'category_id'    => $this->category_id,
-            'title'     => $this->to_update_data['title'],
-            'excerpt'   => $this->to_update_data['excerpt'],
-            'thumbnail' => $this->to_update_data['thumbnail'],
-            'content'   => $this->to_update_data['content'],
-            'images'    => $this->to_update_data['images'],
-            'vid_link'  => $this->to_update_data['vid_link'],
-            'status'    => $this->to_update_data['status'],
+            'title'     => $this->title,
+            'excerpt'   => $this->excerpt,
+            'thumbnail' => $this->thumbnail_img_name ?: $this->prev_data['thumbnail'],
+            'content'   => $this->content,
+            'images'    => $this->images,
+            'vid_link'  => $this->vid_link,
+            'status'    => $this->status,
         ];
-
-        //unset thumbnail update data if no new submitted image for thumbnail
-        if(isEmpty($this->thumbnail)) unset($this->post_data['thumbnail']);
 
         $this->imageHelper->del_image_on_db($this->to_delete_image, $this->post_id);
         $this->image_names = $this->imageHelper->extract_image_names($this->images);
@@ -289,10 +309,16 @@ class Posts extends Component
 
             if ($post_update->images()->saveMany($new_images)) {
 
+                if ($this->thumbnail_img_name) {
+                    $this->storeThumbnailImage();
+                }
                 $this->storeImages();
-                $this->storeThumbnailImage();
                 $this->imageHelper->del_image_on_db($this->to_delete_image, $this->post_id);
                 session()->flash('success', 'Post has been created!');
+
+                $this->resetValidation();
+                $this->resetFields();
+
                 return true;
             }
         }
@@ -324,7 +350,10 @@ class Posts extends Component
      */
     public function storeThumbnailImage(): void
     {
-        $this->thumbnail->storeAs('/public/images', $this->thumbnail_img_name);
+        if ($this->thumbnail)
+            $this->thumbnail->storeAs('/public/images', $this->thumbnail_img_name);
+//        else
+//            $this->to_update_data['thumbnail']->storeAs('/public/images', $this->thumbnail_img_name);
     }
 
     public function delete_post(string|int $post_id): bool
@@ -334,7 +363,8 @@ class Posts extends Component
         return $post->delete() > 0;
     }
 
-    public function insertDeleteImg($data) {
+    public function insertDeleteImg($data)
+    {
         collect(json_decode($data, true))->each(function ($value, $key) {
             $this->to_update_data['images'] = collect($this->to_update_data['images'])->filter(function ($item) use ($value) {
                 return !in_array($value, $item);

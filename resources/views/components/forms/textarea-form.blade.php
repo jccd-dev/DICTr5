@@ -8,5 +8,5 @@
         wire:model="{{ $model }}"
         rows="{{ $rows }}"
     >{{ $value }}</textarea>
-    @error($model) <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p> @enderror
+    @error($err ?: $model) <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p> @enderror
 </div>

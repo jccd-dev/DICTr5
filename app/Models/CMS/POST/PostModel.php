@@ -41,7 +41,7 @@ class PostModel extends Model
 
     // post table is connected to category by foreign key and a category can have many post
     public function category(): BelongsTo {
-        return $this->belongsTo(PostCategory::class);
+        return $this->belongsTo(PostCategory::class, 'category_id');
     }
 
     /**

@@ -1,7 +1,20 @@
-<div x-data="{ state: 1, hasVidData: false, err: [], stateUpdate: 1, hasVidDataUpdate: false, errUpdate: [], deleteImgName: '', deleteImgId: null }"
+<div x-data="{ state: 1, hasVidData: false, err: [], stateUpdate: 1, hasVidDataUpdate: false, errUpdate: [], deleteImgName: '', deleteImgId: null, modalActive: 0 }"
      x-init="listeners($data); listenerUpdate($data); ">
-    <x-layouts.modal.button name="Add Post" target="add-post" />
+{{--    <x-layouts.modal.button name="Add Post" target="add-post" />--}}
+    <button
+        data-modal-target="add-post"
+        data-modal-toggle="add-post"
+        class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        type="button"
+        wire:click="resetFields()"
+        @click="modalActive = 1"
+    >
+
+        Add Post
+
+    </button>
     {{ print_r($to_update_data) }}
+
     {{ print_r($to_delete_image) }}
     <a href="#" x-ref="deleteModal" type="button" data-modal-target="deleteModal" data-modal-show="deleteModal" class="hidden"></a>
 
@@ -89,7 +102,7 @@
                             </div>
                         </td>
                         <td class="px-6 py-4">
-                            <a href="#" type="button" wire:click="get_post_data({{ $post->id }})" @click="state=1; stateUpdate=1;" data-modal-target="update-post" data-modal-show="update-post" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit user</a>
+                            <a href="#" type="button" wire:click="get_post_data({{ $post->id }})" @click="state=1; stateUpdate=1; modalActive = 2" data-modal-target="update-post" data-modal-show="update-post" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit user</a>
                             <a href="#" type="button" data-modal-target="deleteModal" data-modal-show="deleteModal" class="font-medium text-red-600 dark:text-red-500 hover:underline">Delete user</a>
                         </td>
                     </tr>
@@ -177,9 +190,10 @@
                                                 @endforeach
                                             </div>
                                         @endif
+{{--                                        {{ dd(!!$images) }}--}}
                                         @if(!$images)
                                             <div class="flex justify-center items-center">
-                                                <div id="ins-preview" class="flex flex-col items-center justify-center pt-5 pb-6">
+                                                <div id="ins-previe" class="flex flex-col items-center justify-center pt-5 pb-6">
                                                     <svg aria-hidden="true" class="w-10 h-10 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
                                                     <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
                                                     <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
@@ -245,16 +259,16 @@
                         <form action="#" method="POST" wire:submit.prevent="updatePost" class="w-full flex flex-col" >
                             <div x-show="stateUpdate == 1">
 
-                                <x-forms.input-form name="Title" required="false" type="text" placeholder="Title" model="to_update_data.title" classes="mb-6" value="to_update_data.title" />
+                                <x-forms.input-form name="Title" required="false" type="text" placeholder="Title" model="title" classes="mb-6" value="title" err="update.title" />
 
-                                <x-forms.textarea-form name="Excerpt" required="false" placeholder="Excerpt" model="to_update_data.excerpt" rows="3" classes="mb-6" value="to_update_data.excerpt" />
+                                <x-forms.textarea-form name="Excerpt" required="false" placeholder="Excerpt" model="excerpt" rows="3" classes="mb-6" value="excerpt" err="update.excerpt" />
 
-                                <x-forms.textarea-form name="Content" required="false" placeholder="Content" model="to_update_data.content" rows="5" classes="mb-6" value="to_update_data.content" />
+                                <x-forms.textarea-form name="Content" required="false" placeholder="Content" model="content" rows="5" classes="mb-6" value="content" err="update.content" />
 
                             </div>
                             <div x-show="stateUpdate == 2">
 
-                                <x-forms.file name="Thumbnails" required="false" placeholder="Thumbnail" model="to_update_data.thumbnail" classes="mb-6" :th="$to_update_data['thumbnail']" />
+                                <x-forms.file name="Thumbnails" required="false" placeholder="Thumbnail" model="thumbnail" classes="mb-6" :th="$thumbnail" err="update.thumbnail" />
 
                                 <div class="mb-6 flex-1">
                                     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="post-status">
@@ -262,43 +276,47 @@
                                     </label>
                                     <div class="pt-2">
                                         <label class="relative inline-flex items-center mb-4 cursor-pointer">
-                                            <x-toggle lg label="" wire:model.lazy="to_update_data.status" />
+                                            <x-toggle lg label="" wire:model.lazy="status" />
                                         </label>
                                     </div>
                                 </div>
 
                                 <div class="flex flex-col items-center justify-center w-full">
                                     <label for="#" @click="$refs.dropzoneFile.click()" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                                        @if($to_update_data['images'])
-                                            <div id="img-thumbnail" class="flex flex-wrap w-full h-full gap-2 p-2">
-                                                @foreach($to_update_data['images'] as $key => $val)
-                                                    @foreach($val as $k => $v)
-                                                        <div class="w-24 h-24 relative">
+                                        @if(isset($to_update_data['images']))
+                                            @if($to_update_data['images'])
+                                                <div id="img-thumbnail" class="flex flex-wrap w-full h-full gap-2 p-2">
+                                                    @foreach($to_update_data['images'] as $key => $val)
+                                                        @foreach($val as $k => $v)
+                                                            <div class="w-24 h-24 relative">
                                                             <span class="absolute top-0 right-0 z-50" @click.stop>
                                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-6 h-6 text-red-500" @click="$refs.deleteModal.click(); deleteImgName = '{{ $v }}'; deleteImgId = {{ $k }}; ">
                                                                   <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                                                                 </svg>
                                                             </span>
-                                                            <img src="{{ asset('cms-images/'.$v) }}" class="w-full h-full object-cover cursor-default" @click.stop alt="">
-                                                        </div>
+                                                                <img src="{{ asset('cms-images/'.$v) }}" class="w-full h-full object-cover cursor-default" @click.stop alt="">
+                                                            </div>
+                                                        @endforeach
                                                     @endforeach
-                                                @endforeach
                                                     @foreach($images as $img)
                                                         <div class="w-24 h-24">
                                                             <img src="{{ $img->temporaryUrl() }}" class="w-full h-full object-cover" alt="">
                                                         </div>
                                                     @endforeach
-                                            </div>
-                                        @endif
-                                        @if(!$to_update_data['images'])
-                                            <div class="flex justify-center items-center">
-                                                <div id="ins-preview" class="flex flex-col items-center justify-center pt-5 pb-6">
-                                                    <svg aria-hidden="true" class="w-10 h-10 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                                                    <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
-                                                    <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
                                                 </div>
-                                            </div>
+                                            @endif
                                         @endif
+                                            @if(!$images && isset($to_update_data['images']))
+                                                @if(!$to_update_data['images'])
+                                                    <div class="flex justify-center items-center">
+                                                        <div id="ins-preview" class="flex flex-col items-center justify-center pt-5 pb-6">
+                                                            <svg aria-hidden="true" class="w-10 h-10 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                                                            <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                                                            <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            @endif
                                         <input id="dropzone-file"
                                                type="file"
                                                accept="image/*"
@@ -308,14 +326,14 @@
                                                multiple
                                         />
                                     </label>
-                                    @error('to_update_data.images.*') <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p> @enderror
+                                    @error('images.*') <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p> @enderror
                                 </div>
                             </div>
                             <div x-show="stateUpdate == 3">
 
-                                <x-forms.select name="Category" required="false" model="to_update_data.category_id" :options="['1' => 'Announcements', '2' => 'News', '3' => 'Free Wifi4All']" classes="mb-6" value="to_update_data.category_id" />
+                                <x-forms.select name="Category" required="false" model="category_id" :options="['1' => 'Announcements', '2' => 'News', '3' => 'Free Wifi4All']" classes="mb-6" value="category_id" err="update.category_id" />
 
-                                <x-forms.input-form name="Link" required="false" type="url" placeholder="Video Link" model="to_update_data.vid_link" classes="mb-6" value="to_update_data.vid_link" />
+                                <x-forms.input-form name="Link" required="false" type="url" placeholder="Video Link" model="vid_link" classes="mb-6" value="vid_link" err="update.vid_link" />
 
                             </div>
 
@@ -384,15 +402,15 @@
 
             function validationHandler2(event) {
                 const postsForm = document.querySelector('.posts-form');
-                let hasSectionOneError = event.detail.hasOwnProperty('to_update_data.title')
-                    || event.detail.hasOwnProperty('to_update_data.excerpt')
-                    || event.detail.hasOwnProperty('to_update_data.content');
+                let hasSectionOneError = event.detail.hasOwnProperty('title')
+                    || event.detail.hasOwnProperty('excerpt')
+                    || event.detail.hasOwnProperty('content');
 
-                let hasSectionTwoError = event.detail.hasOwnProperty('to_update_data.thumbnail')
-                    || event.detail.hasOwnProperty('to_update_data.status')
-                    || event.detail.hasOwnProperty('to_update_data.images');
-                let hasSectionThreeError = event.detail.hasOwnProperty('to_update_data.vid_link')
-                    || event.detail.hasOwnProperty('to_update_data.categories');
+                let hasSectionTwoError = event.detail.hasOwnProperty('thumbnail')
+                    || event.detail.hasOwnProperty('status')
+                    || event.detail.hasOwnProperty('images');
+                let hasSectionThreeError = event.detail.hasOwnProperty('vid_link')
+                    || event.detail.hasOwnProperty('categories');
 
                 if(hasSectionOneError) {
                     $data.stateUpdate = 1;
