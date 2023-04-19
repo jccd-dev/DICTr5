@@ -72,7 +72,9 @@ class ImageHandlerHelper {
 
                 }
 
-                return true;
+                $deleted = $post->images()->whereIn('image_filename', $images)->delete();
+
+                return $deleted > 0;
             }
 
             return false;

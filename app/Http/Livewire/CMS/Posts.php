@@ -6,6 +6,8 @@ use App\Helpers\ImageHandlerHelper;
 use App\Models\CMS\POST\PostImages;
 use App\Models\CMS\POST\PostCategory;
 use App\Models\CMS\POST\PostModel;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Livewire\Component;
@@ -43,9 +45,9 @@ class Posts extends Component
 
     //for filters variables
     public string $search = '';
-    public string $from = '';
-    public string $to = '';
-    public string $category = '';
+    public ?string $from = '';
+    public ?string $to = '';
+    public string|int $categoryId = '';
 
 
 
@@ -91,7 +93,7 @@ class Posts extends Component
     {
 
         $validator = Validator::make([
-            'category_id'    => $this->category_id,
+            'category_id'   => $this->category_id,
             'title'     => $this->title,
             'excerpt'   => $this->excerpt,
             'thumbnail' => $this->thumbnail,
@@ -164,16 +166,17 @@ class Posts extends Component
         dd($this->postData);
     }
 
-    //for update modal
-    //get post data and its images from database base from database
+
+    /**
+     * @description retrieve post data for update modal.
+     * @param int|string $id
+     * @return void
+     */
     public function get_post_data(int|string $id): void
     {
 
         $post = $this->post_model::with('images')->find($id);
         $this->post_id = $post->id;
-
-        $filename = 'cms-images/' . $post->thumbnail_img_name;
-        $thumbnail_img = file_get_contents($filename);
 
         $this->to_update_data = [
             'title'     => $post->title,
@@ -194,19 +197,23 @@ class Posts extends Component
 
         $this->to_update_data['images'] = $post_images;
 
-
-
         $this->resetValidation();
         //        dd($this->to_update_data);
     }
 
-    public function search_post()
+    /**
+     * @todo Add pagination
+     * @description filter the data to be displayed into view,
+     * @return Builder[]|Collection
+     */
+    public function search_post(): Collection|array
     {
         $posts = $this->post_model::query();
+
         $search_term = $this->search;
-        $category_id = $this->category;
+        $category_id = $this->categoryId;
         $from = date('Y-m-d', strtotime($this->from));
-        $current = date('Y-m-d', strtotime(now()));
+        $current = date('Y-m-d', strtotime('now'));
         $to_date = $this->to;
 
         if (!$search_term == NULL) {
@@ -217,16 +224,17 @@ class Posts extends Component
 
             //return $posts->with('images')->get();
         }
-        if ($category_id != NULL) {
+        if (!$category_id) {
             $posts = $posts->whereHas('category', function ($query) use ($category_id) {
                 $query->where('id', $category_id);
             });
         }
 
-        if (!$from != NULL && $to_date == NULL) {
+        if (!isEmpty($from) && is_null($to_date)) {
             $posts = $posts->whereBetween('timestamp', [$from, $current]);
         }
-        if (!$from != NULL && !$to_date != NULL) {
+
+        if (!isEmpty($from) && !is_null($to_date)) {
             $posts = $posts->whereBetween('timestamp', [$from, $to_date]);
         }
 
@@ -282,7 +290,7 @@ class Posts extends Component
         //unset thumbnail update data if no new submitted image for thumbnail
         if(isEmpty($this->thumbnail)) unset($this->post_data['thumbnail']);
 
-        $this->imageHelper->del_image_on_db($this->to_delete_image, $this->post_id);
+        // $this->imageHelper->del_image_on_db($this->to_delete_image, $this->post_id);
         $this->image_names = $this->imageHelper->extract_image_names($this->images);
 
         $post_update = PostModel::find($this->post_id);
@@ -308,7 +316,6 @@ class Posts extends Component
 
         return false;
     }
-
 
     /**
      * @return void
@@ -339,8 +346,18 @@ class Posts extends Component
     public function delete_post(string|int $post_id): bool
     {
         $post = PostModel::findOrFail($post_id);
+
+        $images_to_delete = $post->images()->pluck('image_filename')->toArray();
         // Delete the post and its related images
-        return $post->delete() > 0;
+        if($post->delete()){
+            foreach ($images_to_delete as $image) {
+                if (Storage::exists('/public/images/' . $image)) {
+                    Storage::delete('public/images/' . $image);
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
     public function render()
