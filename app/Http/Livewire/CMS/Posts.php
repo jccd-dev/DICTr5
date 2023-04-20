@@ -47,7 +47,8 @@ class Posts extends Component
     public string $search = '';
     public string $from = '';
     public string $to = '';
-    public int $cat_id = '';
+    public string $cat_id = '';
+    public $temp_images = [];
 
 
     protected $rules = [
@@ -232,11 +233,11 @@ class Posts extends Component
 
             //return $posts->with('images')->get();
         }
-        if (!$category_id) {
-            $posts = $posts->whereHas('category', function ($query) use ($category_id) {
-                $query->where('category_id', $category_id);
-            });
-        }
+//        if (!$category_id) {
+//            $posts = $posts->whereHas('category', function ($query) use ($category_id) {
+//                $query->where('category_id', $category_id);
+//            });
+//        }
 
         if (!isEmpty($from) && is_null($to_date)) {
             $posts = $posts->whereBetween('timestamp', [$from, $current]);
@@ -285,7 +286,11 @@ class Posts extends Component
             }
             $this->dispatchBrowserEvent('validation-errors-update', $err_msgs->getMessages());
             return false;
+        } else {
+            $this->dispatchBrowserEvent('validation-success-update', true);
         }
+
+        $this->populateImages($this->temp_images);
 
         if ($this->thumbnail !== $this->prev_data['thumbnail']) {
             //handle thumbnail image
@@ -369,6 +374,14 @@ class Posts extends Component
 //            $this->to_update_data['thumbnail']->storeAs('/public/images', $this->thumbnail_img_name);
     }
 
+    public function populateImages($images) {
+        foreach ($images as $value) {
+            foreach ($value as $val) {
+                $this->images[] = $val;
+            }
+        }
+    }
+
     public function delete_post(string|int $post_id): bool
     {
         $post = PostModel::findOrFail($post_id);
@@ -396,14 +409,26 @@ class Posts extends Component
         });
     }
 
+    public function deleteTempImg($data)
+    {
+        collect(json_decode($data, true))->each(function ($loc1, $loc2) {
+            unset($this->temp_images[$loc1][$loc2]);
+        });
+    }
+
+    public function updatedImages($variable) {
+        $this->temp_images[] = $variable;
+        $this->images = [];
+    }
+
     public function get_all_categories(){
-        return PostCategory::all();
+        return PostCategory::all()->toArray();
     }
 
     public function render()
     {
         $postModel = new PostModel();
-        return view('livewire.cms.posts', ['posts' => $this->search_post()])->layout('layouts.layout');
+        return view('livewire.cms.posts', ['posts' => $this->search_post(), 'all_category' => $this->get_all_categories()])->layout('layouts.layout');
     }
 
     public function renderLayout()

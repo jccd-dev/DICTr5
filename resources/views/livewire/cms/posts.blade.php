@@ -1,4 +1,4 @@
-<div x-data="{ state: 1, hasVidData: false, err: [], stateUpdate: 1, hasVidDataUpdate: false, errUpdate: [], deleteImgName: '', deleteImgId: null, modalActive: 0 }"
+<div x-data="{ state: 1, hasVidData: false, err: [], stateUpdate: 1, hasVidDataUpdate: false, errUpdate: [], deleteImgName: '', deleteImgId: null, modalActive: 0, location1: 0, location2: 0 }"
      x-init="listeners($data); listenerUpdate($data); ">
 {{--    <x-layouts.modal.button name="Add Post" target="add-post" />--}}
     <button
@@ -13,10 +13,9 @@
         Add Post
 
     </button>
-    {{ print_r($to_update_data) }}
 
-    {{ print_r($to_delete_image) }}
     <a href="#" x-ref="deleteModal" type="button" data-modal-target="deleteModal" data-modal-show="deleteModal" class="hidden"></a>
+    <a href="#" x-ref="deleteModal2" type="button" data-modal-target="deleteModal2" data-modal-show="deleteModal2" class="hidden"></a>
 
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
         <div class="flex items-center justify-between py-4 bg-white dark:bg-gray-800">
@@ -136,6 +135,25 @@
         </div>
     </div>
 
+    <div id="deleteModal2" tabindex="-1" class="fixed top-0 left-0 right-0 z-[51] hidden p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full flex justify-center">
+        <div class="relative w-full max-w-md max-h-full flex items-center">
+            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                <button type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white" data-modal-hide="deleteModal2">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+                <div class="p-6 text-center">
+                    <svg aria-hidden="true" class="mx-auto mb-4 text-gray-400 w-14 h-14 dark:text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Are you sure you want to delete this item?</h3>
+                    <button @click="$wire.deleteTempImg(JSON.stringify({[location1]: location2}))" data-modal-hide="deleteModal2" type="button" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
+                        Yes, I'm sure
+                    </button>
+                    <button data-modal-hide="deleteModal2" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">No, cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     {{--  Post Modal  --}}
 
@@ -212,8 +230,7 @@
                                 </div>
                             </div>
                             <div x-show="state == 3">
-
-                                <x-forms.select name="Category" required="false" model="category_id" :options="['1' => 'Announcements', '2' => 'News', '3' => 'Free Wifi4All']" classes="mb-6" />
+                                <x-forms.select name="Category" required="false" model="category_id" :options="$all_category" classes="mb-6" />
 
                                 <x-forms.input-form name="Link" required="false" type="url" placeholder="Video Link" model="vid_link" classes="mb-6" />
 
@@ -259,16 +276,16 @@
                         <form action="#" method="POST" wire:submit.prevent="updatePost" class="w-full flex flex-col" >
                             <div x-show="stateUpdate == 1">
 
-                                <x-forms.input-form name="Title" required="false" type="text" placeholder="Title" model="title" classes="mb-6" value="title" err="update.title" />
+                                <x-forms.input-form name="Title" required="false" type="text" placeholder="Title" model="title" classes="mb-6" value="title" />
 
-                                <x-forms.textarea-form name="Excerpt" required="false" placeholder="Excerpt" model="excerpt" rows="3" classes="mb-6" value="excerpt" err="update.excerpt" />
+                                <x-forms.textarea-form name="Excerpt" required="false" placeholder="Excerpt" model="excerpt" rows="3" classes="mb-6" value="excerpt" />
 
-                                <x-forms.textarea-form name="Content" required="false" placeholder="Content" model="content" rows="5" classes="mb-6" value="content" err="update.content" />
+                                <x-forms.textarea-form name="Content" required="false" placeholder="Content" model="content" rows="5" classes="mb-6" value="content" />
 
                             </div>
                             <div x-show="stateUpdate == 2">
 
-                                <x-forms.file name="Thumbnails" required="false" placeholder="Thumbnail" model="thumbnail" classes="mb-6" :th="$thumbnail" err="update.thumbnail" />
+                                <x-forms.file name="Thumbnails" required="false" placeholder="Thumbnail" model="thumbnail" classes="mb-6" :th="$thumbnail" />
 
                                 <div class="mb-6 flex-1">
                                     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="post-status">
@@ -295,6 +312,18 @@
                                                                 </svg>
                                                             </span>
                                                                 <img src="{{ asset('cms-images/'.$v) }}" class="w-full h-full object-cover cursor-default" @click.stop alt="">
+                                                            </div>
+                                                        @endforeach
+                                                    @endforeach
+                                                    @foreach($temp_images as $key => $val)
+                                                        @foreach($val as $k => $v)
+                                                            <div class="w-24 h-24 relative">
+                                                        <span class="absolute top-0 right-0 z-50" @click.stop>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-6 h-6 text-red-500" @click="$refs.deleteModal2.click(); location1 = '{{ $key }}'; location2 = {{ $k }}; ">
+                                                              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                                            </svg>
+                                                        </span>
+                                                                <img src="{{ $v->temporaryUrl() }}" class="w-full h-full object-cover cursor-default" @click.stop alt="">
                                                             </div>
                                                         @endforeach
                                                     @endforeach
@@ -331,9 +360,9 @@
                             </div>
                             <div x-show="stateUpdate == 3">
 
-                                <x-forms.select name="Category" required="false" model="category_id" :options="['1' => 'Announcements', '2' => 'News', '3' => 'Free Wifi4All']" classes="mb-6" value="category_id" err="update.category_id" />
+                                <x-forms.select name="Category" required="false" model="category_id" :options="$all_category" classes="mb-6" value="category_id" />
 
-                                <x-forms.input-form name="Link" required="false" type="url" placeholder="Video Link" model="vid_link" classes="mb-6" value="vid_link" err="update.vid_link" />
+                                <x-forms.input-form name="Link" required="false" type="url" placeholder="Video Link" model="vid_link" classes="mb-6" value="vid_link" />
 
                             </div>
 
