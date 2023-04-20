@@ -47,28 +47,28 @@ class Posts extends Component
     public string $search = '';
     public string $from = '';
     public string $to = '';
-    public int $cat_id = '';
+    public string|int $cat_id = '';
 
 
     protected $rules = [
         'category_id'    => 'required|numeric',
-        'title'     => 'required|word_count:15',
-        'excerpt'   => 'required',
-        'thumbnail' => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
-        'content'   => 'required',
-        'images.*'  => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
-        'vid_link'  => 'nullable|url',
-        'status'    => 'required|numeric',
+        'title'          => 'required|word_count:15',
+        'excerpt'        => 'required',
+        'thumbnail'      => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
+        'content'        => 'required',
+        'images.*'       => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
+        'vid_link'       => 'nullable|url',
+        'status'         => 'required|numeric',
     ];
     protected $update_rules = [
         'category_id'    => 'required|numeric',
-        'title'     => 'required|word_count:15',
-        'excerpt'   => 'required',
-        'thumbnail' => 'nullable|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
-        'content'   => 'required',
-        'images.*'  => 'nullable|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
-        'vid_link'  => 'nullable|url',
-        'status'    => 'required|numeric',
+        'title'          => 'required|word_count:15',
+        'excerpt'        => 'required',
+        'thumbnail'      => 'nullable|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
+        'content'        => 'required',
+        'images.*'       => 'nullable|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
+        'vid_link'       => 'nullable|url',
+        'status'         => 'required|numeric',
     ];
 
     public PostModel $post_model;
@@ -91,13 +91,13 @@ class Posts extends Component
 
         $validator = Validator::make([
             'category_id'   => $this->category_id,
-            'title'     => $this->title,
-            'excerpt'   => $this->excerpt,
-            'thumbnail' => $this->thumbnail,
-            'content'   => $this->content,
-            'images'    => $this->images,
-            'vid_link'  => $this->vid_link,
-            'status'    => $this->status,
+            'title'         => $this->title,
+            'excerpt'       => $this->excerpt,
+            'thumbnail'     => $this->thumbnail,
+            'content'       => $this->content,
+            'images'        => $this->images,
+            'vid_link'      => $this->vid_link,
+            'status'        => $this->status,
         ], $this->rules);
 
         if ($validator->fails()) {

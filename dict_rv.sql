@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 13, 2023 at 03:53 AM
+-- Generation Time: Apr 20, 2023 at 03:33 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -99,19 +99,8 @@ CREATE TABLE `banner` (
   `title` varchar(250) NOT NULL,
   `description` mediumtext NOT NULL,
   `image` varchar(250) NOT NULL,
-  `button_links` varchar(250) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `buttons`
---
-
-CREATE TABLE `buttons` (
-  `id` int(11) NOT NULL,
-  `btn_name` varchar(250) NOT NULL,
-  `is_active` int(1) NOT NULL DEFAULT 1
+  `button_links` varchar(250) NOT NULL,
+  `timestammp` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -172,14 +161,10 @@ INSERT INTO `dict_admins` (`id`, `name`, `office`, `password`, `role`, `email`, 
 
 CREATE TABLE `exam_schedules` (
   `id` int(11) NOT NULL,
+  `exam_set` varchar(15) DEFAULT NULL,
+  `venue` varchar(255) DEFAULT NULL,
   `datetime` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Alter exam_schedule table
---
-
-ALTER TABLE `exam_schedules` ADD `exam_set` VARCHAR(15) NOT NULL AFTER `id`, ADD `venue` VARCHAR(255) NOT NULL AFTER `exam_set`;
 
 -- --------------------------------------------------------
 
@@ -193,18 +178,6 @@ CREATE TABLE `feedbacks` (
   `content` text NOT NULL,
   `email` varchar(250) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `forms`
---
-
-CREATE TABLE `forms` (
-  `id` int(11) NOT NULL,
-  `form_name` varchar(250) NOT NULL,
-  `is_active` int(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -224,31 +197,20 @@ CREATE TABLE `inbox` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `inputs`
---
-
-CREATE TABLE `inputs` (
-  `id` int(11) NOT NULL,
-  `form_id` int(11) NOT NULL,
-  `input_name` int(11) NOT NULL,
-  `is_active` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `posts`
 --
 
 CREATE TABLE `posts` (
   `id` int(11) NOT NULL,
-  `cat_id` int(11) NOT NULL,
+  `category_id` int(11) NOT NULL,
   `admin_id` int(11) NOT NULL,
   `title` varchar(250) NOT NULL,
   `excerpt` text NOT NULL,
   `thumbnail` text NOT NULL,
+  `content` longtext DEFAULT NULL,
   `vid__link` text NOT NULL,
   `author` varchar(250) NOT NULL,
+  `status` int(2) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -275,19 +237,6 @@ INSERT INTO `post_categories` (`id`, `category`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `post_contents`
---
-
-CREATE TABLE `post_contents` (
-  `id` int(11) NOT NULL,
-  `post_id` int(11) NOT NULL,
-  `content` longtext NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `post_images`
 --
 
@@ -295,7 +244,6 @@ CREATE TABLE `post_images` (
   `id` int(11) NOT NULL,
   `post_id` int(11) NOT NULL,
   `image_filename` text NOT NULL,
-  `use_for` varchar(250) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -326,7 +274,8 @@ CREATE TABLE `submitted_files` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `file_name` text NOT NULL,
-  `file_type` varchar(250) NOT NULL
+  `file_type` varchar(250) NOT NULL,
+  `requirement_type` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -361,34 +310,32 @@ CREATE TABLE `training_seminars` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Table structure for table `users_data`
 --
 
-CREATE TABLE `users` (
+CREATE TABLE `users_data` (
   `id` int(11) NOT NULL,
+  `user_login_id` int(11) NOT NULL,
   `fname` varchar(250) NOT NULL,
   `lname` varchar(250) NOT NULL,
-  `mname` varchar(250) NULL,
-  `password` mediumtext NULL,
-  `place_of_birth` varchar(250) NULL,
-  `gender` varchar(250) NULL,
-  `citizenship` varchar(250) NULL,
-  `civil_status` varchar(250) NULL,
-  `contact_number` varchar(250) NULL,
-  `present_office` varchar(250) NULL,
-  `designation` varchar(250) NULL,
-  `telephone_number` varchar(250) NULL,
-  `office_address` varchar(250) NULL,
-  `office_category` varchar(250) NULL,
-  `no_of_years_in_pos` int(11) NULL,
-  `programming _langs` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL CHECK (json_valid(`programming _langs`)),
-  `e_sign` varchar(250) NULL,
-  `date_accomplish` datetime NULL,
-  `timestamp` timestamp NULL DEFAULT current_timestamp()
+  `mname` varchar(250) NOT NULL,
+  `password` mediumtext NOT NULL,
+  `place_of_birth` varchar(250) NOT NULL,
+  `gender` varchar(250) NOT NULL,
+  `citizenship` varchar(250) NOT NULL,
+  `civil_status` varchar(250) NOT NULL,
+  `contact_number` varchar(250) NOT NULL,
+  `present_office` varchar(250) NOT NULL,
+  `designation` varchar(250) NOT NULL,
+  `telephone_number` varchar(250) NOT NULL,
+  `office_address` varchar(250) NOT NULL,
+  `office_category` varchar(250) NOT NULL,
+  `no_of_years_in_pos` int(11) NOT NULL,
+  `programming _langs` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`programming _langs`)),
+  `e_sign` varchar(250) NOT NULL,
+  `date_accomplish` datetime NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-ALTER TABLE `users` ADD `email` VARCHAR(100) NOT NULL AFTER `id`;
-ALTER TABLE `users` ADD `google_id` VARCHAR(255) NOT NULL AFTER `id`;
 
 -- --------------------------------------------------------
 
@@ -405,6 +352,20 @@ CREATE TABLE `user_history` (
   `venue` varchar(250) NOT NULL,
   `assigned_exam_set` varchar(50) NOT NULL,
   `status` int(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_login`
+--
+
+CREATE TABLE `user_login` (
+  `id` int(11) NOT NULL,
+  `google_id` text NOT NULL,
+  `email` varchar(60) NOT NULL,
+  `fname` varchar(60) NOT NULL,
+  `lname` varchar(60) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -461,12 +422,6 @@ ALTER TABLE `banner`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `buttons`
---
-ALTER TABLE `buttons`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `calendar`
 --
 ALTER TABLE `calendar`
@@ -492,21 +447,9 @@ ALTER TABLE `feedbacks`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `forms`
---
-ALTER TABLE `forms`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `inbox`
 --
 ALTER TABLE `inbox`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `inputs`
---
-ALTER TABLE `inputs`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -515,20 +458,13 @@ ALTER TABLE `inputs`
 ALTER TABLE `posts`
   ADD PRIMARY KEY (`id`),
   ADD KEY `admin_id` (`admin_id`),
-  ADD KEY `cat_id` (`cat_id`);
+  ADD KEY `cat_id` (`category_id`);
 
 --
 -- Indexes for table `post_categories`
 --
 ALTER TABLE `post_categories`
   ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `post_contents`
---
-ALTER TABLE `post_contents`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `post_id` (`post_id`);
 
 --
 -- Indexes for table `post_images`
@@ -566,10 +502,11 @@ ALTER TABLE `training_seminars`
   ADD KEY `user_id` (`user_id`);
 
 --
--- Indexes for table `users`
+-- Indexes for table `users_data`
 --
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`);
+ALTER TABLE `users_data`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_login_id` (`user_login_id`);
 
 --
 -- Indexes for table `user_history`
@@ -577,6 +514,12 @@ ALTER TABLE `users`
 ALTER TABLE `user_history`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `user_login`
+--
+ALTER TABLE `user_login`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `user_logs`
@@ -617,13 +560,7 @@ ALTER TABLE `approved_users`
 -- AUTO_INCREMENT for table `banner`
 --
 ALTER TABLE `banner`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `buttons`
---
-ALTER TABLE `buttons`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `calendar`
@@ -650,21 +587,9 @@ ALTER TABLE `feedbacks`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `forms`
---
-ALTER TABLE `forms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `inbox`
 --
 ALTER TABLE `inbox`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `inputs`
---
-ALTER TABLE `inputs`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -678,12 +603,6 @@ ALTER TABLE `posts`
 --
 ALTER TABLE `post_categories`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `post_contents`
---
-ALTER TABLE `post_contents`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `post_images`
@@ -716,15 +635,21 @@ ALTER TABLE `training_seminars`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT for table `users_data`
 --
-ALTER TABLE `users`
+ALTER TABLE `users_data`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `user_history`
 --
 ALTER TABLE `user_history`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `user_login`
+--
+ALTER TABLE `user_login`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -741,7 +666,7 @@ ALTER TABLE `user_logs`
 -- Constraints for table `addresses`
 --
 ALTER TABLE `addresses`
-  ADD CONSTRAINT `addresses_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `addresses_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users_data` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `admin_logs`
@@ -760,7 +685,7 @@ ALTER TABLE `announcements`
 --
 ALTER TABLE `approved_users`
   ADD CONSTRAINT `approved_users_ibfk_1` FOREIGN KEY (`admin_id`) REFERENCES `dict_admins` (`id`) ON DELETE NO ACTION,
-  ADD CONSTRAINT `approved_users_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION;
+  ADD CONSTRAINT `approved_users_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users_data` (`id`) ON DELETE NO ACTION;
 
 --
 -- Constraints for table `calendar`
@@ -773,13 +698,7 @@ ALTER TABLE `calendar`
 --
 ALTER TABLE `posts`
   ADD CONSTRAINT `posts_ibfk_1` FOREIGN KEY (`admin_id`) REFERENCES `dict_admins` (`id`) ON DELETE NO ACTION,
-  ADD CONSTRAINT `posts_ibfk_2` FOREIGN KEY (`cat_id`) REFERENCES `post_categories` (`id`) ON DELETE NO ACTION;
-
---
--- Constraints for table `post_contents`
---
-ALTER TABLE `post_contents`
-  ADD CONSTRAINT `post_contents_ibfk_1` FOREIGN KEY (`post_id`) REFERENCES `posts` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `posts_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `post_categories` (`id`) ON DELETE NO ACTION;
 
 --
 -- Constraints for table `post_images`
@@ -791,37 +710,43 @@ ALTER TABLE `post_images`
 -- Constraints for table `reg_details`
 --
 ALTER TABLE `reg_details`
-  ADD CONSTRAINT `reg_details_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `reg_details_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users_data` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `submitted_files`
 --
 ALTER TABLE `submitted_files`
-  ADD CONSTRAINT `submitted_files_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `submitted_files_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users_data` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `tertiary_edu`
 --
 ALTER TABLE `tertiary_edu`
-  ADD CONSTRAINT `tertiary_edu_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `tertiary_edu_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users_data` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `training_seminars`
 --
 ALTER TABLE `training_seminars`
-  ADD CONSTRAINT `training_seminars_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `training_seminars_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users_data` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `users_data`
+--
+ALTER TABLE `users_data`
+  ADD CONSTRAINT `users_data_ibfk_1` FOREIGN KEY (`user_login_id`) REFERENCES `user_login` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `user_history`
 --
 ALTER TABLE `user_history`
-  ADD CONSTRAINT `user_history_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION;
+  ADD CONSTRAINT `user_history_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users_data` (`id`) ON DELETE NO ACTION;
 
 --
 -- Constraints for table `user_logs`
 --
 ALTER TABLE `user_logs`
-  ADD CONSTRAINT `user_logs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `user_logs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users_data` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
