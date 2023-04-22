@@ -19,6 +19,6 @@ class Addresses extends Model
 
     public function usersData(): BelongsTo
     {
-        return $this->belongsTo(Users::class, 'user_id');
+        return $this->belongsTo(UsersData::class, 'user_id');
     }
 }

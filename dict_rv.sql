@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 20, 2023 at 03:33 AM
+-- Generation Time: Apr 22, 2023 at 11:50 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -74,19 +74,6 @@ CREATE TABLE `announcements` (
 INSERT INTO `announcements` (`id`, `cat_id`, `title`, `excerpt`, `content`, `author`, `status`, `timestamp`) VALUES
 (36, 1, 'Sample', 'HSKAS', '<p>asdlwklqw</p>\n\n<hr />\n<p>&nbsp;</p>\n', '1', 1, '2023-04-11 00:37:27'),
 (37, 2, 'qwekqwlkej', 'wqlkejqklwe', '<p>qweqweipoqwie</p>\n', '1', 0, '2023-04-11 00:37:44');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `approved_users`
---
-
-CREATE TABLE `approved_users` (
-  `id` int(11) NOT NULL,
-  `admin_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `approved_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -256,9 +243,9 @@ CREATE TABLE `post_images` (
 CREATE TABLE `reg_details` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
+  `exam_schedule_id` int(11) NOT NULL,
   `reg_date` datetime NOT NULL,
   `approved_date` datetime NOT NULL,
-  `exam_schedule` datetime NOT NULL,
   `venue` text NOT NULL,
   `assigned_exam_set` varchar(50) NOT NULL,
   `status` int(1) NOT NULL DEFAULT 0
@@ -332,7 +319,7 @@ CREATE TABLE `users_data` (
   `office_category` varchar(250) NOT NULL,
   `no_of_years_in_pos` int(11) NOT NULL,
   `programming _langs` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`programming _langs`)),
-  `e_sign` varchar(250) NOT NULL,
+  `e_sign` longtext NOT NULL,
   `date_accomplish` datetime NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -408,14 +395,6 @@ ALTER TABLE `announcements`
   ADD KEY `cat_id` (`cat_id`);
 
 --
--- Indexes for table `approved_users`
---
-ALTER TABLE `approved_users`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `admin_id` (`admin_id`),
-  ADD KEY `user_id` (`user_id`);
-
---
 -- Indexes for table `banner`
 --
 ALTER TABLE `banner`
@@ -478,7 +457,8 @@ ALTER TABLE `post_images`
 --
 ALTER TABLE `reg_details`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`);
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `exam_schedule_id` (`exam_schedule_id`);
 
 --
 -- Indexes for table `submitted_files`
@@ -549,12 +529,6 @@ ALTER TABLE `admin_logs`
 --
 ALTER TABLE `announcements`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
-
---
--- AUTO_INCREMENT for table `approved_users`
---
-ALTER TABLE `approved_users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `banner`
@@ -681,13 +655,6 @@ ALTER TABLE `announcements`
   ADD CONSTRAINT `announcements_ibfk_1` FOREIGN KEY (`cat_id`) REFERENCES `post_categories` (`id`) ON DELETE NO ACTION;
 
 --
--- Constraints for table `approved_users`
---
-ALTER TABLE `approved_users`
-  ADD CONSTRAINT `approved_users_ibfk_1` FOREIGN KEY (`admin_id`) REFERENCES `dict_admins` (`id`) ON DELETE NO ACTION,
-  ADD CONSTRAINT `approved_users_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users_data` (`id`) ON DELETE NO ACTION;
-
---
 -- Constraints for table `calendar`
 --
 ALTER TABLE `calendar`
@@ -710,7 +677,8 @@ ALTER TABLE `post_images`
 -- Constraints for table `reg_details`
 --
 ALTER TABLE `reg_details`
-  ADD CONSTRAINT `reg_details_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users_data` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `reg_details_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users_data` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `reg_details_ibfk_2` FOREIGN KEY (`exam_schedule_id`) REFERENCES `exam_schedules` (`id`);
 
 --
 -- Constraints for table `submitted_files`
