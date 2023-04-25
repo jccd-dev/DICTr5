@@ -60,3 +60,8 @@ Route::prefix('exam')->group(function () {
 Route::get('/logout', function(){
     session()->flush();
 });
+
+//testing for JWT middleware
+Route::middleware(['jwt.logAuth'])->group(function () {
+    Route::get('/posts', Posts::class)->name('admin.cms.posts');
+});
