@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 22, 2023 at 11:50 AM
+-- Generation Time: Apr 24, 2023 at 02:46 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -161,9 +161,9 @@ CREATE TABLE `exam_schedules` (
 
 CREATE TABLE `feedbacks` (
   `id` int(11) NOT NULL,
-  `name` varchar(250) NOT NULL,
   `content` text NOT NULL,
   `email` varchar(250) NOT NULL,
+  `is_read` tinyint(2) NOT NULL DEFAULT 0,
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 

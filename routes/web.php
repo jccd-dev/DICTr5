@@ -9,6 +9,8 @@ use App\Http\Livewire\CMS\EventCalendar;
 use App\Http\Livewire\CMS\Posts;
 use App\Http\Livewire\Admin\ExamSchedule;
 use App\Http\Controllers\Examinee\DashboardController as UserDashboardController;
+use App\Http\Livewire\Admin\Inbox as CMSInbox;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -42,6 +44,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/event-calendar', EventCalendar::class)->name('admin.cms.calendar');
     });
     Route::get('/exam-schedule', ExamSchedule::class)->name('admin.exam-schedule');
+    Route::get('/inbox', CMSInbox::class)->name('admin.inbox');
 });
 
 // Google OAuth
