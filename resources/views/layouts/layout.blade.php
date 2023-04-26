@@ -5,7 +5,7 @@
 </head>
 <body class="overflow-y-scroll overflow-x-hidden">
 
-    <div>
+    <div id="main">
         {{ $slot }}
     </div>
 

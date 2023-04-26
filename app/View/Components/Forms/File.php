@@ -9,11 +9,12 @@ use Illuminate\View\Component;
 class File extends Component
 {
     public string $name;
-    public bool $isRequired;
     public string $placeholder;
     public string $model;
     public string $classes;
     public string $value;
+    public string $id;
+    public string $accept;
     public $th;
     public $err;
 
@@ -27,16 +28,17 @@ class File extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct(string $name, bool $required, string $placeholder, string $model, $th = null, string $classes = "", string $value = "", $err = null)
+    public function __construct(string $name, string $placeholder, string $model, string $id, string $accept, $th = null, string $classes = "", string $value = "", $err = null)
     {
         $this->name = $name;
-        $this->isRequired = $required;
         $this->placeholder = $placeholder;
         $this->model = $model;
         $this->th = $th;
+        $this->accept = $accept;
         $this->classes = $classes;
         $this->value = $value;
         $this->err = $err;
+        $this->id = $id;
     }
 
     /**
