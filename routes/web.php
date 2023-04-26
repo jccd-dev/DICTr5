@@ -12,6 +12,8 @@ use App\Http\Livewire\Admin\Login;
 use App\Http\Livewire\Admin\Dashboard;
 use App\Http\Livewire\User;
 use App\Http\Controllers\Examinee\DashboardController as UserDashboardController;
+use App\Http\Livewire\Admin\Inbox as CMSInbox;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -48,6 +50,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/event-calendar', EventCalendar::class)->name('admin.cms.calendar');
     });
     Route::get('/exam-schedule', ExamSchedule::class)->name('admin.exam-schedule');
+    Route::get('/inbox', CMSInbox::class)->name('admin.inbox');
 });
 
 // User
@@ -65,8 +68,14 @@ Route::prefix('auth')->group(function () {
 Route::prefix('exam')->group(function () {
     Route::get('/login', [GoogleAuthController::class, 'user_login']);
     Route::get('/dashboard', [UserDashboardController::class, 'dashboard'])->name('examinee.dashboard');
+    Route::get('/send-email', [UserDashboardController::class, 'sendEmail']);
 });
 
 Route::get('/logout', function(){
     session()->flush();
+});
+
+//testing for JWT middleware
+Route::middleware(['jwt.logAuth'])->group(function () {
+    Route::get('/posts', Posts::class)->name('admin.cms.posts');
 });

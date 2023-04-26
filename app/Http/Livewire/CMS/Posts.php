@@ -47,29 +47,29 @@ class Posts extends Component
     public string $search = '';
     public string $from = '';
     public string $to = '';
-    public string $cat_id = '';
+    public string|int $cat_id = '';
     public $temp_images = [];
 
 
     protected $rules = [
         'category_id'    => 'required|numeric',
-        'title'     => 'required|word_count:15',
-        'excerpt'   => 'required',
-        'thumbnail' => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
-        'content'   => 'required',
-        'images.*'  => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
-        'vid_link'  => 'nullable|url',
-        'status'    => 'required|numeric',
+        'title'          => 'required|word_count:15',
+        'excerpt'        => 'required',
+        'thumbnail'      => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
+        'content'        => 'required',
+        'images.*'       => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
+        'vid_link'       => 'nullable|url',
+        'status'         => 'required|numeric',
     ];
     protected $update_rules = [
         'category_id'    => 'required|numeric',
-        'title'     => 'required|word_count:15',
-        'excerpt'   => 'required',
-        'thumbnail' => 'nullable|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
-        'content'   => 'required',
-        'images.*'  => 'nullable|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
-        'vid_link'  => 'nullable|url',
-        'status'    => 'required|numeric',
+        'title'          => 'required|word_count:15',
+        'excerpt'        => 'required',
+        'thumbnail'      => 'nullable|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
+        'content'        => 'required',
+        'images.*'       => 'nullable|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
+        'vid_link'       => 'nullable|url',
+        'status'         => 'required|numeric',
     ];
 
     public PostModel $post_model;
@@ -92,13 +92,13 @@ class Posts extends Component
 
         $validator = Validator::make([
             'category_id'   => $this->category_id,
-            'title'     => $this->title,
-            'excerpt'   => $this->excerpt,
-            'thumbnail' => $this->thumbnail,
-            'content'   => $this->content,
-            'images'    => $this->images,
-            'vid_link'  => $this->vid_link,
-            'status'    => $this->status,
+            'title'         => $this->title,
+            'excerpt'       => $this->excerpt,
+            'thumbnail'     => $this->thumbnail,
+            'content'       => $this->content,
+            'images'        => $this->images,
+            'vid_link'      => $this->vid_link,
+            'status'        => $this->status,
         ], $this->rules);
 
         if ($validator->fails()) {
@@ -155,13 +155,6 @@ class Posts extends Component
     }
 
 
-
-    public function postModalPopulator($id)
-    {
-        $this->postData = DB::table('posts')->where('id', $id)->first();
-    }
-
-
     /**
      * @description retrieve post data for update modal.
      * @param int|string $id
@@ -199,14 +192,15 @@ class Posts extends Component
         }
 
         $this->to_update_data['images'] = $post_images;
-//        $this->images = $post_images;
+        //        $this->images = $post_images;
 
         $this->prev_data = $this->to_update_data;
 
         $this->resetValidation();
     }
 
-    public function resetFields() {
+    public function resetFields()
+    {
         $this->reset();
     }
 
@@ -233,11 +227,11 @@ class Posts extends Component
 
             //return $posts->with('images')->get();
         }
-//        if (!$category_id) {
-//            $posts = $posts->whereHas('category', function ($query) use ($category_id) {
-//                $query->where('category_id', $category_id);
-//            });
-//        }
+        //        if (!$category_id) {
+        //            $posts = $posts->whereHas('category', function ($query) use ($category_id) {
+        //                $query->where('category_id', $category_id);
+        //            });
+        //        }
 
         if (!isEmpty($from) && is_null($to_date)) {
             $posts = $posts->whereBetween('timestamp', [$from, $current]);
@@ -281,7 +275,7 @@ class Posts extends Component
             $err_msgs = $validator->getMessageBag();
             foreach ($err_msgs->getMessages() as $field => $messages) {
                 foreach ($messages as $message) {
-                    $this->addError('update.'.$field, $message);
+                    $this->addError('update.' . $field, $message);
                 }
             }
             $this->dispatchBrowserEvent('validation-errors-update', $err_msgs->getMessages());
@@ -370,11 +364,12 @@ class Posts extends Component
     {
         if ($this->thumbnail)
             $this->thumbnail->storeAs('/public/images', $this->thumbnail_img_name);
-//        else
-//            $this->to_update_data['thumbnail']->storeAs('/public/images', $this->thumbnail_img_name);
+        //        else
+        //            $this->to_update_data['thumbnail']->storeAs('/public/images', $this->thumbnail_img_name);
     }
 
-    public function populateImages($images) {
+    public function populateImages($images)
+    {
         foreach ($images as $value) {
             foreach ($value as $val) {
                 $this->images[] = $val;
@@ -388,7 +383,7 @@ class Posts extends Component
 
         $images_to_delete = $post->images()->pluck('image_filename')->toArray();
         // Delete the post and its related images
-        if($post->delete()){
+        if ($post->delete()) {
             foreach ($images_to_delete as $image) {
                 if (Storage::exists('/public/images/' . $image)) {
                     Storage::delete('public/images/' . $image);
@@ -416,12 +411,14 @@ class Posts extends Component
         });
     }
 
-    public function updatedImages($variable) {
+    public function updatedImages($variable)
+    {
         $this->temp_images[] = $variable;
         $this->images = [];
     }
 
-    public function get_all_categories(){
+    public function get_all_categories()
+    {
         return PostCategory::all()->toArray();
     }
 

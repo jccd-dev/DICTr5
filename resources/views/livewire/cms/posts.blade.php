@@ -387,10 +387,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            livewire.on('postModalPopulator', postId => {
-                livewire.emit('postModalPopulator', postId);
-                console.log(postId)
-            });
 
             Alpine.data("posts-form", (d) => {
                 console.log(d)

@@ -17,7 +17,7 @@ class GoogleAuthController extends Controller
 
     public function callback(){
         $user = Socialite::driver('google')->user();
-     
+
         $email = $user->getEmail();
         $fname = $user->offsetGet('given_name');
         $lname = $user->offsetGet('family_name');
@@ -31,13 +31,13 @@ class GoogleAuthController extends Controller
                 'email' => $email,
                 'fname' => $fname,
                 'lname' => $lname
-            ]);z
+            ]);
             Session::put('user', ['id' => $createdAcc->id, 'fname' => $fname, 'lname' => $lname]);
         }else{
             Session::put('user', ['id' => $account->id, 'fname' => $fname, 'lname' => $lname]);
         }
         return redirect()->route('examinee.dashboard');
-    }   
+    }
 
     public function user_login(){
         return view("layouts.examinee.user-login");

@@ -38,6 +38,7 @@
         @if(request()->routeIs('admin.cms.announcement')) {{'Announcement'}}
         @elseif(request()->routeIs('admin.cms.calendar')) {{'Event Calendar'}}
         @elseif(request()->routeIs('admin.exam-schedule')) {{'Exam Schedule'}}
+        @elseif(request()->routeIs('admin.inbox')) {{'Inbox'}}
         @endif
     </title>
 </head>

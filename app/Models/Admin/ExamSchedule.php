@@ -2,8 +2,10 @@
 
 namespace App\Models\Admin;
 
+use App\Models\Examinee\RegDetails;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
 
 class ExamSchedule extends Model
@@ -11,7 +13,7 @@ class ExamSchedule extends Model
     use HasFactory;
 
     protected $table = 'exam_schedules';
-    
+
     protected $fillable = ['venue', 'exam_set', 'datetime'];
 
     public $timestamps = false;
@@ -36,5 +38,10 @@ class ExamSchedule extends Model
 
     public function updateSchedule($id, $data){
         return DB::table($this->table)->where('id', $id)->update($data);
+    }
+
+    public function regDetails(): HasMany
+    {
+        return $this->hasMany(RegDetails::class, 'exam_schedule_id', 'id');
     }
 }
