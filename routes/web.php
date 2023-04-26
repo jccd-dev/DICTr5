@@ -8,6 +8,9 @@ use App\Http\Livewire\CMS\Announcements;
 use App\Http\Livewire\CMS\EventCalendar;
 use App\Http\Livewire\CMS\Posts;
 use App\Http\Livewire\Admin\ExamSchedule;
+use App\Http\Livewire\Admin\Login;
+use App\Http\Livewire\Admin\Dashboard;
+use App\Http\Livewire\User;
 use App\Http\Controllers\Examinee\DashboardController as UserDashboardController;
 /*
 |--------------------------------------------------------------------------
@@ -36,12 +39,20 @@ Route::get('/about', function () {
 });
 
 Route::prefix('admin')->group(function () {
+    Route::get('/login', Login::class)->name("admin.login");
+    Route::get('/dashboard', Dashboard::class)->name("admin.dashboard");
+
     Route::prefix('cms')->group(function (){
         Route::get('/posts', Posts::class)->name('admin.cms.posts'); // Post::class
         Route::get('/announcement', Announcements::class)->name('admin.cms.announcement');
         Route::get('/event-calendar', EventCalendar::class)->name('admin.cms.calendar');
     });
     Route::get('/exam-schedule', ExamSchedule::class)->name('admin.exam-schedule');
+});
+
+// User
+Route::prefix('user')->group(function () {
+    Route::get('/dashboard', User\Dashboard::class)->name('user.dashboard');
 });
 
 // Google OAuth

@@ -6,25 +6,33 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class InputForm extends Component
+class Datepicker extends Component
 {
+
     public string $name;
-    public string $type;
     public string $placeholder;
     public string $model;
-    public string $insideText;
     public string $classes;
     public string $value;
     public string $id;
-    public $err;
+    public mixed $err;
 
-    public function __construct(string $name, string $type, string $placeholder, string $model, string $id, string $insideText = "", string $classes = "", string $value = "", $err = null)
+    protected array $rules = [
+        'name' => 'required',
+        'isRequired' => 'required',
+        'type' => 'required',
+        'placeholder' => 'required',
+        'model' => 'required',
+    ];
+
+    /**
+     * Create a new component instance.
+     */
+    public function __construct(string $name, string $placeholder, string $model, string $id, string $classes = "", string $value = "", $err = null)
     {
         $this->name = $name;
-        $this->type = $type;
         $this->placeholder = $placeholder;
         $this->model = $model;
-        $this->insideText = $insideText;
         $this->classes = $classes;
         $this->value = $value;
         $this->err = $err;
@@ -36,6 +44,6 @@ class InputForm extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.forms.input-form');
+        return view('components.forms.datepicker');
     }
 }
