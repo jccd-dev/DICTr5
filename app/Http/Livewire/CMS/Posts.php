@@ -48,6 +48,7 @@ class Posts extends Component
     public string $from = '';
     public string $to = '';
     public string|int $cat_id = '';
+    public $temp_images = [];
 
 
     protected $rules = [
@@ -154,13 +155,6 @@ class Posts extends Component
     }
 
 
-
-    public function postModalPopulator($id)
-    {
-        $this->postData = DB::table('posts')->where('id', $id)->first();
-    }
-
-
     /**
      * @description retrieve post data for update modal.
      * @param int|string $id
@@ -198,14 +192,15 @@ class Posts extends Component
         }
 
         $this->to_update_data['images'] = $post_images;
-//        $this->images = $post_images;
+        //        $this->images = $post_images;
 
         $this->prev_data = $this->to_update_data;
 
         $this->resetValidation();
     }
 
-    public function resetFields() {
+    public function resetFields()
+    {
         $this->reset();
     }
 
@@ -232,11 +227,11 @@ class Posts extends Component
 
             //return $posts->with('images')->get();
         }
-        if (!$category_id) {
-            $posts = $posts->whereHas('category', function ($query) use ($category_id) {
-                $query->where('category_id', $category_id);
-            });
-        }
+        //        if (!$category_id) {
+        //            $posts = $posts->whereHas('category', function ($query) use ($category_id) {
+        //                $query->where('category_id', $category_id);
+        //            });
+        //        }
 
         if (!isEmpty($from) && is_null($to_date)) {
             $posts = $posts->whereBetween('timestamp', [$from, $current]);
@@ -280,12 +275,16 @@ class Posts extends Component
             $err_msgs = $validator->getMessageBag();
             foreach ($err_msgs->getMessages() as $field => $messages) {
                 foreach ($messages as $message) {
-                    $this->addError('update.'.$field, $message);
+                    $this->addError('update.' . $field, $message);
                 }
             }
             $this->dispatchBrowserEvent('validation-errors-update', $err_msgs->getMessages());
             return false;
+        } else {
+            $this->dispatchBrowserEvent('validation-success-update', true);
         }
+
+        $this->populateImages($this->temp_images);
 
         if ($this->thumbnail !== $this->prev_data['thumbnail']) {
             //handle thumbnail image
@@ -365,8 +364,17 @@ class Posts extends Component
     {
         if ($this->thumbnail)
             $this->thumbnail->storeAs('/public/images', $this->thumbnail_img_name);
-//        else
-//            $this->to_update_data['thumbnail']->storeAs('/public/images', $this->thumbnail_img_name);
+        //        else
+        //            $this->to_update_data['thumbnail']->storeAs('/public/images', $this->thumbnail_img_name);
+    }
+
+    public function populateImages($images)
+    {
+        foreach ($images as $value) {
+            foreach ($value as $val) {
+                $this->images[] = $val;
+            }
+        }
     }
 
     public function delete_post(string|int $post_id): bool
@@ -375,7 +383,7 @@ class Posts extends Component
 
         $images_to_delete = $post->images()->pluck('image_filename')->toArray();
         // Delete the post and its related images
-        if($post->delete()){
+        if ($post->delete()) {
             foreach ($images_to_delete as $image) {
                 if (Storage::exists('/public/images/' . $image)) {
                     Storage::delete('public/images/' . $image);
@@ -396,14 +404,28 @@ class Posts extends Component
         });
     }
 
-    public function get_all_categories(){
-        return PostCategory::all();
+    public function deleteTempImg($data)
+    {
+        collect(json_decode($data, true))->each(function ($loc1, $loc2) {
+            unset($this->temp_images[$loc1][$loc2]);
+        });
+    }
+
+    public function updatedImages($variable)
+    {
+        $this->temp_images[] = $variable;
+        $this->images = [];
+    }
+
+    public function get_all_categories()
+    {
+        return PostCategory::all()->toArray();
     }
 
     public function render()
     {
         $postModel = new PostModel();
-        return view('livewire.cms.posts', ['posts' => $this->search_post()])->layout('layouts.layout');
+        return view('livewire.cms.posts', ['posts' => $this->search_post(), 'all_category' => $this->get_all_categories()])->layout('layouts.layout');
     }
 
     public function renderLayout()

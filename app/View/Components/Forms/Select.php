@@ -9,13 +9,14 @@ use Illuminate\View\Component;
 class Select extends Component
 {
     public string $name;
-    public bool $isRequired;
     public string $model;
     public string $insideText;
     public string $classes;
     public $options = [];
     public string $value;
+    public string $id;
     public $err;
+    public string $dataValue;
 
     protected array $rules = [
         'name' => 'required',
@@ -26,16 +27,17 @@ class Select extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct(string $name, bool $required, string $model, $options, string $insideText = "", string $classes = "", string $value = "", $err = null)
+    public function __construct(string $name, string $model, string $id, $options = [], string $insideText = "", string $classes = "", string $value = "", $err = null, string $dataValue = "")
     {
         $this->name = $name;
-        $this->isRequired = $required;
         $this->model = $model;
         $this->options = $options;
         $this->insideText = $insideText;
         $this->classes = $classes;
         $this->value = $value;
         $this->err = $err;
+        $this->id = $id;
+        $this->dataValue = $dataValue;
     }
 
     /**
