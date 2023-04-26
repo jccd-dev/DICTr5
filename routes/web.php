@@ -65,6 +65,6 @@ Route::get('/logout', function(){
 });
 
 //testing for JWT middleware
-Route::middleware(['jwt.logAuth'])->group(function () {
+Route::middleware(['jwt.logAuth', 'jwt.roleCheck:superadmin,normaladmin'])->group(function () {
     Route::get('/posts', Posts::class)->name('admin.cms.posts');
 });
