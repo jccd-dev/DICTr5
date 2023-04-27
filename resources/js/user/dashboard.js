@@ -15,7 +15,7 @@ const barangaySelect = document.querySelector('#barangay')
 const setOptions = (data, elementForm, getter, selected = "", parentSelected = "") => {
     let code = "";
 
-    Array.from(data).forEach(objData => {
+    Array.from(data).forEach((objData, index) => {
         let optionElement = document.createElement('option')
 
         if (selected) {

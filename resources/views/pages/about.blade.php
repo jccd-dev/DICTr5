@@ -1,10 +1,15 @@
 @extends('layouts.main-layout')
 
 @section("content")
-<div class="mt-16"></div>
-@include('components.banner')
+{{--<div class="mt-16"></div>--}}
+<x-layouts.top-banner />
 
-@include('layouts.home.announcement-marquee')
+{{--<x-layouts.banner />--}}
+
+<x-layouts.banner />
+<x-layouts.navbar />
+
+<x-layouts.announcement-marquee />
 
 @include('layouts.About.about-banner')
 
