@@ -12,6 +12,8 @@ class Feedback extends Model
 
     protected $fillable = [
         'content',
+        'name',
+        'cp_number',
         'email',
         'is_read',
     ];

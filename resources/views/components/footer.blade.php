@@ -29,7 +29,7 @@
       </div>
 
       <div class="flex-1">
-        <h2 class = "font-bold font-quicksand">Send Feedback</h2>
+        <h2 class = "font-bold font-quicksand">Send Message/Feedback</h2>
           <br>
         <livewire:forms.footer-form />
       </div>
