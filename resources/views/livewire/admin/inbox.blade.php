@@ -30,7 +30,9 @@
                     @forelse ($feedbacks as $fb)
                         <div wire:click="openFeedback({{$fb->id}})" class="border border-2 {{(!$fb->is_read) ? 'bg-yellow-300' : 'bg-yellow-100 border' }} {{($onReadFeedback == $fb->id) ? ' border-blue-700' : ''}} py-2 px-4 cursor-pointer rounded mb-2 ">
                             <p class="leading-3">
-                                <span class="text-lg font-bold">{{$fb->email}}</span>
+                                <span class="text-lg font-bold">{{$fb->name}}</span>
+                                <br>
+                                <span class="text-sm font-semibold">{{$fb->email}} | {{$fb->cp_number}}</span>
                                 <br>
                                 <span class="text-xs font-semibold">{{date('m/d/Y h:i A', strtotime($fb->timestamp))}}</span>
                             </p>
