@@ -276,16 +276,16 @@
                         <form action="#" method="POST" wire:submit.prevent="updatePost" class="w-full flex flex-col" >
                             <div x-show="stateUpdate == 1">
 
-                                <x-forms.input-form name="Title" type="text" placeholder="Title" model="title" classes="mb-6" value="title" />
+                                <x-forms.input-form name="Title" type="text" placeholder="Title" model="title" id="title" classes="mb-6" value="title" />
 
-                                <x-forms.textarea-form name="Excerpt" placeholder="Excerpt" model="excerpt" rows="3" classes="mb-6" value="excerpt" />
+                                <x-forms.textarea-form name="Excerpt" placeholder="Excerpt" model="excerpt" id="excerpt" rows="3" classes="mb-6" value="excerpt" />
 
-                                <x-forms.textarea-form name="Content" placeholder="Content" model="content" rows="5" classes="mb-6" value="content" />
+                                <x-forms.textarea-form name="Content" placeholder="Content" model="content" id="excerpt" rows="5" classes="mb-6" value="content" />
 
                             </div>
                             <div x-show="stateUpdate == 2">
 
-                                <x-forms.file name="Thumbnails" placeholder="Thumbnail" model="thumbnail" classes="mb-6" :th="$thumbnail" />
+                                <x-forms.file name="Thumbnails" placeholder="Thumbnail" model="thumbnail" id="thumbnail" accept="" classes="mb-6" :th="$thumbnail" />
 
                                 <div class="mb-6 flex-1">
                                     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="post-status">
@@ -360,9 +360,9 @@
                             </div>
                             <div x-show="stateUpdate == 3">
 
-                                <x-forms.select name="Category" model="category_id" :options="$all_category" classes="mb-6" value="category_id" />
+                                <x-forms.select name="Category" model="category_id" id="" :options="$all_category" classes="mb-6" value="category_id" />
 
-                                <x-forms.input-form name="Link" type="url" placeholder="Video Link" model="vid_link" classes="mb-6" value="vid_link" />
+                                <x-forms.input-form name="Link" type="url" placeholder="Video Link" model="vid_link" id="vid_link" classes="mb-6" value="vid_link" />
 
                             </div>
 

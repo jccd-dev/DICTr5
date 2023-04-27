@@ -16,71 +16,73 @@
                 id="posts-form"
                 class="flex w-full posts-form"
             >
-                <form action="#" method="POST" class="w-full flex flex-col">
+                <form action="#" method="POST" wire:submit.prevent="submit" class="w-full flex flex-col">
                     <div x-show="state == 1" class="w-full flex flex-col items-center">
                         <h1 class="font-bold font-quicksand text-xl flex self-start my-4">Personal Information</h1>
                         <div class="flex md:flex-row flex-col w-full gap-3">
-
                             <div class="flex md:flex-row flex-col flex-1 gap-3">
-                                <x-forms.input-form name="Given Name" type="text" placeholder="Given Name" model="testing" id="given-name" classes="mb-3 md:mb-6 flex-1 flex-col" />
-                                <x-forms.input-form name="Middle Name" type="text" placeholder="Middle Name" model="" id="middle-name" classes="mb-3 md:mb-6 flex-1 flex-col" />
+                                <x-forms.input-form name="Given Name" type="text" placeholder="Given Name" model="givenName" id="given-name" classes="mb-3 md:mb-6 flex-1 flex-col" />
+                                <x-forms.input-form name="Middle Name" type="text" placeholder="Middle Name" model="middleName" id="middle-name" classes="mb-3 md:mb-6 flex-1 flex-col" />
                             </div>
 
                             <div class="flex md:flex-row flex-col flex-1 gap-3">
-                                <x-forms.input-form name="Surname" type="text" placeholder="Surname" model="" id="surname" classes="mb-3 md:mb-6 flex-1 flex-col" />
-                                <x-forms.input-form name="Telephone Number" type="text" placeholder="Telephone Number" model="" id="tel-num" classes="mb-3 md:mb-6 flex-1 flex-col" />
-                            </div>
-                        </div>
-
-                        <div class="flex md:flex-row flex-col w-full gap-3">
-                            <div class="flex md:flex-row flex-col flex-1 gap-3">
-                                <x-forms.select name="Region" model="" id="region" classes="mb-3 md:mb-6 flex-1 flex-col" />
-                                <x-forms.select name="Province" model="" id="province" classes="mb-3 md:mb-6 flex-1 flex-col" />
-                            </div>
-
-                            <div class="flex md:flex-row flex-col flex-1 gap-3">
-                                <x-forms.select name="Municipality" model="" id="municipality" classes="mb-3 md:mb-6 flex-1 flex-col" />
-                                <x-forms.select name="Barangay" model="" id="barangay" classes="mb-3 md:mb-6 flex-1 flex-col" />
+                                <x-forms.input-form name="Surname" type="text" placeholder="Surname" model="surName" id="surname" classes="mb-3 md:mb-6 flex-1 flex-col" />
+                                <x-forms.input-form name="Telephone Number" type="text" placeholder="Telephone Number" model="tel" id="tel-num" classes="mb-3 md:mb-6 flex-1 flex-col" />
                             </div>
                         </div>
 
                         <div class="flex md:flex-row flex-col w-full gap-3">
-                            <x-forms.input-form name="Email" type="email" placeholder="Email" model="" id="email" classes="mb-3 md:mb-6 flex-1 flex-col" />
-                            <x-forms.input-form name="Place of Birth" type="text" placeholder="Place of Birth" model="" id="dob" classes="mb-3 md:mb-6 flex-1 flex-col" />
-                            <x-forms.datepicker name="Birth Date" placeholder="Birth Date" model="" id="datepicker" classes="mb-3 md:mb-6 flex-1 flex-col" />
+                            <div class="flex md:flex-row flex-col flex-1 gap-3" wire:ignore>
+                                <x-forms.select name="Region" model="region" id="region" classes="mb-3 md:mb-6 flex-1 flex-col" />
+                                <x-forms.select name="Province" model="province" id="province" classes="mb-3 md:mb-6 flex-1 flex-col" />
+                            </div>
+
+                            <div class="flex md:flex-row flex-col flex-1 gap-3" wire:ignore>
+                                <x-forms.select name="Municipality" model="municipality" id="municipality" classes="mb-3 md:mb-6 flex-1 flex-col" />
+                                <x-forms.select name="Barangay" model="barangay" id="barangay" classes="mb-3 md:mb-6 flex-1 flex-col" />
+                            </div>
+                        </div>
+
+                        <div class="flex md:flex-row flex-col w-full gap-3">
+                            <x-forms.input-form name="Email" type="email" placeholder="Email" model="email" id="email" classes="mb-3 md:mb-6 flex-1 flex-col" />
+                            <x-forms.input-form name="Place of Birth" type="text" placeholder="Place of Birth" model="pob" id="dob" classes="mb-3 md:mb-6 flex-1 flex-col" />
+                            <x-forms.datepicker name="Birth Date" placeholder="Birth Date" model="dob" id="datepicker" classes="mb-3 md:mb-6 flex-1 flex-col" />
                         </div>
 
                         <div class="flex md:flex-row flex-col w-full md:w-3/5 gap-3">
-                            <x-forms.select name="Gender" model="" id="gender" :options="['male' => 'Male', 'female' => 'Female']" classes="mb-3 md:mb-6 flex-1 flex-col" />
-                            <x-forms.input-form name="Citizenship" type="text" placeholder="Citizenship" model="" id="citizenship" classes="mb-3 md:mb-6 flex-1 flex-col" />
-                            <x-forms.select name="Civil Status" model="" id="civil status" :options="['single' => 'Single', 'married' => 'Married', 'divorced' => 'Divorced', 'widowed' => 'Widowed']" classes="mb-3 md:mb-6 flex-1 flex-col" />
+                            <x-forms.select name="Gender" model="gender" id="gender" :options="['male' => 'Male', 'female' => 'Female']" classes="mb-3 md:mb-6 flex-1 flex-col" />
+                            <x-forms.input-form name="Citizenship" type="text" placeholder="Citizenship" model="citizenship" id="citizenship" classes="mb-3 md:mb-6 flex-1 flex-col" />
+                            <x-forms.select name="Civil Status" model="civilStatus" id="civil status" :options="['single' => 'Single', 'married' => 'Married', 'divorced' => 'Divorced', 'widowed' => 'Widowed']" classes="mb-3 md:mb-6 flex-1 flex-col" />
                         </div>
                     </div>
                     <div x-show="state == 2" class="pb-3">
                         <h1 class="font-bold font-quicksand text-xl flex self-start my-4">Collegiate / Tertiary Education (attach certified true copy of transcript of record)</h1>
                         <div class="flex md:flex-row flex-col w-full gap-3">
                             <div class="flex flex-1">
-                                <x-forms.input-form name="University / School Attended" type="text" placeholder="University / School Attended" model="" id="school-attended" classes="mb-3 md:mb-6 flex-1 flex-col" />
+                                <x-forms.input-form name="University / School Attended" type="text" placeholder="University / School Attended" model="university" id="school-attended" classes="mb-3 md:mb-6 flex-1 flex-col" />
                             </div>
                             <div class="flex flex-1 gap-3">
-                                <x-forms.input-form name="Degree earned" type="text" placeholder="Degree earned" model="" id="degree-earned" classes="mb-3 md:mb-6 flex-1 flex-col" />
-                                <x-forms.input-form name="Inclusive years" type="number" placeholder="Inclusive Years" model="" id="inclusive-years" classes="mb-3 md:mb-6 flex-1 flex-col" />
+                                <x-forms.input-form name="Degree earned" type="text" placeholder="Degree earned" model="degree" id="degree-earned" classes="mb-3 md:mb-6 flex-1 flex-col" />
+                                <x-forms.input-form name="Inclusive years" type="number" placeholder="Inclusive Years" model="incYears" id="inclusive-years" classes="mb-3 md:mb-6 flex-1 flex-col" />
                             </div>
                         </div>
                         <h1 class="font-bold font-quicksand text-xl flex self-start my-4">IT Trainings / Seminars (Related to chosen examination)</h1>
                         <div class="flex flex-col w-full gap-1">
-                            <div id="seminars-container" class="flex flex-col gap-2 w-full">
+                            <div id="seminars-container" class="flex flex-col gap-2 w-full" wire:ignore>
                                 <div class="flex md:flex-row flex-col w-full gap-3 relative">
-                                    <div class="flex flex-1">
-                                        <x-forms.input-form name="Course / Seminar Title" type="text" placeholder="Course / Seminar Title" model="" id="seminar" classes="mb-3 md:mb-6 flex-1 flex-col" />
+                                    <div class="flex flex-1" wire:ignore>
+                                        <x-forms.input-form name="Course / Seminar Title" type="text" placeholder="Course / Seminar Title" model="trainingCourse.course" id="seminar" classes="mb-3 md:mb-6 flex-1 flex-col" />
                                     </div>
-                                    <div class="flex flex-1">
-                                        <x-forms.input-form name="Training Center" type="text" placeholder="Training Center" model="" id="training-center" classes="mb-3 md:mb-6 flex-1 flex-col" />
+                                    <div class="flex flex-1" wire:ignore>
+                                        <x-forms.input-form name="Training Center" type="text" placeholder="Training Center" model="trainingCenter.course" id="training-center" classes="mb-3 md:mb-6 flex-1 flex-col" />
                                     </div>
-                                    <div class="flex flex-1 gap-3">
-                                        <x-forms.input-form name="Total Training Hours" type="number" placeholder="Total Training Hours" model="" id="training-hours" classes="mb-3 md:mb-6 flex-1 flex-col" />
-                                        <x-forms.file name="Upload Certificate" placeholder="Upload Certificate" model="certificate" id="certificate" accept=".pdf,.doc,.docx" classes="mb-3 md:mb-6 flex-1 flex-col" />
+                                    <div class="flex flex-1 gap-3" wire:ignore>
+                                        <x-forms.input-form name="Total Training Hours" type="number" placeholder="Total Training Hours" model="trainingHours.hours" id="training-hours" classes="mb-3 md:mb-6 flex-1 flex-col" />
+                                        <x-forms.file name="Upload Certificate" placeholder="Upload Certificate" model="trainingCertificates.certificates" id="certificate" accept=".pdf,.doc,.docx" classes="mb-3 md:mb-6 flex-1 flex-col" />
                                     </div>
+                                </div>
+                                <div id="seminars-attended-new" class="flex flex-col gap-2 w-full">
+
                                 </div>
                             </div>
                             <div class="flex justify-end gap-3">
@@ -127,63 +129,38 @@
     <script>
         const addButton = document.querySelector('#add-trainings')
         const removeButton = document.querySelector('#remove-trainings')
-        const itemContainer = document.querySelector('#seminars-container')
+        const itemContainer = document.querySelector('#seminars-attended-new')
 
-        addButton.addEventListener('click', (e) => {
-            appendSeminarsAttended()
-        })
+        addButton.addEventListener('click', appendSeminarsAttended)
+
+        removeButton.addEventListener('click', popSeminarsAttended)
 
         let i = 1;
         function appendSeminarsAttended() {
-            const seminarCode = '' +
-                '<div class="flex md:flex-row flex-col w-full gap-3 relative">' +
-                '<div class="flex flex-1">' +
-                '<div class="mb-3 md:mb-6 flex-1 flex-col">' +
-                '    <label for="seminar" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Course / Seminar Title</label>' +
-                '        <input' +
-                '            type="text"' +
-                '            id="seminar"' +
-                '            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"' +
-                '            placeholder="Course / Seminar Title"' +
-                '            wire:model.lazy=""' +
-                '            value=""' +
-                '        >' +
-                '</div>' +
-                '</div>' +
-                '<div class="flex flex-1">' +
-                '<div class="mb-3 md:mb-6 flex-1 flex-col">' +
-                '    <label for="training-center" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Training Center</label>' +
-                '        <input' +
-                '            type="text"' +
-                '            id="training-center"' +
-                '            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"' +
-                '            placeholder="Training Center"' +
-                '            wire:model.lazy=""' +
-                '            value=""' +
-                '        >' +
-                '</div>' +
-                '</div>' +
-                '<div class="flex flex-1 gap-3">' +
-                '<div class="mb-3 md:mb-6 flex-1 flex-col">' +
-                '    <label for="training-hours" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Total Training Hours</label>' +
-                '        <input' +
-                '            type="number"' +
-                '            id="training-hours"' +
-                '            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"' +
-                '            placeholder="Total Training Hours"' +
-                '            wire:model.lazy=""' +
-                '            value=""' +
-                '        >' +
-                '</div>' +
-                '<x-forms.input-form name="Inclusive years" type="number" placeholder="Inclusive Years" model="" id="inclusive-years" classes="mb-3 md:mb-6 flex-1 flex-col" />' +
-                '</div>' +
-                '</div>';
-
-            itemContainer.innerHTML += seminarCode;
+            const seminarCode = `
+                <div class="flex md:flex-row flex-col w-full gap-3 relative">
+                    <div class="flex flex-1" wire:ignore>
+                        <x-forms.input-form name="Course / Seminar Title" type="text" placeholder="Course / Seminar Title" model="trainingCourse.course${i}" id="seminar" classes="mb-3 md:mb-6 flex-1 flex-col" />
+                    </div>
+                    <div class="flex flex-1" wire:ignore>
+                        <x-forms.input-form name="Training Center" type="text" placeholder="Training Center" model="trainingCenter.course${i}" id="training-center" classes="mb-3 md:mb-6 flex-1 flex-col" />
+                    </div>
+                    <div class="flex flex-1 gap-3" wire:ignore>
+                        <x-forms.input-form name="Total Training Hours" type="number" placeholder="Total Training Hours" model="trainingHours.hours${i}" id="training-hours" classes="mb-3 md:mb-6 flex-1 flex-col" />
+                        <x-forms.file name="Upload Certificate" placeholder="Upload Certificate" model="trainingCertificates.certificates${i}" id="certificate" accept=".pdf,.doc,.docx" classes="mb-3 md:mb-6 flex-1 flex-col" />
+                    </div>
+                </div>
+            `;
+            i++;
+            itemContainer.insertAdjacentHTML('beforeend', seminarCode);
         }
 
-
+        function popSeminarsAttended() {
+            itemContainer.lastElementChild.remove();
+            i--;
+        }
 
     </script>
+
     @vite(['resources/js/user/dashboard.js', 'resources/js/user/seminarsHandler.js'])
 </div>

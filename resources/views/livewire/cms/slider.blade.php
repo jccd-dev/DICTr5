@@ -28,7 +28,7 @@
                 @error('button_links') <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p> @enderror
             </div>
 
-            <x-forms.textarea-form name="Description" required="false" placeholder="" model="description"  />
+            <x-forms.textarea-form name="Description" required="false" placeholder="" model="description" id="" rows="10"  />
 
         </div>
 
