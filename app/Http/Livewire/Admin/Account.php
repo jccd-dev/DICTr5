@@ -26,32 +26,36 @@ class Account extends Component
     /**
      * @throws ValidationException
      */
-    public function authenticate() :void
-    {
-        $validator = Validator::make([
-            'email'     => $this->email,
-            'password'  => $this->password,
-        ], $this->rules);
-
-        if ($validator->fails()) {
-            $err_messages = $validator->getMessageBag();
-            foreach ($err_messages->getMessages() as $field => $messages) {
-                foreach ($messages as $message) {
-                    $this->addError($field, $message);
-                }
-            }
-            $err_messages = $validator->getMessageBag();
-            $this->dispatchBrowserEvent('ValidationErrors', $err_messages->getMessages());
-            return;
-        }
-
-        $validatedData = $validator->validated();
-
-        if (!$token = ){
-            
-        }
-
-    }
+//    public function authenticate() :void
+//    {
+//        $validator = Validator::make([
+//            'email'     => $this->email,
+//            'password'  => $this->password,
+//        ], $this->rules);
+//
+//        if ($validator->fails()) {
+//            $err_messages = $validator->getMessageBag();
+//            dd($err_messages);
+//            foreach ($err_messages->getMessages() as $field => $messages) {
+//                foreach ($messages as $message) {
+//                    $this->addError($field, $message);
+//                }
+//            }
+//            $err_messages = $validator->getMessageBag();
+//            $this->dispatchBrowserEvent('ValidationErrors', $err_messages->getMessages());
+//            return;
+//        }
+//
+//        $validatedData = $validator->validated();
+//
+//        if (!$token = auth('jwt')->attempt($validatedData)){
+//            session()->flash('invalid', 'Invalid Email or Password');
+//        }
+//
+//        // set the token into cookie
+//
+//
+//    }
 
     public function render()
     {

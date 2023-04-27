@@ -11,8 +11,12 @@ class AdminRoleCheck
 {
     public function handle(Request $request, Closure $next, ...$roles){
 
+        // get the token from the cookie
+        $token = $request->cookie('jwt_token');
+
         try {
-            $admin = JWTAuth::parseToken()->authenticate();
+            // parse the token into authorization header
+            $admin = JWTAuth::parseToken($token)->authenticate();
         }catch (JWTException $e){
             return response()->json(['error' => 'Unauthorized'], 401);
         }
