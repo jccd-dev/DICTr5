@@ -5,35 +5,34 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Auth\Middleware\Authenticate as LaravelAuthenticate;
 use Illuminate\Support\Facades\Auth;
-use PHPUnit\Exception;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
-
 
 class JWTAuthAdmins extends LaravelAuthenticate
 {
     public function handle($request, Closure $next, ...$guards){
+        // get the token from the cookie if token not found redirect to log in or previous page
+        $token = $request->cookie('jwt_token');
+        if (!$token) {
+            return redirect('/admin/login');
+        }
 
+        // Authenticate the extracted token then store it in $user var
         try {
-            $admins = JWTAuth::parseToken()->authenticate();
-        }catch (JWTException $e){
-            return redirect('/admin/login');
-        }catch (Exception $e){
-            // do nothing for now
-        }
-
-        //if admin is already logged in
-        if (Auth::guard('jwt')->check()) {
-            return redirect('admin/dashboard');
-        }
-
-        if(!$admins) {
+            $user = JWTAuth::setToken($token)->authenticate();
+        } catch (JWTException $e) {
             return redirect('/admin/login');
         }
 
-        Auth::guard('jwt')->setUser($admins);
+        if (!$user) {
+            return redirect('/admin/login');
+        }
+
+        // receives a user instance as its argument, After logging in the user
+        // Laravel considers them authenticated
+        Auth::login($user);
+
         return $next($request);
+
     }
 }

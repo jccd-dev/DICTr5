@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\Examinee\GoogleAuthController;
+use App\Http\Controllers\Admins\AdminLoginController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\CMS\SliderBanner;
 use App\Http\Livewire\ContactForm;
@@ -42,8 +43,10 @@ Route::get('/about', function () {
 });
 
 Route::prefix('admin')->group(function () {
-    Route::get('/login', Login::class)->name("admin.login");
-    Route::get('/dashboard', Dashboard::class)->name("admin.dashboard");
+
+    Route::get('/login', Login::class)->name("admin.login")->middleware(['jwt.isLoggedIn']);
+    Route::get('/logout', [AdminLoginController::class, 'logout'])->name("admin.logout");
+    Route::get('/dashboard', Dashboard::class)->name("admin.dashboard")->middleware(['jwt.logAuth']);
 
     Route::prefix('cms')->group(function (){
         Route::get('/posts', Posts::class)->name('admin.cms.posts'); // Post::class
@@ -77,7 +80,7 @@ Route::get('/logout', function(){
 });
 
 //testing for JWT middleware
-Route::middleware(['jwt.logAuth'])->group(function () {
+Route::middleware(['jwt.logAuth', 'jwt.roleCheck:superadmin,normaladmin'])->group(function () {
     Route::get('/posts', Posts::class)->name('admin.cms.posts');
 });
 
