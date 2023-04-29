@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 27, 2023 at 03:32 AM
+-- Generation Time: Apr 29, 2023 at 03:52 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -92,9 +92,11 @@ CREATE TABLE `calendar` (
   `id` int(11) NOT NULL,
   `event_title` varchar(255) NOT NULL,
   `admin_id` int(11) NOT NULL,
-  `event` text NOT NULL,
+  `event` text DEFAULT NULL,
   `start_date` datetime NOT NULL,
   `end_date` datetime NOT NULL,
+  `venue` varchar(255) NOT NULL,
+  `category` int(11) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -211,9 +213,9 @@ CREATE TABLE `post_categories` (
 --
 
 INSERT INTO `post_categories` (`id`, `category`) VALUES
-(1, 'Announcement'),
-(2, 'News'),
-(3, 'Wifi4All');
+(3, 'Wifi4All'),
+(14, 'DICT Proj1'),
+(15, 'DICT Proj2');
 
 -- --------------------------------------------------------
 
@@ -399,7 +401,8 @@ ALTER TABLE `banner`
 --
 ALTER TABLE `calendar`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `admin_id` (`admin_id`);
+  ADD KEY `admin_id` (`admin_id`),
+  ADD KEY `category` (`category`);
 
 --
 -- Indexes for table `dict_admins`
@@ -534,7 +537,7 @@ ALTER TABLE `banner`
 -- AUTO_INCREMENT for table `calendar`
 --
 ALTER TABLE `calendar`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `dict_admins`
@@ -570,7 +573,7 @@ ALTER TABLE `posts`
 -- AUTO_INCREMENT for table `post_categories`
 --
 ALTER TABLE `post_categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `post_images`
@@ -652,7 +655,8 @@ ALTER TABLE `announcements`
 -- Constraints for table `calendar`
 --
 ALTER TABLE `calendar`
-  ADD CONSTRAINT `calendar_ibfk_1` FOREIGN KEY (`admin_id`) REFERENCES `dict_admins` (`id`) ON DELETE NO ACTION;
+  ADD CONSTRAINT `calendar_ibfk_1` FOREIGN KEY (`admin_id`) REFERENCES `dict_admins` (`id`) ON DELETE NO ACTION,
+  ADD CONSTRAINT `calendar_ibfk_2` FOREIGN KEY (`category`) REFERENCES `post_categories` (`id`) ON DELETE NO ACTION;
 
 --
 -- Constraints for table `posts`
