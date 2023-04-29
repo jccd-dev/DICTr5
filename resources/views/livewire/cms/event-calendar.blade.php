@@ -120,7 +120,35 @@
                             @error('end_time') <p class="text-xs text-red-600 italic">{{ $message }}</p> @enderror
                         </div>
                     </div>
-                 
+
+                    <div class="mb-5 mt-2 flex flex-row gap-4">
+                        <div>
+                            <x-input label="Venue" placeholder="Enter Venue" wire:model.lazy="createEventArr.venue" class="w-full" style="width:300px" />
+                            @error('venue') <p class="text-xs text-red-600 italic">{{ $message }}</p> @enderror
+                        </div>
+                        <div>
+                            <x-select
+                                label="Category"
+                                wire:model.defer="createEventArr.category"
+                                placeholder="Choose Category"
+                                :async-data="route('api.request.category')"
+                                option-label="category"
+                                option-value="id"
+                                hide-empty-message
+                            >
+                                <x-slot name="afterOptions" class="p-2 flex justify-center" x-show="displayOptions.length === 0">
+                                    <x-button
+                                        x-on:click="$wire.create_category(search)"
+                                        primary
+                                        flat
+                                        full>
+                                        <span x-html="`Create category <b>${search}</b>`"></span>
+                                    </x-button>
+                                </x-slot>
+                            </x-select>
+                            @error('category') <p class="text-xs text-red-600 italic">{{ $message }}</p> @enderror
+                        </div>
+                    </div>
                 
                     <label for="event" class="text-gray-800 text-sm font-bold leading-tight tracking-normal">Event Description</label>
                     <div class="mb-5 mt-2" wire:ignore>
@@ -185,6 +213,35 @@
                         </div>
                     </div>
                  
+                    <div class="mb-5 mt-2 flex flex-row gap-4">
+                        <div>
+                            <x-input label="Venue" placeholder="Enter Venue" wire:model.lazy="updateEventArr.venue" class="w-full" style="width:300px" />
+                            @error('venue') <p class="text-xs text-red-600 italic">{{ $message }}</p> @enderror
+                        </div>
+                        <div>
+                            <x-select
+                                label="Category"
+                                wire:model="updateEventArr.category"
+                                placeholder="Choose Category"
+                                :async-data="route('api.request.category')"
+                                option-label="category"
+                                option-value="id"
+                                hide-empty-message
+                            >
+                                <x-slot name="afterOptions" class="p-2 flex justify-center" x-show="displayOptions.length === 0">
+                                    <x-button
+                                        x-on:click="$wire.create_category(search)"
+                                        primary
+                                        flat
+                                        full
+                                        >
+                                        <span x-html="`Create user <b>${search}</b>`"></span>
+                                    </x-button>
+                                </x-slot>
+                            </x-select>
+                            @error('category') <p class="text-xs text-red-600 italic">{{ $message }}</p> @enderror
+                        </div>
+                    </div>
                 
                     <label for="event" class="text-gray-800 text-sm font-bold leading-tight tracking-normal">Event Description</label>
                     <div class="mb-5 mt-2" wire:ignore>
@@ -223,6 +280,8 @@
                         'All Day' : 
                         date("h:iA", strtotime($toShowEventDetail['start_date'])).' - '.date("h:iA", strtotime($toShowEventDetail['end_date']))
                     }}</span><br>
+                    <span class="font-semibold">Venue: {{$toShowEventDetail['venue']}}</span><br>
+                    <span class="font-semibold">Category: {{$toShowEventDetail['category']}}</span>
 
                     <hr>
 

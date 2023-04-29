@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApiController;
 use App\Http\Controllers\Examinee\GoogleAuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\CMS\SliderBanner;
@@ -78,4 +79,10 @@ Route::get('/logout', function(){
 //testing for JWT middleware
 Route::middleware(['jwt.logAuth'])->group(function () {
     Route::get('/posts', Posts::class)->name('admin.cms.posts');
+});
+
+
+// For API
+Route::prefix('api')->group(function () {
+    Route::match(['GET', 'POST'], '/request/category', [ApiController::class, 'request_category'])->name('api.request.category');
 });

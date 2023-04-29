@@ -23,6 +23,8 @@ class PostCategory extends Model
         return $this->hasMany(PostModel::class, 'category_id', 'id');
     }
 
+    public $timestamps = false; 
+
     /**
      *  check if category to be inserted is already exists
      * @param string $category

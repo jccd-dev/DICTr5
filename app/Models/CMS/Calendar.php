@@ -20,6 +20,8 @@ class Calendar extends Model
     protected $fillable = [
         'event_title',
         'admin_id',
+        'category',
+        'venue',
         'event',
         'start_date',
         'end_date',
@@ -36,8 +38,9 @@ class Calendar extends Model
 
     public function getEvent($id){
         return DB::table($this->table)->join('dict_admins', 'calendar.admin_id', '=', 'dict_admins.id')
+                                    ->join('post_categories', 'calendar.category', '=', 'post_categories.id')
                                     ->where('calendar.id', $id)
-                                    ->select('calendar.*', 'dict_admins.name as author')
+                                    ->select('calendar.*', 'dict_admins.name as author', 'post_categories.category as category_name')
                                     ->first();
     }
 

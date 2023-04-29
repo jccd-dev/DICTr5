@@ -86,6 +86,8 @@
                         'All Day' : 
                         date("h:iA", strtotime($toShowEventDetail['start_date'])).' - '.date("h:iA", strtotime($toShowEventDetail['end_date']))
                     }}</span><br>
+                     <span class="font-semibold">Venue: {{$toShowEventDetail['venue']}}</span><br>
+                     <span class="font-semibold">Category: {{$toShowEventDetail['category']}}</span>
 
                     <hr>
 

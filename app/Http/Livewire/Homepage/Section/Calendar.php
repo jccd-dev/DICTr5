@@ -22,6 +22,8 @@ class Calendar extends Component
         $this->toShowEventDetail['end_date'] = '';
         $this->toShowEventDetail['event'] = '';
         $this->toShowEventDetail['author'] = '';
+        $this->toShowEventDetail['venue'] = '';
+        $this->toShowEventDetail['category'] = '';
         $this->toShowEventDetail['is_single_day'] = false;
         $this->toShowEventDetail['is_allDay'] = false;
 
@@ -44,6 +46,8 @@ class Calendar extends Component
         $this->toShowEventDetail['end_date'] = $event->end_date;
         $this->toShowEventDetail['event'] = $event->event;
         $this->toShowEventDetail['author'] = $event->author;
+        $this->toShowEventDetail['venue'] = $event->venue;
+        $this->toShowEventDetail['category'] = $event->category_name;
         if(date('Y-m-d', strtotime($event->start_date)) == date('Y-m-d', strtotime($event->end_date))){
             $this->toShowEventDetail['is_single_day'] = true;
         }else{
