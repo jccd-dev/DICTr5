@@ -36,6 +36,7 @@
                 <div class="flex flex-col mt-5 gap-3">
                     @forelse ($events as $event)
                         @php
+                            date_default_timezone_set('Asia/Manila');
                             if(date('Y-m-d', strtotime($event->start)) == date('Y-m-d', strtotime($event->end))){
                                 $is_single_day = true;
                             }else{
@@ -48,23 +49,23 @@
                             }
 
                             if(date('Y-m-d H:i:s', strtotime($event->end)) < date('Y-m-d H:i:s')){
-                                $status = 0;
+                                $event_status = 0;
                             }elseif(date('Y-m-d H:i:s', strtotime($event->start)) <= date('Y-m-d H:i:s') && date('Y-m-d H:i:s', strtotime($event->end)) >= date('Y-m-d H:i:s')){
-                                $status = 1;
+                                $event_status = 1;
                             }else{
-                                $status = 2;
+                                $event_status = 2;
                             }
                         @endphp
-                        <div class="bg-white rounded-xl px-5 py-3 flex items-center gap-5">
-                            @if ($status == 0)
+                        <div class="bg-white rounded-xl px-5 py-3 flex items-center gap-5 cursor-pointer" wire:click="showEvent({{$event->id}})" onclick="modalHandler('event_modal', true)">
+                            @if ($event_status == 0)
                                 <div class="legend-icon rounded-full bg-[#C1121F] w-3 h-3"></div>
-                            @elseif($status == 1)
+                            @elseif($event_status == 1)
                                 <div class="legend-icon rounded-full bg-[#51B800] w-3 h-3"></div>
                             @else
                                 <div class="legend-icon rounded-full bg-[#00296B] w-3 h-3"></div>
                             @endif
                             <div>
-                                <h1 class="font-bold font-quicksand text-base mb-1 cursor-pointer" wire:click="showEvent({{$event->id}})" onclick="modalHandler('event_modal', true)">{{$event->title}}</h1>
+                                <h1 class="font-bold font-quicksand text-base mb-1">{{$event->title}}</h1>
                                 <p class="font-quicksand text-xs">{{($is_single_day) ? date('F d, Y', strtotime($event->start)) : date('M d, Y', strtotime($event->start)).' - '.date('M d, Y', strtotime($event->end)) }}</p>
                                 <p class="mt-0 font-quicksand text-xs">{{($is_all_day) ? 'All Day' : date('h:iA', strtotime($event->start)).' - '.date('h:iA', strtotime($event->end))}}</p>
                             </div>
@@ -325,7 +326,12 @@
             editable:true,
             selectable:true,
             events: allEvents,
-            displayEventTime: false,
+            // displayEventTime: false,
+            eventTimeFormat: {
+                hour: 'numeric',
+                minute: '2-digit',
+                meridiem: 'short'
+            },
             headerToolbar: {
                 start: 'prevYear,prev',
                 center: 'title',
