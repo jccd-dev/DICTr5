@@ -111,7 +111,7 @@ class Dashboard extends Component
     }
     public function render()
     {
-        return view('livewire.user.dashboard')->layout('layouts.layout');
+        return view('livewire.user.dashboard')->layout('layouts.user-layouts');
     }
 
     public function popInput() {
