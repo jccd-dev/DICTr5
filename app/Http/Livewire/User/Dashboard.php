@@ -97,7 +97,7 @@ class Dashboard extends Component
         $this->yearsPresentPosition = '';
 
         $this->fill([
-            'trainings' => collect([]),
+            'trainings' => collect([[]]),
         ]);
 
         $this->pl = '';
