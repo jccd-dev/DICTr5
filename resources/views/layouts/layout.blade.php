@@ -4,9 +4,6 @@
     <x-metadata.header />
 </head>
 <body class="overflow-y-scroll overflow-x-hidden" x-data="data()">
-
-
-
         <x-admin.navbar>
         <!-- nav -->
             <div class="flex flex-col flex-1 w-full">
@@ -60,7 +57,6 @@
                     isNotificationsMenuOpen: false,
                     toggleNotificationsMenu() {
                         this.isNotificationsMenuOpen = !this.isNotificationsMenuOpen
-                        console.log(this.isNotificationsMenuOpen)
                     },
                     closeNotificationsMenu() {
                         this.isNotificationsMenuOpen = false

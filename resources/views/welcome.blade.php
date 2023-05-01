@@ -24,8 +24,6 @@
 
 <x-home.section.details-section />
 
-<x-layouts.footer/>
-
 <x-footer />
 
 @endsection

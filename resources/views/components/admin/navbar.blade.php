@@ -48,7 +48,7 @@
                 <li class="relative py-2">
                     <div class="px-4 py-3 flex items-center rounded-lg">
                         <button
-                            class="inline-flex items-center w-full text-sm text-gray-500 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-100"
+                            class="inline-flex items-center justify-between w-full text-sm text-gray-500 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-100"
                             @click="togglePagesMenu"
                             aria-haspopup="true"
                         >

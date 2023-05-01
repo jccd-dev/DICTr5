@@ -1,6 +1,6 @@
-<div class = "flex flex-row w-full py-10 gap-10 bg-white text-black container mx-auto justify-evenly">
-      <div class = "flex-1">
-        <div class =  "w-64">
+<div class = "flex flex-row w-full p-10 gap-10 bg-white text-black container mx-auto justify-evenly flex-wrap">
+      <div class = "flex-1 order-1 md:order-none">
+        <div class =  "w-fit md:w-64">
             <img src="{{asset('img/DICT Standard Commercial Logo .png')}}">
         </div>
         <div class="ml-5">
@@ -10,7 +10,7 @@
         </div>
 
       </div>
-      <div class = "flex-1">
+      <div class = "flex-1 order-3  md:order-none">
         <h2 class = "font-bold font-quicksand">AFFLIATE SITES</h2>
         <br>
         <a href = "#" class = "text-sm">ICT Knowledge Portal</a>
@@ -28,12 +28,12 @@
         <a href = "#" class = "text-sm">Workplace Learning and Development Platform</a>
       </div>
 
-      <div class="flex-1">
+      <div class="flex-1 order-4 md:order-none">
         <h2 class = "font-bold font-quicksand">Send Message/Feedback</h2>
           <br>
         <livewire:forms.footer-form />
       </div>
-    <div class="flex-1">
+    <div class="flex-1 order-2 md:order-none">
         <h2 class = "font-bold font-quicksand">Visitors</h2>
         <br>
         <div class="flex flex-col">
@@ -48,19 +48,19 @@
         </div>
       </div>
 </div>
-<div class= "w-full bg-[#2C2C2C] text-white text-sm py-10">
+<div class= "w-full bg-[#2C2C2C] text-white text-sm p-10">
    <div class="flex flex-row container mx-auto ">
     <section class="w-full">
       <footer class="text-white w-full">
         <div class="w-full">
-          <div class="flex justify-evenly gap-10">
+          <div class="flex justify-evenly gap-10 flex-wrap">
               <div class="">
                  <img
                   src="{{ asset('img/gov-seal2.png') }}"
-                  class="w-100"/>
+                  class="w-[10rem] lg:w-[15rem]"/>
               </div>
 
-              <div class="flex-2">
+              <div class="flex-1 xl:flex-2">
                   <h5 class="font-bold text-base">REPUBLIC OF THE PHILIPPINES</h5>
                   <br>
                   <p>

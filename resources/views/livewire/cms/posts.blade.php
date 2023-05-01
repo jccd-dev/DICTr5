@@ -9,9 +9,7 @@
         wire:click="resetFields()"
         @click="modalActive = 1"
     >
-
         Add Post
-
     </button>
 
     <a href="#" x-ref="deleteModal" type="button" data-modal-target="deleteModal" data-modal-show="deleteModal" class="hidden"></a>
