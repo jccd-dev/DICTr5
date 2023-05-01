@@ -14,20 +14,20 @@ class ExamSchedule extends Model
 
     protected $table = 'exam_schedules';
 
-    protected $fillable = ['venue', 'exam_set', 'datetime'];
+    protected $fillable = ['venue', 'exam_set', 'start_date', 'end_date'];
 
     public $timestamps = false;
 
     public function filter_content($from, $to, $search = null){
         if($this->search != null || $this->search != ''){
-            return DB::table($this->table)->where('datetime', '<=', date('Y-m-d 23:59:00', strtotime($to)))
-                                ->where('datetime', '>=', $from)
-                                ->orderBy('datetime', 'desc')
+            return DB::table($this->table)->where('start_date', '<=', date("Y-m-d H:i:s", strtotime($to)))
+                                ->where('end_date', '>=', date('Y-m-d H:i:s', strtotime($from)))
+                                ->orderBy('start_date', 'desc')
                                 ->get();
         }else{
             return DB::table($this->table)->where('venue',  'LIKE', '%'.$search.'%')
                                 ->orWhere('exam_set', 'LIKE', '%'.$search.'%')
-                                ->orderBy('datetime', 'desc')
+                                ->orderBy('start_date', 'desc')
                                 ->get();
         }
     }

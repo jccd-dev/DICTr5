@@ -42,15 +42,23 @@
                 <td>Time</td>
                 <td>Exam Set</td>
                 <td>Venue</td>
+                <td>Status</td>
                 <td class="text-center">Action</td>
             </tr>
         </tbody>
         @forelse ($schedules as $sched)
             <tr>
-                <td>{{date('F d, Y', strtotime($sched->datetime))}}</td>
-                <td>{{date('H:i A', strtotime($sched->datetime))}}</td>
+                <td>{{date('F d, Y', strtotime($sched->start_date))}}</td>
+                <td>{{date('h:i A', strtotime($sched->start_date)).' - '.date('h:i A', strtotime($sched->end_date))}}</td>
                 <td>{{$sched->exam_set}}</td>
                 <td>{{$sched->venue}} </td>
+                <td>
+                    @if($sched->end_date < date("Y-m-d H:i:s"))
+                        <div class="text-xs font-semibold p-1 bg-green-200 w-12 text-center rounded">Done</div>
+                    @else
+                        <div class="text-xs font-semibold p-1 bg-secondary-300 w-14 text-center rounded">Pending</div>
+                    @endif
+                </td>
                 <td class="text-center">
                     <button class="px-2 py-1 m-1 mr-0 bg-[#00509D] bg-opacity-40 rounded-md" wire:click="update_field({{$sched->id}})" onclick="update_schedule({{$sched->id}})">Edit</button>
                     <button class="px-2 py-1 m-1 ml-0 bg-[#C1121F] bg-opacity-40 rounded-md" onclick="delete_schedule({{$sched->id}})">Delete</button>
@@ -78,12 +86,37 @@
                             without-timezone
                             label="Exam Schedule"
                             placeholder="Examination Schedule"
-                            parse-format="YYYY-MM-DD HH:mm:00"
-                            wire:model.defer="datetime"
-                            interval=60
+                            parse-format="YYYY-MM-DD"
+                            wire:model.defer="sched_date"
+                            interval=30
+                            without-time="true"
                         />
                         <br>
-                        <label class="mt-4 text-sm font-semibold text-slate-700">Event Venue</label>
+                        <div class="flex flex-row">
+                            <div class="basis-5/12">
+                                <x-time-picker
+                                    label="Start Time"
+                                    placeholder="12:00 AM"
+                                    parse-format="HH:mm:00"
+                                    wire:model.defer="sched_start_time"
+                                    interval=30
+                                />
+                            </div>
+                            <div class="basis-2/12 text-center pt-6">
+                                -
+                            </div>
+                            <div class="basis-5/12">
+                                <x-time-picker
+                                    label="End Time"
+                                    placeholder="12:00 AM"
+                                    parse-format="HH:mm:00"
+                                    wire:model.defer="sched_end_time"
+                                    interval=30
+                                />
+                            </div>
+                        </div>
+                        <br>
+                        <label class="mt-4 text-sm font-semibold text-slate-700">Exam Venue</label>
                         <div x-data="{ open: false, selected: '' }" class="relative pt-1">
                             <input wire:model="venue"  @click="open = true" @click.away="open = false" class="w-full py-2 pl-3 pr-10 leading-tight border border-gray-300 text-sm font-semibold text-slate-700 rounded-md appearance-none focus:outline-none focus:shadow-outline-blue focus:border-blue-300 @error('venue') {{'border-red-600'}} @enderror" type="text" placeholder="Select an Venue">
                             <div x-show="open" class="absolute z-10 w-full mt-1 bg-white rounded-md shadow-lg">
@@ -124,12 +157,37 @@
                             without-timezone
                             label="Exam Schedule"
                             placeholder="Examination Schedule"
-                            parse-format="YYYY-MM-DD HH:mm:00"
-                            wire:model.lazy="update_datetime"
-                            interval=60
+                            parse-format="YYYY-MM-DD"
+                            wire:model.defer="update_sched_date"
+                            interval=30
+                            without-time="true"
                         />
                         <br>
-                        <label class="mt-4 text-sm font-semibold text-slate-700">Event Venue</label>
+                        <div class="flex flex-row">
+                            <div class="basis-5/12">
+                                <x-time-picker
+                                    label="Start Time"
+                                    placeholder="12:00 AM"
+                                    parse-format="HH:mm:00"
+                                    wire:model.defer="update_sched_start_time"
+                                    interval=30
+                                />
+                            </div>
+                            <div class="basis-2/12 text-center pt-6">
+                                -
+                            </div>
+                            <div class="basis-5/12">
+                                <x-time-picker
+                                    label="End Time"
+                                    placeholder="12:00 AM"
+                                    parse-format="HH:mm:00"
+                                    wire:model.defer="update_sched_end_time"
+                                    interval=30
+                                />
+                            </div>
+                        </div>
+                        <br>
+                        <label class="mt-4 text-sm font-semibold text-slate-700">Exam Venue</label>
                         <div x-data="{ open: false, selected: '' }" class="relative pt-1">
                             <input wire:model="update_venue"  @click="open = true" @click.away="open = false" class="w-full py-2 pl-3 pr-10 leading-tight border border-gray-300 text-sm font-semibold text-slate-700 rounded-md appearance-none focus:outline-none focus:shadow-outline-blue focus:border-blue-300 @error('update_venue') {{'border-red-600'}} @enderror" type="text" placeholder="Select an Venue">
                             <div x-show="open" class="absolute z-10 w-full mt-1 bg-white rounded-md shadow-lg">
@@ -237,7 +295,7 @@
                 )
             }
         });
-        
+
         window.addEventListener('Error', event => {
             Swal.fire(
                 'Something went wrong',

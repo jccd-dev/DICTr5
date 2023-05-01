@@ -13,11 +13,20 @@ class ExamSchedule extends Component
     public $search;
     public $schedules;
 
-    public $datetime;
+    public $start_date;
+    public $end_date;
+    public $sched_date; // input
+    public $sched_start_time; //input
+    public $sched_end_time; // input
     public $venue;
     public $exam_set;
+
     public $update_exam_set;
-    public $update_datetime;
+    public $update_start_date;  
+    public $update_end_date;
+    public $update_sched_date; // input
+    public $update_sched_start_time; // input
+    public $update_sched_end_time; // input
     public $update_venue;
     public $update_id;
 
@@ -34,14 +43,17 @@ class ExamSchedule extends Component
 
         $this->resetUpdateField();
 
-        $date_from = ExamScheduleModel::select(DB::raw('MIN(datetime) as min_datetime'))->first();
+        $date_from = ExamScheduleModel::select(DB::raw('MIN(start_date) as min_datetime'))->first();
         $this->from = date('Y-m-d', strtotime($date_from->min_datetime));
-        $date_to = ExamScheduleModel::select(DB::raw('MAX(datetime) as max_datetime'))->first();
+        $date_to = ExamScheduleModel::select(DB::raw('MAX(start_date) as max_datetime'))->first();
         $this->to = date('Y-m-d', strtotime($date_to->max_datetime));
     }
 
     public function resetUpdateField(){
-        $this->update_datetime = '';
+        // for inputs
+        $this->update_sched_date = '';
+        $this->update_sched_start_time = '';
+        $this->update_sched_end_time = '';
         $this->update_exam_set = '';
         $this->update_venue = '';
     }
@@ -49,18 +61,28 @@ class ExamSchedule extends Component
     public function create_event_schedule(){
         $validateData = $this->validate(
             [
-                'datetime' => 'required',
+                'sched_date' => 'required',
+                'sched_start_time' => 'required',
+                'sched_end_time' => 'required',
                 'venue' => 'required',
                 'exam_set' => 'required',
             ],
             [
-                'datetime.required' => 'Exam Schedule field is required',
+                'sched_date.required' => 'Exam Date field is required',
+                'sched_start_time.required' => 'Start Time field is required',
+                'sched_end_time.required' => 'End Time field is required',
                 'venue.required' => 'Exam Venue field is required',
                 'exam_set.required' => 'Exam Set field is required',
             ]
 
         );
-        $status = ExamScheduleModel::create($validateData);
+        $create = [
+            'exam_set' => $validateData['exam_set'],
+            'venue' => $validateData['venue'],
+            'start_date' => $validateData['sched_date'].' '.$validateData['sched_start_time'],
+            'end_date' => $validateData['sched_date'].' '.$validateData['sched_end_time'],
+        ];
+        $status = ExamScheduleModel::create($create);
         
         $this->resetCreateForm();
         $this->dispatchBrowserEvent('ExamScheduleCreated', $status);
@@ -76,7 +98,9 @@ class ExamSchedule extends Component
     }
 
     public function resetCreateForm(){
-        $this->datetime = '';
+        $this->sched_date = '';
+        $this->sched_start_time = '';
+        $this->sched_end_time = '';
         $this->venue = '';
         $this->exam_set = '';
     }
@@ -86,22 +110,29 @@ class ExamSchedule extends Component
     }
 
     public function update_field($id){
+        date_default_timezone_set("Asia/Manila");
         $sched = ExamScheduleModel::where('id', $id)->first();
         $this->update_id = $id;
         $this->update_exam_set = $sched->exam_set;
-        $this->update_datetime = $sched->datetime;
+        $this->update_sched_date = date("Y-m-d", strtotime($sched->start_date));
+        $this->update_sched_start_time = date("H:i", strtotime($sched->start_date));
+        $this->update_sched_end_time = date("H:i", strtotime($sched->end_date));
         $this->update_venue = $sched->venue;
     }
 
     public function update_event_schedule(){
         $validateData = $this->validate(
             [
-                'update_datetime' => 'required',
+                'update_sched_date' => 'required',
+                'update_sched_start_time' => 'required',
+                'update_sched_end_time' => 'required',
                 'update_venue' => 'required',
                 'update_exam_set' => 'required',
             ],
             [
-                'update_datetime.required' => 'Exam Schedule field is required',
+                'update_sched_date.required' => 'Exam Date field is required',
+                'update_sched_start_time.required' => 'Exam Start Time field is required',
+                'update_sched_end_time.required' => 'Exam End Time field is required',
                 'update_venue.required' => 'Exam Venue field is required',
                 'update_exam_set.required' => 'Exam Set field is required',
             ]
@@ -111,7 +142,8 @@ class ExamSchedule extends Component
         $status = $exam_schedule_model->updateSchedule($this->update_id, [
             'exam_set' => $this->update_exam_set,
             'venue' => $this->update_venue,
-            'datetime' => $this->update_datetime,
+            'start_date' => $validateData['update_sched_date'].' '.$validateData['update_sched_start_time'],
+            'end_date' => $validateData['update_sched_date'].' '.$validateData['update_sched_end_time'],
         ]);
         $this->resetUpdateField();
         $this->dispatchBrowserEvent('UpdateSchedule', $status);
