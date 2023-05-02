@@ -6,7 +6,6 @@
 
             <form class="w-full" x-data="{ dragging: true }" wire:submit.prevent="submit">
                 <div class="mb-6">
-
                     {{--      TITLE      --}}
                     <div>
                         <label for="Name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
@@ -66,6 +65,8 @@
                     </div>
                 </x-slot>
             </form>
+
         </div>
     </x-modal.card>
+    {{$formData->title}}
 </div>

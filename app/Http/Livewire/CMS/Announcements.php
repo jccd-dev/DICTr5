@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Cms;
 
 use App\Models\CMS\Announcement as AnnouncementModel;
 use App\Models\CMS\POST\PostCategory as PostCategoryModel;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
@@ -21,9 +22,22 @@ class Announcements extends Component
     public $isUpdatedPublished;
     public $to_update_id;
 
+    public array $admin_data = [];
+
     protected $listeners = ['delete' => 'delete_announcement'];
 
     public function render(){
+        if (Auth::check()) {
+            // User is authenticated, retrieve the authenticated user
+            $user = Auth::user();
+            // Access the 'role' property
+            $this->admin_data = [
+                'id'   => $user->id,
+                'name' => $user->name,
+
+            ];
+        }
+
         $announcementModel = new AnnouncementModel();
         $postCategoryModel = new PostCategoryModel();
         return view('livewire.cms.announcements', [
@@ -91,8 +105,8 @@ class Announcements extends Component
             $this->insertAnnArray['status'] = 0;
         }
 
-        $this->insertAnnArray['admin_id'] = GetAdmin::get_admin()['id'];
-        $this->insertAnnArray['author'] = GetAdmin::get_admin()['name'];
+        $this->insertAnnArray['admin_id'] = $this->admin_data['id'];
+        $this->insertAnnArray['author'] = $this->admin_data['name'];
 
         $announcementModel = new AnnouncementModel();
         if($announcementModel->create_announcement($this->insertAnnArray)){

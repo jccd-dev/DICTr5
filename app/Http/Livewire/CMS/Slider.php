@@ -43,10 +43,10 @@ class Slider extends Component
         'image.dimensions'   => 'Image minimum width and height should be 950 x 635 pixels'
     ];
 
-    public function mount()
-    {
-        $this->banner_model = new HomeBanner();
-    }
+//    public function mount()
+//    {
+//        $this->banner_model = new HomeBanner();
+//    }
 
     /**
      * TITLE: SUBMIT
@@ -55,7 +55,7 @@ class Slider extends Component
      */
     public function submit() :void
     {
-        //validate Inputs data before inserting to database
+        // validate Inputs data before inserting to database
         $validatedData = $this->validate();
         $this->storeImage();
         $validatedData['image'] = $this->image_name;
@@ -122,6 +122,7 @@ class Slider extends Component
 
     public function render()
     {
-        return view('livewire.cms.slider', ['formData' => $this->banner_data])->layout("layouts.layout");
+        $data = new HomeBanner();
+        return view('livewire.cms.slider', ['formData' => $data->get_banner(5)])->layout("layouts.layout");
     }
 }
