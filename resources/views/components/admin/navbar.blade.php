@@ -15,13 +15,13 @@
             </a>
             <ul class="mt-14">
                 <li class="relative py-1">
-                    <div class="bg-[#00509D] px-4 py-3 flex items-center rounded-lg">
+                    <div class="{{(request()->routeIs('admin.dashboard')) ? 'bg-[#00509D]' : ''}} px-4 py-3 flex items-center rounded-lg">
                         <a
-                            class="inline-flex items-center w-full text-sm text-gray-800 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-100"
+                            class="inline-flex items-center w-full text-sm transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-100"
                             href="{{ route('admin.dashboard') }}"
                         >
                             <svg
-                                class="w-5 h-5 text-white"
+                                class="w-5 h-5"
                                 aria-hidden="true"
                                 fill="none"
                                 stroke-linecap="round"
@@ -35,7 +35,7 @@
                                 ></path>
                             </svg>
                             <span
-                                class="ml-4 text-white font-semibold text-base"
+                                class="ml-4 font-semibold text-base"
                                 style="font-family: Quicksand"
                             >
                     Dashboard
@@ -69,7 +69,7 @@
                           </svg>
                           <span
                               class="ml-4 font-semibold text-base"
-                              style="font-family: Quicksand,serif">Pages</span>
+                              style="font-family: Quicksand,serif">CMS</span>
                         </span>
                             <svg
                                 class="w-4 h-4"
@@ -118,7 +118,12 @@
                             <li
                                 class="px-2 pl-10 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
                             >
-                                <a class="w-full" href="pages/404.html">404</a>
+                                <a class="w-full" href="{{route('admin.cms.announcement')}}">Announcement</a>
+                            </li>
+                            <li
+                                class="px-2 pl-10 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+                            >
+                                <a class="w-full" href="{{route('admin.cms.calendar')}}">Event Calendar</a>
                             </li>
                             <li
                                 class="px-2 pl-10 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
@@ -129,10 +134,10 @@
                     </template>
                 </li>
                 <li class="relative py-2">
-                    <div class="px-4 py-3 flex items-center rounded-lg">
+                    <div class="{{(request()->routeIs('admin.exam-schedule')) ? 'bg-[#00509D] text-white' : ''}} px-4 py-3 flex items-center rounded-lg">
                         <a
                             class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                            href="forms.html"
+                            href="{{route('admin.exam-schedule')}}"
                         >
                             <svg
                                 class="w-5 h-5"
@@ -152,7 +157,7 @@
                                 class="ml-4 font-semibold text-base"
                                 style="font-family: Quicksand"
                             >
-                    Forms
+                    Exam Schedule
                   </span>
                         </a>
                     </div>

@@ -35,7 +35,7 @@ class ExamSchedule extends Component
         $exam_schedule_model = new ExamScheduleModel();
         $this->schedules = $exam_schedule_model->filter_content($this->from, $this->to, $this->search);
         return view('livewire.admin.exam-schedule')
-                ->layout('livewire.layout.laravel_layout');
+                ->layout('layouts.layout');
     }
 
     public function mount(){

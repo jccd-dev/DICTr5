@@ -16,7 +16,12 @@
                         <h2
                             class="mb-6 text-5xl font-quicksand font-semibold text-gray-700 dark:text-gray-200"
                         >
-                            Charts
+                            @if(request()->routeIs('admin.cms.announcement')) {{'Announcement'}}
+                            @elseif(request()->routeIs('admin.cms.calendar')) {{'Event Calendar'}}
+                            @elseif(request()->routeIs('admin.exam-schedule')) {{'Exam Schedule'}}
+                            @elseif(request()->routeIs('admin.inbox')) {{'Inbox'}}
+                            @else {{'DICT Camarines Sur'}}
+                            @endif
                         </h2>
                         <div id="main">
                             {{ $slot }}
