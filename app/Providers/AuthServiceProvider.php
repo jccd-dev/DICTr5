@@ -24,10 +24,21 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        // sample for now
-        // it limits the cms buttons or display if admin is normal admin
-        Gate::define('cms', function ($admin){
-            return $admin->role !== 'normaladmin';
+        $roles = [
+            'sa' => 100,
+            'na' => 200,
+            'cc' => 300,
+        ];
+
+        // Restrict the role Creator(cc) to access the functions that for admins only
+        // admins_only function is for super_admin(sa) and normal_admin(na) only
+        Gate::define('admins_only', function ($admin) use ($roles) {
+            return (int)$admin->role !== $roles['cc'];
+        });
+
+        // restrict the role normal_admin(na) to delete any contents in the website
+        Gate::define('delete_content', function ($admin) use ($roles) {
+            return (int)$admin->role !== $roles['na'];
         });
     }
 }

@@ -49,6 +49,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/dashboard', Dashboard::class)->name("admin.dashboard")->middleware(['jwt.logAuth']);
 
     Route::prefix('cms')->group(function (){
+        // TODO: insert the banner route here
         Route::get('/posts', Posts::class)->name('admin.cms.posts'); // Post::class
         Route::get('/announcement', Announcements::class)->name('admin.cms.announcement');
         Route::get('/event-calendar', EventCalendar::class)->name('admin.cms.calendar');

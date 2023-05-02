@@ -37,6 +37,7 @@ class Login extends Component
             'password'  => $this->password,
         ], $this->rules);
 
+        // validate submitted data
         if ($validator->fails()) {
             $err_messages = $validator->getMessageBag();
             foreach ($err_messages->getMessages() as $field => $messages) {
@@ -50,11 +51,12 @@ class Login extends Component
         }
 
         $validatedData = $validator->validated();
-        $credentials = $request->only('email', 'password');
 
         // create the token
         if (!$token = auth('jwt')->attempt($validatedData)){
             session()->flash('invalid', 'Invalid Email or Password');
+
+            // In case it need to use an API
             return response()->json(['error' => 'Invalid credentials'], 401);
         }
 
