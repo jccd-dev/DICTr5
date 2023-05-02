@@ -75,16 +75,6 @@ class Posts extends Component
 
     public PostModel $post_model;
     private ImageHandlerHelper $imageHelper;
-<<<<<<< HEAD
-=======
-    private GetAdmin $getAdmin;
-    public function __construct()
-    {
-        $this->post_model = new PostModel();
-        $this->imageHelper = new ImageHandlerHelper();
-        $this->getAdmin = new GetAdmin();
-    }
->>>>>>> 3657783b5114a242a9fd4cdd4b1a266b24618872
 
     public function mount()
     {
@@ -241,7 +231,7 @@ class Posts extends Component
         }
 
         if ($this->from != null) {
-            if (is_null($to_date)){
+            if (is_null($to_date)) {
                 $from = date('Y-m-d', strtotime($this->from));
                 $posts = $posts->whereBetween('timestamp', [$from, $current]);
             }

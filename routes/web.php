@@ -47,12 +47,8 @@ Route::prefix('admin')->group(function () {
     Route::get('/logout', [AdminLoginController::class, 'logout'])->name("admin.logout");
     Route::get('/dashboard', Dashboard::class)->name("admin.dashboard")->middleware(['jwt.logAuth']);
 
-    Route::prefix('cms')->group(function (){
-<<<<<<< HEAD
+    Route::prefix('cms')->group(function () {
         Route::get('/slider', Slider::class)->name("admin.cms.slider");
-=======
-        // TODO: insert the banner route here
->>>>>>> 3657783b5114a242a9fd4cdd4b1a266b24618872
         Route::get('/posts', Posts::class)->name('admin.cms.posts'); // Post::class
         Route::get('/announcement', Announcements::class)->name('admin.cms.announcement');
         Route::get('/event-calendar', EventCalendar::class)->name('admin.cms.calendar');
@@ -79,7 +75,7 @@ Route::prefix('exam')->group(function () {
     Route::get('/send-email', [UserDashboardController::class, 'sendEmail']);
 });
 
-Route::get('/logout', function(){
+Route::get('/logout', function () {
     session()->flush();
 });
 
