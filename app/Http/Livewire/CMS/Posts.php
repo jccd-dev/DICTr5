@@ -8,6 +8,7 @@ use App\Models\CMS\POST\PostCategory;
 use App\Models\CMS\POST\PostModel;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Livewire\Component;
@@ -76,8 +77,17 @@ class Posts extends Component
     public PostModel $post_model;
     private ImageHandlerHelper $imageHelper;
 
+    public function __construct()
+    {
+        parent::__construct();
+        $this->post_model = new PostModel(); // or whatever the name of your Post model is
+        $this->imageHelper = new ImageHandlerHelper();
+    }
+
+
     public function mount()
     {
+
         $this->post_model = new PostModel();
         $this->imageHelper = new ImageHandlerHelper();
         $this->listeners['postModalPopulator'] = 'postModalPopulator';
@@ -115,18 +125,19 @@ class Posts extends Component
         //arrange data for insertion
         $this->post_data = [
             'category_id'    => $this->category_id,
-            'admin_id'  => $this->getAdmin::get_admin()['id'],
+            'admin_id'  => GetAdmin::get_admin()['id'],
             'title'     => $this->title,
             'excerpt'   => $this->excerpt,
             'thumbnail' => $this->thumbnail_img_name,
             'content'   => $this->content,
             'vid_link'  => $this->vid_link,
-            'author'    => $this->getAdmin::get_admin()['name'],
+            'author'    => GetAdmin::get_admin()['name'],
             'status'    => $this->status,
         ];
 
+        $this->populateImages($this->temp_images);
+
         $post = $this->post_model->fill($this->post_data);
-        //        dd($post);
         if ($post->save()) {
 
             $this->image_names = $this->imageHelper->extract_image_names($this->images);
@@ -283,7 +294,7 @@ class Posts extends Component
             $this->dispatchBrowserEvent('validation-errors-update', $err_msgs->getMessages());
             return false;
         } else {
-            $this->dispatchBrowserEvent('validation-success-update', true);
+            $this->dispatchBrowserEvent('ValidationSuccess', true);
         }
 
         $this->populateImages($this->temp_images);
@@ -312,6 +323,7 @@ class Posts extends Component
         $this->image_names = $this->imageHelper->extract_image_names($this->images);
 
         $post_update = PostModel::find($this->post_id);
+
 
         $post_update->fill($this->post_data);
         if ($post_update->save()) {
@@ -402,15 +414,19 @@ class Posts extends Component
             $this->to_update_data['images'] = collect($this->to_update_data['images'])->filter(function ($item) use ($value) {
                 return !in_array($value, $item);
             })->values()->all();
-            $this->to_delete_image[$key] = $value;
+            $this->to_delete_image[] = $value;
         });
     }
 
     public function deleteTempImg($data)
     {
         collect(json_decode($data, true))->each(function ($loc1, $loc2) {
-            unset($this->temp_images[$loc1][$loc2]);
+            unset($this->temp_images[$loc2][$loc1]);
+            if (count($this->temp_images[$loc2]) == 0) {
+                unset($this->temp_images[$loc2]);
+            }
         });
+//        dd($this->temp_images);
     }
 
     public function updatedImages($variable)
@@ -428,10 +444,5 @@ class Posts extends Component
     {
         $postModel = new PostModel();
         return view('livewire.cms.posts', ['posts' => $this->search_post(), 'all_category' => $this->get_all_categories()])->layout('layouts.layout');
-    }
-
-    public function renderLayout()
-    {
-        return view('pages.admin.posts');
     }
 }

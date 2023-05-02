@@ -43,8 +43,9 @@ class Slider extends Component
         'image.dimensions'   => 'Image minimum width and height should be 950 x 635 pixels'
     ];
 
-    public function mount()
+    public function __construct()
     {
+        parent::__construct();
         $this->banner_model = new HomeBanner();
     }
 

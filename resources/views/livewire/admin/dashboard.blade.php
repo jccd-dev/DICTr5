@@ -6,6 +6,8 @@
         <br>
     @endif
 
+    <div x-init="console.log({{ auth('jwt')->user() }})"></div>
+
     <!-- admin credentials can be access using this;-->
     @can('cms', auth('jwt')->user())
         <div style="font-size: 1rem; font-weight: bold">CMS</div>
