@@ -22,6 +22,7 @@ class Announcement extends Model
      */
     protected $fillable = [
         'cat_id',
+        'admin_id',
         'title',
         'excerpt',
         'content',
