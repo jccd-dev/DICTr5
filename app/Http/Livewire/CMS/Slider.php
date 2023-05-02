@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\CMS;
 
+use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
 use Illuminate\Support\Str;
 use Livewire\WithFileUploads;
@@ -20,6 +21,7 @@ class Slider extends Component
     public string $title;
     public $description;
     public $image;
+    public $displayFormat;
     public string $image_name = '';
     public string $button_links;
     private $banner_model;
@@ -54,16 +56,41 @@ class Slider extends Component
      * Description: Handle the data submitted from the form
      * @return \Session (flash session) use for to display message to user.
      */
-    public function submit() :void
+    public function submit():void
     {
+//        dd(1);
         //validate Inputs data before inserting to database
-        $validatedData = $this->validate();
-        $this->storeImage();
-        $validatedData['image'] = $this->image_name;
+//        $validatedData = $this->validate();
+        $validator = Validator::make([
+            'title'       => $this->title,
+            'description'     => $this->description,
+            'image'     => $this->image,
+            'button_links'      => $this->button_links,
+        ], $this->rules);
 
-        $this->banner_data = $validatedData;
+        if ($validator->fails()) {
+            $err_msgs = $validator->getMessageBag();
+            foreach ($err_msgs->getMessages() as $field => $messages) {
+                foreach ($messages as $message) {
+                    $this->addError('update.' . $field, $message);
+                }
+            }
+            $this->dispatchBrowserEvent('ValidationError', $err_msgs->getMessages());
+        } else {
+            $this->dispatchBrowserEvent('ValidationSuccess', true);
+            $this->storeImage();
+
+            $validatedData = [
+                'title'       => $this->title,
+                'description'     => $this->description,
+                'image'     => $this->image,
+                'button_links'      => $this->button_links,
+            ];
+            $validatedData['image'] = $this->image_name;
+            $this->banner_data = $validatedData;
+            $this->banner_model->make_banner($validatedData) ? session()->flash('success', 'Slider Banner Created!') : session()->flash('error', 'Please try Again Later!');
+        }
         //insert data into database
-        $this->banner_model->make_banner($validatedData) ? session()->flash('success', 'Slider Banner Created!') : session()->flash('error', 'Please try Again Later!');
     }
 
     /**
