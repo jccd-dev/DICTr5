@@ -1,4 +1,4 @@
-<div class="flex items-center justify-center" x-data="app()" x-init="[initDate(), getNoOfDays()]" x-cloak>
+<div class="hidden md:flex items-center justify-center" x-data="app()" x-init="[initDate(), getNoOfDays()]" x-cloak>
     <div class="max-w-lg w-full shadow-lg">
         <div class="md:p-8 p-5 dark:bg-gray-800 bg-white rounded-t">
             <div class="px-4 flex items-center justify-between">

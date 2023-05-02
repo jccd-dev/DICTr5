@@ -1,6 +1,7 @@
 <div
     class="flex h-screen bg-[#F2F7FF] dark:bg-gray-900"
     :class="{ 'overflow-hidden': isSideMenuOpen }"
+    x-data="{ isCMSOpen: {{ request()->is('admin/cms/*') }} }"
 >
     <!-- Desktop sidebar -->
     <aside
@@ -15,62 +16,37 @@
             </a>
             <ul class="mt-14">
                 <li class="relative py-1">
-                    <div class="{{(request()->routeIs('admin.dashboard')) ? 'bg-[#00509D]' : ''}} px-4 py-3 flex items-center rounded-lg">
+                    <div class="{{ request()->routeIs('admin.dashboard') ? 'bg-[#00509D] text-white' : 'text-gray-500 hover:text-gray-800' }} transition-colors duration-150 px-4 py-3 flex items-center rounded-lg">
                         <a
-                            class="inline-flex items-center w-full text-sm transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-100"
+                            class="inline-flex items-center w-full text-sm "
+
                             href="{{ route('admin.dashboard') }}"
                         >
-                            <svg
-                                class="w-5 h-5"
-                                aria-hidden="true"
-                                fill="none"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-                                ></path>
-                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-airplay"><path d="M5 17H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1"></path><polygon points="12 15 17 21 7 21 12 15"></polygon></svg>
                             <span
-                                class="ml-4 font-semibold text-base"
-                                style="font-family: Quicksand"
+                                class="ml-4 font-semibold text-base font-quicksand"
                             >
-                    Dashboard
-                  </span>
+                                Dashboard
+                            </span>
                         </a>
                     </div>
                 </li>
             </ul>
             <ul>
                 <li class="relative py-2">
-                    <div class="px-4 py-3 flex items-center rounded-lg">
+                    <div class="{{ request()->is('admin/cms/*') ? 'bg-[#00509D] text-white' : 'text-gray-500 hover:text-gray-800' }} transition-colors duration-150 px-4 py-3 flex items-center rounded-lg">
                         <button
-                            class="inline-flex items-center w-full text-sm text-gray-500 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-100"
-                            @click="togglePagesMenu"
+                            class="inline-flex items-center justify-between w-full text-sm"
+                            @click="isCMSOpen = !isCMSOpen"
                             aria-haspopup="true"
                         >
-                        <span class="inline-flex items-center">
-                          <svg
-                              class="w-5 h-5"
-                              aria-hidden="true"
-                              fill="none"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                          >
-                            <path
-                                d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"
-                            ></path>
-                          </svg>
-                          <span
-                              class="ml-4 font-semibold text-base"
-                              style="font-family: Quicksand,serif">CMS</span>
-                        </span>
+                            <span class="flex">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-box"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                                <span
+                                  class="ml-4 font-semibold text-base"
+                                  style="font-family: Quicksand,serif">CMS
+                                </span>
+                            </span>
                             <svg
                                 class="w-4 h-4"
                                 aria-hidden="true"
@@ -85,7 +61,7 @@
                             </svg>
                         </button>
                     </div>
-                    <template x-if="isPagesMenuOpen">
+                    <template x-if="isCMSOpen">
                         <ul
                             x-transition:enter="transition-all ease-in-out duration-300"
                             x-transition:enter-start="opacity-25 max-h-0"
@@ -93,40 +69,40 @@
                             x-transition:leave="transition-all ease-in-out duration-300"
                             x-transition:leave-start="opacity-100 max-h-xl"
                             x-transition:leave-end="opacity-0 max-h-0"
-                            class="p-2 space-y-2 overflow-hidden text-sm font-medium text-gray-500 rounded-md dark:text-gray-400"
+                            class="p-2 pl-14 space-y-2 overflow-hidden text-sm font-medium text-gray-500 rounded-md dark:text-gray-400"
                             aria-label="submenu"
                         >
                             <li
-                                class="px-2 pl-10 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+                                class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
                             >
                                 <a class="w-full" href="{{ url("/admin/cms/posts") }}">Posts</a>
                             </li>
                             <li
-                                class="px-2 pl-10 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+                                class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
                             >
-                                <a class="w-full" href="{{ route("admin.cms.posts") }}">
-                                    Create account
+                                <a class="w-full" href="{{ route("admin.cms.slider") }}">
+                                    Slider
                                 </a>
                             </li>
                             <li
-                                class="px-2 pl-10 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+                                class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
                             >
                                 <a class="w-full" href="pages/forgot-password.html">
                                     Forgot password
                                 </a>
                             </li>
                             <li
-                                class="px-2 pl-10 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+                                class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
                             >
                                 <a class="w-full" href="{{route('admin.cms.announcement')}}">Announcement</a>
                             </li>
                             <li
-                                class="px-2 pl-10 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+                                class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
                             >
                                 <a class="w-full" href="{{route('admin.cms.calendar')}}">Event Calendar</a>
                             </li>
                             <li
-                                class="px-2 pl-10 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+                                class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
                             >
                                 <a class="w-full" href="pages/blank.html">Blank</a>
                             </li>
@@ -134,10 +110,79 @@
                     </template>
                 </li>
                 <li class="relative py-2">
-                    <div class="{{(request()->routeIs('admin.exam-schedule')) ? 'bg-[#00509D] text-white' : ''}} px-4 py-3 flex items-center rounded-lg">
+                    <div class="{{ request()->routeIs('admin.dashboard') ? 'bg-[#00509D] text-white' : 'text-gray-500 hover:text-gray-800' }} transition-colors duration-150 px-4 py-3 flex items-center rounded-lg">
                         <a
-                            class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                            href="{{route('admin.exam-schedule')}}"
+                            class="inline-flex items-center w-full text-sm "
+
+                            href="{{ route('admin.dashboard') }}"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-send"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                            <span
+                                class="ml-4 font-semibold text-base"
+                                style="font-family: Quicksand"
+                            >
+                    Inbox
+                  </span>
+                        </a>
+                    </div>
+                </li>
+                <li class="relative py-2">
+                    <div class="{{ request()->routeIs('admin.dashboard') ? 'bg-[#00509D] text-white' : 'text-gray-500 hover:text-gray-800' }} transition-colors duration-150 px-4 py-3 flex items-center rounded-lg">
+                        <a
+                            class="inline-flex items-center w-full text-sm "
+
+                            href="{{ route('admin.dashboard') }}"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-square"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                            <span
+                                class="ml-4 font-semibold text-base"
+                                style="font-family: Quicksand"
+                            >
+                    Feedbacks
+                  </span>
+                        </a>
+                    </div>
+                </li>
+                <li class="relative py-2">
+                    <div class="{{ request()->routeIs('admin.dashboard') ? 'bg-[#00509D] text-white' : 'text-gray-500 hover:text-gray-800' }} transition-colors duration-150 px-4 py-3 flex items-center rounded-lg">
+                        <a
+                            class="inline-flex items-center w-full text-sm "
+
+                            href="{{ route('admin.dashboard') }}"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                            <span
+                                class="ml-4 font-semibold text-base"
+                                style="font-family: Quicksand"
+                            >
+                    Admin
+                  </span>
+                        </a>
+                    </div>
+                </li>
+                <li class="relative py-2">
+                    <div class="{{ request()->routeIs('admin.dashboard') ? 'bg-[#00509D] text-white' : 'text-gray-500 hover:text-gray-800' }} transition-colors duration-150 px-4 py-3 flex items-center rounded-lg">
+                        <a
+                            class="inline-flex items-center w-full text-sm "
+
+                            href="{{ route('admin.dashboard') }}"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                            <span
+                                class="ml-4 font-semibold text-base"
+                                style="font-family: Quicksand"
+                            >
+                    Exam Applicants
+                  </span>
+                        </a>
+                    </div>
+                </li>
+                <li class="relative py-2">
+                    <div class="{{ request()->routeIs('admin.dashboard') ? 'bg-[#00509D] text-white' : 'text-gray-500 hover:text-gray-800' }} transition-colors duration-150 px-4 py-3 flex items-center rounded-lg">
+                        <a
+                            class="inline-flex items-center w-full text-sm "
+
+                            href="{{ route('admin.dashboard') }}"
                         >
                             <svg
                                 class="w-5 h-5"
@@ -163,39 +208,28 @@
                     </div>
                 </li>
                 <li class="relative py-2">
-                    <div class="px-4 py-3 flex items-center rounded-lg">
+                    <div class="{{ request()->routeIs('admin.dashboard') ? 'bg-[#00509D] text-white' : 'text-gray-500 hover:text-gray-800' }} transition-colors duration-150 px-4 py-3 flex items-center rounded-lg">
                         <a
-                            class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                            href="forms.html"
+                            class="inline-flex items-center w-full text-sm "
+
+                            href="{{ route('admin.dashboard') }}"
                         >
-                            <svg
-                                class="w-5 h-5"
-                                aria-hidden="true"
-                                fill="none"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
-                                ></path>
-                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-book"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
                             <span
                                 class="ml-4 font-semibold text-base"
                                 style="font-family: Quicksand"
                             >
-                    Forms
+                    All Logs
                   </span>
                         </a>
                     </div>
                 </li>
                 <li class="relative py-2">
-                    <div class="px-4 py-3 flex items-center rounded-lg">
+                    <div class="{{ request()->routeIs('admin.dashboard') ? 'bg-[#00509D] text-white' : 'text-gray-500 hover:text-gray-800' }} transition-colors duration-150 px-4 py-3 flex items-center rounded-lg">
                         <a
-                            class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                            href="forms.html"
+                            class="inline-flex items-center w-full text-sm "
+
+                            href="{{ route('admin.dashboard') }}"
                         >
                             <svg
                                 class="w-5 h-5"
@@ -215,94 +249,7 @@
                                 class="ml-4 font-semibold text-base"
                                 style="font-family: Quicksand"
                             >
-                    Forms
-                  </span>
-                        </a>
-                    </div>
-                </li>
-                <li class="relative py-2">
-                    <div class="px-4 py-3 flex items-center rounded-lg">
-                        <a
-                            class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                            href="forms.html"
-                        >
-                            <svg
-                                class="w-5 h-5"
-                                aria-hidden="true"
-                                fill="none"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
-                                ></path>
-                            </svg>
-                            <span
-                                class="ml-4 font-semibold text-base"
-                                style="font-family: Quicksand"
-                            >
-                    Forms
-                  </span>
-                        </a>
-                    </div>
-                </li>
-                <li class="relative py-2">
-                    <div class="px-4 py-3 flex items-center rounded-lg">
-                        <a
-                            class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                            href="forms.html"
-                        >
-                            <svg
-                                class="w-5 h-5"
-                                aria-hidden="true"
-                                fill="none"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
-                                ></path>
-                            </svg>
-                            <span
-                                class="ml-4 font-semibold text-base"
-                                style="font-family: Quicksand"
-                            >
-                    Forms
-                  </span>
-                        </a>
-                    </div>
-                </li>
-                <li class="relative py-2">
-                    <div class="px-4 py-3 flex items-center rounded-lg">
-                        <a
-                            class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                            href="forms.html"
-                        >
-                            <svg
-                                class="w-5 h-5"
-                                aria-hidden="true"
-                                fill="none"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
-                                ></path>
-                            </svg>
-                            <span
-                                class="ml-4 font-semibold text-base"
-                                style="font-family: Quicksand"
-                            >
-                    Forms
+                    Calendar of Activities
                   </span>
                         </a>
                     </div>

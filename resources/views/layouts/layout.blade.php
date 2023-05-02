@@ -4,9 +4,6 @@
     <x-metadata.header />
 </head>
 <body class="overflow-y-scroll overflow-x-hidden" x-data="data()">
-
-
-
         <x-admin.navbar>
         <!-- nav -->
             <div class="flex flex-col flex-1 w-full">
@@ -19,6 +16,8 @@
                             @if(request()->routeIs('admin.cms.announcement')) {{'Announcement'}}
                             @elseif(request()->routeIs('admin.cms.calendar')) {{'Event Calendar'}}
                             @elseif(request()->routeIs('admin.exam-schedule')) {{'Exam Schedule'}}
+                            @elseif(request()->routeIs('admin.cms.slider')) {{'Slider'}}
+                            @elseif(request()->routeIs('admin.cms.posts')) {{'Posts'}}
                             @elseif(request()->routeIs('admin.inbox')) {{'Inbox'}}
                             @else {{'DICT Camarines Sur'}}
                             @endif
@@ -65,7 +64,6 @@
                     isNotificationsMenuOpen: false,
                     toggleNotificationsMenu() {
                         this.isNotificationsMenuOpen = !this.isNotificationsMenuOpen
-                        console.log(this.isNotificationsMenuOpen)
                     },
                     closeNotificationsMenu() {
                         this.isNotificationsMenuOpen = false

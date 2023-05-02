@@ -1,4 +1,4 @@
-<div class="w-[35rem] bg-yellow-300 rounded-xl p-10 hidden lg:block ">
+<div class="w-fit mx-5 md:w-[35rem] bg-yellow-300 rounded-xl p-5 md:p-10 block">
     <h1 class="font-bold text-2xl font-quicksand">{{$todayMonth.' '.$todayYear}} Highlight Activities</h1>
     <div class="legends flex gap-5 mt-2">
         <div class="flex gap-2 items-center">
@@ -77,13 +77,13 @@
                 <div class="p-5">
                     <h2 class="font-bold text-xl">{{$toShowEventDetail['event_title']}}</h2>
                     <span class="text-sm">{{
-                        ($toShowEventDetail['is_single_day']) ? 
-                        date("F d, Y", strtotime($toShowEventDetail['start_date'])) : 
+                        ($toShowEventDetail['is_single_day']) ?
+                        date("F d, Y", strtotime($toShowEventDetail['start_date'])) :
                         date("M d, Y", strtotime($toShowEventDetail['start_date'])).' - '.date("M d, Y", strtotime($toShowEventDetail['end_date']))
                     }}</span><br>
                     <span class="text-sm">{{
-                        ($toShowEventDetail['is_allDay']) ? 
-                        'All Day' : 
+                        ($toShowEventDetail['is_allDay']) ?
+                        'All Day' :
                         date("h:iA", strtotime($toShowEventDetail['start_date'])).' - '.date("h:iA", strtotime($toShowEventDetail['end_date']))
                     }}</span><br>
                      <span class="font-semibold">Venue: {{$toShowEventDetail['venue']}}</span><br>
