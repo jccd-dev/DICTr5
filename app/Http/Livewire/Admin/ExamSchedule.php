@@ -22,7 +22,7 @@ class ExamSchedule extends Component
     public $exam_set;
 
     public $update_exam_set;
-    public $update_start_date;  
+    public $update_start_date;
     public $update_end_date;
     public $update_sched_date; // input
     public $update_sched_start_time; // input
@@ -31,7 +31,7 @@ class ExamSchedule extends Component
     public $update_id;
 
     public function render()
-    {  
+    {
         $exam_schedule_model = new ExamScheduleModel();
         $this->schedules = $exam_schedule_model->filter_content($this->from, $this->to, $this->search);
         return view('livewire.admin.exam-schedule')
@@ -83,7 +83,7 @@ class ExamSchedule extends Component
             'end_date' => $validateData['sched_date'].' '.$validateData['sched_end_time'],
         ];
         $status = ExamScheduleModel::create($create);
-        
+
         $this->resetCreateForm();
         $this->dispatchBrowserEvent('ExamScheduleCreated', $status);
 
