@@ -15,6 +15,7 @@ use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use function PHPUnit\Framework\isEmpty;
+use App\Helpers\GetAdmin;
 
 class Posts extends Component
 {
@@ -25,7 +26,7 @@ class Posts extends Component
     public string|int $admin_id = 1;
     public string $title = '';
     public string $excerpt = '';
-    public $thumbnail = null;
+    public $thumbnail;
     public string $thumbnail_img_name = '';
     public string $content = '';
     public $images = [];
@@ -45,9 +46,9 @@ class Posts extends Component
 
     //for filters variables
     public string $search = '';
-    public string $from = '';
-    public string $to = '';
-    public string|int $cat_id = '';
+    public ?string $from = null;
+    public ?string $to = null;
+    public string|int|null $cat_id = null;
     public $temp_images = [];
 
 
@@ -74,6 +75,16 @@ class Posts extends Component
 
     public PostModel $post_model;
     private ImageHandlerHelper $imageHelper;
+<<<<<<< HEAD
+=======
+    private GetAdmin $getAdmin;
+    public function __construct()
+    {
+        $this->post_model = new PostModel();
+        $this->imageHelper = new ImageHandlerHelper();
+        $this->getAdmin = new GetAdmin();
+    }
+>>>>>>> 3657783b5114a242a9fd4cdd4b1a266b24618872
 
     public function mount()
     {
@@ -86,7 +97,6 @@ class Posts extends Component
 
     public function create_post(): void
     {
-
         $validator = Validator::make([
             'category_id'   => $this->category_id,
             'title'         => $this->title,
@@ -115,13 +125,13 @@ class Posts extends Component
         //arrange data for insertion
         $this->post_data = [
             'category_id'    => $this->category_id,
-            'admin_id'  => $this->admin_id,
+            'admin_id'  => $this->getAdmin::get_admin()['id'],
             'title'     => $this->title,
             'excerpt'   => $this->excerpt,
             'thumbnail' => $this->thumbnail_img_name,
             'content'   => $this->content,
             'vid_link'  => $this->vid_link,
-            'author'    => $this->author,
+            'author'    => $this->getAdmin::get_admin()['name'],
             'status'    => $this->status,
         ];
 
@@ -179,7 +189,7 @@ class Posts extends Component
         $this->content   = $post->content;
         $this->vid_link  = $post->vid_link;
         $this->status    = $post->status;
-        $this->category_id    = $post->category_id;
+        $this->category_id = $post->category_id;
 
         $post_images = [];
         foreach ($post->images as $image) {
@@ -211,12 +221,11 @@ class Posts extends Component
         $posts = $this->post_model::query();
 
         $search_term = $this->search;
-        $category_id = $this->cat_id;
-        $from = date('Y-m-d', strtotime($this->from));
+        $cat_id = $this->cat_id;
         $current = date('Y-m-d', strtotime('now'));
         $to_date = $this->to;
 
-        if (!$search_term == NULL) {
+        if (!$search_term == '') {
             $posts = $posts->where(function ($query) use ($search_term) {
                 $query->where('title', 'like', '%' . $search_term . '%')
                     ->orWhere('content', 'like', '%' . $search_term . '%');
@@ -224,17 +233,23 @@ class Posts extends Component
 
             //return $posts->with('images')->get();
         }
-        //        if (!$category_id) {
-        //            $posts = $posts->whereHas('category', function ($query) use ($category_id) {
-        //                $query->where('category_id', $category_id);
-        //            });
-        //        }
 
-        if (!isEmpty($from) && is_null($to_date)) {
-            $posts = $posts->whereBetween('timestamp', [$from, $current]);
+        if (!is_null($cat_id)) {
+            $posts = $posts->whereHas('category', function ($query) use ($cat_id) {
+                $query->where('category_id', $cat_id);
+            });
         }
 
-        if (!isEmpty($from) && !is_null($to_date)) {
+        if ($this->from != null) {
+            if (is_null($to_date)){
+                $from = date('Y-m-d', strtotime($this->from));
+                $posts = $posts->whereBetween('timestamp', [$from, $current]);
+            }
+        }
+
+        if ($this->from != null && !is_null($to_date)) {
+            $from = date('Y-m-d', strtotime($this->from));
+            $to_date = date('Y-m-d', strtotime($to_date));
             $posts = $posts->whereBetween('timestamp', [$from, $to_date]);
         }
 
@@ -245,24 +260,24 @@ class Posts extends Component
     {
         if (gettype($this->thumbnail) === 'object') {
             $validator = Validator::make([
-                'category_id'    => $this->category_id,
-                'title'     => $this->title,
-                'excerpt'   => $this->excerpt,
-                'thumbnail' => $this->thumbnail,
-                'content'   => $this->content,
-                'images'    => $this->images,
-                'vid_link'  => $this->vid_link,
-                'status'    => $this->status,
+                'category_id' => $this->category_id,
+                'title'       => $this->title,
+                'excerpt'     => $this->excerpt,
+                'thumbnail'   => $this->thumbnail,
+                'content'     => $this->content,
+                'images'      => $this->images,
+                'vid_link'    => $this->vid_link,
+                'status'      => $this->status,
             ], $this->update_rules);
         } else {
             $validator = Validator::make([
-                'category_id'    => $this->category_id,
-                'title'     => $this->title,
-                'excerpt'   => $this->excerpt,
-                'content'   => $this->content,
-                'images'    => $this->images,
-                'vid_link'  => $this->vid_link,
-                'status'    => $this->status,
+                'category_id' => $this->category_id,
+                'title'       => $this->title,
+                'excerpt'     => $this->excerpt,
+                'content'     => $this->content,
+                'images'      => $this->images,
+                'vid_link'    => $this->vid_link,
+                'status'      => $this->status,
             ], $this->update_rules);
         }
 
@@ -293,14 +308,14 @@ class Posts extends Component
 
         //arrange data for insertion
         $this->post_data = [
-            'category_id'    => $this->category_id,
-            'title'     => $this->title,
-            'excerpt'   => $this->excerpt,
-            'thumbnail' => $this->thumbnail_img_name ?: $this->prev_data['thumbnail'],
-            'content'   => $this->content,
-            'images'    => $this->images,
-            'vid_link'  => $this->vid_link,
-            'status'    => $this->status,
+            'category_id' => $this->category_id,
+            'title'       => $this->title,
+            'excerpt'     => $this->excerpt,
+            'thumbnail'   => $this->thumbnail_img_name ?: $this->prev_data['thumbnail'],
+            'content'     => $this->content,
+            'images'      => $this->images,
+            'vid_link'    => $this->vid_link,
+            'status'      => $this->status,
         ];
 
         $this->imageHelper->del_image_on_db($this->to_delete_image, $this->post_id);

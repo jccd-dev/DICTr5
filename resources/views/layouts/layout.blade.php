@@ -13,18 +13,11 @@
                         <h2
                             class="mb-6 text-5xl font-quicksand font-semibold text-gray-700 dark:text-gray-200"
                         >
-                            @if(strpos(url()->current(), "post"))
-                                Post
-                            @elseif(strpos(url()->current(), "announcement"))
-                                Announcement
-                            @elseif(strpos(url()->current(), "slider"))
-                                Slider
-                            @elseif(strpos(url()->current(), "dashboard"))
-                                Dashboard
-                            @elseif(strpos(url()->current(), "event-calendar"))
-                                Event Calendar
-                            @elseif(strpos(url()->current(), "announcement"))
-                                Announcement
+                            @if(request()->routeIs('admin.cms.announcement')) {{'Announcement'}}
+                            @elseif(request()->routeIs('admin.cms.calendar')) {{'Event Calendar'}}
+                            @elseif(request()->routeIs('admin.exam-schedule')) {{'Exam Schedule'}}
+                            @elseif(request()->routeIs('admin.inbox')) {{'Inbox'}}
+                            @else {{'DICT Camarines Sur'}}
                             @endif
                         </h2>
                         <div id="main">

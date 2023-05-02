@@ -22,11 +22,14 @@ class Announcement extends Model
      */
     protected $fillable = [
         'cat_id',
+        'admin_id',
         'title',
         'excerpt',
         'content',
         'author',
         'status',
+        'start_duration',
+        'end_duration',
     ];
 
     /**
@@ -103,23 +106,26 @@ class Announcement extends Model
      * @return instance of the Illuminate\Database\Eloquent\Collection class
      */
     public function filter_search(string $from, string $to, int $category = null, string $search = null){
+        if(!$from){
+            $from = date('Y-m-d');
+        }
         if($search == null || $search == ''){
             if($category == null || $category == 0)
                 return DB::table($this->table)->join('dict_admins', 'announcements.author', '=', 'dict_admins.id')
                                             ->join('post_categories', 'announcements.cat_id', '=', 'post_categories.id')
                                             ->select('announcements.*', 'dict_admins.name as author_name', 'post_categories.category as category')
-                                            ->where('announcements.timestamp', '<=', $to)
-                                            ->where('announcements.timestamp', '>=', $from)
-                                            ->orderBy('announcements.timestamp', 'desc')
+                                            ->where('announcements.start_duration', '<=', $to)
+                                            ->where('announcements.start_duration', '>=', $from)
+                                            ->orderBy('announcements.start_duration', 'desc')
                                             ->get();
             else
                 return DB::table($this->table)->join('dict_admins', 'announcements.author', '=', 'dict_admins.id')
                                             ->join('post_categories', 'announcements.cat_id', '=', 'post_categories.id')
                                             ->select('announcements.*', 'dict_admins.name as author_name', 'post_categories.category as category')
-                                            ->where('announcements.timestamp', '<=', $to)
-                                            ->where('announcements.timestamp', '>=', $from)
+                                            ->where('announcements.start_duration', '<=', $to)
+                                            ->where('announcements.start_duration', '>=', $from)
                                             ->where('announcements.cat_id', $category)
-                                            ->orderBy('announcements.timestamp', 'desc')
+                                            ->orderBy('announcements.start_duration', 'desc')
                                             ->get();
         }else{
             return $this->search_announcement($search);
@@ -140,7 +146,7 @@ class Announcement extends Model
                                     ->where('announcements.title', 'like', '%'.$data.'%')
                                     ->orWhere('announcements.excerpt', 'like', '%'.$data.'%')
                                     ->orWhere('announcements.content', 'like', '%'.$data.'%')
-                                    ->orderBy('announcements.timestamp', 'desc')
+                                    ->orderBy('announcements.start_duration', 'desc')
                                     ->get();
     }
 

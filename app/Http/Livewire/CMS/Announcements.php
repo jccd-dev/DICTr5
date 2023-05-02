@@ -7,6 +7,7 @@ use App\Models\CMS\POST\PostCategory as PostCategoryModel;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
+use App\Helpers\GetAdmin;
 
 class Announcements extends Component
 {
@@ -34,6 +35,7 @@ class Announcements extends Component
     }
 
     public function mount(): void{
+        date_default_timezone_set('Asia/Manila');
         $this->category = 0;
 
         $date_from = AnnouncementModel::select(DB::raw('MIN(timestamp) as min_timestamp'))->first();
@@ -41,6 +43,13 @@ class Announcements extends Component
         $date_to = AnnouncementModel::select(DB::raw('MAX(timestamp) as max_timestamp'))->first();
         $this->to = date('Y-m-d', strtotime($date_to->max_timestamp));
 
+        $this->insertAnnArray['start_duration'] = date('Y-m-d H:i:s');
+        $this->insertAnnArray['end_duration'] = '';
+        $this->insertAnnArray['cat_id'] = '';
+
+        $this->updateAnnArray['cat_id'] = '';
+        $this->updateAnnArray['start_duration'] = '';
+        $this->updateAnnArray['end_duration'] = '';
     }
 
     public function resetSearch(): void{
@@ -65,11 +74,15 @@ class Announcements extends Component
             'excerpt' => 'required',
             'content' => 'required',
             'cat_id' => 'required',
+            'start_duration' => 'required',
+            'end_duration' => 'required',
         ],[
             'title.required' => 'Announcement title field is required',
             'excerpt.required' => 'Short description field is required',
             'content.required' => 'Content field is required',
             'cat_id.required' => 'Category field is required',
+            'start_duration.required' => 'Start Date field is required',
+            'end_duration.required' => 'End Date field is required',
         ])->validate();
 
         if($this->isPublished){
@@ -78,9 +91,8 @@ class Announcements extends Component
             $this->insertAnnArray['status'] = 0;
         }
 
-
-        // TODO: get admin id
-        $this->insertAnnArray['author'] = 1;
+        $this->insertAnnArray['admin_id'] = GetAdmin::get_admin()['id'];
+        $this->insertAnnArray['author'] = GetAdmin::get_admin()['name'];
 
         $announcementModel = new AnnouncementModel();
         if($announcementModel->create_announcement($this->insertAnnArray)){
@@ -100,8 +112,11 @@ class Announcements extends Component
         $this->updateAnnArray['title'] = $ann->title;
         $this->updateAnnArray['excerpt'] = $ann->excerpt;
         $this->updateAnnArray['cat_id'] = $ann->cat_id;
+        $this->updateAnnArray['start_duration'] = $ann->start_duration;
+        $this->updateAnnArray['end_duration'] = $ann->end_duration;
         $this->isUpdatedPublished = $ann->status;
         $this->dispatchBrowserEvent('update_content', $ann->content);
+        $this->showModal('update_modal', true);
     }
 
     public function update_announcement(): void{
@@ -123,8 +138,8 @@ class Announcements extends Component
             $this->updateAnnArray['status'] = 0;
         }
 
-        // TODO: get admin id
-        $this->updateAnnArray['author'] = 1;
+
+        $this->showModal('update_modal', false);
 
         $announcementModel = new AnnouncementModel();
         $ann = $announcementModel->update_announcement($this->updateAnnArray, $this->to_update_id);
@@ -138,6 +153,23 @@ class Announcements extends Component
     public function delete_announcement($id): void{
         $ann = AnnouncementModel::find($id);
         $deletedRows = $ann->delete();
+    }
+
+    public function create_category($category){
+        $created_category = PostCategoryModel::create([
+            'category' => $category
+        ]);
+        $this->insertAnnArray['cat_id'] = $created_category->id;
+        $this->updateEventArr['cat_id'] = $created_category->id;
+    }
+
+    public $create_modal = false;
+    public $update_modal = false;
+    public function showModal($id, $isOpen){
+        if($id == 'create_modal')
+            $this->create_modal = $isOpen;
+        elseif($id == 'update_modal')
+            $this->update_modal = $isOpen;
     }
 
 }

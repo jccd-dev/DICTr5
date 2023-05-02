@@ -1,7 +1,7 @@
 <div>
     <div class="flex flex-row mt-5 gap-4">
         {{-- CALENDAR --}}
-        <div wire:ignore id="calendar" class="basis-7/12"></div>
+        <div wire:ignore id="calendar" class="basis-7/12 text-sm"></div>
         {{-- EVENT --}}
         <div class="basis-5/12">
             <div class="flex flex-row-reverse">
@@ -150,7 +150,7 @@
                             @error('category') <p class="text-xs text-red-600 italic">{{ $message }}</p> @enderror
                         </div>
                     </div>
-                
+
                     <label for="event" class="text-gray-800 text-sm font-bold leading-tight tracking-normal">Event Description</label>
                     <div class="mb-5 mt-2" wire:ignore>
                         <textarea id="event_field" class="text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 rounded border"></textarea>
@@ -213,7 +213,7 @@
                             @error('end_time') <p class="text-xs text-red-600 italic">{{ $message }}</p> @enderror
                         </div>
                     </div>
-                 
+
                     <div class="mb-5 mt-2 flex flex-row gap-4">
                         <div>
                             <x-input label="Venue" placeholder="Enter Venue" wire:model.lazy="updateEventArr.venue" class="w-full" style="width:300px" />
@@ -243,7 +243,7 @@
                             @error('category') <p class="text-xs text-red-600 italic">{{ $message }}</p> @enderror
                         </div>
                     </div>
-                
+
                     <label for="event" class="text-gray-800 text-sm font-bold leading-tight tracking-normal">Event Description</label>
                     <div class="mb-5 mt-2" wire:ignore>
                         <textarea id="update_event_field" class="text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 rounded border"></textarea>
@@ -272,13 +272,13 @@
                 <div>
                     <h2 class="font-bold text-xl">{{$toShowEventDetail['event_title']}}</h2>
                     <span class="text-sm">{{
-                        ($toShowEventDetail['is_single_day']) ? 
-                        date("F d, Y", strtotime($toShowEventDetail['start_date'])) : 
+                        ($toShowEventDetail['is_single_day']) ?
+                        date("F d, Y", strtotime($toShowEventDetail['start_date'])) :
                         date("M d, Y", strtotime($toShowEventDetail['start_date'])).' - '.date("M d, Y", strtotime($toShowEventDetail['end_date']))
                     }}</span><br>
                     <span class="text-sm">{{
-                        ($toShowEventDetail['is_allDay']) ? 
-                        'All Day' : 
+                        ($toShowEventDetail['is_allDay']) ?
+                        'All Day' :
                         date("h:iA", strtotime($toShowEventDetail['start_date'])).' - '.date("h:iA", strtotime($toShowEventDetail['end_date']))
                     }}</span><br>
                     <span class="font-semibold">Venue: {{$toShowEventDetail['venue']}}</span><br>
@@ -304,7 +304,7 @@
                             Update
                         </button>
                     </div>
-                    
+
                 </div>
                 <button class="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 transition duration-150 ease-in-out rounded focus:ring-2 focus:outline-none focus:ring-gray-600" onclick="modalHandler('event_modal', false)" aria-label="close modal" role="button">
                     <svg  xmlns="http://www.w3.org/2000/svg"  class="icon icon-tabler icon-tabler-x" width="20" height="20" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -326,7 +326,7 @@
             editable:true,
             selectable:true,
             events: allEvents,
-            // displayEventTime: false,
+            eventBackgroundColor: '#378006',
             eventTimeFormat: {
                 hour: 'numeric',
                 minute: '2-digit',
@@ -512,7 +512,7 @@
                 to_update_event.setProp('title', event.detail['event']['event_title']);
                 to_update_event.setStart(event.detail['event']['start']);
                 to_update_event.setEnd(event.detail['event']['end']);
-                
+
                 Swal.fire("Successfully Updated Event", "You just have updated an event.", "success");
             }else{
                 Swal.fire("Something Went Wrong!", "Please try again later.", "error");

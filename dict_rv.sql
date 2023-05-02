@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 29, 2023 at 03:52 AM
+-- Generation Time: May 02, 2023 at 06:10 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -59,11 +59,14 @@ CREATE TABLE `admin_logs` (
 CREATE TABLE `announcements` (
   `id` int(11) NOT NULL,
   `cat_id` int(11) NOT NULL,
+  `admin_id` int(11) NOT NULL,
   `title` varchar(250) NOT NULL,
   `excerpt` text NOT NULL,
   `content` longtext NOT NULL,
   `author` varchar(250) NOT NULL,
   `status` tinyint(2) NOT NULL,
+  `start_duration` datetime NOT NULL,
+  `end_duration` datetime NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -92,10 +95,10 @@ CREATE TABLE `calendar` (
   `id` int(11) NOT NULL,
   `event_title` varchar(255) NOT NULL,
   `admin_id` int(11) NOT NULL,
-  `event` text DEFAULT NULL,
+  `event` text NOT NULL,
   `start_date` datetime NOT NULL,
   `end_date` datetime NOT NULL,
-  `venue` varchar(255) NOT NULL,
+  `venue` varchar(255) DEFAULT NULL,
   `category` int(11) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -119,20 +122,23 @@ CREATE TABLE `count_users` (
 
 CREATE TABLE `dict_admins` (
   `id` int(11) NOT NULL,
-  `name` varchar(250) NOT NULL,
-  `office` int(11) NOT NULL,
-  `password` longtext NOT NULL,
-  `role` varchar(250) NOT NULL,
   `email` varchar(250) NOT NULL,
-  `designation` int(11) NOT NULL
+  `password` longtext NOT NULL,
+  `name` varchar(250) NOT NULL,
+  `office` varchar(255) NOT NULL,
+  `role` int(11) NOT NULL,
+  `designation` varchar(255) NOT NULL,
+  `remember_token` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `dict_admins`
 --
 
-INSERT INTO `dict_admins` (`id`, `name`, `office`, `password`, `role`, `email`, `designation`) VALUES
-(1, 'Edgar Reyes', 1, 'ememe', 'admin', 'sample@gmail.com', 1);
+INSERT INTO `dict_admins` (`id`, `email`, `password`, `name`, `office`, `role`, `designation`, `remember_token`) VALUES
+(1, 'sample@gmail.com', '$2y$10$NeYLbNVa3qiR4VcjkcC8GO7G3p/qeQydo4eJUJ0RAbB1E33qlDF5u', 'Edgar Reyes', '1', 200, '1', NULL),
+(2, 'jd@gmail.com', '$2y$10$NeYLbNVa3qiR4VcjkcC8GO7G3p/qeQydo4eJUJ0RAbB1E33qlDF5u', 'John Doe', 'DICT', 100, 'checker', NULL),
+(3, 'creator@gmail.com', '$2y$10$NeYLbNVa3qiR4VcjkcC8GO7G3p/qeQydo4eJUJ0RAbB1E33qlDF5u', 'Creator Co', 'DICT R-5', 300, 'Writer', NULL);
 
 -- --------------------------------------------------------
 
@@ -144,7 +150,9 @@ CREATE TABLE `exam_schedules` (
   `id` int(11) NOT NULL,
   `exam_set` varchar(15) DEFAULT NULL,
   `venue` varchar(255) DEFAULT NULL,
-  `datetime` datetime NOT NULL
+  `datetime` datetime NOT NULL,
+  `start_date` datetime DEFAULT NULL,
+  `end_date` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -155,11 +163,9 @@ CREATE TABLE `exam_schedules` (
 
 CREATE TABLE `feedbacks` (
   `id` int(11) NOT NULL,
+  `name` varchar(250) NOT NULL,
   `content` text NOT NULL,
-  `name` varchar(199) NOT NULL,
-  `cp_number` varchar(15) NOT NULL,
   `email` varchar(250) NOT NULL,
-  `is_read` tinyint(2) NOT NULL DEFAULT 0,
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -191,11 +197,18 @@ CREATE TABLE `posts` (
   `excerpt` text NOT NULL,
   `thumbnail` text NOT NULL,
   `content` longtext DEFAULT NULL,
-  `vid__link` text NOT NULL,
+  `vid_link` text NOT NULL,
   `author` varchar(250) NOT NULL,
   `status` int(2) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `posts`
+--
+
+INSERT INTO `posts` (`id`, `category_id`, `admin_id`, `title`, `excerpt`, `thumbnail`, `content`, `vid_link`, `author`, `status`, `timestamp`) VALUES
+(1, 2, 1, 'Test', 'dsfsdfsd', '1682992580_Q9dIaSoM.jpg', 'fsfsdf', 'http://localhost:8000/admin/cms/posts', 'test author', 0, '2023-05-02 01:56:20');
 
 -- --------------------------------------------------------
 
@@ -213,9 +226,9 @@ CREATE TABLE `post_categories` (
 --
 
 INSERT INTO `post_categories` (`id`, `category`) VALUES
-(3, 'Wifi4All'),
-(14, 'DICT Proj1'),
-(15, 'DICT Proj2');
+(1, 'Announcement'),
+(2, 'News'),
+(3, 'Wifi4All');
 
 -- --------------------------------------------------------
 
@@ -388,7 +401,8 @@ ALTER TABLE `admin_logs`
 --
 ALTER TABLE `announcements`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `cat_id` (`cat_id`);
+  ADD KEY `cat_id` (`cat_id`),
+  ADD KEY `admin_id` (`admin_id`);
 
 --
 -- Indexes for table `banner`
@@ -525,7 +539,7 @@ ALTER TABLE `admin_logs`
 -- AUTO_INCREMENT for table `announcements`
 --
 ALTER TABLE `announcements`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT for table `banner`
@@ -537,13 +551,13 @@ ALTER TABLE `banner`
 -- AUTO_INCREMENT for table `calendar`
 --
 ALTER TABLE `calendar`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `dict_admins`
 --
 ALTER TABLE `dict_admins`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `exam_schedules`
@@ -555,7 +569,7 @@ ALTER TABLE `exam_schedules`
 -- AUTO_INCREMENT for table `feedbacks`
 --
 ALTER TABLE `feedbacks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `inbox`
@@ -567,13 +581,13 @@ ALTER TABLE `inbox`
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `post_categories`
 --
 ALTER TABLE `post_categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `post_images`
@@ -649,14 +663,15 @@ ALTER TABLE `admin_logs`
 -- Constraints for table `announcements`
 --
 ALTER TABLE `announcements`
-  ADD CONSTRAINT `announcements_ibfk_1` FOREIGN KEY (`cat_id`) REFERENCES `post_categories` (`id`) ON DELETE NO ACTION;
+  ADD CONSTRAINT `announcements_ibfk_1` FOREIGN KEY (`cat_id`) REFERENCES `post_categories` (`id`) ON DELETE NO ACTION,
+  ADD CONSTRAINT `announcements_ibfk_2` FOREIGN KEY (`admin_id`) REFERENCES `dict_admins` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `calendar`
 --
 ALTER TABLE `calendar`
   ADD CONSTRAINT `calendar_ibfk_1` FOREIGN KEY (`admin_id`) REFERENCES `dict_admins` (`id`) ON DELETE NO ACTION,
-  ADD CONSTRAINT `calendar_ibfk_2` FOREIGN KEY (`category`) REFERENCES `post_categories` (`id`) ON DELETE NO ACTION;
+  ADD CONSTRAINT `calendar_ibfk_2` FOREIGN KEY (`category`) REFERENCES `post_categories` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `posts`

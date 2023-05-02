@@ -3,7 +3,7 @@ namespace App\Helpers;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-// usermmodel //TODO make a model for submitted files. ? usermodel
+use App\Models\Examinee\UsersData;
 
 class FileHandler
 {
@@ -15,7 +15,7 @@ class FileHandler
     ];
     public function __construct()
     {
-        $this->userModel = new UserModel();
+        $this->userModel = new UsersData();
     }
 
     /**
@@ -82,7 +82,7 @@ class FileHandler
 
     /**
      * @description update a submitted file in server folder and database.
-     * @param string|int $file_id
+     * @param string|int $file_name
      * @param $new_file
      * @param string|int $userId
      * @return bool
@@ -99,7 +99,7 @@ class FileHandler
 
         in_array(strtolower($file_extension), $this->accepted_file_types['docs']) ? $file_type = 'Document' : $file_type = 'Image';
 
-        $new_file_name = $this->file_namer($new_file, $user_name, $file_extension);
+        $new_file_name = $this->file_namer($user_name, $file_extension);
 
         //since it's just for update
         $updated = $file->submitted__files()->where('id', $file_name)

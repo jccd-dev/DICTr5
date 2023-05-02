@@ -24,6 +24,7 @@ class JWTAuthAdmins extends LaravelAuthenticate
             return redirect('/admin/login');
         }
 
+        // if user is null redirect to login page again
         if (!$user) {
             return redirect('/admin/login');
         }
