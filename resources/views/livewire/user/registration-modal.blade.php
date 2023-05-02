@@ -183,29 +183,29 @@
                     <h1 class="block mb-3 text-sm font-medium text-gray-900 dark:text-white">For Programming: <b>Check the language that you will use in the exam</b></h1>
                     <div class="flex mb-3">
                         <div class="flex flex-1 items-center mr-4">
-                            <input id="visual-basic" type="radio" value="Visual Basic 6.0" name="pl" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                            <input id="visual-basic" type="radio" value="Visual Basic 6.0" name="pl" wire:model="pl" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                             <label for="visual-basic" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Visual Basic 6.0</label>
                         </div>
                         <div class="flex flex-1 items-center mr-4">
-                            <input id="cpp" type="radio" value="c++" name="pl" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                            <input id="cpp" type="radio" value="c++" name="pl" wire:model="pl" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                             <label for="cpp" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">C++</label>
                         </div>
                         <div class="flex flex-1 items-center mr-4">
-                            <input id="c-language" type="radio" value="C Language" name="pl" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                            <input id="c-language" type="radio" value="C Language" name="pl" wire:model="pl" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                             <label for="c-language" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">C Language</label>
                         </div>
                     </div>
                     <div class="flex">
                         <div class="flex flex-1 items-center mr-4">
-                            <input id="vb-net" type="radio" value="VB.NET" name="pl" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                            <input id="vb-net" type="radio" value="VB.NET" name="pl" wire:model="pl" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                             <label for="vb-net" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">VB.NET</label>
                         </div>
                         <div class="flex flex-1 items-center mr-4">
-                            <input id="c-sharp" type="radio" value="C#" name="pl" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                            <input id="c-sharp" type="radio" value="C#" name="pl" wire:model="pl" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                             <label for="c-sharp" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">C#</label>
                         </div>
                         <div class="flex flex-1 items-center mr-4">
-                            <input id="java" type="radio" value="Java" name="pl" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                            <input id="java" type="radio" value="Java" name="pl" wire:model="pl" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                             <label for="java" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Java</label>
                         </div>
                     </div>

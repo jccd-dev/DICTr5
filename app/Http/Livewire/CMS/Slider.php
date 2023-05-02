@@ -16,6 +16,7 @@ class Slider extends Component
     /**
      INITIALIZED variable to hold value from the form submit
      */
+    public $myModal;
     public string $title;
     public $description;
     public $image;
@@ -24,6 +25,8 @@ class Slider extends Component
     private $banner_model;
     private $banner_id = null;
     private $banner_data = [];
+
+    protected $except = ['myModal'];
 
     //Input validation rules
     protected $rules = [
@@ -40,7 +43,7 @@ class Slider extends Component
         'image.dimensions'   => 'Image minimum width and height should be 950 x 635 pixels'
     ];
 
-    public function __construct()
+    public function mount()
     {
         $this->banner_model = new HomeBanner();
     }
@@ -119,6 +122,6 @@ class Slider extends Component
 
     public function render()
     {
-        return view('livewire.cms.slider', ['formData' => $this->banner_data]);
+        return view('livewire.cms.slider', ['formData' => $this->banner_data])->layout("layouts.layout");
     }
 }

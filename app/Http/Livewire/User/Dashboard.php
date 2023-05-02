@@ -97,7 +97,12 @@ class Dashboard extends Component
         $this->yearsPresentPosition = '';
 
         $this->fill([
-            'trainings' => collect([[]]),
+            'trainings' => collect([[
+                'course' => '',
+                'center' => '',
+                'hours' => '',
+                'certificate' => ''
+            ]]),
         ]);
 
         $this->pl = '';
@@ -115,7 +120,8 @@ class Dashboard extends Component
     }
 
     public function popInput() {
-        $this->trainings->pop();
+        if (count($this->trainings) != 1)
+            $this->trainings->pop();
     }
 
     public function addInput() {
@@ -125,7 +131,6 @@ class Dashboard extends Component
             'hours' => '',
             'certificate' => ''
         ]);
-//        dd(2);
     }
 
     public function submit() {

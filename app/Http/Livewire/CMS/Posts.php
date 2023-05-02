@@ -74,14 +74,11 @@ class Posts extends Component
 
     public PostModel $post_model;
     private ImageHandlerHelper $imageHelper;
-    public function __construct()
-    {
-        $this->post_model = new PostModel();
-        $this->imageHelper = new ImageHandlerHelper();
-    }
 
     public function mount()
     {
+        $this->post_model = new PostModel();
+        $this->imageHelper = new ImageHandlerHelper();
         $this->listeners['postModalPopulator'] = 'postModalPopulator';
         $this->to_update_data['images'] = [];
         $this->to_update_data['thumbnail'] = '';

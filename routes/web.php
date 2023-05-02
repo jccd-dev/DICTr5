@@ -13,6 +13,7 @@ use App\Http\Livewire\Admin\ExamSchedule;
 use App\Http\Livewire\Admin\Login;
 use App\Http\Livewire\Admin\Dashboard;
 use App\Http\Livewire\User;
+use App\Http\Livewire\CMS\Slider;
 use App\Http\Controllers\Examinee\DashboardController as UserDashboardController;
 use App\Http\Livewire\Admin\Inbox as CMSInbox;
 
@@ -34,9 +35,7 @@ Route::get('/testing', \App\Http\Livewire\CMS\Testing::class);
 
 //TODO: cant display the slider form component
 //FIXME: blank page
-Route::get('/form', function() {
-    return view('layouts.app');
-});
+
 
 Route::get('/about', function () {
     return view('pages.about');
@@ -49,6 +48,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/dashboard', Dashboard::class)->name("admin.dashboard")->middleware(['jwt.logAuth']);
 
     Route::prefix('cms')->group(function (){
+        Route::get('/slider', Slider::class)->name("admin.cms.slider");
         Route::get('/posts', Posts::class)->name('admin.cms.posts'); // Post::class
         Route::get('/announcement', Announcements::class)->name('admin.cms.announcement');
         Route::get('/event-calendar', EventCalendar::class)->name('admin.cms.calendar');

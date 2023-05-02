@@ -120,8 +120,6 @@
         @include("livewire.user.registration-modal")
     </x-modal.card>
 
-
-
     <script>
         const addButton = document.querySelector('#add-trainings')
         const removeButton = document.querySelector('#remove-trainings')

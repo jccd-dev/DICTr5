@@ -13,7 +13,19 @@
                         <h2
                             class="mb-6 text-5xl font-quicksand font-semibold text-gray-700 dark:text-gray-200"
                         >
-                            Charts
+                            @if(strpos(url()->current(), "post"))
+                                Post
+                            @elseif(strpos(url()->current(), "announcement"))
+                                Announcement
+                            @elseif(strpos(url()->current(), "slider"))
+                                Slider
+                            @elseif(strpos(url()->current(), "dashboard"))
+                                Dashboard
+                            @elseif(strpos(url()->current(), "event-calendar"))
+                                Event Calendar
+                            @elseif(strpos(url()->current(), "announcement"))
+                                Announcement
+                            @endif
                         </h2>
                         <div id="main">
                             {{ $slot }}
