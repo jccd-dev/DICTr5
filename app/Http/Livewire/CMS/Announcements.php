@@ -91,8 +91,6 @@ class Announcements extends Component
             $this->insertAnnArray['status'] = 0;
         }
 
-
-        // TODO: get admin id
         $this->insertAnnArray['admin_id'] = GetAdmin::get_admin()['id'];
         $this->insertAnnArray['author'] = GetAdmin::get_admin()['name'];
 
@@ -140,8 +138,6 @@ class Announcements extends Component
             $this->updateAnnArray['status'] = 0;
         }
 
-        // TODO: get admin id
-        $this->updateAnnArray['author'] = 1;
 
         $this->showModal('update_modal', false);
 
