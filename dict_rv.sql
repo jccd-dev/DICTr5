@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 02, 2023 at 05:32 AM
+-- Generation Time: May 02, 2023 at 05:44 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -59,6 +59,7 @@ CREATE TABLE `admin_logs` (
 CREATE TABLE `announcements` (
   `id` int(11) NOT NULL,
   `cat_id` int(11) NOT NULL,
+  `admin_id` int(11) NOT NULL,
   `title` varchar(250) NOT NULL,
   `excerpt` text NOT NULL,
   `content` longtext NOT NULL,
@@ -396,7 +397,8 @@ ALTER TABLE `admin_logs`
 --
 ALTER TABLE `announcements`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `cat_id` (`cat_id`);
+  ADD KEY `cat_id` (`cat_id`),
+  ADD KEY `admin_id` (`admin_id`);
 
 --
 -- Indexes for table `banner`
@@ -656,7 +658,8 @@ ALTER TABLE `admin_logs`
 -- Constraints for table `announcements`
 --
 ALTER TABLE `announcements`
-  ADD CONSTRAINT `announcements_ibfk_1` FOREIGN KEY (`cat_id`) REFERENCES `post_categories` (`id`) ON DELETE NO ACTION;
+  ADD CONSTRAINT `announcements_ibfk_1` FOREIGN KEY (`cat_id`) REFERENCES `post_categories` (`id`) ON DELETE NO ACTION,
+  ADD CONSTRAINT `announcements_ibfk_2` FOREIGN KEY (`admin_id`) REFERENCES `dict_admins` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `calendar`
