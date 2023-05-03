@@ -9,13 +9,13 @@
     <div x-init="console.log({{ auth('jwt')->user() }})"></div>
 
     <!-- admin credentials can be access using this;-->
-    @can('cms', auth('jwt')->user())
-        <div style="font-size: 1rem; font-weight: bold">CMS</div>
+    @can('admins_only', auth('jwt')->user())
+        <div style="font-size: 1rem; font-weight: bold">Admins Only</div>
     @endcan
 
 
     Admin Dashboard
-    @if($role === 'superadmin')
+    @if($role === 100)
         <h2>Super Admin Features</h2>
         <h5>{{$name}}</h5>
         <ul>
@@ -24,7 +24,7 @@
         </ul>
     @endif
 
-    @if($role === 'normaladmin')
+    @if($role === 200)
         <h2>Admin Features</h2>
         <ul>
             <li>Manage User Accounts</li>
@@ -32,7 +32,7 @@
         </ul>
     @endif
 
-    @if($role === 'creator')
+    @if($role === 300)
         <h2>Creator Features</h2>
         <ul>
             <li>Create and Manage Content</li>

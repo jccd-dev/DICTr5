@@ -12,6 +12,15 @@ class HomeBanner extends Model
 
     protected $table = 'banner';
 
+    protected $fillable = [
+        'title',
+        'description',
+        'image',
+        'button_links'
+    ];
+
+    public $timestamps = false;
+
     /**
        * TITLE: GET BANNER DATA
      * Description: Get specific banner data in database using its unique ID if banner ID
@@ -19,23 +28,17 @@ class HomeBanner extends Model
      * @param int|null $banner_id
      * @return array|object $banner_data
      */
-    public function get_banner(int $banner_id = NULL): array|object
+    public function get_banner(int $banner_id = Null): array|object
     {
         $banner_data = DB::table($this->table)
             ->select('*');
 
-        if($banner_id) {
-            $banner_data->where('id', $banner_id)
+        if ($banner_id) {
+            return $banner_data->where('id', $banner_id)
                 ->first();
-
-            // return get_object_vars($banner_data);
-            return $banner_data;
         }
 
-        $banner_data->get();
-
-
-        return $banner_data;
+        return $banner_data->get();
     }
 
     /**

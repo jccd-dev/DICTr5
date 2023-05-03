@@ -147,12 +147,27 @@ class Slider extends Component
      */
     public function delete_banner(string|int $banner_id): bool
     {
-        return $this->banner_model->delete_banner($banner_id);
+        $banner = HomeBanner::find($banner_id);
+
+        if($this->banner_model->delete_banner($banner_id)){
+            if (Storage::exists('/public/images/' . $banner->image)) {
+                Storage::delete('public/images/' . $banner->image);
+            }
+
+            return true;
+        }
+        return false;
     }
 
     public function render()
     {
+<<<<<<< HEAD
         $data = DB::table('banner')->get();
         return view('livewire.cms.slider', ['formData' => $this->banner_data, 'data' => $data])->layout("layouts.layout");
+=======
+        // testing
+        $data = new HomeBanner();
+        return view('livewire.cms.slider', ['formData' => $data->get_banner(5)])->layout("layouts.layout");
+>>>>>>> f50f6505b564fc7b38d363d128732af8a17119a4
     }
 }

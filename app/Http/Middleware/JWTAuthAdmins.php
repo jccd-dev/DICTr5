@@ -13,6 +13,7 @@ class JWTAuthAdmins extends LaravelAuthenticate
     public function handle($request, Closure $next, ...$guards){
         // get the token from the cookie if token not found redirect to log in or previous page
         $token = $request->cookie('jwt_token');
+
         if (!$token) {
             return redirect('/admin/login');
         }
@@ -31,7 +32,8 @@ class JWTAuthAdmins extends LaravelAuthenticate
 
         // receives a user instance as its argument, After logging in the user
         // Laravel considers them authenticated
-        Auth::login($user);
+//        Auth::login($user);
+        Auth::guard('jwt')->setUser($user);
 
         return $next($request);
 
