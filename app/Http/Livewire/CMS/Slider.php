@@ -2,14 +2,14 @@
 
 namespace App\Http\Livewire\CMS;
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
+use mysql_xdevapi\Session;
 use Illuminate\Support\Str;
 use Livewire\WithFileUploads;
 use App\Models\CMS\HomeBanner;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use mysql_xdevapi\Session;
+use Illuminate\Support\Facades\Validator;
 
 class Slider extends Component
 {
@@ -19,11 +19,9 @@ class Slider extends Component
      INITIALIZED variable to hold value from the form submit
      */
     public $myModal;
-    public $updateModal;
     public string $title;
     public $description;
     public $image;
-    public $displayFormat;
     public string $image_name = '';
     public string $button_links;
     public $temp_image;
@@ -48,9 +46,8 @@ class Slider extends Component
         'image.dimensions'   => 'Image minimum width and height should be 950 x 635 pixels'
     ];
 
-    public function __construct()
+    public function mount()
     {
-        parent::__construct();
         $this->banner_model = new HomeBanner();
     }
 
@@ -61,9 +58,7 @@ class Slider extends Component
      */
     public function submit(): void
     {
-//                dd(1);
         //validate Inputs data before inserting to database
-        //        $validatedData = $this->validate();
         $validator = Validator::make([
             'title'       => $this->title,
             'description'     => $this->description,
@@ -142,7 +137,8 @@ class Slider extends Component
         $this->banner_model->update_banner($validatedData, $this->banner_id) ? session()->flash('success', 'Slider Banner Created!') : session()->flash('error', 'Please try Again Later!');
     }
 
-    public function get_banner_data(int $id) {
+    public function get_banner_data(int $id)
+    {
         $data = $this->banner_model->get_banner($id);
         $this->title = $data->title;
         $this->description = $data->description;

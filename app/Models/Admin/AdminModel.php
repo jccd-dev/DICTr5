@@ -2,6 +2,10 @@
 
 namespace App\Models\Admin;
 
+use App\Models\CMS\Announcement;
+use App\Models\CMS\Calendar;
+use App\Models\CMS\POST\PostModel;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
@@ -102,5 +106,20 @@ class AdminModel extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+
+    // eloquent relation connections
+
+    public function announcement(): HasMany{
+        return $this->hasMany(Announcement::class, 'admin_id', 'id');
+    }
+
+    public function post(): HasMany {
+        return $this->hasMany(PostModel::class, 'admin_id', 'id');
+    }
+
+    public function calendar(): HasMany {
+        return $this->hasMany(Calendar::class, 'admin_id', 'id');
     }
 }

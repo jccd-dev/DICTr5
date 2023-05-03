@@ -4,9 +4,11 @@
 
 namespace App\Models\CMS;
 
+use App\Models\Admin\AdminModel;
 use ArrayObject;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\DB;
 use stdClass;
 
@@ -32,6 +34,9 @@ class Announcement extends Model
         'end_duration',
     ];
 
+    public function admin():BelongsTo {
+        return $this->belongsTo(AdminModel::class, 'admin_id');
+    }
     /**
      * TITLE: RETRIEVING ALL ANNOUNCEMENT
      * Description: getting all announcement data from the database
@@ -40,11 +45,12 @@ class Announcement extends Model
     public function get_all_announcement(){
         return DB::table($this->table)
             ->orderBy('timestamp', 'desc')
-            ->join('dict_admins', 'announcements.author', '=', 'dict_admins.id')
+            ->join('dict_admins', 'announcements.admin_id', '=', 'dict_admins.id')
             ->join('post_categories', 'announcements.cat_id', '=', 'post_categories.id')
             ->select('announcements.*', 'dict_admins.name as author_name', 'post_categories.category as category')
             ->get();
     }
+
 
     /**
      * TITLE: CREATE ANNOUNCEMENT
@@ -88,7 +94,7 @@ class Announcement extends Model
      * @return instance of the Illuminate\Database\Eloquent\Collection class
      */
     public function  get_announcement(int $id): stdClass{
-        return DB::table($this->table)->join('dict_admins', 'announcements.author', '=', 'dict_admins.id')
+        return DB::table($this->table)->join('dict_admins', 'announcements.admin_id', '=', 'dict_admins.id')
                                     ->join('post_categories', 'announcements.cat_id', '=', 'post_categories.id')
                                     ->select('announcements.*', 'dict_admins.name as author_name', 'post_categories.category as category')
                                     ->where('announcements.id', $id)
@@ -111,7 +117,7 @@ class Announcement extends Model
         }
         if($search == null || $search == ''){
             if($category == null || $category == 0)
-                return DB::table($this->table)->join('dict_admins', 'announcements.author', '=', 'dict_admins.id')
+                return DB::table($this->table)->join('dict_admins', 'announcements.admin_id', '=', 'dict_admins.id')
                                             ->join('post_categories', 'announcements.cat_id', '=', 'post_categories.id')
                                             ->select('announcements.*', 'dict_admins.name as author_name', 'post_categories.category as category')
                                             ->where('announcements.start_duration', '<=', $to)
@@ -119,7 +125,7 @@ class Announcement extends Model
                                             ->orderBy('announcements.start_duration', 'desc')
                                             ->get();
             else
-                return DB::table($this->table)->join('dict_admins', 'announcements.author', '=', 'dict_admins.id')
+                return DB::table($this->table)->join('dict_admins', 'announcements.admin_id', '=', 'dict_admins.id')
                                             ->join('post_categories', 'announcements.cat_id', '=', 'post_categories.id')
                                             ->select('announcements.*', 'dict_admins.name as author_name', 'post_categories.category as category')
                                             ->where('announcements.start_duration', '<=', $to)
@@ -140,7 +146,7 @@ class Announcement extends Model
      * @return instance of the Illuminate\Database\Eloquent\Collection class
      */
     public function search_announcement(string $data){
-        return DB::table($this->table)->join('dict_admins', 'announcements.author', '=', 'dict_admins.id')
+        return DB::table($this->table)->join('dict_admins', 'announcements.admin_id', '=', 'dict_admins.id')
                                     ->join('post_categories', 'announcements.cat_id', '=', 'post_categories.id')
                                     ->select('announcements.*', 'dict_admins.name as author_name', 'post_categories.category as category')
                                     ->where('announcements.title', 'like', '%'.$data.'%')
