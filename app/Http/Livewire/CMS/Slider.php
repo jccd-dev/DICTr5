@@ -19,14 +19,18 @@ class Slider extends Component
      INITIALIZED variable to hold value from the form submit
      */
     public $myModal;
+    public $displayFormat;
+    public $updateModal;
     public string $title;
     public $description;
     public $image;
     public string $image_name = '';
     public string $button_links;
+    public $temp_image;
     private $banner_model;
     private $banner_id = null;
     private $banner_data = [];
+    public int $updateID = 0;
 
     protected $except = ['myModal'];
 
@@ -47,6 +51,12 @@ class Slider extends Component
 
     public function mount()
     {
+        $this->banner_model = new HomeBanner();
+    }
+
+    public function __construct($id = null)
+    {
+        parent::__construct($id);
         $this->banner_model = new HomeBanner();
     }
 
@@ -117,7 +127,7 @@ class Slider extends Component
      * @param string|int $banner_id unique identification for every slider banner
      * @return \Session (flash session) use for to display message to user.
      */
-    public function update_banner(string|int $banner_id) :void
+    public function update_banner(string|int $banner_id): void
     {
         //validate Inputs data before inserting to database
         $validatedData = $this->validate();
@@ -134,6 +144,15 @@ class Slider extends Component
         //inert or save into database
         $this->banner_data = $validatedData;
         $this->banner_model->update_banner($validatedData, $this->banner_id) ? session()->flash('success', 'Slider Banner Created!') : session()->flash('error', 'Please try Again Later!');
+    }
+
+    public function get_banner_data(int $id)
+    {
+        $data = $this->banner_model->get_banner($id);
+        $this->title = $data->title;
+        $this->description = $data->description;
+        $this->button_links = $data->button_links;
+        $this->temp_image = $data->image;
     }
 
     /**
@@ -154,10 +173,9 @@ class Slider extends Component
         return false;
     }
 
-    public function render(){
-        // testing
-        $data = DB::table('banner')->get();
-
+    public function render()
+    {
+        $data = $this->banner_model->get();
         return view('livewire.cms.slider', ['formData' => $this->banner_data, 'data' => $data])->layout("layouts.layout");
     }
 }
