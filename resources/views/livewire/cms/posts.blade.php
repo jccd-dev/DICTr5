@@ -197,17 +197,20 @@
 
                                 <div class="flex flex-col items-center justify-center w-full">
                                     <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                                        @if($images)
+                                        @if($temp_images)
+{{--                                        {{ dd($temp_images) }}--}}
                                             <div id="img-thumbnail" class="flex flex-wrap w-full h-full gap-2 p-2">
-                                                @foreach($images as $image)
-                                                    <div class="w-24 h-24">
-                                                        <img src="{{ $image->temporaryUrl() }}" class="w-full h-full object-cover" alt="">
-                                                    </div>
+                                                @foreach($temp_images as $image)
+                                                    @foreach($image as $img)
+                                                        <div class="w-24 h-24">
+                                                            <img src="{{ $img->temporaryUrl() }}" class="w-full h-full object-cover" alt="">
+                                                        </div>
+                                                    @endforeach
                                                 @endforeach
                                             </div>
                                         @endif
-{{--                                        {{ dd(!!$images) }}--}}
-                                        @if(!$images)
+{{--                                        {{ dd(!!$temp_images) }}--}}
+                                        @if(!$temp_images)
                                             <div class="flex justify-center items-center">
                                                 <div id="ins-previe" class="flex flex-col items-center justify-center pt-5 pb-6">
                                                     <svg aria-hidden="true" class="w-10 h-10 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
@@ -298,9 +301,9 @@
 
                                 <div class="flex flex-col items-center justify-center w-full">
                                     <label for="#" @click="$refs.dropzoneFile.click()" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                                        @if(isset($to_update_data['images']))
-                                            @if($to_update_data['images'])
-                                                <div id="img-thumbnail" class="flex flex-wrap w-full h-full gap-2 p-2">
+                                        @if(isset($to_update_data['images']) && count($to_update_data['images']) > 0 || isset($temp_images) && count($temp_images) > 0)
+                                            <div id="img-thumbnail" class="flex flex-wrap w-full h-full gap-2 p-2">
+                                                @if(isset($to_update_data['images']))
                                                     @foreach($to_update_data['images'] as $key => $val)
                                                         @foreach($val as $k => $v)
                                                             <div class="w-24 h-24 relative">
@@ -313,6 +316,15 @@
                                                             </div>
                                                         @endforeach
                                                     @endforeach
+
+
+                                                    @foreach($images as $img)
+                                                        <div class="w-24 h-24">
+                                                            <img src="{{ $img->temporaryUrl() }}" class="w-full h-full object-cover" alt="">
+                                                        </div>
+                                                    @endforeach
+                                                @endif
+                                                @if($temp_images)
                                                     @foreach($temp_images as $key => $val)
                                                         @foreach($val as $k => $v)
                                                             <div class="w-24 h-24 relative">
@@ -325,25 +337,18 @@
                                                             </div>
                                                         @endforeach
                                                     @endforeach
-                                                    @foreach($images as $img)
-                                                        <div class="w-24 h-24">
-                                                            <img src="{{ $img->temporaryUrl() }}" class="w-full h-full object-cover" alt="">
-                                                        </div>
-                                                    @endforeach
-                                                </div>
-                                            @endif
-                                        @endif
-                                            @if(!$images && isset($to_update_data['images']))
-                                                @if(!$to_update_data['images'])
-                                                    <div class="flex justify-center items-center">
-                                                        <div id="ins-preview" class="flex flex-col items-center justify-center pt-5 pb-6">
-                                                            <svg aria-hidden="true" class="w-10 h-10 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                                                            <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
-                                                            <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
-                                                        </div>
-                                                    </div>
                                                 @endif
-                                            @endif
+                                            </div>
+                                        @else
+                                                <div class="flex justify-center items-center">
+                                                    <div id="ins-preview" class="flex flex-col items-center justify-center pt-5 pb-6">
+                                                        <svg aria-hidden="true" class="w-10 h-10 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                                                        <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                                                        <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+                                                    </div>
+                                                </div>
+                                        @endif
+
                                         <input id="dropzone-file"
                                                type="file"
                                                accept="image/*"

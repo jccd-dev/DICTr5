@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 use App\Models\CMS\POST\PostImages;
 use App\Models\CMS\POST\PostModel;
 
@@ -58,21 +59,21 @@ class ImageHandlerHelper {
 
     //delete on folder and database
         public function del_image_on_db(mixed $images, string|int $post_id) : bool{
+            $flat_images = Arr::flatten($images);
             $post = PostModel::find($post_id);
 
             if($post) {
-                $images = $post->images()->whereIn('image_filename', $images)->get();
+                $imgs = $post->images()->whereIn('image_filename', $flat_images)->get();
 
-                foreach ($images as $image) {
-
-                    $image->delete();
-                    if (Storage::exists('/public/images/' . $image)) {
-                        Storage::delete('public/images/' . $image);
+                foreach ($imgs as $image) {
+                    if (Storage::exists('/public/images/' . $image->image_filename)) {
+                        Storage::delete('public/images/' . $image->image_filename);
                     }
+                    $image->delete();
 
                 }
 
-                $deleted = $post->images()->whereIn('image_filename', $images)->delete();
+                $deleted = $post->images()->whereIn('image_filename', $flat_images)->delete();
 
                 return $deleted > 0;
             }

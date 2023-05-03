@@ -1,8 +1,9 @@
 <div
     class="flex h-screen bg-[#F2F7FF] dark:bg-gray-900"
     :class="{ 'overflow-hidden': isSideMenuOpen }"
-    x-data="{ isCMSOpen: {{ request()->is('admin/cms/*') }} }"
+    x-data="{ isCMSOpen: '{{ request()->is('admin/cms/*') }}' }"
 >
+
     <!-- Desktop sidebar -->
     <aside
         class="z-20 hidden w-80 overflow-y-auto bg-white dark:bg-gray-800 md:block flex-shrink-0 px-5"
@@ -73,16 +74,26 @@
                             aria-label="submenu"
                         >
                             <li
-                                class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+                                class="{{ request()->routeIs('admin.cms.posts') ? 'text-custom-blue' : 'hover:text-gray-800' }} px-2 py-1 transition-colors duration-150"
                             >
                                 <a class="w-full" href="{{ url("/admin/cms/posts") }}">Posts</a>
                             </li>
                             <li
-                                class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+                                class="{{ request()->routeIs('admin.cms.slider') ? 'text-custom-blue' : 'hover:text-gray-800' }} px-2 py-1 transition-colors duration-150"
                             >
                                 <a class="w-full" href="{{ route("admin.cms.slider") }}">
                                     Slider
                                 </a>
+                            </li>
+                            <li
+                                class="{{ request()->routeIs('admin.cms.announcement') ? 'text-custom-blue' : 'hover:text-gray-800' }} px-2 py-1 transition-colors duration-150"
+                            >
+                                <a class="w-full" href="{{route('admin.cms.announcement')}}">Announcement</a>
+                            </li>
+                            <li
+                                class="{{ request()->routeIs('admin.cms.calendar') ? 'text-custom-blue' : 'hover:text-gray-800' }} px-2 py-1 transition-colors duration-150"
+                            >
+                                <a class="w-full" href="{{route('admin.cms.calendar')}}">Event Calendar</a>
                             </li>
                             <li
                                 class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
@@ -90,16 +101,6 @@
                                 <a class="w-full" href="pages/forgot-password.html">
                                     Forgot password
                                 </a>
-                            </li>
-                            <li
-                                class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                            >
-                                <a class="w-full" href="{{route('admin.cms.announcement')}}">Announcement</a>
-                            </li>
-                            <li
-                                class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                            >
-                                <a class="w-full" href="{{route('admin.cms.calendar')}}">Event Calendar</a>
                             </li>
                             <li
                                 class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"

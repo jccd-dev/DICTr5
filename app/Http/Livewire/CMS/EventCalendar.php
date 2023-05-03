@@ -36,11 +36,11 @@ class EventCalendar extends Component
                                 ->where('calendar.event_title', 'like', '%'.$this->search.'%')
                                 ->orWhere('post_categories.category', 'like', '%'.$this->search.'%')
                                 ->orWhere('calendar.venue', 'like', '%'.$this->search.'%')
-                                ->get(); 
+                                ->get();
         }
 
         return view('livewire.cms.event-calendar')
-                ->layout('livewire.layout.laravel_layout');
+                ->layout('layouts.layout');
     }
 
     public function mount(){
@@ -91,8 +91,8 @@ class EventCalendar extends Component
         ])->validate();
 
         // Combine Date and Time
-        $this->createEventArr['start_date'] .= ' '.$this->createEventArr['start_time']; 
-        $this->createEventArr['end_date'] .= ' '.$this->createEventArr['end_time']; 
+        $this->createEventArr['start_date'] .= ' '.$this->createEventArr['start_time'];
+        $this->createEventArr['end_date'] .= ' '.$this->createEventArr['end_time'];
 
         // Removing Time in Array
         unset($this->createEventArr['start_time']);
@@ -188,8 +188,8 @@ class EventCalendar extends Component
         ])->validate();
 
         // Combine Date and Time
-        $this->updateEventArr['start_date'] .= ' '.$this->updateEventArr['start_time']; 
-        $this->updateEventArr['end_date'] .= ' '.$this->updateEventArr['end_time']; 
+        $this->updateEventArr['start_date'] .= ' '.$this->updateEventArr['start_time'];
+        $this->updateEventArr['end_date'] .= ' '.$this->updateEventArr['end_time'];
 
         // Removing Time in Array
         unset($this->updateEventArr['start_time']);
