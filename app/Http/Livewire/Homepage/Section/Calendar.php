@@ -11,6 +11,7 @@ class Calendar extends Component
     public $todayMonth;
     public $todayYear;
     public $toShowEventDetail = [];
+    public $event_modal = false;
 
     public function mount(){
         date_default_timezone_set('Asia/Manila');
@@ -58,6 +59,7 @@ class Calendar extends Component
         }else{
             $this->toShowEventDetail['is_allDay'] = false;
         }
+        $this->event_modal = true;
         // dd($this->toShowEventDetail);
     }
 }
