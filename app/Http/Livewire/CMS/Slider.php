@@ -133,6 +133,6 @@ class Slider extends Component
     {
         // testing
         $data = new HomeBanner();
-        return view('livewire.cms.slider', ['formData' => $data->get_banner(5)])->layout("layouts.layout");
+        return view('livewire.cms.slider', ['formData' => $data->get_banner()])->layout("layouts.layout");
     }
 }

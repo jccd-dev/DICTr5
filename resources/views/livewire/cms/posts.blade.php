@@ -100,7 +100,7 @@
                         </td>
                         <td class="px-6 py-4">
                             <a href="#" type="button" wire:click="get_post_data({{ $post->id }})" @click="state=1; stateUpdate=1; modalActive = 2" data-modal-target="update-post" data-modal-show="update-post" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit user</a>
-                            <a href="#" type="button" data-modal-target="deleteModal" data-modal-show="deleteModal" class="font-medium text-red-600 dark:text-red-500 hover:underline">Delete user</a>
+                            <a href="#" type="button" wire:click="delete_post({{ $post->id }})" data-modal-target="deleteModal" data-modal-show="deleteModal" class="font-medium text-red-600 dark:text-red-500 hover:underline">Delete user</a>
                         </td>
                     </tr>
                 @endforeach

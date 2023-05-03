@@ -2,20 +2,17 @@
 
 namespace App\Http\Livewire\CMS;
 
-use App\Helpers\ImageHandlerHelper;
-use App\Models\CMS\POST\PostImages;
-use App\Models\CMS\POST\PostCategory;
-use App\Models\CMS\POST\PostModel;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use App\Models\CMS\POST\PostModel;
+use App\Helpers\ImageHandlerHelper;
+use App\Models\CMS\POST\PostImages;
+use Illuminate\Support\Facades\Auth;
+use App\Models\CMS\POST\PostCategory;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Validator;
-use function PHPUnit\Framework\isEmpty;
-use App\Helpers\GetAdmin;
+use Illuminate\Database\Eloquent\Collection;
 
 class Posts extends Component
 {
@@ -24,6 +21,7 @@ class Posts extends Component
     //initialized variable that will hold values from input form
     public string|int $category_id = '1';
     public string|int $admin_id = 1;
+    public string $author = '';
     public string $title = '';
     public string $excerpt = '';
     public $thumbnail;
@@ -32,7 +30,6 @@ class Posts extends Component
     public $images = [];
     public array $image_names = [];
     public string $vid_link = '';
-    public string $author = 'test author';
     public int $status = 0;
     public array $post_data = [];
     public int $post_id = 0;
@@ -115,13 +112,13 @@ class Posts extends Component
         //arrange data for insertion
         $this->post_data = [
             'category_id'    => $this->category_id,
-            'admin_id'  => $this->getAdmin::get_admin()['id'],
+            'admin_id'  => $this->admin_id,
             'title'     => $this->title,
             'excerpt'   => $this->excerpt,
             'thumbnail' => $this->thumbnail_img_name,
             'content'   => $this->content,
             'vid_link'  => $this->vid_link,
-            'author'    => $this->getAdmin::get_admin()['name'],
+            'author'    => $this->author,
             'status'    => $this->status,
         ];
 
@@ -426,7 +423,15 @@ class Posts extends Component
 
     public function render()
     {
-        $postModel = new PostModel();
+        // get admin name and id
+        if (Auth::check()){
+
+            $admin = Auth::user();
+
+            $this->admin_id = $admin->id;
+            $this->author = $admin->name;
+
+        }
         return view('livewire.cms.posts', ['posts' => $this->search_post(), 'all_category' => $this->get_all_categories()])->layout('layouts.layout');
     }
 
