@@ -1,4 +1,4 @@
-<div x-init="">
+<div x-init="" x-data="{ updateBannerID: 0 }">
     <div class="relative overflow-x-auto shadow-md rounded-2xl" wire:ignore>
         <div class="flex items-center justify-between py-4 bg-white dark:bg-gray-800 px-10 pt-10">
             <div class="font-quicksand flex gap-3 items-center">
@@ -89,7 +89,7 @@
                                         {{ $val->button_links }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        <a href="#" class="font-medium hover:underline" @click="$openModal('updateModal')" wire:click="get_banner_data({{ $val->id }})">Edit</a>
+                                        <a href="#" class="font-medium hover:underline" @click="$openModal('updateModal'); updateBannerID = {{ $val->id }}" wire:click="get_banner_data({{ $val->id }})">Edit</a>
                                     </td>
                                 </tr>
                             @else
@@ -104,7 +104,7 @@
                                         {{ $val->button_links }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        <a href="#" class="font-medium hover:underline" @click="$openModal('updateModal')" wire:click="get_banner_data({{ $val->id }})">Edit</a>
+                                        <a href="#" class="font-medium hover:underline" @click="$openModal('updateModal'); updateBannerID = {{ $val->id }}" wire:click="get_banner_data({{ $val->id }})">Edit</a>
                                     </td>
                                 </tr>
                             @endif
@@ -196,7 +196,7 @@
         <div class="w-full">
 {{--             {{ //TODO: slider banner form accept String title, File image, Text description, and String button_links }}--}}
 
-            <form class="w-full" x-data="{ dragging: true }" wire:submit.prevent="update_banner">
+            <form class="w-full" x-data="{ dragging: true }">
                 <div class="mb-6">
 
                           TITLE
@@ -268,7 +268,7 @@
                 </div>
                 <x-slot name="footer">
                     <div class="flex justify-end">
-                        <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+                        <button type="button" @click="$wire.update_banner(updateBannerID)" x-text="updateBannerID" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
 
                     </div>
                 </x-slot>

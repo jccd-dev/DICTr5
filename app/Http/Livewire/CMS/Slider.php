@@ -19,6 +19,8 @@ class Slider extends Component
      INITIALIZED variable to hold value from the form submit
      */
     public $myModal;
+    public $displayFormat;
+    public $updateModal;
     public string $title;
     public $description;
     public $image;
@@ -28,6 +30,7 @@ class Slider extends Component
     private $banner_model;
     private $banner_id = null;
     private $banner_data = [];
+    public int $updateID = 0;
 
     protected $except = ['myModal'];
 
@@ -48,6 +51,12 @@ class Slider extends Component
 
     public function mount()
     {
+        $this->banner_model = new HomeBanner();
+    }
+
+    public function __construct($id = null)
+    {
+        parent::__construct($id);
         $this->banner_model = new HomeBanner();
     }
 
