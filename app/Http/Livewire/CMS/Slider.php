@@ -26,6 +26,7 @@ class Slider extends Component
     public $displayFormat;
     public string $image_name = '';
     public string $button_links;
+    public $temp_image;
     private $banner_model;
     private $banner_id = null;
     private $banner_data = [];
@@ -60,7 +61,7 @@ class Slider extends Component
      */
     public function submit(): void
     {
-        //        dd(1);
+//                dd(1);
         //validate Inputs data before inserting to database
         //        $validatedData = $this->validate();
         $validator = Validator::make([
@@ -141,6 +142,14 @@ class Slider extends Component
         $this->banner_model->update_banner($validatedData, $this->banner_id) ? session()->flash('success', 'Slider Banner Created!') : session()->flash('error', 'Please try Again Later!');
     }
 
+    public function get_banner_data(int $id) {
+        $data = $this->banner_model->get_banner($id);
+        $this->title = $data->title;
+        $this->description = $data->description;
+        $this->button_links = $data->button_links;
+        $this->temp_image = $data->image;
+    }
+
     /**
      * @param string|int $banner_id
      * @return bool
@@ -161,10 +170,7 @@ class Slider extends Component
 
     public function render()
     {
-        $data = DB::table('banner')->get();
+        $data = $this->banner_model->get();
         return view('livewire.cms.slider', ['formData' => $this->banner_data, 'data' => $data])->layout("layouts.layout");
-        // testing
-        // $data = new HomeBanner();
-        // return view('livewire.cms.slider', ['formData' => $data->get_banner(5)])->layout("layouts.layout");
     }
 }
