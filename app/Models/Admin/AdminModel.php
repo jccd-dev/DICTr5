@@ -2,15 +2,16 @@
 
 namespace App\Models\Admin;
 
-use App\Models\CMS\Announcement;
 use App\Models\CMS\Calendar;
+use App\Models\CMS\Announcement;
 use App\Models\CMS\POST\PostModel;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\Model;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class AdminModel extends Authenticatable implements JWTSubject
 {
@@ -122,4 +123,10 @@ class AdminModel extends Authenticatable implements JWTSubject
     public function calendar(): HasMany {
         return $this->hasMany(Calendar::class, 'admin_id', 'id');
     }
+
+    // automatically hashed the password when $admin->pass = 'pass' $admin->save()
+    public function setPasswordAttribute($value) {
+        $this->attributes['password'] = Hash::make($value);
+    }
+
 }
