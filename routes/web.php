@@ -33,10 +33,13 @@ Route::get('/', function () {
 });
 Route::get('/testing', \App\Http\Livewire\CMS\Testing::class);
 
+
+// STATIC PAGES ROUTES
 Route::get('/about', function () {
     return view('pages.about');
 });
 
+// ADMIN SIDE ROUTES
 Route::prefix('admin')->group(function () {
 
     Route::get('/login', Login::class)->name("admin.login")->middleware(['jwt.isLoggedIn']);
@@ -57,7 +60,7 @@ Route::prefix('admin')->group(function () {
     });
 });
 
-// User
+// USER SIDE ROUTES
 Route::prefix('user')->group(function () {
     Route::get('/dashboard', User\Dashboard::class)->name('user.dashboard');
 });

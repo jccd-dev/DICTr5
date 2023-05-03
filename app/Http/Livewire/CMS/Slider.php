@@ -43,10 +43,10 @@ class Slider extends Component
         'image.dimensions'   => 'Image minimum width and height should be 950 x 635 pixels'
     ];
 
-//    public function mount()
-//    {
-//        $this->banner_model = new HomeBanner();
-//    }
+    public function mount()
+    {
+        $this->banner_model = new HomeBanner();
+    }
 
     /**
      * TITLE: SUBMIT
@@ -117,11 +117,21 @@ class Slider extends Component
      */
     public function delete_banner(string|int $banner_id): bool
     {
-        return $this->banner_model->delete_banner($banner_id);
+        $banner = HomeBanner::find($banner_id);
+
+        if($this->banner_model->delete_banner($banner_id)){
+            if (Storage::exists('/public/images/' . $banner->image)) {
+                Storage::delete('public/images/' . $banner->image);
+            }
+
+            return true;
+        }
+        return false;
     }
 
     public function render()
     {
+        // testing
         $data = new HomeBanner();
         return view('livewire.cms.slider', ['formData' => $data->get_banner(5)])->layout("layouts.layout");
     }
