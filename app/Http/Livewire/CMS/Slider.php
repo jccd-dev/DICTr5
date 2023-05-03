@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\CMS;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
 use Illuminate\Support\Str;
@@ -18,6 +19,7 @@ class Slider extends Component
      INITIALIZED variable to hold value from the form submit
      */
     public $myModal;
+    public $updateModal;
     public string $title;
     public $description;
     public $image;
@@ -150,6 +152,7 @@ class Slider extends Component
 
     public function render()
     {
-        return view('livewire.cms.slider', ['formData' => $this->banner_data])->layout("layouts.layout");
+        $data = DB::table('banner')->get();
+        return view('livewire.cms.slider', ['formData' => $this->banner_data, 'data' => $data])->layout("layouts.layout");
     }
 }
