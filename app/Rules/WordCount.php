@@ -39,6 +39,6 @@ class WordCount implements ValidationRule
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        // TODO: Implement validate() method.
+        // Implement validate() method.
     }
 }

@@ -42,7 +42,7 @@ class Dashboard extends Component
     public string $designationPosition;
     public string $yearsPresentPosition;
 
-    public string $pl;
+    public string $progLang;
     public mixed $passport = null;
     public mixed $psa = null;
     public mixed $cert = null;
@@ -105,7 +105,7 @@ class Dashboard extends Component
             ]]),
         ]);
 
-        $this->pl = '';
+        $this->progLang = '';
         $this->passport = '';
         $this->psa = '';
         $this->cert = '';
@@ -161,7 +161,9 @@ class Dashboard extends Component
             "officeCategory = " . $this->officeCategory,
             "designationPosition = " . $this->designationPosition,
             "yearsPresentPosition = " . $this->yearsPresentPosition,
-            "pl = " . $this->pl,
+
+            // TODO: separate the submission of this files
+            "pl = " . $this->progLang,
             "passport = " . $this->passport,
             "psa = " . $this->psa,
             "cert = " . $this->cert,
@@ -169,5 +171,8 @@ class Dashboard extends Component
             "diploma = " . $this->diploma,
             "signature = " . $this->signature
         );
+
+
+
     }
 }

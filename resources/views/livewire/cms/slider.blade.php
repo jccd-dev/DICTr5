@@ -127,7 +127,7 @@
 
     <x-modal.card title="Add Slider" blur wire:model="myModal">
         <div class="w-full">
-            {{-- {{ //TODO: slider banner form accept String title, File image, Text description, and String button_links }} --}}
+            {{-- {{ slider banner form accept String title, File image, Text description, and String button_links }} --}}
 
             <form class="w-full" x-data="{ dragging: true }">
                 <div class="mb-6">
@@ -194,7 +194,7 @@
     </x-modal.card>
     <x-modal.card title="Update Slider" blur wire:model="updateModal">
         <div class="w-full">
-{{--             {{ //TODO: slider banner form accept String title, File image, Text description, and String button_links }}--}}
+{{--             {{ slider banner form accept String title, File image, Text description, and String button_links }}--}}
 
             <form class="w-full" x-data="{ dragging: true }">
                 <div class="mb-6">
