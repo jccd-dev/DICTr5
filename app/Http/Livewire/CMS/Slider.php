@@ -3,11 +3,13 @@
 namespace App\Http\Livewire\CMS;
 
 use Livewire\Component;
+use mysql_xdevapi\Session;
 use Illuminate\Support\Str;
 use Livewire\WithFileUploads;
 use App\Models\CMS\HomeBanner;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use mysql_xdevapi\Session;
+use Illuminate\Support\Facades\Validator;
 
 class Slider extends Component
 {
@@ -17,14 +19,18 @@ class Slider extends Component
      INITIALIZED variable to hold value from the form submit
      */
     public $myModal;
+    public $displayFormat;
+    public $updateModal;
     public string $title;
     public $description;
     public $image;
     public string $image_name = '';
     public string $button_links;
+    public $temp_image;
     private $banner_model;
     private $banner_id = null;
     private $banner_data = [];
+    public int $updateID = 0;
 
     protected $except = ['myModal'];
 
@@ -35,6 +41,12 @@ class Slider extends Component
         'image'        => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=950,min_height=635',
         'button_links' => 'required',
     ];
+    protected $rulesUpdate = [
+        'title'        => 'required|word_count:7',
+        'description'  => 'required|word_count:20',
+        'image'        => 'required|string',
+        'button_links' => 'required',
+    ];
 
     // Custom validation messages
     protected $messages = [
@@ -43,26 +55,55 @@ class Slider extends Component
         'image.dimensions'   => 'Image minimum width and height should be 950 x 635 pixels'
     ];
 
-//    public function mount()
-//    {
-//        $this->banner_model = new HomeBanner();
-//    }
+    public function mount()
+    {
+        $this->banner_model = new HomeBanner();
+    }
+
+    public function __construct($id = null)
+    {
+        parent::__construct($id);
+        $this->banner_model = new HomeBanner();
+    }
 
     /**
      * TITLE: SUBMIT
      * Description: Handle the data submitted from the form
      * @return \Session (flash session) use for to display message to user.
      */
-    public function submit() :void
+    public function submit(): void
     {
-        // validate Inputs data before inserting to database
-        $validatedData = $this->validate();
-        $this->storeImage();
-        $validatedData['image'] = $this->image_name;
+        //validate Inputs data before inserting to database
+        $validator = Validator::make([
+            'title'       => $this->title,
+            'description'     => $this->description,
+            'image'     => $this->image,
+            'button_links'      => $this->button_links,
+        ], $this->rules);
 
-        $this->banner_data = $validatedData;
+        if ($validator->fails()) {
+            $err_msgs = $validator->getMessageBag();
+            foreach ($err_msgs->getMessages() as $field => $messages) {
+                foreach ($messages as $message) {
+                    $this->addError('update.' . $field, $message);
+                }
+            }
+            $this->dispatchBrowserEvent('ValidationError', $err_msgs->getMessages());
+        } else {
+            $this->storeImage();
+
+            $validatedData = [
+                'title'       => $this->title,
+                'description'     => $this->description,
+                'image'     => $this->image,
+                'button_links'      => $this->button_links,
+            ];
+            $validatedData['image'] = $this->image_name;
+            $this->banner_data = $validatedData;
+            $this->banner_model->make_banner($validatedData) ? session()->flash('success', 'Slider Banner Created!') : session()->flash('error', 'Please try Again Later!');
+            $this->dispatchBrowserEvent('ValidationSuccess', true);
+        }
         //insert data into database
-        $this->banner_model->make_banner($validatedData) ? session()->flash('success', 'Slider Banner Created!') : session()->flash('error', 'Please try Again Later!');
     }
 
     /**
@@ -92,23 +133,104 @@ class Slider extends Component
      * @param string|int $banner_id unique identification for every slider banner
      * @return \Session (flash session) use for to display message to user.
      */
-    public function update_banner(string|int $banner_id) :void
+    public function update_banner(string|int $banner_id): void
     {
         //validate Inputs data before inserting to database
-        $validatedData = $this->validate();
+        //validate Inputs data before inserting to database
+        if ($this->image) {
+            $validator = Validator::make([
+                'title'       => $this->title,
+                'description'     => $this->description,
+                'image'     => $this->image,
+                'button_links'      => $this->button_links,
+            ], $this->rules);
 
-        //get the prev banner data (image name and id)
-        $banner_data = $this->banner_model->get_banner($banner_id);
-        $this->image_name = $banner_data->image;
-        $this->banner_id = $banner_data->id;
+            if ($validator->fails()) {
+                $err_msgs = $validator->getMessageBag();
+                foreach ($err_msgs->getMessages() as $field => $messages) {
+                    foreach ($messages as $message) {
+                        $this->addError($field, $message);
+                    }
+                }
+                $this->dispatchBrowserEvent('UpdateSliderFailed', $err_msgs->getMessages());
+            } else {
+                //get the prev banner data (image name and id)
+                $banner_data = $this->banner_model->get_banner($banner_id);
+                $this->image_name = $banner_data->image;
+                $this->banner_id = $banner_data->id;
 
-        //save image into the designated folder in the server
-        $this->storeImage();
-        $validatedData['image'] = $this->image_name;
+                $validatedData = [
+                    'title'       => $this->title,
+                    'description'     => $this->description,
+                    'button_links'      => $this->button_links,
+                ];
 
-        //inert or save into database
-        $this->banner_data = $validatedData;
-        $this->banner_model->update_banner($validatedData, $this->banner_id) ? session()->flash('success', 'Slider Banner Created!') : session()->flash('error', 'Please try Again Later!');
+                //save image into the designated folder in the server
+                $this->storeImage();
+                $validatedData['image'] = $this->image_name;
+
+                //inert or save into database
+                $this->banner_data = $validatedData;
+                if ($this->banner_model->update_banner($validatedData, $this->banner_id)) {
+                    $this->dispatchBrowserEvent('UpdateSliderSuccess', true);
+                    session()->flash('success', 'Slider Banner Created!');
+                } else {
+                    $this->dispatchBrowserEvent('UpdateSliderFailed', true);
+                    session()->flash('error', 'Please try Again Later!');
+                }
+            }
+        } else {
+            $validator = Validator::make([
+                'title'       => $this->title,
+                'description'     => $this->description,
+                'image'     => $this->temp_image,
+                'button_links'      => $this->button_links,
+            ], $this->rulesUpdate);
+
+            if ($validator->fails()) {
+                $err_msgs = $validator->getMessageBag();
+                foreach ($err_msgs->getMessages() as $field => $messages) {
+                    foreach ($messages as $message) {
+                        $this->addError($field, $message);
+                    }
+                }
+                $this->dispatchBrowserEvent('UpdateSliderFailed', $err_msgs->getMessages());
+            } else {
+
+                $validatedData = [
+                    'title'       => $this->title,
+                    'description'     => $this->description,
+                    'button_links'      => $this->button_links,
+                ];
+
+                //get the prev banner data (image name and id)
+                $banner_data = $this->banner_model->get_banner($banner_id);
+                $this->image_name = $banner_data->image;
+                $this->banner_id = $banner_data->id;
+
+                //save image into the designated folder in the server
+                $validatedData['image'] = $this->temp_image;
+
+                //inert or save into database
+                $this->banner_data = $validatedData;
+                if ($this->banner_model->update_banner($validatedData, $this->banner_id)) {
+                    $this->dispatchBrowserEvent('UpdateSliderSuccess', true);
+                    session()->flash('success', 'Slider Banner Created!');
+                } else {
+                    $this->dispatchBrowserEvent('UpdateSliderFailed', ["" => $validatedData]);
+                    session()->flash('error', 'Please try Again Later!');
+                }
+            }
+        }
+    }
+
+    public function get_banner_data(int $id)
+    {
+        $data = $this->banner_model->get_banner($id);
+        $this->title = $data->title;
+        $this->description = $data->description;
+        $this->button_links = $data->button_links;
+        $this->temp_image = $data->image;
     }
 
     /**
@@ -117,12 +239,23 @@ class Slider extends Component
      */
     public function delete_banner(string|int $banner_id): bool
     {
-        return $this->banner_model->delete_banner($banner_id);
+        $banner = HomeBanner::find($banner_id);
+
+        if ($this->banner_model->delete_banner($banner_id)) {
+            if (Storage::exists('/public/images/' . $banner->image)) {
+                Storage::delete('public/images/' . $banner->image);
+            }
+
+            $this->dispatchBrowserEvent('DeleteSliderSuccess', true);
+            return true;
+        }
+        $this->dispatchBrowserEvent('DeleteSliderFailed', true);
+        return false;
     }
 
     public function render()
     {
-        $data = new HomeBanner();
-        return view('livewire.cms.slider', ['formData' => $data->get_banner(5)])->layout("layouts.layout");
+        $data = $this->banner_model->get();
+        return view('livewire.cms.slider', ['formData' => $this->banner_data, 'data' => $data])->layout("layouts.layout");
     }
 }

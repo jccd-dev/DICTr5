@@ -2,6 +2,7 @@
 
 namespace App\Models\CMS\POST;
 
+use App\Models\Admin\AdminModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -42,6 +43,11 @@ class PostModel extends Model
     // post table is connected to category by foreign key and a category can have many post
     public function category(): BelongsTo {
         return $this->belongsTo(PostCategory::class, 'category_id');
+    }
+
+    public function admin(): BelongsTo
+    {
+        return $this->belongsTo(AdminModel::class, 'admin_id');
     }
 
     /**

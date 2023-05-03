@@ -6,9 +6,8 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class TopBanner extends Component
+class TableOptions extends Component
 {
-
     /**
      * Create a new component instance.
      */
@@ -22,6 +21,6 @@ class TopBanner extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.layouts.top-banner');
+        return view('components.layouts.table-options');
     }
 }

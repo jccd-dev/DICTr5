@@ -6,6 +6,8 @@
         <br>
     @endif
 
+    <div x-init="console.log({{ auth('jwt')->user() }})"></div>
+
     <!-- admin credentials can be access using this;-->
     @can('admins_only', auth('jwt')->user())
         <div style="font-size: 1rem; font-weight: bold">Admins Only</div>

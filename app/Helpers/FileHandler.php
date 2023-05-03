@@ -25,19 +25,22 @@ class FileHandler
      * @param string $applicant_name
      * @return void
      */
-    public function store_files(mixed $files, int|string $applicant_id, string $applicant_name){
+    public function store_files(mixed $files, int|string $userId){
+        $file = $this->userModel::find($userId);
 
+        //get the old file (filename) and username
+        $user_name = "{$file->lname}_{$file->fname}";
         foreach ($files as $key => $file) {
             $file_extension = $file->getClientOriginalExtension();
             $file_type = '';
 
             in_array(strtolower($file_extension), $this->accepted_file_types['docs']) ? $file_type = 'Document' : $file_type = 'Image';
 
-            $new_file_name = $this->file_namer($applicant_name, $file_extension);
+            $new_file_name = $this->file_namer($user_name, $file_extension);
 
             //insert the files here,
 
-            $this->userModel->user_id          = $applicant_id;
+            $this->userModel->user_id          = $userId;
             $this->userModel->file_name        = $new_file_name;
             $this->userModel->file_type        = $file_type;
             $this->userModel->requirement_type = $key;
@@ -82,18 +85,17 @@ class FileHandler
 
     /**
      * @description update a submitted file in server folder and database.
-     * @param string|int $file_name
      * @param $new_file
      * @param string|int $userId
      * @return bool
      */
-    public function update_the_file(string|int $file_name, $new_file, string|int $userId):bool{
+    public function update_the_file($new_file, string|int $userId):bool{
         $file = $this->userModel::find($userId);
 
         //get the old file (filename) and username
-        $user_name = "{$file->fname}_{$file->lname}";
+        $user_name = "{$file->lname}_{$file->fname}";
         // $old_file_name = $file->submitted_file()->where('id', $file_name)->value('file_name');
-        $old_file_name = $file_name;
+        $old_file_name = $file->file_name;
 
         $file_extension = $new_file->getClientOriginalExtension();
 
@@ -102,7 +104,7 @@ class FileHandler
         $new_file_name = $this->file_namer($user_name, $file_extension);
 
         //since it's just for update
-        $updated = $file->submitted__files()->where('id', $file_name)
+        $updated = $file->submitted__files()->where('file_name', $old_file_name)
             ->update([
                 'file_name' => $new_file_name,
                 'file_type' => $file_type,

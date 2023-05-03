@@ -2,11 +2,16 @@
 
 namespace App\Models\Admin;
 
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Notifications\Notifiable;
+use App\Models\CMS\Calendar;
+use App\Models\CMS\Announcement;
+use App\Models\CMS\POST\PostModel;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\Model;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class AdminModel extends Authenticatable implements JWTSubject
 {
@@ -103,4 +108,25 @@ class AdminModel extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+
+    // eloquent relation connections
+
+    public function announcement(): HasMany{
+        return $this->hasMany(Announcement::class, 'admin_id', 'id');
+    }
+
+    public function post(): HasMany {
+        return $this->hasMany(PostModel::class, 'admin_id', 'id');
+    }
+
+    public function calendar(): HasMany {
+        return $this->hasMany(Calendar::class, 'admin_id', 'id');
+    }
+
+    // automatically hashed the password when $admin->pass = 'pass' $admin->save()
+    public function setPasswordAttribute($value) {
+        $this->attributes['password'] = Hash::make($value);
+    }
+
 }

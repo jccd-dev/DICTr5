@@ -11,7 +11,8 @@ module.exports = {
         "./node_modules/flowbite/**/*.js",
         './vendor/wireui/wireui/resources/**/*.blade.php',
         './vendor/wireui/wireui/ts/**/*.ts',
-        './vendor/wireui/wireui/src/View/**/*.php'
+        './vendor/wireui/wireui/src/View/**/*.php',
+        'node_modules/preline/dist/*.js',
     ],
     theme: {
         fontFamily: {
@@ -42,6 +43,7 @@ module.exports = {
         require('@tailwindcss/typography'),
         require('@tailwindcss/forms'),
         require('@tailwindcss/aspect-ratio'),
+        require('preline/plugin'),
     ],
     variants: {
         extend: {
