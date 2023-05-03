@@ -4,6 +4,7 @@ namespace App\Models\CMS;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\DB;
 
 class Calendar extends Model
@@ -28,7 +29,11 @@ class Calendar extends Model
         'timestamp',
     ];
 
-    public $timestamps = false; 
+    public $timestamps = false;
+
+    public function admin(): BelongsTo{
+        return $this->belongsTo(AdminModel::class, 'admin_id');
+    }
 
     public function getAllEvent(){
         return DB::table($this->table)->join('dict_admins', 'calendar.admin_id', '=', 'dict_admins.id')
