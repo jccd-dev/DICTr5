@@ -158,6 +158,6 @@ class Slider extends Component
         // testing
         $data = DB::table('banner')->get();
 
-        return view('livewire.cms.slider', ['formData' => $this->banner_data(), 'data' => $data])->layout("layouts.layout");
+        return view('livewire.cms.slider', ['formData' => $this->banner_data, 'data' => $data])->layout("layouts.layout");
     }
 }
