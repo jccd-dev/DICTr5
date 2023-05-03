@@ -41,6 +41,12 @@ class Slider extends Component
         'image'        => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=950,min_height=635',
         'button_links' => 'required',
     ];
+    protected $rulesUpdate = [
+        'title'        => 'required|word_count:7',
+        'description'  => 'required|word_count:20',
+        'image'        => 'required|string',
+        'button_links' => 'required',
+    ];
 
     // Custom validation messages
     protected $messages = [
@@ -84,7 +90,6 @@ class Slider extends Component
             }
             $this->dispatchBrowserEvent('ValidationError', $err_msgs->getMessages());
         } else {
-            $this->dispatchBrowserEvent('ValidationSuccess', true);
             $this->storeImage();
 
             $validatedData = [
@@ -96,6 +101,7 @@ class Slider extends Component
             $validatedData['image'] = $this->image_name;
             $this->banner_data = $validatedData;
             $this->banner_model->make_banner($validatedData) ? session()->flash('success', 'Slider Banner Created!') : session()->flash('error', 'Please try Again Later!');
+            $this->dispatchBrowserEvent('ValidationSuccess', true);
         }
         //insert data into database
     }
@@ -130,20 +136,92 @@ class Slider extends Component
     public function update_banner(string|int $banner_id): void
     {
         //validate Inputs data before inserting to database
-        $validatedData = $this->validate();
+        //validate Inputs data before inserting to database
+        if ($this->image) {
+            $validator = Validator::make([
+                'title'       => $this->title,
+                'description'     => $this->description,
+                'image'     => $this->image,
+                'button_links'      => $this->button_links,
+            ], $this->rules);
 
-        //get the prev banner data (image name and id)
-        $banner_data = $this->banner_model->get_banner($banner_id);
-        $this->image_name = $banner_data->image;
-        $this->banner_id = $banner_data->id;
+            if ($validator->fails()) {
+                $err_msgs = $validator->getMessageBag();
+                foreach ($err_msgs->getMessages() as $field => $messages) {
+                    foreach ($messages as $message) {
+                        $this->addError($field, $message);
+                    }
+                }
+                $this->dispatchBrowserEvent('UpdateSliderFailed', $err_msgs->getMessages());
+            } else {
+                //get the prev banner data (image name and id)
+                $banner_data = $this->banner_model->get_banner($banner_id);
+                $this->image_name = $banner_data->image;
+                $this->banner_id = $banner_data->id;
 
-        //save image into the designated folder in the server
-        $this->storeImage();
-        $validatedData['image'] = $this->image_name;
+                $validatedData = [
+                    'title'       => $this->title,
+                    'description'     => $this->description,
+                    'button_links'      => $this->button_links,
+                ];
 
-        //inert or save into database
-        $this->banner_data = $validatedData;
-        $this->banner_model->update_banner($validatedData, $this->banner_id) ? session()->flash('success', 'Slider Banner Created!') : session()->flash('error', 'Please try Again Later!');
+                //save image into the designated folder in the server
+                $this->storeImage();
+                $validatedData['image'] = $this->image_name;
+
+                //inert or save into database
+                $this->banner_data = $validatedData;
+                if ($this->banner_model->update_banner($validatedData, $this->banner_id)) {
+                    $this->dispatchBrowserEvent('UpdateSliderSuccess', true);
+                    session()->flash('success', 'Slider Banner Created!');
+                } else {
+                    $this->dispatchBrowserEvent('UpdateSliderFailed', true);
+                    session()->flash('error', 'Please try Again Later!');
+                }
+            }
+        } else {
+            $validator = Validator::make([
+                'title'       => $this->title,
+                'description'     => $this->description,
+                'image'     => $this->temp_image,
+                'button_links'      => $this->button_links,
+            ], $this->rulesUpdate);
+
+            if ($validator->fails()) {
+                $err_msgs = $validator->getMessageBag();
+                foreach ($err_msgs->getMessages() as $field => $messages) {
+                    foreach ($messages as $message) {
+                        $this->addError($field, $message);
+                    }
+                }
+                $this->dispatchBrowserEvent('UpdateSliderFailed', $err_msgs->getMessages());
+            } else {
+
+                $validatedData = [
+                    'title'       => $this->title,
+                    'description'     => $this->description,
+                    'button_links'      => $this->button_links,
+                ];
+
+                //get the prev banner data (image name and id)
+                $banner_data = $this->banner_model->get_banner($banner_id);
+                $this->image_name = $banner_data->image;
+                $this->banner_id = $banner_data->id;
+
+                //save image into the designated folder in the server
+                $validatedData['image'] = $this->temp_image;
+
+                //inert or save into database
+                $this->banner_data = $validatedData;
+                if ($this->banner_model->update_banner($validatedData, $this->banner_id)) {
+                    $this->dispatchBrowserEvent('UpdateSliderSuccess', true);
+                    session()->flash('success', 'Slider Banner Created!');
+                } else {
+                    $this->dispatchBrowserEvent('UpdateSliderFailed', ["" => $validatedData]);
+                    session()->flash('error', 'Please try Again Later!');
+                }
+            }
+        }
     }
 
     public function get_banner_data(int $id)
@@ -168,8 +246,10 @@ class Slider extends Component
                 Storage::delete('public/images/' . $banner->image);
             }
 
+            $this->dispatchBrowserEvent('DeleteSliderSuccess', true);
             return true;
         }
+        $this->dispatchBrowserEvent('DeleteSliderFailed', true);
         return false;
     }
 

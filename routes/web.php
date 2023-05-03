@@ -28,9 +28,7 @@ use App\Http\Livewire\Admin\Inbox as CMSInbox;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [\App\Http\Controllers\Layouts\Layouts::class, 'render']);
 Route::get('/testing', \App\Http\Livewire\CMS\Testing::class);
 
 

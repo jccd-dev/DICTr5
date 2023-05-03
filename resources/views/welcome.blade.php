@@ -10,7 +10,7 @@
 
 <x-layouts.announcement-marquee />
 
-<x-home.section.home-slider />
+<x-home.section.home-slider :data="$data" />
 
 <x-home.section.exam-section />
 
