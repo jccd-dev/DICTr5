@@ -58,11 +58,11 @@ class Slider extends Component
      * Description: Handle the data submitted from the form
      * @return \Session (flash session) use for to display message to user.
      */
-    public function submit():void
+    public function submit(): void
     {
-//        dd(1);
+        //        dd(1);
         //validate Inputs data before inserting to database
-//        $validatedData = $this->validate();
+        //        $validatedData = $this->validate();
         $validator = Validator::make([
             'title'       => $this->title,
             'description'     => $this->description,
@@ -122,7 +122,7 @@ class Slider extends Component
      * @param string|int $banner_id unique identification for every slider banner
      * @return \Session (flash session) use for to display message to user.
      */
-    public function update_banner(string|int $banner_id) :void
+    public function update_banner(string|int $banner_id): void
     {
         //validate Inputs data before inserting to database
         $validatedData = $this->validate();
@@ -149,7 +149,7 @@ class Slider extends Component
     {
         $banner = HomeBanner::find($banner_id);
 
-        if($this->banner_model->delete_banner($banner_id)){
+        if ($this->banner_model->delete_banner($banner_id)) {
             if (Storage::exists('/public/images/' . $banner->image)) {
                 Storage::delete('public/images/' . $banner->image);
             }
@@ -161,13 +161,10 @@ class Slider extends Component
 
     public function render()
     {
-<<<<<<< HEAD
         $data = DB::table('banner')->get();
         return view('livewire.cms.slider', ['formData' => $this->banner_data, 'data' => $data])->layout("layouts.layout");
-=======
         // testing
-        $data = new HomeBanner();
-        return view('livewire.cms.slider', ['formData' => $data->get_banner(5)])->layout("layouts.layout");
->>>>>>> f50f6505b564fc7b38d363d128732af8a17119a4
+        // $data = new HomeBanner();
+        // return view('livewire.cms.slider', ['formData' => $data->get_banner(5)])->layout("layouts.layout");
     }
 }
