@@ -1,12 +1,23 @@
 <div x-data="{ state: 1, hasVidData: false, err: [], stateUpdate: 1, hasVidDataUpdate: false, errUpdate: [], deleteImgName: '', deleteImgId: null, modalActive: 0, location1: 0, location2: 0, deletePostID: 0 }"
      x-init="listeners($data); listenerUpdate($data); ">
+    {{--    <x-layouts.modal.button name="Add Post" target="add-post" />--}}
+    <button
+        data-modal-target="add-post"
+        data-modal-toggle="add-post"
+        class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        type="button"
+        wire:click="resetFields()"
+        @click="modalActive = 1"
+    >
+        Add Post {{ dd($author) }}
+    </button>
 
     <a href="#" x-ref="deleteModal" type="button" data-modal-target="deleteModal" data-modal-show="deleteModal" class="hidden"></a>
     <a href="#" x-ref="deleteModal2" type="button" data-modal-target="deleteModal2" data-modal-show="deleteModal2" class="hidden"></a>
 
-    <div class="relative shadow-md bg-white rounded-2xl">
-        <div class="flex items-center justify-between py-4 dark:bg-gray-800 px-10 pt-10">
-            <div class="font-quicksand flex gap-3 items-center" wire:ignore>
+    <div class="relative overflow-x-auto shadow-md rounded-2xl" wire:ignore>
+        <div class="flex items-center justify-between py-4 bg-white dark:bg-gray-800 px-10 pt-10">
+            <div class="font-quicksand flex gap-3 items-center">
                 <div class="relative bg-custom-blue bg-opacity-10 border-0 font-semibold rounded-xl flex">
                     <div class="absolute top-0 left-0 h-full px-3 flex items-center bg-custom-blue bg-opacity-10 rounded-tl-xl rounded-bl-xl">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-custom-blue">
@@ -18,7 +29,7 @@
                         placeholder="Appointment Date"
                         display-format="MM - DD - YYYY"
                         without-time="true"
-                        wire:model="from"
+                        wire:model.defer="displayFormat"
                         class="bg-transparent border-none outline-none shadow-none drop-shadow-none py-2.5 pl-14 max-w-[13rem]"
                     />
                 </div>
@@ -34,7 +45,7 @@
                         placeholder="Appointment Date"
                         display-format="MM - DD - YYYY"
                         without-time="true"
-                        wire:model="to"
+                        wire:model.defer="displayFormat"
                         class="bg-transparent border-none outline-none shadow-none drop-shadow-none py-2.5 pl-14 max-w-[13rem]"
                     />
                 </div>
@@ -45,15 +56,13 @@
                     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                         <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
                     </div>
-                    <input type="text" wire:model="search" id="table-search" class="block h-full p-2.5 py-3 font-quicksand pl-10 text-base text-gray-900 border-0 rounded-lg w-48 bg-[#E6EEF6] focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search">
+                    <input type="text" id="table-search" class="block h-full p-2.5 font-quicksand pl-10 text-base text-gray-900 border-0 rounded-lg w-48 bg-[#E6EEF6] focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search">
                 </div>
                 <div>
                     <button
-                        type="button"
+                        @click="$openModal('myModal'); modalActive = 1"
                         wire:click="resetFields()"
-                        @click="modalActive = 1"
-                        data-modal-target="add-post"
-                        data-modal-toggle="add-post"
+                        type="button"
                         class="font-bold font-quicksand bg-custom-blue bg-opacity-10 hover:bg-opacity-20 focus:ring-4 focus:outline-none focus:ring-[#3b5998]/50 rounded-lg text-base px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#3b5998]/55 mr-2 mb-2">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2 -ml-2 text-dark-blue">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -63,7 +72,7 @@
                 </div>
             </div>
         </div>
-        <div class="px-10 pb-10" wire:ignore.self>
+        <div class="px-10 pb-10 bg-white">
             <div class="rounded-2xl overflow-hidden">
                 <table class="w-full text-black text-sm text-left font-quicksand">
                     <thead class="text-sm uppercase bg-[#FDC500] dark:text-white">
@@ -86,7 +95,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @if(isset($posts) && count($posts)>0)
+                    @if(count($posts)>0)
                         @foreach($posts as $key => $val)
                             @if($key % 2 === 0)
                                 <tr class="bg-[#FDC500] bg-opacity-25">
@@ -97,11 +106,11 @@
                                         {{ $val->author }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ $val->category_id }}
+                                        {{ $val->category->category }}
                                     </td>
                                     <td class="px-6 py-4">
                                         <div class="flex items-center">
-                                            @if($val->status)
+                                            @if($val->published)
                                                 <div class="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></div> Published
                                             @else
                                                 <div class="h-2.5 w-2.5 rounded-full bg-yellow-500 mr-2"></div> Unpublished
@@ -122,11 +131,11 @@
                                         {{ $val->author }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ $val->category_id }}
+                                        {{ $val->category->category }}
                                     </td>
                                     <td class="px-6 py-4">
                                         <div class="flex items-center">
-                                            @if($val->status)
+                                            @if($val->published)
                                                 <div class="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></div> Published
                                             @else
                                                 <div class="h-2.5 w-2.5 rounded-full bg-yellow-500 mr-2"></div> Unpublished
@@ -238,7 +247,7 @@
 
                         {{--    wire:ignore--}}
                     >
-                        <form action="#" method="POST" wire:ignore.self wire:submit.prevent="create_post({{ json_encode($admin_data) }})" class="w-full flex flex-col">
+                        <form action="#" method="POST" wire:submit.prevent="create_post" class="w-full flex flex-col">
                             <div x-show="state == 1">
 
                                 <x-forms.input-form name="Title" type="text" placeholder="Title" model="title" id="title" classes="mb-6" />
@@ -265,7 +274,7 @@
                                 <div class="flex flex-col items-center justify-center w-full">
                                     <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
                                         @if($temp_images)
-{{--                                        {{ dd($temp_images) }}--}}
+                                            {{--                                        {{ dd($temp_images) }}--}}
                                             <div id="img-thumbnail" class="flex flex-wrap w-full h-full gap-2 p-2">
                                                 @foreach($temp_images as $image)
                                                     @foreach($image as $img)
@@ -276,7 +285,7 @@
                                                 @endforeach
                                             </div>
                                         @endif
-{{--                                        {{ dd(!!$temp_images) }}--}}
+                                        {{--                                        {{ dd(!!$temp_images) }}--}}
                                         @if(!$temp_images)
                                             <div class="flex justify-center items-center">
                                                 <div id="ins-previe" class="flex flex-col items-center justify-center pt-5 pb-6">
@@ -323,7 +332,7 @@
         </div>
     </div>
 
-{{--  Update Post  --}}
+    {{--  Update Post  --}}
 
     <div wire:ignore.self id="update-post" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
         <div class="relative w-auto max-h-full">
@@ -407,13 +416,13 @@
                                                 @endif
                                             </div>
                                         @else
-                                                <div class="flex justify-center items-center">
-                                                    <div id="ins-preview" class="flex flex-col items-center justify-center pt-5 pb-6">
-                                                        <svg aria-hidden="true" class="w-10 h-10 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                                                        <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
-                                                        <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
-                                                    </div>
+                                            <div class="flex justify-center items-center">
+                                                <div id="ins-preview" class="flex flex-col items-center justify-center pt-5 pb-6">
+                                                    <svg aria-hidden="true" class="w-10 h-10 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                                                    <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                                                    <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
                                                 </div>
+                                            </div>
                                         @endif
 
                                         <input id="dropzone-file"
@@ -456,7 +465,7 @@
     </div>
 
     <script>
-        const datePickerIcons = document.querySelectorAll("[name='from'], [name='to']")
+        const datePickerIcons = document.querySelectorAll("[name='displayFormat']")
         datePickerIcons.forEach((el) => {
             el.nextElementSibling.firstElementChild.lastElementChild.remove()
         })

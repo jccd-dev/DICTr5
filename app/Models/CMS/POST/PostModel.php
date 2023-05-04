@@ -82,4 +82,41 @@ class PostModel extends Model
             ->where('id', $post_id)
             ->delete();
     }
+
+    public function filter_search(string $from, string $to, int $category = null, string $search = null){
+        if(!$from){
+            $from = date('Y-m-d');
+        }
+        if($search == null || $search == ''){
+            if($category == null || $category == 0)
+                return DB::table('posts')
+                    ->select('*')
+                    ->where('timestamp', '<=', $to)
+                    ->where('timestamp', '>=', $from)
+                    ->orderBy('timestamp', 'desc')
+                    ->get();
+            else
+                return DB::table('posts')
+                    ->select('*')
+                    ->where('timestamp', '<=', $to)
+                    ->where('timestamp', '>=', $from)
+                    ->where('category_id', $category)
+                    ->orderBy('timestamp', 'desc')
+                    ->get();
+        }else{
+            return $this->search($search);
+        }
+    }
+
+    public function search(string $data){
+        return DB::table('posts')->join('dict_admins', 'posts.admin_id', '=', 'dict_admins.id')
+            ->join('post_categories', 'posts.category_id', '=', 'post_categories.id')
+            ->select('posts.*', 'dict_admins.name as author_name', 'post_categories.category as category')
+            ->where('posts.title', 'like', '%'.$data.'%')
+            ->orWhere('dict_admins.name', 'like', '%'.$data.'%')
+            ->orWhere('post_categories.category', 'like', '%'.$data.'%')
+            ->orWhere('posts.status', 'like', '%'.$data.'%')
+            ->orderBy('posts.timestamp', 'desc')
+            ->get();
+    }
 }

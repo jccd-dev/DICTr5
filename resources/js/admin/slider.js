@@ -1,4 +1,7 @@
 const datePickerIcons = document.querySelectorAll("[name='displayFormat']")
+datePickerIcons.forEach((el) => {
+    el.nextElementSibling.firstElementChild.lastElementChild.remove()
+})
 const messageAlert = document.querySelector('#message-alert');
 const dismissAlert = document.querySelector('#dismiss-alert');
 const closeAlertBtn = document.querySelector('#closeAlertBtn');
@@ -11,9 +14,6 @@ for (let i = 0; i < headings.length; i++) {
         break;
     }
 }
-datePickerIcons.forEach((el) => {
-    el.nextElementSibling.firstElementChild.lastElementChild.remove()
-})
 
 closeAlertBtn.addEventListener('click', _ => {
     dismissAlert.classList.toggle("hidden")
