@@ -329,7 +329,7 @@ class Posts extends Component
                 ->whereDate('timestamp', '<=', $to_date);
         }
 
-        return $posts->get();
+        return $posts->with('category')->get();
     }
 
     public function updatePost(): bool

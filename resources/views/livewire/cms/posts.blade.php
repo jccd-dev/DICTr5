@@ -97,7 +97,7 @@
                                         {{ $val->author }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ $val->category_id }}
+                                        {{ $val->category->category }}
                                     </td>
                                     <td class="px-6 py-4">
                                         <div class="flex items-center">
@@ -379,7 +379,8 @@
                                                                   <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                                                                 </svg>
                                                             </span>
-                                                                <img src="{{ asset('cms-images/'.$v) }}" class="w-full h-full object-cover cursor-default" @click.stop alt="">
+
+                                                                <img src="{{ asset('images/'.$v) }}" class="w-full h-full object-cover cursor-default" @click.stop alt="">
                                                             </div>
                                                         @endforeach
                                                     @endforeach
