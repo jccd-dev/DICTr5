@@ -15,6 +15,7 @@ class TertiaryEducation extends Model
         'user_id',
         'school_attended',
         'degree',
+        'year_level',
         'inclusive_years'
     ];
 

@@ -26,7 +26,6 @@ class RegDetails extends Model
         return $this->belongsTo(UsersData::class, 'user_id');
     }
 
-    //todo add exam schedule connections
     public function examSchedule(): BelongsTo
     {
         return $this->belongsTo(ExamSchedule::class, 'exam_schedule_id');
