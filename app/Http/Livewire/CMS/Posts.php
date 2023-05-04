@@ -20,8 +20,6 @@ class Posts extends Component
 
     //initialized variable that will hold values from input form
     public string|int $category_id = '1';
-    public string|int $admin_id = 1;
-    public string $author = '';
     public string $title = '';
     public string $excerpt = '';
     public $thumbnail;
@@ -47,6 +45,8 @@ class Posts extends Component
     public ?string $to = null;
     public string|int|null $cat_id = null;
     public $temp_images = [];
+
+    public $admin_data = [];
 
 
     protected $rules = [
@@ -121,13 +121,13 @@ class Posts extends Component
         //arrange data for insertion
         $this->post_data = [
             'category_id'    => $this->category_id,
-            'admin_id'  => $this->admin_id,
+            'admin_id'  => $this->admin_id[0],
             'title'     => $this->title,
             'excerpt'   => $this->excerpt,
             'thumbnail' => $this->thumbnail_img_name,
             'content'   => $this->content,
             'vid_link'  => $this->vid_link,
-            'author'    => $this->author,
+            'author'    => $this->admin_data[1],
             'status'    => $this->status,
         ];
 
@@ -441,11 +441,13 @@ class Posts extends Component
         // get admin name and id
         if (Auth::check()){
 
-            $admin = Auth::user();
+            $user = Auth::user();
+            // Access the 'role' property
+            $this->admin_data = [
+                'id'   => $user->id,
+                'name' => $user->name,
 
-            $this->admin_id = $admin->id;
-            $this->author = $admin->name;
-
+            ];
         }
         return view('livewire.cms.posts', ['posts' => $this->search_post(), 'all_category' => $this->get_all_categories()])->layout('layouts.layout');
     }

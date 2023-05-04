@@ -26,5 +26,14 @@ class Users extends Model
         return $this->hasOne(UsersData::class, 'user_login_id', 'id');
     }
 
+    // accessor method to automatically retrieve full name
+    public function getFormattedNameAttribute(): string
+    {
+        $fname = $this->fname;
+        $lname = $this->lname;
+
+        return "{$fname} {$lname}";
+    }
+
 
 }

@@ -7,7 +7,7 @@ use App\Models\Examinee\UsersData;
 
 class FileHandler
 {
-    private $userModel;
+    private UsersData $userModel;
 
     private $accepted_file_types = [
         'docs' => ['doc', 'pdf'],
@@ -20,49 +20,47 @@ class FileHandler
 
     /**
      * @description store files to database and server storage
-     * @param mixed $files
-     * @param int|string $applicant_id
-     * @param string $applicant_name
-     * @return void
+     * @param mixed $file
+     * @param $submit
+     * @param string $req_type
+     * @param $user_name
+     * @return true
      */
-    public function store_files(mixed $files, int|string $userId){
-        $file = $this->userModel::find($userId);
+    public function store_files(mixed $file, $submit, string $req_type, string $lname): bool
+    {
 
-        //get the old file (filename) and username
-        $user_name = "{$file->lname}_{$file->fname}";
-        foreach ($files as $key => $file) {
-            $file_extension = $file->getClientOriginalExtension();
-            $file_type = '';
+        $file_extension = $file->getClientOriginalExtension();
+        $new_file_name = $this->file_namer($lname, $req_type, $file_extension);
 
-            in_array(strtolower($file_extension), $this->accepted_file_types['docs']) ? $file_type = 'Document' : $file_type = 'Image';
+        in_array(strtolower($file_extension), $this->accepted_file_types['docs']) ? $file_type = 'Document' : $file_type = 'Image';
 
-            $new_file_name = $this->file_namer($user_name, $file_extension);
+        // insert into database a new file record
+        $submitted = $submit->create([
+            'file_name'        => $new_file_name,
+            'file_type'        => $file_type,
+            'requirement_type' => $req_type
+        ]);
 
-            //insert the files here,
-
-            $this->userModel->user_id          = $userId;
-            $this->userModel->file_name        = $new_file_name;
-            $this->userModel->file_type        = $file_type;
-            $this->userModel->requirement_type = $key;
-
-            if($this->userModel->save()){
-                $file->storeAs('/public/fileSubmits', $new_file_name);
-            }
-
+        // then insert the actual file into the folder after the inserting into database
+        if($submitted){
+            $file->storeAs('/public/fileSubmits', $submitted->file_name);
+            return true;
         }
 
+        return false;
     }
 
     /**
      * Description: Just simply create a new name for the file.
      * @param string $applicant_name "{first name}_{last name}";
+     * @param string $req_type
      * @param string $file_ext
      * @return string
      */
-    public function file_namer(string $applicant_name, string $file_ext): string {
+    public function file_namer(string $applicant_name, string $req_type,string $file_ext): string {
         $timestamp = date('ymd', strtotime('now'));
         $time = time();
-        return "{$timestamp}{$time}_{$applicant_name}.{$file_ext}";
+        return "{$applicant_name}_{$req_type}_{$timestamp}{$time}.{$file_ext}";
     }
 
     /**
@@ -75,7 +73,7 @@ class FileHandler
         $file = $this->userModel::find($userId);
 
         if($file){
-            $file->submitted_files()->where('file_name', $file_name)->delete();
+            $file->submittedFiles()->where('file_name', $file_name)->delete();
             Storage::delete('/public/fileSubmits/'.$file_name);
             return true;
          }
@@ -104,7 +102,7 @@ class FileHandler
         $new_file_name = $this->file_namer($user_name, $file_extension);
 
         //since it's just for update
-        $updated = $file->submitted__files()->where('file_name', $old_file_name)
+        $updated = $file->submittedFiles()->where('file_name', $old_file_name)
             ->update([
                 'file_name' => $new_file_name,
                 'file_type' => $file_type,

@@ -13,10 +13,9 @@ class TrainingSeminars extends Model
     protected $table = 'training_seminars';
     protected $fillable = [
         'user_id',
-        'course_seminar',
-        'training_center',
-        'training_hours',
-        'cert_files'
+        'course',
+        'center',
+        'hours',
     ];
 
     public function usersData() :BelongsTo

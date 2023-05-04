@@ -32,6 +32,7 @@ class GoogleAuthController extends Controller
                 'fname' => $fname,
                 'lname' => $lname
             ]);
+
             Session::put('user', ['id' => $createdAcc->id, 'fname' => $fname, 'lname' => $lname]);
         }else{
             Session::put('user', ['id' => $account->id, 'fname' => $fname, 'lname' => $lname]);

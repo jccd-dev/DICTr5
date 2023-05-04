@@ -32,6 +32,7 @@ class UsersData extends Model
         'no_of_years_in_pos',
         'programming_langs',
         'e_sign',
+        'current_status',
         'date_accomplished',
     ];
 
