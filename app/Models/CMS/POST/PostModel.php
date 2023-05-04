@@ -89,19 +89,21 @@ class PostModel extends Model
         }
         if($search == null || $search == ''){
             if($category == null || $category == 0)
-                return DB::table('posts')
-                    ->select('*')
-                    ->where('timestamp', '<=', $to)
-                    ->where('timestamp', '>=', $from)
-                    ->orderBy('timestamp', 'desc')
+                return DB::table('posts')->join('dict_admins', 'posts.admin_id', '=', 'dict_admins.id')
+                    ->join('post_categories', 'posts.category_id', '=', 'post_categories.id')
+                    ->select('posts.*', 'dict_admins.name as author_name', 'post_categories.category as category')
+                    ->where('posts.timestamp', '<=', $to)
+                    ->where('posts.timestamp', '>=', $from)
+                    ->orderBy('posts.timestamp', 'desc')
                     ->get();
             else
-                return DB::table('posts')
-                    ->select('*')
-                    ->where('timestamp', '<=', $to)
-                    ->where('timestamp', '>=', $from)
-                    ->where('category_id', $category)
-                    ->orderBy('timestamp', 'desc')
+                return DB::table('posts')->join('dict_admins', 'posts.admin_id', '=', 'dict_admins.id')
+                    ->join('post_categories', 'posts.category_id', '=', 'post_categories.id')
+                    ->select('posts.*', 'dict_admins.name as author_name', 'post_categories.category as category')
+                    ->where('posts.timestamp', '<=', $to)
+                    ->where('posts.timestamp', '>=', $from)
+                    ->where('post_categories.category', $category)
+                    ->orderBy('posts.timestamp', 'desc')
                     ->get();
         }else{
             return $this->search($search);

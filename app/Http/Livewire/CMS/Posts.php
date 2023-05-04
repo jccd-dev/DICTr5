@@ -23,7 +23,7 @@ class Posts extends Component
     //initialized variable that will hold values from input form
     public mixed $myModal = null;
     public mixed $displayFormat = null;
-    public string|int $category_id = '1';
+    public string|int $category_id = 0;
     public string|int $admin_id = 1;
     public string $title = '';
     public string $excerpt = '';
@@ -127,7 +127,7 @@ class Posts extends Component
         $this->to_update_data['thumbnail'] = '';
         $this->myModal = null;
         $this->displayFormat = null;
-        $this->category_id = '1';
+        $this->category_id = 0;
         $this->admin_id = 1;
 //        $this->author = '';
         $this->title = '';
