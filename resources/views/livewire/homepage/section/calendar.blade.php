@@ -90,13 +90,6 @@
                 </div>
 
             </div>
-
-            <x-slot name="footer">
-                <div class="flex justify-end gap-x-4">
-                    <x-button flat label="Cancel" x-on:click="close" />
-                    <x-button primary label="I Agree" />
-                </div>
-            </x-slot>
         </x-card>
     </x-modal>
 
