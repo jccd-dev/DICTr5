@@ -85,7 +85,7 @@ let codeValues = {
     codeValues.barangayCode = barangayCode;
 })();
 
-regionSelect.addEventListener("change", async (event) => {
+regionSelect.addEventListener("input", async (event) => {
     let region = await regions()
     let regionObj = region.find((region) => region.region_name === event.target.value)
 
@@ -98,7 +98,7 @@ regionSelect.addEventListener("change", async (event) => {
     setOptions(province, provinceSelect, 'province')
 })
 
-provinceSelect.addEventListener("change", async (event) => {
+provinceSelect.addEventListener("input", async (event) => {
     let province = await provinces(codeValues.regionCode);
     let provinceObj = province.find((province) => province.province_name === event.target.value)
 
@@ -110,13 +110,15 @@ provinceSelect.addEventListener("change", async (event) => {
     setOptions(city, municipalitiesSelect, 'city')
 })
 
-municipalitiesSelect.addEventListener("change", async (event) => {
+municipalitiesSelect.addEventListener("input", async (event) => {
     let city = await cities(codeValues.provinceCode);
     let cityObj = city.find((city) => city.city_name === event.target.value)
 
     codeValues.cityCode = cityObj.city_code
 
+    console.log(cityObj.city_code)
     let barangay = await barangays(cityObj.city_code);
+    console.log(barangay)
     removeElement(barangaySelect.children)
     setOptions(barangay, barangaySelect, 'brgy')
 })

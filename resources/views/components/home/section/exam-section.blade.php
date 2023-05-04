@@ -1,7 +1,6 @@
 <div class="w-full h-[30rem] 2xl:h-[40rem] bg-darker-blue border-b-4 border-dark-yellow">
     <div class="w-full h-full bg-[url('../../../../../public/img/exam-bg-img.png')] bg-no-repeat bg-cover m-0 p-0 border-0 relative">
         <div class="container h-full flex mx-auto justify-evenly lg:justify-between items-center flex-col lg:flex-row py-10 lg:py-0">
-            <div class="line w-full h-[3px] bg-custom-red absolute top-[2rem] lg:top-[3rem] left-0"></div>
             <div class="left w-full lg:w-2/3 text-white flex flex-col gap-5 lg:gap-16">
                 <div>
                     <img src="/img/ILCDB.png" class="w-[10rem] lg:w-[15rem]" alt="">
