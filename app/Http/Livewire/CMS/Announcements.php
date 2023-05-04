@@ -174,7 +174,7 @@ class Announcements extends Component
             'category' => $category
         ]);
         $this->insertAnnArray['cat_id'] = $created_category->id;
-        $this->updateEventArr['cat_id'] = $created_category->id;
+        $this->updateAnnArray['cat_id'] = $created_category->id;
     }
 
     public $create_modal = false;
