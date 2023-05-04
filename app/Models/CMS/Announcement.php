@@ -156,4 +156,16 @@ class Announcement extends Model
                                     ->get();
     }
 
+
+    /**
+     FUNCTION: SCOPE PRIORITY
+     * @description:  SCOPE Method for PRIORITY ANNOUNCEMENT retrieval
+     * Can be use as
+     * $priorites = Announcement::priority()->get();
+     * return 3 prioritized announcements
+     */
+    public function scopePriority($query) {
+        return $query->where('status', 1)->orderBy('timestamp', 'acs')->limit(3);
+    }
+
 }

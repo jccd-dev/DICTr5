@@ -12,12 +12,11 @@ class AdminLogActivity{
      * @param string $activity: string value
      * @return void
      */
-    public static function addToLog(string $activity): void {
+    public static function addToLog(Request $request, string $activity, string|int $admin_id): void {
         $log = [];
         $log['activity'] = $activity;
-        $log['end_point_access'] = Request::fullUrl();
-        // TODO: JWT
-        // $log['admin_id'] = auth()->check() ? auth()->user()->id : 1;
+        $log['end_point_access'] = $request->fullUrl();
+        $log['admin_id'] = $admin_id;
 
         AdminLogModel::create($log);
     }

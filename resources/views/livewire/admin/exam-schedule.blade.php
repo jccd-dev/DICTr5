@@ -33,60 +33,26 @@
         </div>
     </div>
 
-    {{-- TABLE --}}
-    <table class="table table-light w-full">
-        <tbody>
-            <tr class="font-bold border-b-2 border-slate-900">
-                <td>Date</td>
-                <td>Time</td>
-                <td>Exam Set</td>
-                <td>Venue</td>
-                <td>Status</td>
-                <td class="text-center">Action</td>
-            </tr>
-        </tbody>
-        @forelse ($schedules as $sched)
-            <tr>
-                <td>{{date('F d, Y', strtotime($sched->start_date))}}</td>
-                <td>{{date('h:i A', strtotime($sched->start_date)).' - '.date('h:i A', strtotime($sched->end_date))}}</td>
-                <td>{{$sched->exam_set}}</td>
-                <td>{{$sched->venue}} </td>
-                <td>
-                    @if($sched->end_date < date("Y-m-d H:i:s"))
-                        <div class="text-xs font-semibold p-1 bg-green-200 w-12 text-center rounded">Done</div>
-                    @else
-                        <div class="text-xs font-semibold p-1 bg-secondary-300 w-14 text-center rounded">Pending</div>
-                    @endif
-                </td>
-                <td class="text-center">
-                    <button class="px-2 py-1 m-1 mr-0 bg-[#00509D] bg-opacity-40 rounded-md" wire:click="update_field({{$sched->id}})" onclick="update_schedule({{$sched->id}})">Edit</button>
-                    <button class="px-2 py-1 m-1 ml-0 bg-[#C1121F] bg-opacity-40 rounded-md" onclick="delete_schedule({{$sched->id}})">Delete</button>
-                </td>
-            </tr>
-        @empty
-            <tr>
-                <td colspan="6">No Record Found</td>
-            </tr>
-        @endforelse
-    </table>
-
     <br>
-    {{--  TRIAL  --}}
+    {{--  Table  --}}
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
                 <th scope="col" class="px-6 py-3">
-                    Product name
+                    Date
                 </th>
                 <th scope="col" class="px-6 py-3">
-                    Color
+                    Time
                 </th>
                 <th scope="col" class="px-6 py-3">
-                    Category
+                    Exam Set
                 </th>
                 <th scope="col" class="px-6 py-3">
-                    Price
+                    Venue
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Status
                 </th>
                 <th scope="col" class="px-6 py-3">
                     Action
@@ -94,91 +60,37 @@
             </tr>
             </thead>
             <tbody>
-            <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    Apple MacBook Pro 17"
-                </th>
-                <td class="px-6 py-4">
-                    Silver
-                </td>
-                <td class="px-6 py-4">
-                    Laptop
-                </td>
-                <td class="px-6 py-4">
-                    $2999
-                </td>
-                <td class="px-6 py-4">
-                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                </td>
-            </tr>
-            <tr class="border-b bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    Microsoft Surface Pro
-                </th>
-                <td class="px-6 py-4">
-                    White
-                </td>
-                <td class="px-6 py-4">
-                    Laptop PC
-                </td>
-                <td class="px-6 py-4">
-                    $1999
-                </td>
-                <td class="px-6 py-4">
-                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                </td>
-            </tr>
-            <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    Magic Mouse 2
-                </th>
-                <td class="px-6 py-4">
-                    Black
-                </td>
-                <td class="px-6 py-4">
-                    Accessories
-                </td>
-                <td class="px-6 py-4">
-                    $99
-                </td>
-                <td class="px-6 py-4">
-                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                </td>
-            </tr>
-            <tr class="border-b bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    Google Pixel Phone
-                </th>
-                <td class="px-6 py-4">
-                    Gray
-                </td>
-                <td class="px-6 py-4">
-                    Phone
-                </td>
-                <td class="px-6 py-4">
-                    $799
-                </td>
-                <td class="px-6 py-4">
-                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    Apple Watch 5
-                </th>
-                <td class="px-6 py-4">
-                    Red
-                </td>
-                <td class="px-6 py-4">
-                    Wearables
-                </td>
-                <td class="px-6 py-4">
-                    $999
-                </td>
-                <td class="px-6 py-4">
-                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                </td>
-            </tr>
+            @forelse ($schedules as $sched)
+                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        {{date('F d, Y', strtotime($sched->start_date))}}
+                    </th>
+                    <td class="px-6 py-4">
+                        {{date('h:i A', strtotime($sched->start_date)).' - '.date('h:i A', strtotime($sched->end_date))}}
+                    </td>
+                    <td class="px-6 py-4">
+                        {{$sched->exam_set}}
+                    </td>
+                    <td class="px-6 py-4">
+                        {{$sched->venue}}
+                    </td>
+                    <td class="px-6 py-4">
+                        @if($sched->end_date < date("Y-m-d H:i:s"))
+                            <div class="text-xs font-semibold p-1 bg-green-200 w-12 text-center rounded">Done</div>
+                        @else
+                            <div class="text-xs font-semibold p-1 bg-secondary-300 w-14 text-center rounded">Pending</div>
+                        @endif
+                    </td>
+                    <td class="px-6 py-4">
+                        <x-button blue sm label="Edit" wire:click="update_field({{$sched->id}})" onclick="update_schedule({{$sched->id}})" />
+                        <x-button red sm label="Delete" onclick="delete_schedule({{$sched->id}})" />
+                    </td>
+                </tr>
+            @empty
+                <tr colspan="6" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+
+                </tr>
+            @endforelse
             </tbody>
         </table>
     </div>

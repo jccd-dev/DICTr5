@@ -45,7 +45,7 @@ class Announcements extends Component
             date('Y-m-d', strtotime($this->to.' +1 day')),
             $this->category, $this->search),
             'categories' => $postCategoryModel->all()
-        ])->layout('livewire.layout.laravel_layout');
+        ])->layout('layouts.layout');
     }
 
     public function mount(): void{
