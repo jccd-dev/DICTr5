@@ -2,29 +2,28 @@
 
 namespace App\Http\Livewire\CMS;
 
-use App\Models\CMS\Announcement as AnnouncementModel;
-use Illuminate\Support\Facades\DB;
+use App\Helpers\ImageHandlerHelper;
+use App\Models\CMS\POST\PostCategory;
+use App\Models\CMS\POST\PostImages;
+use App\Models\CMS\POST\PostModel;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use App\Models\CMS\POST\PostModel;
-use App\Helpers\ImageHandlerHelper;
-use App\Models\CMS\POST\PostImages;
-use Illuminate\Support\Facades\Auth;
-use App\Models\CMS\POST\PostCategory;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Database\Eloquent\Collection;
 
-class Posts extends Component
+class Post extends Component
 {
     use WithFileUploads;
 
     //initialized variable that will hold values from input form
     public mixed $myModal = null;
     public mixed $displayFormat = null;
-    public string|int $category_id = 0;
+    public string|int $category_id = '1';
     public string|int $admin_id = 1;
+    public string $author = '';
     public string $title = '';
     public string $excerpt = '';
     public $thumbnail;
@@ -43,6 +42,7 @@ class Posts extends Component
     public mixed $to_delete_image = [];
     public array $to_update_images = [];
     public array $to_update_imgnames = [];
+    public $admin_data;
 
     //for filters variables
     public string $search = '';
@@ -50,7 +50,7 @@ class Posts extends Component
     public ?string $to = null;
     public string|int|null $cat_id = null;
     public $temp_images = [];
-    public $admin_data;
+
 
     protected $rules = [
         'category_id'    => 'required|numeric',
@@ -88,9 +88,7 @@ class Posts extends Component
                 'author' => $admin->name
             ];
         }
-        return view('livewire.cms.posts', ['posts' => $this->post_model->filter_search($this->from,
-            date('Y-m-d', strtotime($this->to.' +1 day')),
-            $this->category_id, $this->search), 'all_category' => $this->get_all_categories(), 'author' => $this->admin_data])->layout('layouts.layout');
+        return view('livewire.cms.post', ['posts' => $this->search_post(), 'all_category' => $this->get_all_categories(), 'author' => $this->admin_data['author']])->layout('layouts.layout');
     }
 
     public function __construct()
@@ -98,7 +96,6 @@ class Posts extends Component
         parent::__construct();
         $this->post_model = new PostModel(); // or whatever the name of your Post model is
         $this->imageHelper = new ImageHandlerHelper();
-
         if (Auth::check()){
 
             $admin = Auth::user();
@@ -107,6 +104,10 @@ class Posts extends Component
                 'id' => $admin->id,
                 'author' => $admin->name
             ];
+
+        } else {
+            $this->admin_data = [];
+
         }
     }
 
@@ -115,45 +116,11 @@ class Posts extends Component
 
     public function mount()
     {
-        date_default_timezone_set('Asia/Manila');
-        $date_from = PostModel::select(DB::raw('MIN(timestamp) as min_timestamp'))->first();
-        $this->from = date('Y-m-d', strtotime($date_from->min_timestamp));
-        $date_to = PostModel::select(DB::raw('MAX(timestamp) as max_timestamp'))->first();
-        $this->to = date('Y-m-d', strtotime($date_to->max_timestamp));
         $this->post_model = new PostModel();
         $this->imageHelper = new ImageHandlerHelper();
         $this->listeners['postModalPopulator'] = 'postModalPopulator';
         $this->to_update_data['images'] = [];
         $this->to_update_data['thumbnail'] = '';
-        $this->myModal = null;
-        $this->displayFormat = null;
-        $this->category_id = 0;
-        $this->admin_id = 1;
-//        $this->author = '';
-        $this->title = '';
-        $this->excerpt = '';
-        $this->thumbnail = '';
-        $this->thumbnail_img_name = '';
-        $this->content = '';
-        $this->images = [];
-        $this->image_names = [];
-        $this->vid_link = '';
-        $this->status = 0;
-        $this->post_data = [];
-        $this->post_id = 0;
-
-        $this->prev_data = [];
-
-        $this->to_update_data = [];
-        $this->to_delete_image = [];
-        $this->to_update_images = [];
-        $this->to_update_imgnames = [];
-        $this->admin_data = [];
-
-        //for filters variables
-        $this->search = '';
-        $this->cat_id = null;
-        $this->temp_images = [];
         if (Auth::check()){
 
             $admin = Auth::user();
@@ -162,10 +129,14 @@ class Posts extends Component
                 'id' => $admin->id,
                 'author' => $admin->name
             ];
+
+        } else {
+            $this->admin_data = [];
+
         }
     }
 
-    public function create_post($admin): void
+    public function create_post(): void
     {
         $validator = Validator::make([
             'category_id'   => $this->category_id,
@@ -195,13 +166,13 @@ class Posts extends Component
         //arrange data for insertion
         $this->post_data = [
             'category_id'    => $this->category_id,
-            'admin_id'  => $admin['id'],
+            'admin_id'  => $this->admin_id,
             'title'     => $this->title,
             'excerpt'   => $this->excerpt,
             'thumbnail' => $this->thumbnail_img_name,
             'content'   => $this->content,
             'vid_link'  => $this->vid_link,
-            'author'    => $admin['author'],
+            'author'    => $this->author,
             'status'    => $this->status,
         ];
 
@@ -509,6 +480,4 @@ class Posts extends Component
     {
         return PostCategory::all()->toArray();
     }
-
-
 }

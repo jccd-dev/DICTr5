@@ -30,6 +30,7 @@
         "flatpickr": "^4.6.13",
         "fullcalendar": "^6.1.5",
         "moment": "^2.29.4",
+        "preline": "^1.8.0",
         "select-philippines-address": "^1.0.6",
         "swiper": "^9.1.1"
     }

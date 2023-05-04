@@ -5,8 +5,8 @@
         {{-- EVENT --}}
         <div class="basis-5/12">
             <div class="flex flex-row-reverse">
-                <div>
-                    <button onclick="modalHandler('create_event_modal', true)">Add</button>
+                <div class="pt-2">
+                    <x-button blue label="Add" wire:click="showModal('create_event_modal', true)"  />
                 </div>
                 <div class="p-2 mr-3">
                     <div class="relative">
@@ -37,26 +37,26 @@
                     @forelse ($events as $event)
                         @php
                             date_default_timezone_set('Asia/Manila');
-                            if(date('Y-m-d', strtotime($event->start)) == date('Y-m-d', strtotime($event->end))){
+                            if(date('Y-m-d', strtotime($event['start'])) == date('Y-m-d', strtotime($event['end']))){
                                 $is_single_day = true;
                             }else{
                                 $is_single_day = false;
                             }
-                            if(date('H:i:s', strtotime($event->start)) == '00:00:00' && date('H:i:s', strtotime($event->end)) == '23:59:00'){
+                            if(date('H:i:s', strtotime($event['start'])) == '00:00:00' && date('H:i:s', strtotime($event['end'])) == '23:59:00'){
                                 $is_all_day = true;
                             }else{
                                 $is_all_day = false;
                             }
 
-                            if(date('Y-m-d H:i:s', strtotime($event->end)) < date('Y-m-d H:i:s')){
+                            if(date('Y-m-d H:i:s', strtotime($event['end'])) < date('Y-m-d H:i:s')){
                                 $event_status = 0;
-                            }elseif(date('Y-m-d H:i:s', strtotime($event->start)) <= date('Y-m-d H:i:s') && date('Y-m-d H:i:s', strtotime($event->end)) >= date('Y-m-d H:i:s')){
+                            }elseif(date('Y-m-d H:i:s', strtotime($event['start'])) <= date('Y-m-d H:i:s') && date('Y-m-d H:i:s', strtotime($event['end'])) >= date('Y-m-d H:i:s')){
                                 $event_status = 1;
                             }else{
                                 $event_status = 2;
                             }
                         @endphp
-                        <div class="bg-white rounded-xl px-5 py-3 flex items-center gap-5 cursor-pointer" wire:click="showEvent({{$event->id}})" onclick="modalHandler('event_modal', true)">
+                        <div class="bg-white rounded-xl px-5 py-3 flex items-center gap-5 cursor-pointer" wire:click="showEvent('{{$event['id']}}')">
                             @if ($event_status == 0)
                                 <div class="legend-icon rounded-full bg-[#C1121F] w-3 h-3"></div>
                             @elseif($event_status == 1)
@@ -65,9 +65,9 @@
                                 <div class="legend-icon rounded-full bg-[#00296B] w-3 h-3"></div>
                             @endif
                             <div>
-                                <h1 class="font-bold font-quicksand text-base mb-1">{{$event->title}}</h1>
-                                <p class="font-quicksand text-xs">{{($is_single_day) ? date('F d, Y', strtotime($event->start)) : date('M d, Y', strtotime($event->start)).' - '.date('M d, Y', strtotime($event->end)) }}</p>
-                                <p class="mt-0 font-quicksand text-xs">{{($is_all_day) ? 'All Day' : date('h:iA', strtotime($event->start)).' - '.date('h:iA', strtotime($event->end))}}</p>
+                                <h1 class="font-bold font-quicksand text-base mb-1">{{$event['title']}}</h1>
+                                <p class="font-quicksand text-xs">{{($is_single_day) ? date('F d, Y', strtotime($event['start'])) : date('M d, Y', strtotime($event['start'])).' - '.date('M d, Y', strtotime($event['end'])) }}</p>
+                                <p class="mt-0 font-quicksand text-xs">{{($is_all_day) ? 'All Day' : date('h:iA', strtotime($event['start'])).' - '.date('h:iA', strtotime($event['end']))}}</p>
                             </div>
                         </div>
                     @empty
@@ -81,104 +81,159 @@
     </div>
 
     {{-- Create Event Modal --}}
-    <div wire:ignore.self class="py-12 hidden bg-gray-700 bg-opacity-75 transition duration-150 ease-in-out z-10 absolute top-0 right-0 bottom-0 left-0" id="create_event_modal">
-        <div role="alert" class="container mx-auto w-11/12 md:w-2/3 max-w-2xl">
-            <div class="relative py-8 px-5 md:px-10 bg-white shadow-md rounded border border-gray-400">
-                <form wire:submit.prevent="create_event">
-                    @csrf
-                    <h1 class="text-gray-800 font-lg font-bold tracking-normal leading-tight mb-4">Create Event</h1>
-                    <label for="title" class="text-gray-800 text-sm font-bold leading-tight tracking-normal">Event Name</label>
-                    <input wire:model.lazy="createEventArr.event_title" id="title" class="mt-2 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border  @error('event_title') {{'border-red-600'}} @enderror" placeholder="Enter Event Title" />
-                    @error('event_title') <p wire:ignore class="text-xs text-red-600 italic">{{ $message }}</p> @enderror
-
-                    <br>
-                    <label class=" text-gray-800 text-sm font-bold leading-tight tracking-normal">Event Date</label>
-                    <div class="mb-5 mt-2 flex flex-row">
-                        <div>
-                            <input type="date" wire:model.lazy="createEventArr.start_date" id="create_start_date" class=" text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal h-10 pr-3 flex items-center pl-3 text-sm border-gray-300 rounded border @error('start_date') {{'border-red-600'}} @enderror" />
-                            @error('start_date') <p class="text-xs text-red-600 italic">{{ $message }}</p> @enderror
-                        </div>
-                        <div class="pt-2 mx-3">
-                            -
-                        </div>
-                        <div>
-                            <input type="date" wire:model.lazy="createEventArr.end_date" id="create_end_date" class="text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal h-10 pr-3 flex items-center pl-3 text-sm border-gray-300 rounded border @error('end_date') {{'border-red-600'}} @enderror" />
-                            @error('end_date') <p class="text-xs text-red-600 italic">{{ $message }}</p> @enderror
-                        </div>
+    <x-modal blur wire:model.defer="create_event_modal">
+        <x-card title="Create Event">
+            <div class="px-3" x-data="{toggleform:true}">
+                <div class="flex flex-row-reverse">
+                    <div>
+                        <label class="relative inline-flex items-center mb-5 cursor-pointer">
+                            <input type="checkbox" value="" class="sr-only peer" @change="toggleform = !toggleform">
+                            <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                            <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">Exam Schedule</span>
+                        </label>
                     </div>
+                </div>
+                <div x-show="toggleform">
+                    <form wire:submit.prevent="create_event">
+                        @csrf
+                        <label for="title" class="text-gray-800 text-sm font-bold leading-tight tracking-normal">Event Name</label>
+                        <input wire:model.lazy="createEventArr.event_title" id="title" class="mt-2 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border  @error('event_title') {{'border-red-600'}} @enderror" placeholder="Enter Event Title" />
+                        @error('event_title') <p wire:ignore class="text-xs text-red-600 italic">{{ $message }}</p> @enderror
 
-                    <label class=" text-gray-800 text-sm font-bold leading-tight tracking-normal">Event Time</label>
-                    <div class="mb-5 mt-2 flex flex-row">
-                        <div>
-                            <input type="time" wire:model.lazy="createEventArr.start_time" id="create_start_time" class=" text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal h-10 pr-3 flex items-center pl-3 text-sm border-gray-300 rounded border @error('start_time') {{'border-red-600'}} @enderror" />
-                            @error('start_time') <p class="text-xs text-red-600 italic">{{ $message }}</p> @enderror
+                        <br>
+                        <label class=" text-gray-800 text-sm font-bold leading-tight tracking-normal">Event Date</label>
+                        <div class="mb-5 mt-2 flex flex-row">
+                            <div>
+                                <input type="date" wire:model.lazy="createEventArr.start_date" id="create_start_date" class=" text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal h-10 pr-3 flex items-center pl-3 text-sm border-gray-300 rounded border @error('start_date') {{'border-red-600'}} @enderror" />
+                                @error('start_date') <p class="text-xs text-red-600 italic">{{ $message }}</p> @enderror
+                            </div>
+                            <div class="pt-2 mx-3">
+                                -
+                            </div>
+                            <div>
+                                <input type="date" wire:model.lazy="createEventArr.end_date" id="create_end_date" class="text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal h-10 pr-3 flex items-center pl-3 text-sm border-gray-300 rounded border @error('end_date') {{'border-red-600'}} @enderror" />
+                                @error('end_date') <p class="text-xs text-red-600 italic">{{ $message }}</p> @enderror
+                            </div>
                         </div>
-                        <div class="pt-2 mx-3">
-                            -
-                        </div>
-                        <div>
-                            <input type="time" wire:model.lazy="createEventArr.end_time" id="create_end_time" class="text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal h-10 pr-3 flex items-center pl-3 text-sm border-gray-300 rounded border @error('end_time') {{'border-red-600'}} @enderror" />
-                            @error('end_time') <p class="text-xs text-red-600 italic">{{ $message }}</p> @enderror
-                        </div>
-                    </div>
 
-                    <div class="mb-5 mt-2 flex flex-row gap-4">
-                        <div>
-                            <x-input label="Venue" placeholder="Enter Venue" wire:model.lazy="createEventArr.venue" class="w-full" style="width:300px" />
-                            @error('venue') <p class="text-xs text-red-600 italic">{{ $message }}</p> @enderror
+                        <label class=" text-gray-800 text-sm font-bold leading-tight tracking-normal">Event Time</label>
+                        <div class="mb-5 mt-2 flex flex-row">
+                            <div>
+                                <input type="time" wire:model.lazy="createEventArr.start_time" id="create_start_time" class=" text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal h-10 pr-3 flex items-center pl-3 text-sm border-gray-300 rounded border @error('start_time') {{'border-red-600'}} @enderror" />
+                                @error('start_time') <p class="text-xs text-red-600 italic">{{ $message }}</p> @enderror
+                            </div>
+                            <div class="pt-2 mx-3">
+                                -
+                            </div>
+                            <div>
+                                <input type="time" wire:model.lazy="createEventArr.end_time" id="create_end_time" class="text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal h-10 pr-3 flex items-center pl-3 text-sm border-gray-300 rounded border @error('end_time') {{'border-red-600'}} @enderror" />
+                                @error('end_time') <p class="text-xs text-red-600 italic">{{ $message }}</p> @enderror
+                            </div>
                         </div>
-                        <div>
-                            <x-select
-                                label="Category"
-                                wire:model.defer="createEventArr.category"
-                                placeholder="Choose Category"
-                                :async-data="route('api.request.category')"
-                                option-label="category"
-                                option-value="id"
-                                hide-empty-message
-                            >
-                                <x-slot name="afterOptions" class="p-2 flex justify-center" x-show="displayOptions.length === 0">
-                                    <x-button
-                                        x-on:click="$wire.create_category(search)"
-                                        primary
-                                        flat
-                                        full>
-                                        <span x-html="`Create category <b>${search}</b>`"></span>
-                                    </x-button>
-                                </x-slot>
-                            </x-select>
-                            @error('category') <p class="text-xs text-red-600 italic">{{ $message }}</p> @enderror
+
+                        <div class="mb-5 mt-2 flex flex-row gap-4">
+                            <div>
+                                <x-input label="Venue" placeholder="Enter Venue" wire:model.lazy="createEventArr.venue" class="w-full" style="width:300px" />
+                                @error('venue') <p class="text-xs text-red-600 italic">{{ $message }}</p> @enderror
+                            </div>
+                            <div>
+                                <x-select
+                                    label="Category"
+                                    wire:model.defer="createEventArr.category"
+                                    placeholder="Choose Category"
+                                    :async-data="route('api.request.category')"
+                                    option-label="category"
+                                    option-value="id"
+                                    hide-empty-message
+                                >
+                                    <x-slot name="afterOptions" class="p-2 flex justify-center" x-show="displayOptions.length === 0">
+                                        <x-button
+                                            x-on:click="$wire.create_category(search)"
+                                            primary
+                                            flat
+                                            full>
+                                            <span x-html="`Create category <b>${search}</b>`"></span>
+                                        </x-button>
+                                    </x-slot>
+                                </x-select>
+                                @error('category') <p class="text-xs text-red-600 italic">{{ $message }}</p> @enderror
+                            </div>
                         </div>
-                    </div>
 
-                    <label for="event" class="text-gray-800 text-sm font-bold leading-tight tracking-normal">Event Description</label>
-                    <div class="mb-5 mt-2" wire:ignore>
-                        <textarea id="event_field" class="text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 rounded border"></textarea>
-                    </div>
-                    @error('event') <p class="text-xs text-red-600 italic mb-3">{{ $message }}</p> @enderror
+                        <label for="event" class="text-gray-800 text-sm font-bold leading-tight tracking-normal">Event Description</label>
+                        <div class="mb-5 mt-2" wire:ignore>
+                            <textarea id="event_field" class="text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 rounded border"></textarea>
+                        </div>
+                        @error('event') <p class="text-xs text-red-600 italic mb-3">{{ $message }}</p> @enderror
 
-                    <div class="flex items-center justify-start w-full mt-3">
-                        <button type="submit" class="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 transition duration-150 ease-in-out hover:bg-indigo-600 bg-indigo-700 rounded text-white px-8 py-2 text-sm">Submit</button>
-                    </div>
-                </form>
-                <button class="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 transition duration-150 ease-in-out rounded focus:ring-2 focus:outline-none focus:ring-gray-600" onclick="modalHandler('create_event_modal', false)" aria-label="close modal" role="button">
-                    <svg  xmlns="http://www.w3.org/2000/svg"  class="icon icon-tabler icon-tabler-x" width="20" height="20" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                        <path stroke="none" d="M0 0h24v24H0z" />
-                        <line x1="18" y1="6" x2="6" y2="18" />
-                        <line x1="6" y1="6" x2="18" y2="18" />
-                    </svg>
-                </button>
+                        <div class="flex items-center justify-start w-full mt-3">
+                            <button type="submit" class="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 transition duration-150 ease-in-out hover:bg-indigo-600 bg-indigo-700 rounded text-white px-8 py-2 text-sm">Submit</button>
+                        </div>
+                    </form>
+                </div>
+                {{--    EXAM SCHEDULE   --}}
+                <div x-show="!toggleform">
+                    <span class="text-xs font-semibold italic mb-2.5">NOTE: You cannot update nor delete the exam schedule in this page</span>
+                    <form wire:submit.prevent="create_exam_schedule">
+                        <div class="flex flex-row">
+                            <div class="basis-2/3 m-1">
+                                <x-input label="Exam Set" placeholder="Enter Exam Set" wire:model.defer="examSched.exam_set" />
+                            </div>
+                            <div class="basis-1/3 m-1">
+                                <x-datetime-picker
+                                    label="Exam Date"
+                                    placeholder="Exam Date"
+                                    without-time="true"
+                                    wire:model.defer="examSched.date"
+                                />
+                            </div>
+                        </div>
+                        <br>
+                        <span class="text-sm font-semibold">Time Duration</span> <br>
+                        <div class="flex flex-row">
+                            <div class="basis-1/2 m-1 mr-2">
+                                <x-time-picker
+                                    label="Start Time"
+                                    placeholder="Choose starting time"
+                                    wire:model.defer="examSched.start_time"
+                                    interval="30"
+                                />
+                            </div>
+                            <div class="basis-1/2 m-1 ml-2">
+                                <x-time-picker
+                                    label="End Time"
+                                    placeholder="Choose end time"
+                                    wire:model.defer="examSched.end_time"
+                                    interval="30"
+                                />
+                            </div>
+                        </div>
+                        <br>
+                        <label class="mt-4 text-sm font-semibold text-slate-700">Exam Venue</label>
+                        <div x-data="{ open: false, selected: '' }" class="relative pt-1">
+                            <input wire:model="examSched.venue"  @click="open = true" @click.away="open = false" class="w-full py-2 pl-3 pr-10 leading-tight border border-gray-300 text-sm font-semibold text-slate-700 rounded-md appearance-none focus:outline-none focus:shadow-outline-blue focus:border-blue-300 @error('examSched.venue') {{'border-red-600'}} @enderror" type="text" placeholder="Select an Venue">
+                            <div x-show="open" class="absolute z-10 w-full mt-1 bg-white rounded-md shadow-lg">
+                                <ul class="py-1 overflow-auto">
+                                    <li wire:click="selectVenue('Naga City Digital Innovation Hub')" @click="open = false" class="text-sm px-3 py-2 cursor-pointer hover:bg-gray-100">Naga City Digital Innovation Hub</li>
+                                </ul>
+                            </div>
+                            @error('examSched.venue') <p wire:ignore class="text-xs text-red-600 italic">{{ $message }}</p> @enderror
+                        </div>
+                        <br>
+                        <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Create</button>
+                    </form>
+                </div>
             </div>
-        </div>
-    </div>
+
+        </x-card>
+    </x-modal>
 
     {{-- Update Event Modal --}}
-    <div wire:ignore.self class="py-12 hidden bg-gray-700 bg-opacity-75 transition duration-150 ease-in-out z-10 absolute top-0 right-0 bottom-0 left-0" id="update_event_modal">
-        <div role="alert" class="container mx-auto w-11/12 md:w-2/3 max-w-2xl">
-            <div class="relative py-8 px-5 md:px-10 bg-white shadow-md rounded border border-gray-400">
+    <x-modal blur wire:model.defer="update_event_modal">
+        <x-card title="Update Event">
+            <div class="px-3">
                 <form wire:submit.prevent="update_event">
                     @csrf
-                    <h1 class="text-gray-800 font-lg font-bold tracking-normal leading-tight mb-4">Update Event</h1>
                     <label for="title" class="text-gray-800 text-sm font-bold leading-tight tracking-normal">Event Name</label>
                     <input wire:model.lazy="updateEventArr.event_title" id="title" class="mt-2 text-gray-600 focus:outline-none focus:border focus:border-indigo-700 font-normal w-full h-10 flex items-center pl-3 text-sm border-gray-300 rounded border  @error('event_title') {{'border-red-600'}} @enderror" placeholder="Enter Event Title" />
                     @error('event_title') <p wire:ignore class="text-xs text-red-600 italic">{{ $message }}</p> @enderror
@@ -217,12 +272,12 @@
                     <div class="mb-5 mt-2 flex flex-row gap-4">
                         <div>
                             <x-input label="Venue" placeholder="Enter Venue" wire:model.lazy="updateEventArr.venue" class="w-full" style="width:300px" />
-                            @error('venue') <p class="text-xs text-red-600 italic">{{ $message }}</p> @enderror
+                            @error('updateEventArr.venue') <p class="text-xs text-red-600 italic">{{ $message }}</p> @enderror
                         </div>
                         <div>
                             <x-select
                                 label="Category"
-                                wire:model="updateEventArr.category"
+                                wire:model.defer="updateEventArr.category"
                                 placeholder="Choose Category"
                                 :async-data="route('api.request.category')"
                                 option-label="category"
@@ -234,9 +289,8 @@
                                         x-on:click="$wire.create_category(search)"
                                         primary
                                         flat
-                                        full
-                                        >
-                                        <span x-html="`Create user <b>${search}</b>`"></span>
+                                        full>
+                                        <span x-html="`Create category <b>${search}</b>`"></span>
                                     </x-button>
                                 </x-slot>
                             </x-select>
@@ -254,21 +308,15 @@
                         <button type="submit" class="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 transition duration-150 ease-in-out hover:bg-indigo-600 bg-indigo-700 rounded text-white px-8 py-2 text-sm">Submit</button>
                     </div>
                 </form>
-                <button class="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 transition duration-150 ease-in-out rounded focus:ring-2 focus:outline-none focus:ring-gray-600" onclick="modalHandler('update_event_modal', false)" aria-label="close modal" role="button">
-                    <svg  xmlns="http://www.w3.org/2000/svg"  class="icon icon-tabler icon-tabler-x" width="20" height="20" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                        <path stroke="none" d="M0 0h24v24H0z" />
-                        <line x1="18" y1="6" x2="6" y2="18" />
-                        <line x1="6" y1="6" x2="18" y2="18" />
-                    </svg>
-                </button>
             </div>
-        </div>
-    </div>
+
+        </x-card>
+    </x-modal>
 
     {{-- View Event Modal --}}
-    <div wire:ignore.self class="py-12 hidden bg-gray-700 bg-opacity-75 transition duration-150 ease-in-out z-10 absolute top-0 right-0 bottom-0 left-0" id="event_modal">
-        <div role="alert" class="container mx-auto w-11/12 md:w-2/3 max-w-2xl">
-            <div class="relative py-8 px-5 md:px-10 bg-white shadow-md rounded border border-gray-400">
+    <x-modal blur wire:model.defer="show_event_modal">
+        <x-card title="View Event">
+            <div class="px-3">
                 <div>
                     <h2 class="font-bold text-xl">{{$toShowEventDetail['event_title']}}</h2>
                     <span class="text-sm">{{
@@ -300,33 +348,27 @@
                         <button class="flex justify-center bg-red-700 text-white py-2 px-4 rounded" onclick="delete_event({{$toShowEventDetail['id']}}, '{{$toShowEventDetail['event_title']}}')">
                             Delete
                         </button>
-                        <button class="flex justify-center bg-blue-500 text-white py-2 px-4 rounded" onclick="modalHandler('event_modal', false); modalHandler('update_event_modal', true);" wire:click="update_event_data('{{$toShowEventDetail['id']}}')">
+                        <button class="flex justify-center bg-blue-500 text-white py-2 px-4 rounded" onclick="modalHandler('event_modal', false);" wire:click="update_event_data('{{$toShowEventDetail['id']}}')" wire:loading.class="bg-gray">
                             Update
                         </button>
                     </div>
 
                 </div>
-                <button class="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 transition duration-150 ease-in-out rounded focus:ring-2 focus:outline-none focus:ring-gray-600" onclick="modalHandler('event_modal', false)" aria-label="close modal" role="button">
-                    <svg  xmlns="http://www.w3.org/2000/svg"  class="icon icon-tabler icon-tabler-x" width="20" height="20" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                        <path stroke="none" d="M0 0h24v24H0z" />
-                        <line x1="18" y1="6" x2="6" y2="18" />
-                        <line x1="6" y1="6" x2="18" y2="18" />
-                    </svg>
-                </button>
             </div>
-        </div>
-    </div>
+
+        </x-card>
+    </x-modal>
 
     <script>
         var calendar_counter = 0;
         // Initialize the calendar
-        const allEvents = @json($events);
+        const allEvents = @json($calendar_events);
         var calendarEl = document.getElementById('calendar');
         var calendar = new FullCalendar.Calendar(calendarEl, {
             editable:true,
             selectable:true,
             events: allEvents,
-            eventBackgroundColor: '#378006',
+            eventBackgroundColor: '#00296B',
             eventTimeFormat: {
                 hour: 'numeric',
                 minute: '2-digit',
@@ -352,11 +394,22 @@
                 @this.set('createEventArr.end_date', end_date);
                 @this.set('createEventArr.start_time', start_time);
                 @this.set('createEventArr.end_time', end_time);
-                modalHandler('create_event_modal', true);
+                @this.set('create_event_modal', true)
+
+                // Exam sched
+                @this.set('examSched.date', start_date);
+                // @this.set('examSched.start_time', start_time);
+                // @this.set('examSched.end_time', end_time);
+
+                // modalHandler('create_event_modal', true);
             },
             eventClick: function(data){
-                @this.showEvent(data.event.id);
-                modalHandler('event_modal', true);
+                if(data.event.id != 'examschedule'){
+                    @this.showEvent(data.event.id);
+                    modalHandler('event_modal', true);
+                }else{
+                    Swal.fire("ICT Proficiency Exam Schedule", "Go to Exam Schedule navbar to access details about the exam schedules.", "info");
+                }
             },
             datesSet: function (info) {
                 var startDate = info.start;
@@ -454,7 +507,7 @@
 
         // Delete Event
         function delete_event(id, name){
-            modalHandler('event_modal', false);
+            @this.set('show_event_modal', false);
             Swal.fire({
             title: 'Are you sure you want to delete '+name+'?',
             text: "You won't be able to revert this!",
@@ -485,8 +538,9 @@
 
         // Alerts
         window.addEventListener('EventCreated', event => {
+            @this.set('create_event_modal', false);
             if(event.detail['status']){
-                modalHandler('create_event_modal', false);
+                // modalHandler('create_event_modal', false);
                 Swal.fire("Successfully Created Event", "You just have created an event", "success");
                 editor.setData('');
                 // Rendering the new created event in the calendar
@@ -504,8 +558,29 @@
             }
         });
 
+        window.addEventListener('ExamScheduleCreated', event => {
+            @this.set('create_event_modal', false);
+            if(event.detail){
+                // modalHandler('create_event_modal', false);
+                Swal.fire("Successfully Created Exam Schedule", "If you want to update or delete the exam schedule, access the Exam Schedule in navigation bar", "success");
+                editor.setData('');
+                // Rendering the new created event in the calendar
+                var event = {
+                    id: 'examschedule',
+                    title: 'Exam Schedule',
+                    start: event.detail.start_date,
+                    end: event.detail.end_date,
+                    color: "#989898"
+                };
+                // console.log(event);
+                calendar.addEvent(event);
+                calendar.render();
+            }else{
+                Swal.fire("Something Went Wrong!", "Please try again later.", "error");
+            }
+        });
+
         window.addEventListener('UpdatedEvent', event => {
-            modalHandler('update_event_modal', false);
             if(event.detail['status']){
                 // Replacing the old event to the updated event in the calendar
                 var to_update_event = calendar.getEventById(event.detail['event']['id']);
@@ -517,6 +592,10 @@
             }else{
                 Swal.fire("Something Went Wrong!", "Please try again later.", "error");
             }
+        });
+
+        window.addEventListener('ErrorForExamSchedule', event => {
+            Swal.fire("ICT Proficiency Exam Schedule", "Go to Exam Schedule navbar to access details about the exam schedules.", "info");
         });
 
     </script>
