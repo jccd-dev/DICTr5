@@ -96,11 +96,6 @@ class Posts extends Component
         parent::__construct();
         $this->post_model = new PostModel(); // or whatever the name of your Post model is
         $this->imageHelper = new ImageHandlerHelper();
-        date_default_timezone_set('Asia/Manila');
-        $date_from = PostModel::select(DB::raw('MIN(timestamp) as min_timestamp'))->first();
-        $this->from = date('Y-m-d', strtotime($date_from->min_timestamp));
-        $date_to = PostModel::select(DB::raw('MAX(timestamp) as max_timestamp'))->first();
-        $this->to = date('Y-m-d', strtotime($date_to->max_timestamp));
 
         if (Auth::check()){
 
@@ -118,11 +113,6 @@ class Posts extends Component
 
     public function mount()
     {
-        date_default_timezone_set('Asia/Manila');
-        $date_from = PostModel::select(DB::raw('MIN(timestamp) as min_timestamp'))->first();
-        $this->from = date('Y-m-d', strtotime($date_from->min_timestamp));
-        $date_to = PostModel::select(DB::raw('MAX(timestamp) as max_timestamp'))->first();
-        $this->to = date('Y-m-d', strtotime($date_to->max_timestamp));
         $this->post_model = new PostModel();
         $this->imageHelper = new ImageHandlerHelper();
         $this->listeners['postModalPopulator'] = 'postModalPopulator';
