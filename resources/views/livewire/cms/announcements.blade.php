@@ -1,83 +1,144 @@
-<div class="p-2">
-    <div class="flex flex-row">
-        <div class="basis-3/5">
-            <div class="flex flex-row">
-                <div class="p-3">
-                    <x-datetime-picker wire:model="from" without-time="true" />
-                </div>
-                <div class="p-3 mt-2">
-                    <span class="">-</span>
-                </div>
-                <div class="p-3">
-                    <x-datetime-picker wire:model="to" without-time="true" />
-                </div>
-                <div class="p-3">
-                    <select wire:model="category" class="p-1 rounded drop-shadow-lg">
-                        <option value="0">All</option>
-                        @forelse ($categories as $cat)
-                            <option value="{{$cat->id}}">{{$cat->category}}</option>
-                        @empty
+<div class="">
+    <div class="p-10 bg-white shadow-md rounded-2xl">
+        <div class="flex flex-row">
+            <div class="basis-3/5">
+                <div class="flex flex-row">
+                    <div class="p-3">
+                        <x-datetime-picker wire:model="from" without-time="true" />
+                    </div>
+                    <div class="p-3 mt-2">
+                        <span class="">-</span>
+                    </div>
+                    <div class="p-3">
+                        <x-datetime-picker wire:model="to" without-time="true" />
+                    </div>
+                    <div class="p-3">
+                        <select wire:model="category" class="p-1 rounded drop-shadow-lg">
+                            <option value="0">All</option>
+                            @forelse ($categories as $cat)
+                                <option value="{{$cat->id}}">{{$cat->category}}</option>
+                            @empty
 
-                        @endforelse
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="basis-2/5 ">
-            <div class="flex flex-row-reverse">
-                <div class="p-2">
-                    <button wire:click="showModal('create_modal', true)" class="flex items-center gap-2 px-4 py-1 bg-[#00509D] bg-opacity-5 hover:bg-[#00509D] rounded">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="15" stroke="#f5f5f5" viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>
-                        <span>Add</span>
-                    </button>
-                </div>
-                <div class="p-2 mr-3">
-                    <div class="relative">
-                        <div class="absolute top-1/2 left-3 -translate-y-1/2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#474747" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                        </div>
-                        <input type="search" wire:model="search" id="search" class="w-56 drop-shadow-lg bg-[#00509D] bg-opacity-5 px-3 pl-10 py-2 rounded-md text-[#474747] text-sm" placeholder="Search">
+                            @endforelse
+                        </select>
                     </div>
                 </div>
             </div>
+            <div class="basis-2/5 ">
+                <div class="flex flex-row-reverse">
+                    <div class="p-2">
+                        <button wire:click="showModal('create_modal', true)" class="flex items-center gap-2 px-4 py-1 bg-[#00509D] bg-opacity-5 hover:bg-[#00509D] rounded">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="15" stroke="#f5f5f5" viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>
+                            <span>Add</span>
+                        </button>
+                    </div>
+                    <div class="p-2 mr-3">
+                        <div class="relative">
+                            <div class="absolute top-1/2 left-3 -translate-y-1/2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#474747" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                            </div>
+                            <input type="search" wire:model="search" id="search" class="w-56 drop-shadow-lg bg-[#00509D] bg-opacity-5 px-3 pl-10 py-2 rounded-md text-[#474747] text-sm" placeholder="Search">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="rounded-2xl overflow-hidden">
+            <table class="w-full text-black text-sm text-left font-quicksand">
+                <thead class="text-sm uppercase bg-[#FDC500] dark:text-white">
+                <tr>
+                    <th scope="col" class="px-6 py-3">
+                        Title
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Author
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Category
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Start Duration
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        End Duration
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Status
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Action
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                    @forelse($announcements as $key => $ann)
+                        @if($key % 2 == 0)
+                            <tr class="bg-[#FDC500] bg-opacity-25">
+                                <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
+                                    {{$ann->title}}
+                                </th>
+                                <td class="px-6 py-4">
+                                    {{$ann->author_name}}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{$ann->category}}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{date('M d, Y h:ia', strtotime($ann->start_duration))}}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{date('M d, Y h:ia', strtotime($ann->end_duration))}}
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-xs font-semibold {{($ann->status) ? 'bg-yellow-200 w-20' : 'bg-slate-400 w-24'}} py-1 px-2 rounded text-center">
+                                        {{($ann->status) ? 'Prioritized' : 'Unpublished'}}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <button wire:click="to_update_announcement('{{$ann->id}}')" class="px-2 py-1 m-1 mr-0 bg-[#00509D] bg-opacity-40 rounded-md">Edit</button>
+                                    <button onclick="delete_confirm('{{$ann->id}}')" class="px-2 py-1 m-1 ml-0 bg-[#C1121F] bg-opacity-40 rounded-md">Delete</button>
+                                </td>
+                            </tr>
+                        @else
+                            <tr class="bg-[#FDC500] bg-opacity-10">
+                                <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
+                                    {{$ann->title}}
+                                </th>
+                                <td class="px-6 py-4">
+                                    {{$ann->author_name}}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{$ann->category}}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{date('M d, Y h:ia', strtotime($ann->start_duration))}}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{date('M d, Y h:ia', strtotime($ann->end_duration))}}
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-xs font-semibold {{($ann->status) ? 'bg-yellow-200 w-20' : 'bg-slate-400 w-24'}} py-1 px-2 rounded text-center">
+                                        {{($ann->status) ? 'Prioritized' : 'Unpublished'}}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <button wire:click="to_update_announcement('{{$ann->id}}')" class="px-2 py-1 m-1 mr-0 bg-[#00509D] bg-opacity-40 rounded-md">Edit</button>
+                                    <button onclick="delete_confirm('{{$ann->id}}')" class="px-2 py-1 m-1 ml-0 bg-[#C1121F] bg-opacity-40 rounded-md">Delete</button>
+                                </td>
+                            </tr>
+                        @endif
+                    @empty
+                        <tr>
+                            <td>
+                                No data
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
     </div>
-    <br>
-    <table class="table table-light w-full">
-        <tbody>
-            <tr class="font-bold border-b-2 border-slate-900">
-                <td>Title</td>
-                <td>Author</td>
-                <td>Category</td>
-                <td>Start Duration</td>
-                <td>End Duration</td>
-                <td>Status</td>
-                <td class="text-center">Action</td>
-            </tr>
-        </tbody>
-        @forelse ($announcements as $ann)
-            <tr>
-                <td>{{$ann->title}}</td>
-                <td>{{$ann->author_name}}</td>
-                <td>{{$ann->category}}</td>
-                <td>{{date('M d, Y h:ia', strtotime($ann->start_duration))}}</td>
-                <td>{{date('M d, Y h:ia', strtotime($ann->end_duration))}}</td>
-                <td>
-                    <div class="text-xs font-semibold {{($ann->status) ? 'bg-yellow-200 w-20' : 'bg-slate-400 w-24'}} py-1 px-2 rounded text-center">
-                        {{($ann->status) ? 'Prioritized' : 'Unpublished'}}
-                    </div>
-                </td>
-                <td class="text-center">
-                    <button wire:click="to_update_announcement('{{$ann->id}}')" class="px-2 py-1 m-1 mr-0 bg-[#00509D] bg-opacity-40 rounded-md">Edit</button>
-                    <button onclick="delete_confirm('{{$ann->id}}')" class="px-2 py-1 m-1 ml-0 bg-[#C1121F] bg-opacity-40 rounded-md">Delete</button>
-                </td>
-            </tr>
-        @empty
-            <tr>
-                <td colspan="6">No Announcement Found</td>
-            </tr>
-        @endforelse
-    </table>
 
     {{-- MODAL --}}
     {{-- Temporary | Got from internet --}}
