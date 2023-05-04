@@ -88,9 +88,7 @@ class Posts extends Component
                 'author' => $admin->name
             ];
         }
-        return view('livewire.cms.posts', ['posts' => $this->post_model->filter_search($this->from,
-            date('Y-m-d', strtotime($this->to.' +1 day')),
-            $this->category_id, $this->search), 'all_category' => $this->get_all_categories(), 'author' => $this->admin_data])->layout('layouts.layout');
+        return view('livewire.cms.posts', ['posts' => $this->search_post(), 'all_category' => $this->get_all_categories(), 'author' => $this->admin_data])->layout('layouts.layout');
     }
 
     public function __construct()
@@ -314,14 +312,16 @@ class Posts extends Component
         if ($this->from != null) {
             if (is_null($to_date)) {
                 $from = date('Y-m-d', strtotime($this->from));
-                $posts = $posts->whereBetween('timestamp', [$from, $current]);
+                $posts = $posts->whereDate('timestamp', '>=', $from)
+                    ->whereDate('timestamp', '<=', $current);
             }
         }
 
         if ($this->from != null && !is_null($to_date)) {
             $from = date('Y-m-d', strtotime($this->from));
             $to_date = date('Y-m-d', strtotime($to_date));
-            $posts = $posts->whereBetween('timestamp', [$from, $to_date]);
+            $posts = $posts->whereDate('timestamp', '>=', $from)
+                ->whereDate('timestamp', '<=', $to_date);
         }
 
         return $posts->get();
