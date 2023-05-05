@@ -5,15 +5,24 @@
         {{-- EVENT --}}
         <div class="basis-5/12">
             <div class="flex flex-row-reverse">
-                <div class="pt-2">
-                    <x-button blue label="Add" wire:click="showModal('create_event_modal', true)"  />
+                <div class="">
+                    <button
+                        type="button"
+                        wire:click="showModal('create_event_modal', true)"
+                        @click="modalActive = 1"
+                        class="font-bold font-quicksand bg-custom-blue bg-opacity-10 hover:bg-opacity-20 focus:ring-4 focus:outline-none focus:ring-[#3b5998]/50 rounded-lg text-base px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#3b5998]/55 mr-2 mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2 -ml-2 text-dark-blue">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Add
+                    </button>
                 </div>
-                <div class="p-2 mr-3">
+                <div class="mr-3">
                     <div class="relative">
                         <div class="absolute top-1/2 left-3 -translate-y-1/2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#474747" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                         </div>
-                        <input type="search" wire:model="search" id="search" class="w-56 drop-shadow-lg bg-[#00509D] bg-opacity-5 px-3 pl-10 py-2 rounded-md text-[#474747] text-sm" placeholder="Search">
+                        <input type="search" wire:model="search" id="search" class="w-56 h-11 drop-shadow-lg bg-[#00509D] border-0 bg-opacity-5 px-3 pl-10 py-2 rounded-md text-[#474747] text-sm" placeholder="Search">
                     </div>
                 </div>
             </div>
@@ -423,28 +432,33 @@
                 calendar_counter++;
             },
             eventDrop: function(event, delta, revert){
-                var update_start = moment(event.event.start).format('YYYY-MM-DD HH:mm:ss');
-                var update_end = moment(event.event.end).format('YYYY-MM-DD HH:mm:ss');
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, reschedule it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        @this.reschedule(event.event.id, update_start, update_end);
-                        Swal.fire(
-                            'Rescheduled!',
-                            'The event was rescheduled.',
-                            'success'
-                        )
-                    }else{
-                        event.revert();
-                    }
-                })
+                if(event.event.id != 'examschedule'){
+                    var update_start = moment(event.event.start).format('YYYY-MM-DD HH:mm:ss');
+                    var update_end = moment(event.event.end).format('YYYY-MM-DD HH:mm:ss');
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, reschedule it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            @this.reschedule(event.event.id, update_start, update_end);
+                            Swal.fire(
+                                'Rescheduled!',
+                                'The event was rescheduled.',
+                                'success'
+                            )
+                        }else{
+                            event.revert();
+                        }
+                    })
+                }else{
+                    Swal.fire("ICT Proficiency Exam Schedule", "You cannot update Exam Schedule here. Go to Exam Schedule navbar to update the schedule.", "info")
+                    event.revert();
+                }
             }
         });
 

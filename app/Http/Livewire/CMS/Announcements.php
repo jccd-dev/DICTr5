@@ -9,9 +9,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
 use App\Helpers\GetAdmin;
+use Livewire\WithPagination;
 
 class Announcements extends Component
 {
+    use WithPagination;
+
     public $search = '';
     public $from = '';
     public $to = '';
@@ -41,7 +44,7 @@ class Announcements extends Component
         $announcementModel = new AnnouncementModel();
         $postCategoryModel = new PostCategoryModel();
         return view('livewire.cms.announcements', [
-            'announcements' => $announcementModel->filter_search($this->from,
+            'announcements' => $this->filter_search($this->from,
             date('Y-m-d', strtotime($this->to.' +1 day')),
             $this->category, $this->search),
             'categories' => $postCategoryModel->all()
@@ -184,6 +187,46 @@ class Announcements extends Component
             $this->create_modal = $isOpen;
         elseif($id == 'update_modal')
             $this->update_modal = $isOpen;
+    }
+
+    // For Pagination
+    public function filter_search(string|null $from, string|null $to, int $category = null, string $search = null){
+        if($from == null || $to == null){
+            return AnnouncementModel::join('dict_admins', 'announcements.admin_id', '=', 'dict_admins.id')
+                ->join('post_categories', 'announcements.cat_id', '=', 'post_categories.id')
+                ->select('announcements.*', 'dict_admins.name as author_name', 'post_categories.category as category')
+                ->orderBy('announcements.start_duration', 'desc')
+                ->paginate(10);
+        }
+        if($search == null || $search == ''){
+            if($category == null || $category == 0)
+                return AnnouncementModel::join('dict_admins', 'announcements.admin_id', '=', 'dict_admins.id')
+                    ->join('post_categories', 'announcements.cat_id', '=', 'post_categories.id')
+                    ->select('announcements.*', 'dict_admins.name as author_name', 'post_categories.category as category')
+                    ->where('announcements.start_duration', '<=', $to)
+                    ->where('announcements.end_duration', '>=', $from)
+                    ->orderBy('announcements.start_duration', 'asc')
+                    ->paginate(10);
+            else
+                return AnnouncementModel::join('dict_admins', 'announcements.admin_id', '=', 'dict_admins.id')
+                    ->join('post_categories', 'announcements.cat_id', '=', 'post_categories.id')
+                    ->select('announcements.*', 'dict_admins.name as author_name', 'post_categories.category as category')
+                    ->where('announcements.start_duration', '<=', $to)
+                    ->where('announcements.end_duration', '>=', $from)
+                    ->where('announcements.cat_id', $category)
+                    ->orderBy('announcements.start_duration', 'asc')
+                    ->paginate(10);
+        }else{
+            return AnnouncementModel::join('dict_admins', 'announcements.admin_id', '=', 'dict_admins.id')
+                ->join('post_categories', 'announcements.cat_id', '=', 'post_categories.id')
+                ->select('announcements.*', 'dict_admins.name as author_name', 'post_categories.category as category')
+                ->where('announcements.title', 'like', '%'.$search.'%')
+                ->orWhere('announcements.excerpt', 'like', '%'.$search.'%')
+                ->orWhere('announcements.content', 'like', '%'.$search.'%')
+                ->orWhere('post_categories.category', 'like', '%'.$search.'%')
+                ->orderBy('announcements.start_duration', 'desc')
+                ->paginate(10);
+        }
     }
 
 }

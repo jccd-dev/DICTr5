@@ -125,7 +125,7 @@ class Announcement extends Model
                                             ->join('post_categories', 'announcements.cat_id', '=', 'post_categories.id')
                                             ->select('announcements.*', 'dict_admins.name as author_name', 'post_categories.category as category')
                                             ->where('announcements.start_duration', '<=', $to)
-                                            ->where('announcements.start_duration', '>=', $from)
+                                            ->where('announcements.end_duration', '>=', $from)
                                             ->orderBy('announcements.start_duration', 'desc')
                                             ->get();
             else
@@ -133,7 +133,7 @@ class Announcement extends Model
                                             ->join('post_categories', 'announcements.cat_id', '=', 'post_categories.id')
                                             ->select('announcements.*', 'dict_admins.name as author_name', 'post_categories.category as category')
                                             ->where('announcements.start_duration', '<=', $to)
-                                            ->where('announcements.start_duration', '>=', $from)
+                                            ->where('announcements.end_duration', '>=', $from)
                                             ->where('announcements.cat_id', $category)
                                             ->orderBy('announcements.start_duration', 'desc')
                                             ->get();

@@ -3,22 +3,45 @@
         <div class="flex flex-row">
             <div class="basis-3/5">
                 <div class="flex flex-row">
-                    <div class="p-3">
-                        <x-datetime-picker wire:model="from" without-time="true" />
+                    <div class="relative bg-custom-blue bg-opacity-10 border-0 font-semibold rounded-xl flex h-10">
+                        <div class="absolute top-0 left-0 h-full px-3 flex items-center bg-custom-blue bg-opacity-10 rounded-tl-xl rounded-bl-xl">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-custom-blue">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z" />
+                            </svg>
+                        </div>
+
+                        <x-datetime-picker
+                            display-format="MM - DD - YYYY"
+                            without-time="true"
+                            wire:model="from"
+                            class="bg-transparent border-none outline-none shadow-none drop-shadow-none py-2.5 pl-14 max-w-[13rem]"
+                        />
                     </div>
-                    <div class="p-3 mt-2">
+                    <div class="px-3 mt-1">
                         <span class="">-</span>
                     </div>
-                    <div class="p-3">
-                        <x-datetime-picker wire:model="to" without-time="true" />
+                    <div class="relative bg-custom-blue bg-opacity-10 border-0 font-semibold rounded-xl flex h-10">
+                        <div class="absolute top-0 left-0 h-full px-3 flex items-center bg-custom-blue bg-opacity-10 rounded-tl-xl rounded-bl-xl">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-custom-blue">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z" />
+                            </svg>
+                        </div>
+
+                        <x-datetime-picker
+                            placeholder="Appointment Date"
+                            display-format="MM - DD - YYYY"
+                            without-time="true"
+                            wire:model="to"
+                            class="bg-transparent border-none outline-none shadow-none drop-shadow-none py-2.5 pl-14 max-w-[13rem]"
+                        />
                     </div>
-                    <div class="p-3">
-                        <select wire:model="category" class="px-2 py-1.5 rounded drop-shadow-lg border-slate-300">
+                    <div class="px-3">
+                        <select wire:model="category" class=" py-1.5 rounded drop-shadow-lg border-slate-300 bg-custom-blue bg-opacity-10 rounded-xl">
                             <option value="0">All</option>
                             @forelse ($categories as $cat)
                                 <option value="{{$cat->id}}">{{$cat->category}}</option>
                             @empty
-
+                                <option value="0">Empty</option>
                             @endforelse
                         </select>
                     </div>
@@ -26,18 +49,24 @@
             </div>
             <div class="basis-2/5 ">
                 <div class="flex flex-row-reverse">
-                    <div class="p-2">
-                        <button wire:click="showModal('create_modal', true)" class="flex items-center gap-2 px-4 py-1 bg-[#00509D] bg-opacity-5 hover:bg-[#00509D] rounded">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="15" stroke="#f5f5f5" viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>
-                            <span>Add</span>
+                    <div class="">
+                        <button
+                            type="button"
+                            wire:click="showModal('create_modal', true)"
+                            @click="modalActive = 1"
+                            class="font-bold font-quicksand bg-custom-blue bg-opacity-10 hover:bg-opacity-20 focus:ring-4 focus:outline-none focus:ring-[#3b5998]/50 rounded-lg text-base px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#3b5998]/55 mr-2 mb-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2 -ml-2 text-dark-blue">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Add
                         </button>
                     </div>
-                    <div class="p-2 mr-3">
+                    <div class="mr-3">
                         <div class="relative">
                             <div class="absolute top-1/2 left-3 -translate-y-1/2">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#474747" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                             </div>
-                            <input type="search" wire:model="search" id="search" class="w-56 drop-shadow-lg bg-[#00509D] bg-opacity-5 px-3 pl-10 py-2 rounded-md text-[#474747] text-sm border-0" placeholder="Search">
+                            <input type="search" wire:model="search" id="search" class="w-56 h-11 drop-shadow-lg bg-[#00509D] bg-opacity-5 px-3 pl-10 py-2 rounded-md text-[#474747] text-sm border-0" placeholder="Search">
                         </div>
                     </div>
                 </div>
@@ -129,14 +158,16 @@
                             </tr>
                         @endif
                     @empty
-                        <tr>
-                            <td>
+                        <tr class="bg-[#FDC500] bg-opacity-25 ">
+                            <td colspan="7" class="text-center p-5">
                                 No data
                             </td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
+            <br>
+            {{ $announcements->links() }}
         </div>
     </div>
 

@@ -8,7 +8,6 @@ use App\Models\CMS\Calendar;
 use Illuminate\Support\Facades\Validator;
 use App\Models\CMS\Calendar as EventCalendarModel;
 use App\Models\CMS\POST\PostCategory;
-
 class EventCalendar extends Component
 {
     public $today = [];
@@ -132,7 +131,7 @@ class EventCalendar extends Component
             'venue' => 'required',
             'category' => 'required',
         ],[
-            'event_title.required' => 'Event Title title field is required',
+            'event_title.required' => 'Event Title field is required',
             'start_date.required' => 'Start Date field is required',
             'end_date.required' => 'End Date field is required',
             'start_time.required' => 'Start Time field is required',
