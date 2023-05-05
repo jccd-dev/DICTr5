@@ -84,6 +84,6 @@ class PostModel extends Model
     }
 
     public function scopePriority($query) {
-        return $query->where('status', 1)->orderBy('timestamp', 'acs')->limit(3);
+        return $query->where('status', 1)->orderBy('timestamp', 'asc')->limit(3);
     }
 }
