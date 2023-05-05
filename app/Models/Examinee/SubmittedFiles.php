@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class SubmittedFiles extends Model{
 
+    use HasFactory;
+
     protected $table = 'submitted_files';
     protected $fillable = [
         'user_id',

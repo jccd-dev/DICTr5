@@ -4,6 +4,7 @@ namespace App\Http\Livewire\User;
 
 use App\Helpers\FileHandler;
 use App\Models\Examinee\UsersData;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
@@ -255,7 +256,8 @@ class Dashboard extends Component
 
         $tertiary_edu = [
             'school_attended'   => $this->university,
-            'degree'            =>$this->degree,
+            'degree'            => $this->degree,
+            'year_level'        => $this->yearLevel,
             'inclusive_years'   => $this->incYears
         ];
 
@@ -284,7 +286,7 @@ class Dashboard extends Component
         // insert into main table users data
         if($user->save()){
             $user_id = $user->id;
-            $lname = $user->lname;
+            $last_name = $user->lname;
 
             // insert into tertiary education table
             $user->tertiaryEdu()->create($organized_data['ter_edu']);
@@ -297,10 +299,10 @@ class Dashboard extends Component
 
             $submit = $user->submittedFiles();
             // insert files into folder and database
-            $this->passport != null ? $file_helper->store_files($this->passport, $submit, 'passport', $lname) : null;
-            $this->psa != null ? $file_helper->store_files($this->psa, $submit, 'psa', $lname) : null;
-            $this->validId != null ? $file_helper->store_files($this->validId, $submit, 'validId', $lname) : null;
-            $this->diploma != null ? $file_helper->store_files($this->diploma, $submit, 'diploma', $lname) : null;
+            $this->passport != null ? $file_helper->store_files($this->passport, $submit, 'passport', $last_name) : null;
+            $this->psa != null ? $file_helper->store_files($this->psa, $submit, 'psa', $last_name) : null;
+            $this->validId != null ? $file_helper->store_files($this->validId, $submit, 'validId', $last_name) : null;
+            $this->diploma != null ? $file_helper->store_files($this->diploma, $submit, 'diploma_TOR', $last_name) : null;
 
             // insert into registration details table
             $user->regDetails()->create(['reg_date' => $user->date_accomplish]);
@@ -310,4 +312,185 @@ class Dashboard extends Component
 
         return false;
     }
+
+
+    /**
+     * @return Builder[]|\Illuminate\Database\Eloquent\Collection
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @description use for retrieving current logged in user data
+     */
+    public function get_user_data(): Collection|array
+    {
+        $user_login_id = session()->get('user')['id'];
+        return UsersData::with('tertiaryEdu', 'trainingSeminars', 'addresses', 'submittedFiles')
+            ->where('user_login_id', $user_login_id)
+            ->get();
+    }
+
+    public function update_users_data(){
+        // update rules  base for current status of the user
+        if (strtolower($this->currentStatus) == 'student'){
+            $this->rules = array_merge($this->rules, $this->student_rule);
+        }else {
+            $this->rules = array_merge($this->rules, $this->prof_rule);
+        }
+
+        $validator = Validator::make([
+            'givenName'           => $this->givenName,
+            'middleName'          => $this->middleName,
+            'surName'             => $this->surName,
+            'tel'                 => $this->tel,
+            'region'              => $this->region,
+            'province'            => $this->province,
+            'municipality'        => $this->municipality,
+            'barangay'            => $this->barangay,
+            'email'               => $this->email,
+            'pob'                 => $this->pob,
+            'dob'                 => $this->dob,
+            'gender'              => $this->gender,
+            'citizenship'         => $this->citizenship,
+            'civilStatus'         => $this->civilStatus,
+            'pl'                  => $this->pl,
+            'signature'           => $this->signature,
+            'yearLevel'           => $this->yearLevel,
+            'presentOffice'       => $this->presentOffice,
+            'telNum'              => $this->telNum,
+            'officeAddress'       => $this->officeAddress,
+            'officeCategory'      => $this->officeCategory,
+            'designationPosition' => $this->designationPosition,
+            'yearsPresentPosition'=> $this->yearsPresentPosition
+
+        ], $this->rules);
+
+        if ($validator->fails()) {
+            $err_msgs = $validator->getMessageBag();
+            foreach ($err_msgs->getMessages() as $field => $messages) {
+                foreach ($messages as $message) {
+                    $this->addError($field, $message);
+                }
+            }
+            $err_msgs = $validator->getMessageBag();
+            $this->dispatchBrowserEvent('ValidationErrors', $err_msgs->getMessages());
+            return;
+        }
+
+        $users_data = [
+            'user_login_id'     => session()->get('user')['id'],
+            'fname'             => $this->givenName,
+            'lname'             => $this->lname,
+            'mname'             => $this->mname,
+            'place_of_birth'    => $this->pob,
+            'date_of_birth'     => $this->dob,
+            'gender'            => $this->gender,
+            'citizenship'       => $this->citizenship,
+            'civil_status'      => $this->civilStatus,
+            'contact_number'    => $this->tel,
+            'present_office'    => $this->presentOffice,
+            'designation'       => $this->designationPosition,
+            'telephone_number'  => $this->telNum,
+            'office_address'    => $this->officeAddress,
+            'office_category'   => $this->officeCategory,
+            'no_of_years_in_pos'=> $this->yearsPresentPosition,
+            'programming_langs' => $this->pl,
+            'e_sign'            => $this->signature,
+            'yearLevel'         => $this->yearLevel,
+            'current_status'    => $this->currentStatus,
+            'date_accomplish'   => date('Y-m-d H:i:s', strtotime('now'))
+        ];
+
+        $address = [
+            'region'            => $this->region,
+            'province'          => $this->province,
+            'municipality'      => $this->municipality,
+            'barangay'          => $this->barangay
+        ];
+
+        $tertiary_edu = [
+            'school_attended'   => $this->university,
+            'degree'            => $this->degree,
+            'year_level'        => $this->yearLevel,
+            'inclusive_years'   => $this->incYears
+        ];
+
+        $user_login_id = session()->get('user')['id'];
+        $user = UsersData::find($user_login_id);
+
+        $user->update($users_data);
+
+        $user->tertiaryEdu()->update($tertiary_edu);
+        $user->addresses()->update($address);
+
+        // TODO: provide the new $this->>training for update, if user update then include the ID
+        // TODO if user add new training then append to $this->>taining but no ID
+        foreach ($this->trainings as $training){
+            $training_id = $training['id'] ?? null;
+
+            // if $this->>trainings has no id then i will create bew record, else update
+            $user->trainingSeminars()->updateOrCreate(['id' => $training_id], $training);
+        }
+
+
+    }
+
+    private function update_trainings($user){
+
+    }
+
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function update_passport(): bool
+    {
+
+        $file_helper = new FileHandler();
+        $user_login_id = session()->get('user')['id'];
+        $user = UsersData::find($user_login_id);
+
+        return $file_helper->update_the_file($this->passport, $user, 'passport');
+    }
+
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function update_psa(): bool
+    {
+        $file_helper = new FileHandler();
+        $user_login_id = session()->get('user')['id'];
+        $user = UsersData::find($user_login_id);
+
+        return $file_helper->update_the_file($this->psa, $user, 'psa');
+    }
+
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function update_id(): bool
+    {
+        $file_helper = new FileHandler();
+        $user_login_id = session()->get('user')['id'];
+        $user = UsersData::find($user_login_id);
+
+        return $file_helper->update_the_file($this->validId, $user, 'validId');
+    }
+
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function update_diploma(): bool
+    {
+        $file_helper = new FileHandler();
+        $user_login_id = session()->get('user')['id'];
+        $user = UsersData::find($user_login_id);
+
+        return $file_helper->update_the_file($this->diploma, $user, 'diploma_TOR');
+    }
+
+
+
+
 }

@@ -31,19 +31,20 @@ class Category extends Component
             return false;
         }
 
-        $category = $this->postCategoryModel::firstOrCreate(
-            [
-                'category' => ucfirst($this->category)
-            ]);
+        $category = $this->postCategoryModel::firstOrNew([
+            'category' => ucfirst($this->category)
+        ]);
 
-        if ($category) {
-            //the category is already used.
-            session()->flash('error', 'Category Not inserted!');
+        if ($category->exists) {
+            session()->flash('error', 'Category exist!');
             return false;
+        } else {
+            $category->save();
+            session()->flash('success', 'Category Created!');
+            return true;
         }
 
-        session()->flash('success', 'Category Created!');
-        return true;
+
 
     }
 
@@ -56,6 +57,7 @@ class Category extends Component
 
     public function render()
     {
-        return view('livewire.cms.category');
+        $cat_data = new PostCategory();
+        return view('livewire.cms.category', ['categories' => $cat_data->all()]);
     }
 }
