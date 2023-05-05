@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\CMS;
 
+use Illuminate\Database\Eloquent\Collection;
 use Livewire\Component;
 use mysql_xdevapi\Session;
 use Illuminate\Support\Str;
@@ -21,16 +22,20 @@ class Slider extends Component
     public $myModal;
     public $displayFormat;
     public $updateModal;
-    public string $title;
-    public $description;
-    public $image;
+    public string $title = "";
+    public $description = "";
+    public $image = null;
     public string $image_name = '';
-    public string $button_links;
+    public string $button_links = "";
     public $temp_image;
     private $banner_model;
     private $banner_id = null;
     private $banner_data = [];
     public int $updateID = 0;
+
+    public string $search;
+    public string $to = '';
+    public string $from = '';
 
     protected $except = ['myModal'];
 
@@ -58,6 +63,13 @@ class Slider extends Component
     public function mount()
     {
         $this->banner_model = new HomeBanner();
+        $this->title = "";
+        $this->description = "";
+        $this->image = null;
+        $this->button_links = "";
+        $this->search = "";
+        $this->to = '';
+        $this->from = '';
     }
 
     public function __construct($id = null)
@@ -85,7 +97,7 @@ class Slider extends Component
             $err_msgs = $validator->getMessageBag();
             foreach ($err_msgs->getMessages() as $field => $messages) {
                 foreach ($messages as $message) {
-                    $this->addError('update.' . $field, $message);
+                    $this->addError($field, $message);
                 }
             }
             $this->dispatchBrowserEvent('ValidationError', $err_msgs->getMessages());
@@ -253,9 +265,43 @@ class Slider extends Component
         return false;
     }
 
+    public function search_post(): Collection|array
+    {
+        $banner_model = $this->banner_model::query();
+
+        $search_term = $this->search;
+        $current = date('Y-m-d', strtotime('now'));
+        $to_date = $this->to;
+
+        if (!$search_term == '') {
+            $banner_model = $banner_model->where(function ($query) use ($search_term) {
+                $query->where('title', 'like', '%' . $search_term . '%')
+                    ->orWhere('description', 'like', '%' . $search_term . '%');
+            });
+            //return $banner_model->with('images')->get();
+        }
+
+        if ($this->from != null) {
+            if (is_null($to_date)) {
+                $from = date('Y-m-d', strtotime($this->from));
+                $banner_model = $banner_model->whereDate('timestamp', '>=', $from)
+                    ->whereDate('timestamp', '<=', $current);
+            }
+        }
+
+        if ($this->from != null && !is_null($to_date)) {
+            $from = date('Y-m-d', strtotime($this->from));
+            $to_date = date('Y-m-d', strtotime($to_date));
+            $banner_model = $banner_model->whereDate('timestamp', '>=', $from)
+                ->whereDate('timestamp', '<=', $to_date);
+        }
+
+        return $banner_model->get();
+    }
+
     public function render()
     {
-        $data = $this->banner_model->get();
+        $data = $this->search_post();
         return view('livewire.cms.slider', ['formData' => $this->banner_data, 'data' => $data])->layout("layouts.layout");
     }
 }
