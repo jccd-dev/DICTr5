@@ -109,8 +109,8 @@
                                         </div>
                                     </td>
                                     <td class="px-6 py-4">
-                                        <a href="#" type="button" wire:click="get_post_data({{ $val->id }})" @click="state=1; stateUpdate=1; modalActive = 2" data-modal-target="update-post" data-modal-show="update-post" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit user</a>
-                                        <a href="#" type="button" data-modal-target="deleteModal3" data-modal-show="deleteModal3" @click="deletePostID = {{ $val->id }}" class="font-medium text-red-600 dark:text-red-500 hover:underline">Delete user</a>
+                                        <a href="#" type="button" wire:click="get_post_data({{ $val->id }})" @click="state=1; stateUpdate=1; modalActive = 2" data-modal-target="update-post" data-modal-show="update-post" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                                        <a href="#" type="button" data-modal-target="deleteModal3" data-modal-show="deleteModal3" @click="deletePostID = {{ $val->id }}" class="font-medium text-red-600 dark:text-red-500 hover:underline">Delete</a>
                                     </td>
                                 </tr>
                             @else
@@ -134,8 +134,8 @@
                                         </div>
                                     </td>
                                     <td class="px-6 py-4">
-                                        <a href="#" type="button" wire:click="get_post_data({{ $val->id }})" @click="state=1; stateUpdate=1; modalActive = 2" data-modal-target="update-post" data-modal-show="update-post" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit user</a>
-                                        <a href="#" type="button" data-modal-target="deleteModal3" data-modal-show="deleteModal3" @click="deletePostID = {{ $val->id }}" class="font-medium text-red-600 dark:text-red-500 hover:underline">Delete user</a>
+                                        <a href="#" type="button" wire:click="get_post_data({{ $val->id }})" @click="state=1; stateUpdate=1; modalActive = 2" data-modal-target="update-post" data-modal-show="update-post" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                                        <a href="#" type="button" data-modal-target="deleteModal3" data-modal-show="deleteModal3" @click="deletePostID = {{ $val->id }}" class="font-medium text-red-600 dark:text-red-500 hover:underline">Delete</a>
                                     </td>
                                 </tr>
                             @endif
@@ -253,11 +253,11 @@
 
                                 <div class="mb-6 flex-1">
                                     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="post-status">
-                                        Status
+{{--                                        Status--}}
                                     </label>
                                     <div class="pt-2">
                                         <label class="relative inline-flex items-center mb-4 cursor-pointer">
-                                            <x-toggle lg label="" wire:model.defer="status" />
+                                            <x-toggle lg label="Publish" wire:model.defer="status" />
                                         </label>
                                     </div>
                                 </div>
@@ -295,6 +295,7 @@
                                         />
                                     </label>
                                     @error('images.*') <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p> @enderror
+                                    @error('images') <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p> @enderror
                                 </div>
                             </div>
                             <div x-show="state == 3">
@@ -461,6 +462,66 @@
         datePickerIcons.forEach((el) => {
             el.nextElementSibling.firstElementChild.lastElementChild.remove()
         })
+
+        const messageAlert = document.querySelector('#message-alert');
+        const dismissAlert = document.querySelector('#dismiss-alert');
+
+        window.addEventListener('ValidationPostError', _ => {
+            dismissAlert.classList.remove('hidden')
+            messageAlert.textContent = "Error Adding Category"
+
+            setTimeout(() =>{
+                dismissAlert.classList.add('hidden')
+                location.reload()
+            }, 2000)
+        })
+
+        window.addEventListener('ValidationPostSuccess', _ => {
+            dismissAlert.classList.remove('hidden')
+            messageAlert.textContent = "Successfully Added Post"
+
+            setTimeout(() =>{
+                dismissAlert.classList.add('hidden')
+                location.reload()
+            }, 2000)
+        })
+        window.addEventListener('UpdateValidationPostError', _ => {
+            dismissAlert.classList.remove('hidden')
+            messageAlert.textContent = "Error Adding Category"
+
+            setTimeout(() =>{
+                dismissAlert.classList.add('hidden')
+                location.reload()
+            }, 2000)
+        })
+
+        window.addEventListener('UpdateValidationPostSuccess', _ => {
+            dismissAlert.classList.remove('hidden')
+            messageAlert.textContent = "Successfully Added Post"
+
+            setTimeout(() =>{
+                dismissAlert.classList.add('hidden')
+                location.reload()
+            }, 2000)
+        })
+
+        window.addEventListener('DeletePostSuccess', _ => {
+            dismissAlert.classList.remove('hidden')
+            messageAlert.textContent = "Successfully Deleted Post"
+
+            setTimeout(() =>{
+                dismissAlert.classList.add('hidden')
+            }, 2000)
+        })
+        window.addEventListener('DeletePostErrorSuccess', _ => {
+            dismissAlert.classList.remove('hidden')
+            messageAlert.textContent = "Successfully Deleted Post"
+
+            setTimeout(() =>{
+                dismissAlert.classList.add('hidden')
+            }, 2000)
+        })
+
         document.addEventListener('DOMContentLoaded', () => {
 
             Alpine.data("posts-form", (d) => {

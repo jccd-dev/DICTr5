@@ -16,6 +16,7 @@
                             @if(request()->routeIs('admin.cms.announcement')) {{'Announcement'}}
                             @elseif(request()->routeIs('admin.cms.calendar')) {{'Event Calendar'}}
                             @elseif(request()->routeIs('admin.exam-schedule')) {{'Exam Schedule'}}
+                            @elseif(request()->routeIs('admin.cms.category')) {{'Category'}}
                             @elseif(request()->routeIs('admin.cms.slider')) {{'Slider'}}
                             @elseif(request()->routeIs('admin.cms.posts')) {{'Posts'}}
                             @elseif(request()->routeIs('admin.inbox')) {{'Inbox'}}

@@ -51,6 +51,7 @@ Route::prefix('admin')->group(function () {
         Route::prefix('cms')->group(function () {
             Route::get('/slider', Slider::class)->name("admin.cms.slider");
             Route::get('/posts', Posts::class)->name('admin.cms.posts'); // Post::class
+            Route::get('/category', \App\Http\Livewire\CMS\Category::class)->name('admin.cms.category'); // Post::class
             Route::get('/announcement', Announcements::class)->name('admin.cms.announcement');
             Route::get('/event-calendar', EventCalendar::class)->name('admin.cms.calendar');
         });

@@ -9,18 +9,16 @@ class UserLogActivity{
     /**
      * TITLE: ADD ADMIN LOG
      * Description: insert admin logs to database
-     * @param Request $request
-     * @param string $activity : string value
-     * @param string|int $user_id
+     * @param string $activity: string value
      * @return void
      */
-    public static function addToLog(Request $request, string $activity, string|int $user_id): void {
+    public static function addToLog(Request $request, string $activity, string|int $admin_id): void {
+        $log = [];
+        $log['activity'] = $activity;
+        $log['end_point_access'] = $request->fullUrl();
+        $log['admin_id'] = $admin_id;
 
-        UserLogs::create([
-            'user_id' => $user_id,
-            'activity' => $activity,
-            'end_point' => $request->fullUrl()
-        ]);
+        AdminLogModel::create($log);
     }
 
     /**
@@ -29,6 +27,6 @@ class UserLogActivity{
      * @return collection of Std Class: data from 'admin_logs' table
      */
     public static function logActivityLists(){
-    	return UserLogs::orderByDesc('timestamp')->get();
+    	return AdminLogModel::latest()->get();
     }
 }
