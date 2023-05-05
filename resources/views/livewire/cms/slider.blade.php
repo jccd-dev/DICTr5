@@ -16,7 +16,7 @@
             </button>
         </div>
     </div>
-    <div class="relative shadow-md rounded-2xl bg-white" wire:ignore>
+    <div class="relative shadow-md rounded-2xl bg-white">
         <div class="flex items-center justify-between py-4 dark:bg-gray-800 px-10 pt-10">
             <div class="font-quicksand flex gap-3 items-center">
                 <div class="relative bg-custom-blue bg-opacity-10 border-0 font-semibold rounded-xl flex">
@@ -30,7 +30,7 @@
                         placeholder="Appointment Date"
                         display-format="MM - DD - YYYY"
                         without-time="true"
-                        wire:model.defer="displayFormat"
+                        wire:model="from"
                         class="bg-transparent border-none outline-none shadow-none drop-shadow-none py-2.5 pl-14 max-w-[13rem]"
                     />
                 </div>
@@ -46,7 +46,7 @@
                         placeholder="Appointment Date"
                         display-format="MM - DD - YYYY"
                         without-time="true"
-                        wire:model.defer="displayFormat"
+                        wire:model="to"
                         class="bg-transparent border-none outline-none shadow-none drop-shadow-none py-2.5 pl-14 max-w-[13rem]"
                     />
                 </div>
@@ -57,7 +57,7 @@
                     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                         <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
                     </div>
-                    <input type="text" id="table-search" class="block h-full p-2.5 font-quicksand pl-10 text-base text-gray-900 border-0 rounded-lg w-48 bg-[#E6EEF6] focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search">
+                    <input type="text" id="table-search" wire:model="search" class="block h-full p-2.5 font-quicksand pl-10 text-base text-gray-900 border-0 rounded-lg w-48 bg-[#E6EEF6] focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search">
                 </div>
                 <div>
                     <button
@@ -100,7 +100,7 @@
                                         {{ $val->title }}
                                     </th>
                                     <td class="px-6 py-4">
-                                        {{ $val->description }}
+                                        {{ date("M j, Y", strtotime($val->timestamp)) }}
                                     </td>
                                     <td class="px-6 py-4">
                                         {{ $val->button_links }}
@@ -116,7 +116,7 @@
                                         {{ $val->title }}
                                     </th>
                                     <td class="px-6 py-4">
-                                        {{ $val->description }}
+                                        {{ date("M j, Y", strtotime($val->timestamp)) }}
                                     </td>
                                     <td class="px-6 py-4">
                                         {{ $val->button_links }}
@@ -199,6 +199,7 @@
                                class="hidden"
                                wire:model="image"
                         />
+                        @error('image') <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p> @enderror
                     </label>
                 </div>
                 <x-slot name="footer">
@@ -265,7 +266,7 @@
                             @else
                                 <div id="img-thumbnail">
                                     @if($temp_image)
-                                        <img src="{{ asset('cms-images/'.$temp_image) }}" alt="">
+                                        <img src="{{ asset('storage/images/'.$temp_image) }}" alt="">
                                     @endif
                                 </div>
                                 @if(!$temp_image)

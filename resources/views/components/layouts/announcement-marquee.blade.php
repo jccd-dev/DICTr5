@@ -15,6 +15,9 @@
                                 <li class="splide__slide text-xs 2xl:text-lg">
                                     <p class="whitespace-nowrap">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Incidunt, explicabo.</p>
                                 </li>
+                                <li class="splide__slide text-xs 2xl:text-lg">
+                                    <p class="whitespace-nowrap">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Incidunt, explicabo.</p>
+                                </li>
                             </ul>
                         </div>
                     </div>

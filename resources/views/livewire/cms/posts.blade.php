@@ -380,7 +380,7 @@
                                                                 </svg>
                                                             </span>
 
-                                                                <img src="{{ asset('images/'.$v) }}" class="w-full h-full object-cover cursor-default" @click.stop alt="">
+                                                                <img src="{{ asset('storage/images/'.$v) }}" class="w-full h-full object-cover cursor-default" @click.stop alt="">
                                                             </div>
                                                         @endforeach
                                                     @endforeach
