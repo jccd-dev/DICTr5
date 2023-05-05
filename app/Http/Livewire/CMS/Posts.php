@@ -58,7 +58,7 @@ class Posts extends Component
         'excerpt'        => 'required',
         'thumbnail'      => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
         'content'        => 'required',
-        'images'       => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
+        'images.*'       => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
         'vid_link'       => 'nullable|url',
         'status'         => 'required|numeric',
     ];
@@ -160,16 +160,37 @@ class Posts extends Component
 
     public function create_post($admin): void
     {
-        $validator = Validator::make([
-            'category_id'   => $this->category_id,
-            'title'         => $this->title,
-            'excerpt'       => $this->excerpt,
-            'thumbnail'     => $this->thumbnail,
-            'content'       => $this->content,
-            'images'        => $this->images,
-            'vid_link'      => $this->vid_link,
-            'status'        => $this->status,
-        ], $this->rules);
+        if (count($this->temp_images) > 0)
+            $validator = Validator::make([
+                'category_id'   => $this->category_id,
+                'title'         => $this->title,
+                'excerpt'       => $this->excerpt,
+                'thumbnail'     => $this->thumbnail,
+                'content'       => $this->content,
+                'images.*'        => $this->temp_images,
+                'vid_link'      => $this->vid_link,
+                'status'        => $this->status,
+            ], $this->rules);
+        else
+            $validator = Validator::make([
+                    'category_id'   => $this->category_id,
+                    'title'         => $this->title,
+                    'excerpt'       => $this->excerpt,
+                    'thumbnail'     => $this->thumbnail,
+                    'content'       => $this->content,
+                    'images'        => $this->temp_images,
+                    'vid_link'      => $this->vid_link,
+                    'status'        => $this->status,
+                ],[
+                'category_id'    => 'required|numeric',
+                'title'          => 'required|word_count:15',
+                'excerpt'        => 'required',
+                'thumbnail'      => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
+                'content'        => 'required',
+                'images'       => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
+                'vid_link'       => 'nullable|url',
+                'status'         => 'required|numeric',
+            ]);
         if ($validator->fails()) {
             $err_msgs = $validator->getMessageBag();
             foreach ($err_msgs->getMessages() as $field => $messages) {
@@ -218,7 +239,7 @@ class Posts extends Component
                 session()->flash('success', 'Post has been created!');
             }
 
-            $this->dispatchBrowserEvent('ValidationPOstSuccess', ['success' => 'success']);
+            $this->dispatchBrowserEvent('ValidationPostSuccess', ['success' => 'success']);
         }
 
         session()->flash('error', 'Something went wrong please try again later!');

@@ -11,6 +11,7 @@ class Category extends Component
 
     public string $category;
     public mixed $myModal;
+    public string $search;
     private PostCategory $postCategoryModel;
 
     public function __construct()
@@ -22,6 +23,7 @@ class Category extends Component
     public function mount()
     {
         $this->myModal = null;
+        $this->search = '';
     }
 
     public function create_category(): bool

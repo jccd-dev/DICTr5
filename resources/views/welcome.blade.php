@@ -10,11 +10,11 @@
 
 <x-layouts.announcement-marquee />
 
-<x-home.section.home-slider :data="$data" />
+<x-home.section.home-slider :data="$data['banner']" />
 
 <x-home.section.exam-section />
 
-<x-home.section.highlight-post-section />
+<x-home.section.highlight-post-section :data="$data['posts']" />
 
 <x-home.section.calendar-section />
 
