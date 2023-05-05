@@ -10,16 +10,25 @@ class Category extends Component
 {
 
     public string $category;
+    public mixed $myModal;
     private PostCategory $postCategoryModel;
 
-    public function __construct() {
+    public function __construct()
+    {
+        parent::__construct();
         $this->postCategoryModel = new PostCategory();
     }
 
-    public function create_category() :bool {
+    public function mount()
+    {
+        $this->myModal = null;
+    }
+
+    public function create_category(): bool
+    {
         $validator = Validator::make([
             'category' => ucfirst($this->category)
-        ],[
+        ], [
             'category' => 'required|unique:post_categories,category'
         ], [
             'category.unique' => 'Category is already in used'
@@ -27,7 +36,12 @@ class Category extends Component
 
         if ($validator->fails()) {
             $err_msg = $validator->getMessageBag();
-            $this->dispatchBrowserEvent('validation-errors', $err_msg->getMessages());
+            foreach ($err_msg->getMessages() as $field => $messages) {
+                foreach ($messages as $message) {
+                    $this->addError($field, $message);
+                }
+            }
+            $this->dispatchBrowserEvent('ValidationCategoryError', $err_msg->getMessages());
             return false;
         }
 
@@ -43,14 +57,18 @@ class Category extends Component
             session()->flash('success', 'Category Created!');
             return true;
         }
-
-
-
     }
 
-    public function delete_category (string|int $category_id){
+    public function delete_category(string|int $category_id)
+    {
         $category = $this->postCategoryModel::findOrFail($category_id);
         // Delete the post and its related images
+
+        if ($category->delete() > 0) {
+            $this->dispatchBrowserEvent('DeleteCategorySuccess', true);
+        } else {
+            $this->dispatchBrowserEvent('DeleteCategoryFail', true);
+        }
         return $category->delete() > 0;
     }
 
@@ -58,6 +76,6 @@ class Category extends Component
     public function render()
     {
         $cat_data = new PostCategory();
-        return view('livewire.cms.category', ['categories' => $cat_data->all()]);
+        return view('livewire.cms.category', ['data' => $cat_data->get()])->layout("layouts.layout");
     }
 }
