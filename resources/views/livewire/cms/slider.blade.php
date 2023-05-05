@@ -18,7 +18,7 @@
     </div>
     <div class="relative shadow-md rounded-2xl bg-white">
         <div class="flex items-center justify-between py-4 dark:bg-gray-800 px-10 pt-10">
-            <div class="font-quicksand flex gap-3 items-center">
+            <div class="font-quicksand flex gap-3 items-center" wire:ignore>
                 <div class="relative bg-custom-blue bg-opacity-10 border-0 font-semibold rounded-xl flex">
                     <div class="absolute top-0 left-0 h-full px-3 flex items-center bg-custom-blue bg-opacity-10 rounded-tl-xl rounded-bl-xl">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-custom-blue">
@@ -312,5 +312,11 @@
             </div>
         </div>
     </div>
+    <script>
+        const datePickerIcons = document.querySelectorAll("[name='from'], [name='to']")
+        datePickerIcons.forEach((el) => {
+            el.nextElementSibling.firstElementChild.lastElementChild.remove()
+        })
+    </script>
     @vite('resources/js/admin/slider.js')
 </div>

@@ -30,7 +30,7 @@ class Posts extends Component
     public $thumbnail;
     public string $thumbnail_img_name = '';
     public string $content = '';
-    public $images = [];
+    public $images;
     public array $image_names = [];
     public string $vid_link = '';
     public int $status = 0;
@@ -58,7 +58,7 @@ class Posts extends Component
         'excerpt'        => 'required',
         'thumbnail'      => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
         'content'        => 'required',
-        'images.*'       => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
+        'images'       => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
         'vid_link'       => 'nullable|url',
         'status'         => 'required|numeric',
     ];
@@ -68,7 +68,7 @@ class Posts extends Component
         'excerpt'        => 'required',
         'thumbnail'      => 'nullable|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
         'content'        => 'required',
-        'images.*'       => 'nullable|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
+        'images'       => 'nullable|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
         'vid_link'       => 'nullable|url',
         'status'         => 'required|numeric',
     ];
@@ -170,7 +170,6 @@ class Posts extends Component
             'vid_link'      => $this->vid_link,
             'status'        => $this->status,
         ], $this->rules);
-
         if ($validator->fails()) {
             $err_msgs = $validator->getMessageBag();
             foreach ($err_msgs->getMessages() as $field => $messages) {
@@ -219,7 +218,7 @@ class Posts extends Component
                 session()->flash('success', 'Post has been created!');
             }
 
-            $this->dispatchBrowserEvent('ValidationSuccess', ['success' => 'success']);
+            $this->dispatchBrowserEvent('ValidationPOstSuccess', ['success' => 'success']);
         }
 
         session()->flash('error', 'Something went wrong please try again later!');
@@ -293,9 +292,7 @@ class Posts extends Component
             $posts = $posts->where(function ($query) use ($search_term) {
                 $query->where('title', 'like', '%' . $search_term . '%')
                     ->orWhere('content', 'like', '%' . $search_term . '%')
-                    ->orWhere('author', 'like', '%' . $search_term . '%')
-                    ->orWhere('status', 'like', '%' . $search_term . '%')
-                    ->orWhere('category_id', 'like', '%' . $search_term . '%');
+                    ->orWhere('author', 'like', '%' . $search_term . '%');
             });
 
             //return $posts->with('images')->get();
@@ -359,10 +356,10 @@ class Posts extends Component
                     $this->addError('update.' . $field, $message);
                 }
             }
-            $this->dispatchBrowserEvent('validation-errors-update', $err_msgs->getMessages());
+            $this->dispatchBrowserEvent('ValidationErrors', $err_msgs->getMessages());
             return false;
         } else {
-            $this->dispatchBrowserEvent('ValidationSuccess', true);
+            $this->dispatchBrowserEvent('UpdatedValidationPostSuccess', true);
         }
 
         $this->populateImages($this->temp_images);
@@ -471,8 +468,10 @@ class Posts extends Component
                     Storage::delete('public/images/' . $image);
                 }
             }
+            $this->dispatchBrowserEvent("DeletePostSuccess", true);
             return true;
         }
+        $this->dispatchBrowserEvent("DeletePostError", true);
         return false;
     }
 
@@ -499,6 +498,9 @@ class Posts extends Component
 
     public function updatedImages($variable)
     {
+        $this->validate([
+            'images.*' => "mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506"
+        ]);
         $this->temp_images[] = $variable;
         $this->images = [];
     }
