@@ -1,6 +1,7 @@
 <?php
 namespace App\Helpers;
 
+use Exception;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Models\Examinee\UsersData;
@@ -76,7 +77,7 @@ class FileHandler
             $file->submittedFiles()->where('file_name', $file_name)->delete();
             Storage::delete('/public/fileSubmits/'.$file_name);
             return true;
-         }
+        }
 
         return false;
     }
@@ -84,39 +85,52 @@ class FileHandler
     /**
      * @description update a submitted file in server folder and database.
      * @param $new_file
-     * @param string|int $userId
+     * @param $user
+     * @param $req_type
      * @return bool
      */
-    public function update_the_file($new_file, string|int $userId):bool{
-        $file = $this->userModel::find($userId);
+    public function update_the_file($new_file, $user, $req_type):bool{
+        $old_file_name = '';
+        $lname = $user->lname;
+        $user_id = $user->id;
+        $file = $user->submittedFiles()
+            ->where('user_id', $user_id)
+            ->first();
 
-        //get the old file (filename) and username
-        $user_name = "{$file->lname}_{$file->fname}";
-        // $old_file_name = $file->submitted_file()->where('id', $file_name)->value('file_name');
-        $old_file_name = $file->file_name;
+        if ($file){
+            $old_file_name = $file->file_name;
+        }
 
         $file_extension = $new_file->getClientOriginalExtension();
 
         in_array(strtolower($file_extension), $this->accepted_file_types['docs']) ? $file_type = 'Document' : $file_type = 'Image';
 
-        $new_file_name = $this->file_namer($user_name, $file_extension);
+        $new_file_name = $this->file_namer($lname, $req_type ,$file_extension);
 
-        //since it's just for update
-        $updated = $file->submittedFiles()->where('file_name', $old_file_name)
-            ->update([
-                'file_name' => $new_file_name,
-                'file_type' => $file_type,
-            ]);
+        try {
+            $updated = $user->submittedFiles()->updateOrCreate(
+                ['requirement_type' => $req_type],
+                [
+                    'user_id'          => $user_id,
+                    'file_name'        => $new_file_name,
+                    'file_type'        => $file_type,
+                    'requirement_type' => $req_type
+                ]
+            );
 
-        if($updated > 0) {
-            //delete the old file into folder
-            Storage::delete('/public/fileSubmits/'.$old_file_name);
+            // if the file is updated then delete the old file into folder
+            if(!$updated->wasRecentlyCreated) {
+                Storage::delete('/public/fileSubmits/' . $old_file_name);
+            }
+
             //store insert the new uploaded file into folder
-            $new_file->storeAs('/public/fileSubmits', $new_file_name);
+            $new_file->storeAs('/public/fileSubmits', $updated->file_name);
+
             return true;
+        }catch (Exception){
+            return false;
         }
 
-        return false;
     }
 
 

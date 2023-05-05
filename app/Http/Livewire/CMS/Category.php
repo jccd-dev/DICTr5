@@ -13,19 +13,22 @@ class Category extends Component
     public mixed $myModal;
     private PostCategory $postCategoryModel;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->postCategoryModel = new PostCategory();
     }
 
-    public function mount() {
+    public function mount()
+    {
         $this->myModal = null;
     }
 
-    public function create_category() :bool {
+    public function create_category(): bool
+    {
         $validator = Validator::make([
             'category' => ucfirst($this->category)
-        ],[
+        ], [
             'category' => 'required|unique:post_categories,category'
         ], [
             'category.unique' => 'Category is already in used'
@@ -42,24 +45,22 @@ class Category extends Component
             return false;
         }
 
-        $category = $this->postCategoryModel::firstOrCreate(
-            [
-                'category' => ucfirst($this->category)
-            ]);
+        $category = $this->postCategoryModel::firstOrNew([
+            'category' => ucfirst($this->category)
+        ]);
 
-//        if ($category) {
-//            //the category is already used.
-//            session()->flash('error', 'Category Not inserted!');
-//            return false;
-//        }
-
-        $this->dispatchBrowserEvent('ValidationCategorySuccess', true);
-        session()->flash('success', 'Category Created!');
-        return true;
-
+        if ($category->exists) {
+            session()->flash('error', 'Category exist!');
+            return false;
+        } else {
+            $category->save();
+            session()->flash('success', 'Category Created!');
+            return true;
+        }
     }
 
-    public function delete_category (string|int $category_id){
+    public function delete_category(string|int $category_id)
+    {
         $category = $this->postCategoryModel::findOrFail($category_id);
         // Delete the post and its related images
 
@@ -67,7 +68,6 @@ class Category extends Component
             $this->dispatchBrowserEvent('DeleteCategorySuccess', true);
         } else {
             $this->dispatchBrowserEvent('DeleteCategoryFail', true);
-
         }
         return $category->delete() > 0;
     }
@@ -75,6 +75,7 @@ class Category extends Component
 
     public function render()
     {
-        return view('livewire.cms.category', ['data' => $this->postCategoryModel->get()])->layout('layouts.layout');
+        $cat_data = new PostCategory();
+        return view('livewire.cms.category', ['data' => $cat_data->get()])->layout("layouts.layout");
     }
 }

@@ -85,10 +85,13 @@
                             @endif
                         @endforeach
                     @else
-                        <tr>
-                            <td>
+                        <tr class="bg-[#FDC500] bg-opacity-10">
+                            <td colspan="4" class="text-center">
                                 No data
                             </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
                         </tr>
                     @endif
 
