@@ -292,7 +292,10 @@ class Posts extends Component
         if (!$search_term == '') {
             $posts = $posts->where(function ($query) use ($search_term) {
                 $query->where('title', 'like', '%' . $search_term . '%')
-                    ->orWhere('content', 'like', '%' . $search_term . '%');
+                    ->orWhere('content', 'like', '%' . $search_term . '%')
+                    ->orWhere('author', 'like', '%' . $search_term . '%')
+                    ->orWhere('status', 'like', '%' . $search_term . '%')
+                    ->orWhere('category_id', 'like', '%' . $search_term . '%');
             });
 
             //return $posts->with('images')->get();

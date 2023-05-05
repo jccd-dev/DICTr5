@@ -1,4 +1,4 @@
-const datePickerIcons = document.querySelectorAll("[name='displayFormat']")
+const datePickerIcons = document.querySelectorAll("[name='from'], [name='to']")
 datePickerIcons.forEach((el) => {
     el.nextElementSibling.firstElementChild.lastElementChild.remove()
 })

@@ -15,7 +15,7 @@
                         </div>
                     </div>
                     <div class="absolute top-0 left-0 w-full h-full -z-[1]">
-                        <img src="{{ asset("cms-images/$slider->image") }}" class="w-full h-full object-cover" alt="">
+                        <img src="{{ asset("storage/images/$slider->image") }}" class="w-full h-full object-cover" alt="">
                     </div>
                 </div>
             </div>
