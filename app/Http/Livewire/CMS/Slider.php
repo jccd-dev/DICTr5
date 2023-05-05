@@ -34,8 +34,8 @@ class Slider extends Component
     public int $updateID = 0;
 
     public string $search;
-    public string $to = '';
-    public string $from = '';
+    public mixed $to = null;
+    public mixed $from = null;
 
     protected $except = ['myModal'];
 
@@ -68,8 +68,8 @@ class Slider extends Component
         $this->image = null;
         $this->button_links = "";
         $this->search = "";
-        $this->to = '';
-        $this->from = '';
+        $this->to = null;
+        $this->from = null;
     }
 
     public function __construct($id = null)

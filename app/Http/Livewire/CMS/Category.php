@@ -10,10 +10,16 @@ class Category extends Component
 {
 
     public string $category;
+    public mixed $myModal;
     private PostCategory $postCategoryModel;
 
     public function __construct() {
+        parent::__construct();
         $this->postCategoryModel = new PostCategory();
+    }
+
+    public function mount() {
+        $this->myModal = null;
     }
 
     public function create_category() :bool {
@@ -27,7 +33,12 @@ class Category extends Component
 
         if ($validator->fails()) {
             $err_msg = $validator->getMessageBag();
-            $this->dispatchBrowserEvent('validation-errors', $err_msg->getMessages());
+            foreach ($err_msg->getMessages() as $field => $messages) {
+                foreach ($messages as $message) {
+                    $this->addError($field, $message);
+                }
+            }
+            $this->dispatchBrowserEvent('ValidationCategoryError', $err_msg->getMessages());
             return false;
         }
 
@@ -36,12 +47,13 @@ class Category extends Component
                 'category' => ucfirst($this->category)
             ]);
 
-        if ($category) {
-            //the category is already used.
-            session()->flash('error', 'Category Not inserted!');
-            return false;
-        }
+//        if ($category) {
+//            //the category is already used.
+//            session()->flash('error', 'Category Not inserted!');
+//            return false;
+//        }
 
+        $this->dispatchBrowserEvent('ValidationCategorySuccess', true);
         session()->flash('success', 'Category Created!');
         return true;
 
@@ -50,12 +62,19 @@ class Category extends Component
     public function delete_category (string|int $category_id){
         $category = $this->postCategoryModel::findOrFail($category_id);
         // Delete the post and its related images
+
+        if ($category->delete() > 0) {
+            $this->dispatchBrowserEvent('DeleteCategorySuccess', true);
+        } else {
+            $this->dispatchBrowserEvent('DeleteCategoryFail', true);
+
+        }
         return $category->delete() > 0;
     }
 
 
     public function render()
     {
-        return view('livewire.cms.category');
+        return view('livewire.cms.category', ['data' => $this->postCategoryModel->get()])->layout('layouts.layout');
     }
 }
