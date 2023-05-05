@@ -19,7 +19,7 @@ class Layouts extends Controller
 
     public function render() {
         $banner = $this->banner_model->get();
-        $posts = $this->postModel->get();
+        $posts = $this->postModel::priority()->get();
         $posts = $posts->map(function ($item) {
             $startedAt = Carbon::parse($item->timestamp);
             $endedAt = Carbon::parse(now());
@@ -27,6 +27,7 @@ class Layouts extends Controller
             $item->elapsed = $elapsed;
             return $item;
         });
+
         return view('welcome', ['data' => ['banner' => $banner, 'posts' => $posts]]);
     }
 }
