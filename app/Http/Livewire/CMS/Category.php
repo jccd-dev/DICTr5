@@ -44,8 +44,6 @@ class Category extends Component
             return true;
         }
 
-
-
     }
 
     public function delete_category (string|int $category_id){

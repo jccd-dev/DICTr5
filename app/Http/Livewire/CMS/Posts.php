@@ -30,7 +30,7 @@ class Posts extends Component
     public $thumbnail;
     public string $thumbnail_img_name = '';
     public string $content = '';
-    public $images = [];
+    public array $images = [];
     public array $image_names = [];
     public string $vid_link = '';
     public int $status = 0;
@@ -507,6 +507,7 @@ class Posts extends Component
     {
         return PostCategory::all()->toArray();
     }
+
 
 
 }

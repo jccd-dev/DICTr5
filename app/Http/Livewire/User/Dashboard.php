@@ -80,10 +80,10 @@ class Dashboard extends Component
         'civilStatus'   => "required",
         'pl'            => "required",
         'signature'     => "required",
-        'passport'      => "required|mimes:jpg,jpeg,png|max:5120|dimensions:min_width=826,min_height=1062|max:5120",
-        'psa'           => "required|mimes:jpg,jpeg,png,doc,pdf,docx|max:5120|max:5120",
-        'validId'       => "required|mimes:jpg,jpeg,png,doc,pdf,docx|max:5120|max:5120",
-        'diploma'       => "required|mimes:jpg,jpeg,png,doc,pdf,docx|max:5120|max:5120",
+        'passport'      => "mimes:jpg,jpeg,png|max:5120|dimensions:min_width=826,min_height=1062|max:5120",
+        'psa'           => "mimes:jpg,jpeg,png,doc,pdf,docx|max:5120|max:5120",
+        'validId'       => "mimes:jpg,jpeg,png,doc,pdf,docx|max:5120|max:5120",
+        'diploma'       => "mimes:jpg,jpeg,png,doc,pdf,docx|max:5120|max:5120",
     ];
 
     private array $student_rule = [
@@ -425,16 +425,15 @@ class Dashboard extends Component
         // TODO if user add new training then append to $this->>taining but no ID
         foreach ($this->trainings as $training){
             $training_id = $training['id'] ?? null;
-
+            $training['user_id'] = $user->id; // Set the user_id
             // if $this->>trainings has no id then i will create bew record, else update
             $user->trainingSeminars()->updateOrCreate(['id' => $training_id], $training);
         }
 
+        // if user remove the training data
+        if (!is_null($this->toDeleteTrainings)){
 
-    }
-
-    private function update_trainings($user){
-
+        }
     }
 
     /**
@@ -489,8 +488,5 @@ class Dashboard extends Component
 
         return $file_helper->update_the_file($this->diploma, $user, 'diploma_TOR');
     }
-
-
-
 
 }

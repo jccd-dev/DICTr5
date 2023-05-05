@@ -46,6 +46,7 @@ Route::prefix('admin')->group(function () {
 
     Route::middleware(['jwt.logAuth'])->group(function (){
         Route::get('/dashboard', Dashboard::class)->name("admin.dashboard");
+        Route::get('/test', [AdminLoginController::class, 'test'])->name("admin.test");
 
         Route::prefix('cms')->group(function () {
             Route::get('/slider', Slider::class)->name("admin.cms.slider");

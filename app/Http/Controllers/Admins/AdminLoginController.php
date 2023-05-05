@@ -9,6 +9,7 @@ use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Cookie;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Auth;
 
 class AdminLoginController extends Controller
 {
@@ -28,5 +29,9 @@ class AdminLoginController extends Controller
         }
 
         return redirect('/admin/login')->withCookie($cookie);
+    }
+
+    public function test(){
+        return json_encode(['user' => Auth::user()]);
     }
 }
