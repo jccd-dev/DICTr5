@@ -52,9 +52,9 @@ class Announcements extends Component
         date_default_timezone_set('Asia/Manila');
         $this->category = 0;
 
-        $date_from = AnnouncementModel::select(DB::raw('MIN(timestamp) as min_timestamp'))->first();
+        $date_from = AnnouncementModel::select(DB::raw('MIN(start_duration) as min_timestamp'))->first();
         $this->from = date('Y-m-d', strtotime($date_from->min_timestamp));
-        $date_to = AnnouncementModel::select(DB::raw('MAX(timestamp) as max_timestamp'))->first();
+        $date_to = AnnouncementModel::select(DB::raw('MAX(end_duration) as max_timestamp'))->first();
         $this->to = date('Y-m-d', strtotime($date_to->max_timestamp));
 
         $this->insertAnnArray['start_duration'] = date('Y-m-d H:i:s');
@@ -85,7 +85,7 @@ class Announcements extends Component
     public function create_announcement(): void{
         Validator::make($this->insertAnnArray, [
             'title' => 'required',
-            'excerpt' => 'required',
+            'excerpt' => 'required|max:150',
             'content' => 'required',
             'cat_id' => 'required',
             'start_duration' => 'required',
@@ -136,7 +136,7 @@ class Announcements extends Component
     public function update_announcement(): void{
         Validator::make($this->updateAnnArray, [
             'title' => 'required',
-            'excerpt' => 'required',
+            'excerpt' => 'required|max:150',
             'content' => 'required',
             'cat_id' => 'required',
         ],[

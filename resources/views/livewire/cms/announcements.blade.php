@@ -13,7 +13,7 @@
                         <x-datetime-picker wire:model="to" without-time="true" />
                     </div>
                     <div class="p-3">
-                        <select wire:model="category" class="p-1 rounded drop-shadow-lg">
+                        <select wire:model="category" class="px-2 py-1.5 rounded drop-shadow-lg border-slate-300">
                             <option value="0">All</option>
                             @forelse ($categories as $cat)
                                 <option value="{{$cat->id}}">{{$cat->category}}</option>
@@ -37,7 +37,7 @@
                             <div class="absolute top-1/2 left-3 -translate-y-1/2">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#474747" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                             </div>
-                            <input type="search" wire:model="search" id="search" class="w-56 drop-shadow-lg bg-[#00509D] bg-opacity-5 px-3 pl-10 py-2 rounded-md text-[#474747] text-sm" placeholder="Search">
+                            <input type="search" wire:model="search" id="search" class="w-56 drop-shadow-lg bg-[#00509D] bg-opacity-5 px-3 pl-10 py-2 rounded-md text-[#474747] text-sm border-0" placeholder="Search">
                         </div>
                     </div>
                 </div>

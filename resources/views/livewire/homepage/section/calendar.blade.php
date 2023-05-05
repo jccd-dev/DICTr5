@@ -25,7 +25,7 @@
                     $status = 2;
                 }
             @endphp
-            <div class="bg-white rounded-xl px-5 py-3 flex items-center gap-5 cursor-pointer" wire:click="showEvent({{$event['id']}}, {{$event['is_exam_sched']}})">
+            <div class="bg-white rounded-xl px-5 py-3 flex items-center gap-5">
                 @if ($status == 0)
                     <div class="legend-icon rounded-full bg-[#C1121F] w-3 h-3"></div>
                 @elseif($status == 1)
