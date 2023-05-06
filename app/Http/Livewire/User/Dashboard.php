@@ -489,4 +489,8 @@ class Dashboard extends Component
         return $file_helper->update_the_file($this->diploma, $user, 'diploma_TOR');
     }
 
+    public function update_COE(){
+        
+    }
+
 }

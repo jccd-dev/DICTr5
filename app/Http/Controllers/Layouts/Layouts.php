@@ -19,7 +19,7 @@ class Layouts extends Controller
 
     public function render() {
         $banner = $this->banner_model->get();
-        $posts = $this->postModel->get();
+        $posts = $this->postModel::priority()->get();
         $posts = $posts->map(function ($item) {
             $startedAt = Carbon::parse($item->timestamp);
             $endedAt = Carbon::parse(now());

@@ -75,4 +75,16 @@ class UsersData extends Model
         return $this->hasMany(UserLogs::class, 'user_id', 'id');
     }
 
+    /**
+     * @return string
+     * @description Accessor method to format Full name directly on eloquent statement
+     */
+    public function getFormattedNameAttribute(): string{
+        $first_name = $this->fname;
+        $middle_name = $this->mname;
+        $last_name = $this->lname;
+
+        return "{$last_name}, {$first_name} {$middle_name}";
+    }
+
 }

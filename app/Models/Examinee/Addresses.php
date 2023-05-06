@@ -21,4 +21,13 @@ class Addresses extends Model
     {
         return $this->belongsTo(UsersData::class, 'user_id');
     }
+
+    public function getFormattedAddressAttribute(): string{
+        $region = $this->region;
+        $province = $this->province;
+        $municipality = $this->municipality;
+        $barangay = $this->barangay;
+
+        return "{$barangay} {$municipality}, {$province}, {$region}";
+    }
 }
