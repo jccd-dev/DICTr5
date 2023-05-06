@@ -111,9 +111,13 @@ class Announcement extends Model
      *
      * @return instance of the Illuminate\Database\Eloquent\Collection class
      */
-    public function filter_search(string $from, string $to, int $category = null, string $search = null){
-        if(!$from){
-            $from = date('Y-m-d');
+    public function filter_search(string|null $from, string|null $to, int $category = null, string $search = null){
+        if($from == null || $to == null){
+            return DB::table($this->table)->join('dict_admins', 'announcements.admin_id', '=', 'dict_admins.id')
+                ->join('post_categories', 'announcements.cat_id', '=', 'post_categories.id')
+                ->select('announcements.*', 'dict_admins.name as author_name', 'post_categories.category as category')
+                ->orderBy('announcements.start_duration', 'desc')
+                ->get();
         }
         if($search == null || $search == ''){
             if($category == null || $category == 0)
@@ -121,7 +125,7 @@ class Announcement extends Model
                                             ->join('post_categories', 'announcements.cat_id', '=', 'post_categories.id')
                                             ->select('announcements.*', 'dict_admins.name as author_name', 'post_categories.category as category')
                                             ->where('announcements.start_duration', '<=', $to)
-                                            ->where('announcements.start_duration', '>=', $from)
+                                            ->where('announcements.end_duration', '>=', $from)
                                             ->orderBy('announcements.start_duration', 'desc')
                                             ->get();
             else
@@ -129,7 +133,7 @@ class Announcement extends Model
                                             ->join('post_categories', 'announcements.cat_id', '=', 'post_categories.id')
                                             ->select('announcements.*', 'dict_admins.name as author_name', 'post_categories.category as category')
                                             ->where('announcements.start_duration', '<=', $to)
-                                            ->where('announcements.start_duration', '>=', $from)
+                                            ->where('announcements.end_duration', '>=', $from)
                                             ->where('announcements.cat_id', $category)
                                             ->orderBy('announcements.start_duration', 'desc')
                                             ->get();
@@ -152,6 +156,7 @@ class Announcement extends Model
                                     ->where('announcements.title', 'like', '%'.$data.'%')
                                     ->orWhere('announcements.excerpt', 'like', '%'.$data.'%')
                                     ->orWhere('announcements.content', 'like', '%'.$data.'%')
+                                    ->orWhere('post_categories.category', 'like', '%'.$data.'%')
                                     ->orderBy('announcements.start_duration', 'desc')
                                     ->get();
     }

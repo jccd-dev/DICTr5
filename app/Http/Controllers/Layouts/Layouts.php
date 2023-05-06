@@ -27,6 +27,7 @@ class Layouts extends Controller
             $item->elapsed = $elapsed;
             return $item;
         });
+
         return view('welcome', ['data' => ['banner' => $banner, 'posts' => $posts]]);
     }
 }

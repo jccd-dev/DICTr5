@@ -138,7 +138,7 @@
                                         {{ $val->author }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ $val->category_id }}
+                                        {{ $val->category->category }}
                                     </td>
                                     <td class="px-6 py-4">
                                         <div class="flex items-center">

@@ -37,15 +37,17 @@ class UsersData extends Model
     ];
 
     public $timestamps = false;
-    public function userLogin(): BelongsTo {
+    public function userLogin(): BelongsTo
+    {
         return $this->belongsTo(Users::class, 'user_login_id');
     }
 
-    public function addresses():HasOne {
+    public function addresses(): HasOne
+    {
         return $this->hasOne(Addresses::class, 'user_id', 'id');
     }
 
-    public function regDetails() :HasOne
+    public function regDetails(): HasOne
     {
         return $this->hasOne(RegDetails::class, 'user_id', 'id');
     }
@@ -65,12 +67,12 @@ class UsersData extends Model
         return $this->hasMany(TrainingSeminars::class, 'user_id', 'id');
     }
 
-    public function userHistory() :HasMany
+    public function userHistory(): HasMany
     {
         return $this->hasMany(UserHistory::class, 'user_id', 'id');
     }
 
-    public function userLogs() :HasMany
+    public function userLogs(): HasMany
     {
         return $this->hasMany(UserLogs::class, 'user_id', 'id');
     }
