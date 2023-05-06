@@ -29,6 +29,9 @@ const setOptions = (data, elementForm, getter, selected = "", parentSelected = "
 
         optionElement.textContent = objData[`${getter}_name`]
         optionElement.setAttribute("value", objData[`${getter}_name`])
+        if (index === 1) {
+            optionElement.setAttribute("selected", true)
+        }
 
         elementForm.appendChild(optionElement)
     })
@@ -116,9 +119,7 @@ municipalitiesSelect.addEventListener("input", async (event) => {
 
     codeValues.cityCode = cityObj.city_code
 
-    console.log(cityObj.city_code)
     let barangay = await barangays(cityObj.city_code);
-    console.log(barangay)
     removeElement(barangaySelect.children)
     setOptions(barangay, barangaySelect, 'brgy')
 })

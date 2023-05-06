@@ -67,7 +67,7 @@ class Dashboard extends Component
         'givenName'     => "required|regex:/^[A-Za-z\s]+$/",
         'middleName'    => "required|regex:/^[A-Za-z\s]+$/",
         'surName'       => "required|regex:/^[A-Za-z\s]+$/",
-        'tel'           => "required|regex:/^09\d{9}$/",
+        //        'tel'           => "required|regex:/^09\d{9}$/",
         'region'        => "required",
         'province'      => "required",
         'municipality'  => "required",
@@ -96,16 +96,18 @@ class Dashboard extends Component
         'officeAddress'       => "required",
         'officeCategory'      => "required",
         'designationPosition' => "required",
-        'yearsPresentPosition'=> "required|numeric"
+        'yearsPresentPosition' => "required|numeric"
     ];
 
     protected $except = ['cardModal'];
 
-    public function updated($propertyName) {
+    public function updated($propertyName)
+    {
         $this->validateOnly($propertyName);
     }
 
-    public function mount() {
+    public function mount()
+    {
         $this->givenName = '';
         $this->middleName = '';
         $this->surName = '';
@@ -157,12 +159,14 @@ class Dashboard extends Component
         return view('livewire.user.dashboard')->layout('layouts.user-layouts');
     }
 
-    public function popInput() {
+    public function popInput()
+    {
         if (count($this->trainings) != 1)
             $this->trainings->pop();
     }
 
-    public function addInput() {
+    public function addInput()
+    {
         $this->trainings->push([
             'course' => '',
             'center' => '',
@@ -178,9 +182,9 @@ class Dashboard extends Component
     {
 
         // update rules  base for current status of the user
-        if (strtolower($this->currentStatus) == 'student'){
+        if (strtolower($this->currentStatus) == 'student') {
             $this->rules = array_merge($this->rules, $this->student_rule);
-        }else {
+        } else {
             $this->rules = array_merge($this->rules, $this->prof_rule);
         }
 
@@ -207,7 +211,7 @@ class Dashboard extends Component
             'officeAddress'       => $this->officeAddress,
             'officeCategory'      => $this->officeCategory,
             'designationPosition' => $this->designationPosition,
-            'yearsPresentPosition'=> $this->yearsPresentPosition
+            'yearsPresentPosition' => $this->yearsPresentPosition
 
         ], $this->rules);
 
@@ -218,16 +222,16 @@ class Dashboard extends Component
                     $this->addError($field, $message);
                 }
             }
-            $err_msgs = $validator->getMessageBag();
             $this->dispatchBrowserEvent('ValidationErrors', $err_msgs->getMessages());
             return;
         }
 
         $users_data = [
-            'user_login_id'     => session()->get('user')['id'],
+            //            'user_login_id'     => session()->get('user')['id'],
+            'user_login_id'     => 1,
             'fname'             => $this->givenName,
-            'lname'             => $this->lname,
-            'mname'             => $this->mname,
+            'lname'             => $this->surName,
+            'mname'             => $this->middleName,
             'place_of_birth'    => $this->pob,
             'date_of_birth'     => $this->dob,
             'gender'            => $this->gender,
@@ -239,7 +243,7 @@ class Dashboard extends Component
             'telephone_number'  => $this->telNum,
             'office_address'    => $this->officeAddress,
             'office_category'   => $this->officeCategory,
-            'no_of_years_in_pos'=> $this->yearsPresentPosition,
+            'no_of_years_in_pos' => $this->yearsPresentPosition,
             'programming_langs' => $this->pl,
             'e_sign'            => $this->signature,
             'yearLevel'         => $this->yearLevel,
@@ -268,7 +272,6 @@ class Dashboard extends Component
         ];
 
         $this->insert_users_data($organized_users_data);
-
     }
 
     /**
@@ -284,7 +287,7 @@ class Dashboard extends Component
         $user->fill($organized_data['main_data']);
 
         // insert into main table users data
-        if($user->save()){
+        if ($user->save()) {
             $user_id = $user->id;
             $last_name = $user->lname;
 
@@ -328,11 +331,12 @@ class Dashboard extends Component
             ->get();
     }
 
-    public function update_users_data(){
+    public function update_users_data()
+    {
         // update rules  base for current status of the user
-        if (strtolower($this->currentStatus) == 'student'){
+        if (strtolower($this->currentStatus) == 'student') {
             $this->rules = array_merge($this->rules, $this->student_rule);
-        }else {
+        } else {
             $this->rules = array_merge($this->rules, $this->prof_rule);
         }
 
@@ -359,7 +363,7 @@ class Dashboard extends Component
             'officeAddress'       => $this->officeAddress,
             'officeCategory'      => $this->officeCategory,
             'designationPosition' => $this->designationPosition,
-            'yearsPresentPosition'=> $this->yearsPresentPosition
+            'yearsPresentPosition' => $this->yearsPresentPosition
 
         ], $this->rules);
 
@@ -391,7 +395,7 @@ class Dashboard extends Component
             'telephone_number'  => $this->telNum,
             'office_address'    => $this->officeAddress,
             'office_category'   => $this->officeCategory,
-            'no_of_years_in_pos'=> $this->yearsPresentPosition,
+            'no_of_years_in_pos' => $this->yearsPresentPosition,
             'programming_langs' => $this->pl,
             'e_sign'            => $this->signature,
             'yearLevel'         => $this->yearLevel,
@@ -423,7 +427,7 @@ class Dashboard extends Component
 
         // TODO: provide the new $this->>training for update, if user update then include the ID
         // TODO if user add new training then append to $this->>taining but no ID
-        foreach ($this->trainings as $training){
+        foreach ($this->trainings as $training) {
             $training_id = $training['id'] ?? null;
             $training['user_id'] = $user->id; // Set the user_id
             // if $this->>trainings has no id then i will create bew record, else update
@@ -431,8 +435,7 @@ class Dashboard extends Component
         }
 
         // if user remove the training data
-        if (!is_null($this->toDeleteTrainings)){
-
+        if (!is_null($this->toDeleteTrainings)) {
         }
     }
 
@@ -488,5 +491,4 @@ class Dashboard extends Component
 
         return $file_helper->update_the_file($this->diploma, $user, 'diploma_TOR');
     }
-
 }
