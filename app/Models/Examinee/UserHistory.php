@@ -11,6 +11,7 @@ class UserHistory extends Model {
     use HasFactory;
 
     protected $table = 'user_history';
+    public $timestamps = false;
     protected $fillable = [
         'user_id',
         'registration_date',

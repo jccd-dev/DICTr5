@@ -11,6 +11,7 @@ class SubmittedFiles extends Model{
     use HasFactory;
 
     protected $table = 'submitted_files';
+    public $timestamps = false;
     protected $fillable = [
         'user_id',
         'file_name',

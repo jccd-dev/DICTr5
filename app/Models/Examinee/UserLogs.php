@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class UserLogs extends Model
 {
     protected $table = 'user_logs';
+    public $timestamps = false;
     protected $fillable = [
         'user_id',
         'activity',

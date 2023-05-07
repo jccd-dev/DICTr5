@@ -12,6 +12,7 @@ class RegDetails extends Model
     use HasFactory;
 
     protected $table = 'reg_details';
+    public $timestamps = false;
     protected $fillable = [
       'user_id',
       'exam_schedule_id',

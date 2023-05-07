@@ -11,6 +11,7 @@ class TrainingSeminars extends Model
     use HasFactory;
 
     protected $table = 'training_seminars';
+    public $timestamps = false;
     protected $fillable = [
         'user_id',
         'course',

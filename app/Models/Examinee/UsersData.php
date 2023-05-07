@@ -13,6 +13,8 @@ class UsersData extends Model
     use HasFactory;
 
     protected $table = 'users_data';
+
+    public $timestamps = false;
     protected $fillable = [
         'user_login_id',
         'fname',
@@ -20,6 +22,7 @@ class UsersData extends Model
         'mname',
         'password',
         'place_of_birth',
+        'date_of_birth',
         'gender',
         'citizenship',
         'civil_status',
@@ -32,11 +35,11 @@ class UsersData extends Model
         'no_of_years_in_pos',
         'programming_langs',
         'e_sign',
+        'year_level',
         'current_status',
-        'date_accomplished',
+        'date_accomplish',
     ];
 
-    public $timestamps = false;
     public function userLogin(): BelongsTo
     {
         return $this->belongsTo(Users::class, 'user_login_id');

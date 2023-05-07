@@ -11,11 +11,11 @@ class TertiaryEducation extends Model
     use HasFactory;
 
     protected $table = 'tertiary_edu';
+    public $timestamps = false;
     protected $fillable = [
         'user_id',
         'school_attended',
         'degree',
-        'year_level',
         'inclusive_years'
     ];
 

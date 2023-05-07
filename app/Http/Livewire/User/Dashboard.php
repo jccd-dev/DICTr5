@@ -20,7 +20,7 @@ class Dashboard extends Component
     public string $givenName;
     public string $middleName;
     public string $surName;
-    public int $tel;
+    public string $tel;
     public string $region;
     public string $province;
     public string $municipality;
@@ -67,7 +67,7 @@ class Dashboard extends Component
         'givenName'     => "required|regex:/^[A-Za-z\s]+$/",
         'middleName'    => "required|regex:/^[A-Za-z\s]+$/",
         'surName'       => "required|regex:/^[A-Za-z\s]+$/",
-        //        'tel'           => "required|regex:/^09\d{9}$/",
+        'tel'           => "required|regex:/^09\d{9}$/",
         'region'        => "required",
         'province'      => "required",
         'municipality'  => "required",
@@ -217,6 +217,7 @@ class Dashboard extends Component
 
         if ($validator->fails()) {
             $err_msgs = $validator->getMessageBag();
+            dd($err_msgs);
             foreach ($err_msgs->getMessages() as $field => $messages) {
                 foreach ($messages as $message) {
                     $this->addError($field, $message);
@@ -225,15 +226,14 @@ class Dashboard extends Component
             $this->dispatchBrowserEvent('ValidationErrors', $err_msgs->getMessages());
             return;
         }
-
         $users_data = [
-            //            'user_login_id'     => session()->get('user')['id'],
-            'user_login_id'     => 1,
+            // 'user_login_id'     => session()->get('user')['id'],
+            'user_login_id'     => 1, // note: for deve, it need to have atleast one data in user login table and use the id here
             'fname'             => $this->givenName,
             'lname'             => $this->surName,
             'mname'             => $this->middleName,
             'place_of_birth'    => $this->pob,
-            'date_of_birth'     => $this->dob,
+            'date_of_birth'     => date('Y-m-d', strtotime($this->dob)),
             'gender'            => $this->gender,
             'citizenship'       => $this->citizenship,
             'civil_status'      => $this->civilStatus,
@@ -246,7 +246,7 @@ class Dashboard extends Component
             'no_of_years_in_pos' => $this->yearsPresentPosition,
             'programming_langs' => $this->pl,
             'e_sign'            => $this->signature,
-            'yearLevel'         => $this->yearLevel,
+            'year_level'         => $this->yearLevel,
             'current_status'    => $this->currentStatus,
             'date_accomplish'   => date('Y-m-d H:i:s', strtotime('now'))
         ];
@@ -261,7 +261,6 @@ class Dashboard extends Component
         $tertiary_edu = [
             'school_attended'   => $this->university,
             'degree'            => $this->degree,
-            'year_level'        => $this->yearLevel,
             'inclusive_years'   => $this->incYears
         ];
 
@@ -271,6 +270,7 @@ class Dashboard extends Component
             'ter_edu'   => $tertiary_edu
         ];
 
+        // dd($organized_users_data, $this->trainings);
         $this->insert_users_data($organized_users_data);
     }
 

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 04, 2023 at 07:40 AM
+-- Generation Time: May 07, 2023 at 06:10 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -77,7 +77,7 @@ CREATE TABLE `announcements` (
 INSERT INTO `announcements` (`id`, `cat_id`, `admin_id`, `title`, `excerpt`, `content`, `author`, `status`, `start_duration`, `end_duration`, `timestamp`) VALUES
 (44, 2, 1, 'sdssd', 'dasdasd', '<p>adsadasdd</p>\n', 'Anonymous', 1, '2023-05-02 13:50:50', '2023-05-03 00:00:47', '2023-05-02 05:51:52'),
 (46, 2, 3, 'ssdf', 'sfsfd', '<p>sfsfsdf</p>\n', 'Creator Co', 0, '2023-05-02 15:07:01', '2023-06-02 07:07:14', '2023-05-02 07:07:22'),
-(48, 1, 3, 'gdfgd', 'dgdfgdfg', '<p><strong>Lorem Ipsum</strong>&nbsp;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry&#39;s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>\n', 'Creator Co', 1, '2023-05-03 08:53:40', '2023-05-18 01:30:15', '2023-05-03 00:54:29');
+(49, 2, 2, 'zxc', 'asdasdsad', '<p>asdadsd</p>\n', 'John Doe', 1, '2023-05-04 16:36:21', '2023-05-23 01:30:42', '2023-05-04 08:36:47');
 
 -- --------------------------------------------------------
 
@@ -91,15 +91,16 @@ CREATE TABLE `banner` (
   `description` mediumtext NOT NULL,
   `image` varchar(250) NOT NULL,
   `button_links` varchar(250) NOT NULL,
-  `timestammp` timestamp NULL DEFAULT current_timestamp()
+  `timestamp` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `banner`
 --
 
-INSERT INTO `banner` (`id`, `title`, `description`, `image`, `button_links`, `timestammp`) VALUES
-(6, 'adadas', 'ddadad', '1683083281_kTpLaaT1.jpg', 'http://localhost:8000/form', '2023-05-03 03:03:13');
+INSERT INTO `banner` (`id`, `title`, `description`, `image`, `button_links`, `timestamp`) VALUES
+(6, 'adadas', 'ddadad', '1683083281_kTpLaaT1.jpg', 'http://localhost:8000/form', '2023-05-03 03:03:13'),
+(7, 'adadas', 'dsdaddadadas', '1683188212_A36BMLpJ.jpg', 'http://localhost:8000/form', '2023-05-04 08:16:52');
 
 -- --------------------------------------------------------
 
@@ -221,6 +222,13 @@ CREATE TABLE `posts` (
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Dumping data for table `posts`
+--
+
+INSERT INTO `posts` (`id`, `category_id`, `admin_id`, `title`, `excerpt`, `thumbnail`, `content`, `vid_link`, `author`, `status`, `timestamp`) VALUES
+(3, 1, 2, 'sds', 'adasd', '1683187088_OhoLvSli.jpg', 'sdasd', 'http://localhost:8000/admin/cms/posts', 'John Doe', 1, '2023-05-04 07:58:08');
+
 -- --------------------------------------------------------
 
 --
@@ -254,6 +262,13 @@ CREATE TABLE `post_images` (
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Dumping data for table `post_images`
+--
+
+INSERT INTO `post_images` (`id`, `post_id`, `image_filename`, `timestamp`) VALUES
+(3, 3, '1683187088_jaNLpZEo.png', '2023-05-04 07:58:08');
+
 -- --------------------------------------------------------
 
 --
@@ -263,11 +278,11 @@ CREATE TABLE `post_images` (
 CREATE TABLE `reg_details` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `exam_schedule_id` int(11) NOT NULL,
-  `reg_date` datetime NOT NULL,
-  `approved_date` datetime NOT NULL,
-  `venue` text NOT NULL,
-  `assigned_exam_set` varchar(50) NOT NULL,
+  `exam_schedule_id` int(11) DEFAULT NULL,
+  `reg_date` datetime DEFAULT NULL,
+  `approved_date` datetime DEFAULT NULL,
+  `venue` text DEFAULT NULL,
+  `assigned_exam_set` varchar(50) DEFAULT NULL,
   `status` int(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -296,7 +311,6 @@ CREATE TABLE `tertiary_edu` (
   `user_id` int(11) NOT NULL,
   `school_attended` varchar(250) NOT NULL,
   `degree` text NOT NULL,
-  `year_level` int(11) DEFAULT NULL,
   `inclusive_years` varchar(250) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -327,18 +341,18 @@ CREATE TABLE `users_data` (
   `lname` varchar(250) NOT NULL,
   `mname` varchar(250) NOT NULL,
   `place_of_birth` varchar(250) NOT NULL,
-  `date_of_birth` datetime DEFAULT NULL,
+  `date_of_birth` date DEFAULT NULL,
   `gender` varchar(250) NOT NULL,
   `citizenship` varchar(250) NOT NULL,
   `civil_status` varchar(250) NOT NULL,
   `contact_number` varchar(250) NOT NULL,
-  `present_office` varchar(250) NOT NULL,
-  `designation` varchar(250) NOT NULL,
-  `telephone_number` varchar(250) NOT NULL,
-  `office_address` varchar(250) NOT NULL,
-  `office_category` varchar(250) NOT NULL,
-  `no_of_years_in_pos` int(11) NOT NULL,
-  `programming _langs` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`programming _langs`)),
+  `present_office` varchar(250) DEFAULT NULL,
+  `designation` varchar(250) DEFAULT NULL,
+  `telephone_number` varchar(250) DEFAULT NULL,
+  `office_address` varchar(250) DEFAULT NULL,
+  `office_category` varchar(250) DEFAULT NULL,
+  `no_of_years_in_pos` varchar(10) DEFAULT NULL,
+  `programming_langs` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `e_sign` longtext NOT NULL,
   `year_level` int(11) DEFAULT NULL,
   `current_status` varchar(50) DEFAULT NULL,
@@ -376,6 +390,13 @@ CREATE TABLE `user_login` (
   `fname` varchar(60) NOT NULL,
   `lname` varchar(60) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `user_login`
+--
+
+INSERT INTO `user_login` (`id`, `google_id`, `email`, `fname`, `lname`) VALUES
+(1, 'sdsfsfd', 'dsad', 'asdad', 'asdads');
 
 -- --------------------------------------------------------
 
@@ -540,7 +561,7 @@ ALTER TABLE `user_logs`
 -- AUTO_INCREMENT for table `addresses`
 --
 ALTER TABLE `addresses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `admin_logs`
@@ -552,13 +573,13 @@ ALTER TABLE `admin_logs`
 -- AUTO_INCREMENT for table `announcements`
 --
 ALTER TABLE `announcements`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT for table `banner`
 --
 ALTER TABLE `banner`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `calendar`
@@ -594,7 +615,7 @@ ALTER TABLE `inbox`
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `post_categories`
@@ -606,37 +627,37 @@ ALTER TABLE `post_categories`
 -- AUTO_INCREMENT for table `post_images`
 --
 ALTER TABLE `post_images`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `reg_details`
 --
 ALTER TABLE `reg_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `submitted_files`
 --
 ALTER TABLE `submitted_files`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `tertiary_edu`
 --
 ALTER TABLE `tertiary_edu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `training_seminars`
 --
 ALTER TABLE `training_seminars`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `users_data`
 --
 ALTER TABLE `users_data`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `user_history`
@@ -648,7 +669,7 @@ ALTER TABLE `user_history`
 -- AUTO_INCREMENT for table `user_login`
 --
 ALTER TABLE `user_login`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `user_logs`

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Addresses extends Model
 {
     protected $table = 'addresses';
+    public $timestamps = false;
     protected $fillable = [
         'user_id',
         'region',
