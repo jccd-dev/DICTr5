@@ -58,6 +58,7 @@ class Dashboard extends Component
     public mixed $signature = null;
     public string $inputsValues = '';
     public int $i = 0;
+    public mixed $cur_user_data;
 
     private $user_id = null;
 
@@ -325,9 +326,11 @@ class Dashboard extends Component
     public function get_user_data(): Collection|array
     {
         $user_login_id = session()->get('user')['id'];
-        return UsersData::with('tertiaryEdu', 'trainingSeminars', 'addresses', 'submittedFiles')
+        $this->cur_user_data = UsersData::with('tertiaryEdu', 'trainingSeminars', 'addresses', 'submittedFiles')
             ->where('user_login_id', $user_login_id)
             ->get();
+
+        dd($this->cur_user_data);
     }
 
     public function update_users_data()
