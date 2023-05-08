@@ -14,7 +14,9 @@
 
 <x-home.section.exam-section />
 
-<x-home.section.highlight-post-section :data="$data['posts']" />
+@if(isset($data['posts']) && count($data['posts']) > 0)
+    <x-home.section.highlight-post-section :data="$data['posts']" />
+@endif
 
 <x-home.section.calendar-section />
 

@@ -16,7 +16,7 @@ class GoogleAuthController extends Controller
     }
 
     public function callback(){
-        $user = Socialite::driver('google')->user();
+        $user = Socialite::driver('google')->stateless()->user();
 
         $email = $user->getEmail();
         $fname = $user->offsetGet('given_name');
