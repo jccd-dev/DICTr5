@@ -10,7 +10,7 @@
                         <img src="{{ asset('img/Group 44.svg') }}" alt="">
                     </div>
                     <div class="font-quicksand flex flex-col">
-                        <h1 class="font-bold text-3xl">Keanu Reeves</h1>
+                        <h1 class="font-bold text-3xl" wire:click="get_user_data">Keanu Reeves</h1>
                         <a href="mailto:keanu.reeves@gmail.com" class="hover:underline">keanu.reeves@gmail.com</a>
                         <span>Professional</span>
                         <div class="flex gap-5 mt-10">
@@ -119,6 +119,11 @@
     <x-modal.card max-width="6xl" title="" blur wire:model.defer="cardModal">
         @include("livewire.user.registration-modal")
     </x-modal.card>
+
+{{--    <x-modal.card max-width="6xl" title="" blur wire:model.defer="cardModal2">--}}
+{{--        @include("livewire.user.registration-modal")--}}
+{{--    </x-modal.card>--}}
+
 
     <script>
         const addButton = document.querySelector('#add-trainings')
