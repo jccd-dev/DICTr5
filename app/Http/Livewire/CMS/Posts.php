@@ -316,7 +316,7 @@ class Posts extends Component
             //return $posts->with('images')->get();
         }
 
-        if (!is_null($cat_id)) {
+        if (!is_null($cat_id) || $cat_id != 0) {
             $posts = $posts->whereHas('category', function ($query) use ($cat_id) {
                 $query->where('category_id', $cat_id);
             });

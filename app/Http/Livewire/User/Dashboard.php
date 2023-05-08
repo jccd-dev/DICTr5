@@ -334,14 +334,15 @@ class Dashboard extends Component
 
     public function populate_user_data():void {
         $cur_user_data = $this->get_user_data()[0];
+        dd($cur_user_data);
         $this->givenName = $cur_user_data->fname;
         $this->middleName = $cur_user_data->mname;
         $this->surName = $cur_user_data->lname;
         $this->tel = $cur_user_data->contact_number;
-//        $this->region = $cur_user_data->re;
-        $this->province = $cur_user_data->date_of_birth;
-//        $this->municipality = $cur_user_data->gender;
-//        $this->barangay = $cur_user_data->citizenship;
+        $this->region = $cur_user_data->addresses->region;
+        $this->province = $cur_user_data->addresses->province;
+        $this->municipality = $cur_user_data->addresses->municipality;
+        $this->barangay = $cur_user_data->addresses->barangay;
 //        $this->email = $cur_user_data->civil_status;
         $this->pob = $cur_user_data->place_of_birth;
         $this->dob = $cur_user_data->date_of_birth;

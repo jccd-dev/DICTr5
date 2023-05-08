@@ -1,11 +1,14 @@
 <div class="relative" x-data="{ state: 1, hasVidData: false, err: [], stateUpdate: 1, hasVidDataUpdate: false, errUpdate: [], deleteImgName: '', deleteImgId: null, modalActive: 0, location1: 0, location2: 0, deletePostID: 0 }"
      x-init="listeners($data); listenerUpdate($data); ">
-    <div id="dismiss-alert" wire:ignore class="w-full hidden text-white bg-emerald-500 absolute -top-10 right-0 z-10">
+    <div id="dismiss-alert" wire:ignore class="w-full hidden text-white bg-emerald-400 absolute -top-10 right-0 z-10">
         <div class="container relative flex items-center justify-between px-6 py-4 mx-auto">
-            <div class="flex">
-                <svg viewBox="0 0 40 40" class="w-6 h-6 fill-current">
+            <div class="flex items-center">
+                <svg viewBox="0 0 40 40" id="success-alert" class="w-6 h-6 fill-current hidden">
                     <path d="M20 3.33331C10.8 3.33331 3.33337 10.8 3.33337 20C3.33337 29.2 10.8 36.6666 20 36.6666C29.2 36.6666 36.6667 29.2 36.6667 20C36.6667 10.8 29.2 3.33331 20 3.33331ZM16.6667 28.3333L8.33337 20L10.6834 17.65L16.6667 23.6166L29.3167 10.9666L31.6667 13.3333L16.6667 28.3333Z">
                     </path>
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" id="error-alert" fill="currentColor" class="bi bi-x-circle-fill w-5 h-5 hidden" viewBox="0 0 16 16">
+                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
                 </svg>
                 <p class="mx-3" id="message-alert"></p>
             </div>
@@ -53,6 +56,22 @@
                         wire:model="to"
                         class="bg-transparent border-none outline-none shadow-none drop-shadow-none py-2.5 pl-14 max-w-[13rem]"
                     />
+                </div>
+                <div>
+                    <select id="category-list" wire:model.lazy="cat_id" class="bg-custom-blue py-2.5 bg-opacity-10 font-semibold border-none text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option value="0">All</option>
+                        @if($all_category)
+                            @foreach($all_category as $k => $option)
+                                @if(gettype($option) == "string")
+                                    <option value="{{ $k }}">{{ $option }}</option>
+                                @else
+                                    @if(is_array($option) || is_object($option))
+                                        <option value="{{ $option['id'] }}">{{ $option['category'] }}</option>
+                                    @endif
+                                @endif
+                            @endforeach
+                        @endif
+                    </select>
                 </div>
             </div>
             <label for="table-search" class="sr-only">Search</label>
@@ -167,8 +186,6 @@
                             <td></td>
                         </tr>
                     @endif
-
-
                     </tbody>
                 </table>
             </div>
@@ -481,10 +498,16 @@
 
         const messageAlert = document.querySelector('#message-alert');
         const dismissAlert = document.querySelector('#dismiss-alert');
+        const successAlert = document.querySelector('#success-alert');
+        const errorAlert = document.querySelector('#error-alert');
 
         window.addEventListener('ValidationPostError', _ => {
             dismissAlert.classList.remove('hidden')
             messageAlert.textContent = "Error Adding Category"
+            dismissAlert.classList.remove('bg-emerald-400')
+            dismissAlert.classList.add('bg-custom-red')
+            errorAlert.classList.remove("hidden")
+            successAlert.classList.add("hidden")
 
             setTimeout(() =>{
                 dismissAlert.classList.add('hidden')
@@ -495,6 +518,10 @@
         window.addEventListener('ValidationPostSuccess', _ => {
             dismissAlert.classList.remove('hidden')
             messageAlert.textContent = "Successfully Added Post"
+            dismissAlert.classList.add('bg-emerald-400')
+            dismissAlert.classList.remove('bg-custom-red')
+            errorAlert.classList.add("hidden")
+            successAlert.classList.remove("hidden")
 
             setTimeout(() =>{
                 dismissAlert.classList.add('hidden')
@@ -504,6 +531,10 @@
         window.addEventListener('UpdateValidationPostError', _ => {
             dismissAlert.classList.remove('hidden')
             messageAlert.textContent = "Error Adding Category"
+            dismissAlert.classList.remove('bg-emerald-400')
+            dismissAlert.classList.add('bg-custom-red')
+            errorAlert.classList.remove("hidden")
+            successAlert.classList.add("hidden")
 
             setTimeout(() =>{
                 dismissAlert.classList.add('hidden')
@@ -513,7 +544,11 @@
 
         window.addEventListener('UpdateValidationPostSuccess', _ => {
             dismissAlert.classList.remove('hidden')
-            messageAlert.textContent = "Successfully Added Post"
+            messageAlert.textContent = "Successfully Updated Post"
+            dismissAlert.classList.add('bg-emerald-400')
+            dismissAlert.classList.remove('bg-custom-red')
+            errorAlert.classList.add("hidden")
+            successAlert.classList.remove("hidden")
 
             setTimeout(() =>{
                 dismissAlert.classList.add('hidden')
@@ -524,17 +559,27 @@
         window.addEventListener('DeletePostSuccess', _ => {
             dismissAlert.classList.remove('hidden')
             messageAlert.textContent = "Successfully Deleted Post"
+            dismissAlert.classList.add('bg-emerald-400')
+            dismissAlert.classList.remove('bg-custom-red')
+            errorAlert.classList.add("hidden")
+            successAlert.classList.remove("hidden")
 
             setTimeout(() =>{
                 dismissAlert.classList.add('hidden')
+                location.reload()
             }, 2000)
         })
-        window.addEventListener('DeletePostErrorSuccess', _ => {
+        window.addEventListener('DeletePostError', _ => {
             dismissAlert.classList.remove('hidden')
             messageAlert.textContent = "Successfully Deleted Post"
+            dismissAlert.classList.remove('bg-emerald-400')
+            dismissAlert.classList.add('bg-custom-red')
+            errorAlert.classList.remove("hidden")
+            successAlert.classList.add("hidden")
 
             setTimeout(() =>{
                 dismissAlert.classList.add('hidden')
+                location.reload()
             }, 2000)
         })
 
