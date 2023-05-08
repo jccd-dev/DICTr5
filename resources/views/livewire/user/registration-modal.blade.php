@@ -298,4 +298,14 @@
             </div>
         </form>
     </div>
+    <script>
+        window.addEventListener('ValidationErrors', event => {
+            console.log(event)
+        })
+
+        window.addEventListener('ValidationSuccess', event => {
+            
+        })
+
+    </script>
 </div>
