@@ -217,13 +217,12 @@ class Dashboard extends Component
 
         if ($validator->fails()) {
             $err_msgs = $validator->getMessageBag();
-            dd($err_msgs);
             foreach ($err_msgs->getMessages() as $field => $messages) {
                 foreach ($messages as $message) {
                     $this->addError($field, $message);
                 }
             }
-            $this->dispatchBrowserEvent('ValidationErrors', $err_msgs->getMessages());
+            $this->dispatchBrowserEvent('RegistrationValidationErrors', $err_msgs->getMessages());
             return;
         }
         $users_data = [
@@ -270,8 +269,8 @@ class Dashboard extends Component
             'ter_edu'   => $tertiary_edu
         ];
 
-        // dd($organized_users_data, $this->trainings);
         $this->insert_users_data($organized_users_data);
+        $this->dispatchBrowserEvent('RegistrationValidationSuccess', true);
     }
 
     /**
