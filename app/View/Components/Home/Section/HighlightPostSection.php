@@ -8,12 +8,14 @@ use Illuminate\View\Component;
 
 class HighlightPostSection extends Component
 {
+
+    public mixed $data;
     /**
      * Create a new component instance.
      */
-    public function __construct()
+    public function __construct(mixed $data = [])
     {
-        //
+        $this->data = $data;
     }
 
     /**
@@ -21,6 +23,6 @@ class HighlightPostSection extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.home.section.highlight-post-section');
+        return view('components.home.section.highlight-post-section', ['data' => $this->data]);
     }
 }
