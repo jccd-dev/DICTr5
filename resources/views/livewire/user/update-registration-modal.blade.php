@@ -229,27 +229,7 @@
                 <hr />
             </div>
             <div x-show="state == 4">
-                <div x-show="currentStatus == 'student'">
-                    <h1 class="font-bold font-quicksand text-xl flex self-start my-4">Required Documents</h1>
-                    <div class="w-full md:w-4/5 flex gap-3">
-                        <x-forms.file name="Upload Passport Size Image (required for students)" placeholder="Upload Passport Size Image" model="passport" id="passport" accept=".pdf,.doc,.docx,image/*" classes="mb-3 md:mb-6 flex-1 flex-col" />
-                        <x-forms.file name="PSA Birth Certificate (required for students)" placeholder="PSA Birth Certificate" model="psa" id="psa" accept=".pdf,.doc,.docx,image/*" classes="mb-3 md:mb-6 flex-1 flex-col" />
-                    </div>
-                    <div class="w-full md:w-2/5 flex gap-3">
-                        <x-forms.file name="COE / COG (required for students)" placeholder="COE / COG" model="cert" id="certs" accept=".pdf,.doc,.docx,image/*" classes="mb-3 md:mb-6 flex-1 flex-col" />
-                    </div>
-                </div>
-                <div x-show="currentStatus == 'professional'">
-                    <h1 class="font-bold font-quicksand text-xl flex self-start my-4">Required Documents</h1>
-                    <div class="w-full md:w-4/5 flex gap-3">
-                        <x-forms.file name="Valid ID (required for professional)" placeholder="Valid ID" model="validId" id="valid-id" accept=".pdf,.doc,.docx,image/*" classes="mb-3 md:mb-6 flex-1 flex-col" />
-                        <x-forms.file name="Diploma / TOR (required for prefessional)" placeholder="Diploma / TOR" model="diploma" id="diploma" accept=".pdf,.doc,.docx,image/*" classes="mb-3 md:mb-6 flex-1 flex-col" />
-                    </div>
-                </div>
-                <br />
-                <hr />
-
-                <div class="my-3">
+                <div class="">
                     <h1 class="font-bold font-quicksand text-base flex self-start my-1">IMPORTANT</h1>
                     <div class="flex items-center gap-3 mx-7">
                         <div class="flex items-center h-5">

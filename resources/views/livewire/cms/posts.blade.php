@@ -1,4 +1,4 @@
-<div x-data="{ state: 1, hasVidData: false, err: [], stateUpdate: 1, hasVidDataUpdate: false, errUpdate: [], deleteImgName: '', deleteImgId: null, modalActive: 0, location1: 0, location2: 0, deletePostID: 0 }"
+<div class="relative" x-data="{ state: 1, hasVidData: false, err: [], stateUpdate: 1, hasVidDataUpdate: false, errUpdate: [], deleteImgName: '', deleteImgId: null, modalActive: 0, location1: 0, location2: 0, deletePostID: 0 }"
      x-init="listeners($data); listenerUpdate($data); ">
     <div id="dismiss-alert" wire:ignore class="w-full hidden text-white bg-emerald-500 absolute -top-10 right-0 z-10">
         <div class="container relative flex items-center justify-between px-6 py-4 mx-auto">

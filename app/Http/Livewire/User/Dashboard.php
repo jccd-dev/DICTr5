@@ -16,6 +16,7 @@ class Dashboard extends Component
 {
     use WithFileUploads;
     public $cardModal;
+    public $cardModal2;
     public string $testing;
     public string $givenName;
     public string $middleName;
@@ -100,7 +101,7 @@ class Dashboard extends Component
         'yearsPresentPosition' => "required|numeric"
     ];
 
-    protected $except = ['cardModal'];
+    protected $except = ['cardModal', 'cardModal2'];
 
     public function updated($propertyName)
     {
@@ -157,7 +158,7 @@ class Dashboard extends Component
     public function render()
     {
         // get userlog_id from session
-        return view('livewire.user.dashboard')->layout('layouts.user-layouts');
+        return view('livewire.user.dashboard', ['user_data' => $this->get_user_data()])->layout('layouts.user-layouts');
     }
 
     public function popInput()
@@ -228,7 +229,7 @@ class Dashboard extends Component
         }
         $users_data = [
             // 'user_login_id'     => session()->get('user')['id'],
-            'user_login_id'     => 1, // note: for deve, it need to have atleast one data in user login table and use the id here
+            'user_login_id'     => 2, // note: for deve, it need to have atleast one data in user login table and use the id here
             'fname'             => $this->givenName,
             'lname'             => $this->surName,
             'mname'             => $this->middleName,
@@ -326,13 +327,38 @@ class Dashboard extends Component
     public function get_user_data(): Collection|array
     {
         $user_login_id = session()->get('user')['id'];
-        $this->cur_user_data = UsersData::with('tertiaryEdu', 'trainingSeminars', 'addresses', 'submittedFiles')
+        return UsersData::with('tertiaryEdu', 'trainingSeminars', 'addresses', 'submittedFiles')
             ->where('user_login_id', $user_login_id)
             ->get();
-
-        dd($this->cur_user_data);
     }
 
+    public function populate_user_data():void {
+        $cur_user_data = $this->get_user_data()[0];
+        $this->givenName = $cur_user_data->fname;
+        $this->middleName = $cur_user_data->mname;
+        $this->surName = $cur_user_data->lname;
+        $this->tel = $cur_user_data->contact_number;
+//        $this->region = $cur_user_data->re;
+        $this->province = $cur_user_data->date_of_birth;
+//        $this->municipality = $cur_user_data->gender;
+//        $this->barangay = $cur_user_data->citizenship;
+//        $this->email = $cur_user_data->civil_status;
+        $this->pob = $cur_user_data->place_of_birth;
+        $this->dob = $cur_user_data->date_of_birth;
+        $this->gender = $cur_user_data->gender;
+        $this->citizenship = $cur_user_data->citizenship;
+        $this->civilStatus = $cur_user_data->civil_status;
+        $this->pl = $cur_user_data->programming_langs;
+        $this->signature = $cur_user_data->e_sign;
+        $this->yearLevel = $cur_user_data->year_level;
+        $this->presentOffice = $cur_user_data->present_office;
+        $this->telNum = $cur_user_data->telephone_number;
+        $this->officeAddress = $cur_user_data->office_address;
+        $this->officeCategory = $cur_user_data->office_category;
+        $this->designationPosition = $cur_user_data->designation;
+        $this->yearsPresentPosition = $cur_user_data->no_of_years_in_pos;
+        $this->currentStatus = $cur_user_data->current_status;
+    }
     public function update_users_data()
     {
         // update rules  base for current status of the user
