@@ -306,6 +306,7 @@ class Dashboard extends Component
             $this->psa != null ? $file_helper->store_files($this->psa, $submit, 'psa', $last_name) : null;
             $this->validId != null ? $file_helper->store_files($this->validId, $submit, 'validId', $last_name) : null;
             $this->diploma != null ? $file_helper->store_files($this->diploma, $submit, 'diploma_TOR', $last_name) : null;
+            $this->coe != null ? $file_helper->store_files($this->coe, $submit, 'coe', $last_name) : null;
 
             // insert into registration details table
             $user->regDetails()->create(['reg_date' => $user->date_accomplish]);
@@ -434,8 +435,12 @@ class Dashboard extends Component
             $user->trainingSeminars()->updateOrCreate(['id' => $training_id], $training);
         }
 
-        // if user remove the training data
+        // in case the user remove the training data
         if (!is_null($this->toDeleteTrainings)) {
+            foreach ($this->toDeleteTrainings as $training_id){
+                $training = $user->trainingSeminars()->where('id', $training_id)->first();
+                $training ? $training->delete() : null;
+            }
         }
     }
 
@@ -493,7 +498,14 @@ class Dashboard extends Component
     }
 
     public function update_COE(){
+        $file_helper = new FileHandler();
+        $user_login_id =  session()->get('user')['id'];
+        $user = UsersData::find($user_login_id);
 
+        // TODO make the coe submmission, for stundent
+        return $file_helper->update_the_file($this->coe, $user, 'coe');
     }
+
+
 
 }
