@@ -32,14 +32,14 @@
             </div>
             <div class="flex flex-col font-quicksand max-w-[15rem] gap-3">
                 @if(count($user_data))
-                    <button type="button" class="py-4 px-5 bg-custom-red font-semibold" @click="$openModal('cardModal'); isFiles = false" wire:click="populate_user_data">
+                    <button type="button" id="update-form-btn" class="py-4 px-5 bg-custom-red font-semibold" @click="$openModal('cardModal'); isFiles = false" wire:click="populate_user_data">
                             Update Exam Form
                     </button>
-                    <button type="button" class="py-4 px-5 bg-custom-red font-semibold" @click="$openModal('cardModal'); isFiles = true" wire:click="populate_user_data">
+                    <button type="button" id="update-file-btn"  class="py-4 px-5 bg-custom-red font-semibold" @click="$openModal('cardModal'); isFiles = true" wire:click="populate_user_data">
                             Update Submitted Files
                     </button>
                 @else
-                    <button type="button" class="py-4 px-5 bg-custom-red font-semibold" @click="$openModal('cardModal'); isFiles = false" wire:click="populate_user_data">
+                    <button type="button" id="register-form-btn"  class="py-4 px-5 bg-custom-red font-semibold" @click="$openModal('cardModal'); isFiles = false">
                             Register Exam
                     </button>
                 @endif
@@ -150,10 +150,25 @@
         const clearSign = document.querySelector('#clear-btn')
         const canvas = document.querySelector('#signature-pad');
 
+        let isInitialSign = true;
+
+        canvas.addEventListener('mousedown', () => {
+            if (!isInitialSign) return
+            canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+            isInitialSign = false;
+        })
+
         const signaturePad = new SignaturePad(canvas);
 
         clearSign.addEventListener("click", () => signaturePad.clear())
-
+        @if(count($user_data))
+            const image = new Image();
+            image.src = "{{ $user_data[0]->e_sign }}";
+            image.onload = function() {
+                canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height);
+            };
+        @endif
+        {{--signaturePad.fromDataURL("{{ $user_data[0]->e_sign }}");--}}
         saveSign.addEventListener("click", async () => {
             const dataURL = signaturePad.toDataURL();
             signInput.value = dataURL;

@@ -304,7 +304,7 @@
         })
 
         window.addEventListener('ValidationSuccess', event => {
-            
+
         })
 
     </script>

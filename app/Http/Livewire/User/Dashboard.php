@@ -63,7 +63,8 @@ class Dashboard extends Component
 
     private $user_id = null;
 
-    public $dataValue = ["region" => 'Region V (Bicol Region)', 'province' => 'Camarines Sur', 'municipality' => 'Iriga City', 'barangay' => "Niño Jesus"];
+    public mixed $prev_data;
+    public mixed $prev_trainings;
 
     protected $rules = [
         'givenName'     => "required|regex:/^[A-Za-z\s]+$/",
@@ -86,6 +87,9 @@ class Dashboard extends Component
         'psa'           => "mimes:jpg,jpeg,png,doc,pdf,docx|max:5120|max:5120",
         'validId'       => "mimes:jpg,jpeg,png,doc,pdf,docx|max:5120|max:5120",
         'diploma'       => "mimes:jpg,jpeg,png,doc,pdf,docx|max:5120|max:5120",
+        'trainings.*.center' => 'required|string',
+        'trainings.*.course' => 'required|string',
+        'trainings.*.hours' => 'required|numeric',
     ];
 
     private array $student_rule = [
@@ -127,6 +131,7 @@ class Dashboard extends Component
         $this->university = '';
         $this->degree = '';
         $this->incYears = 0;
+        $this->prev_data = collect([]);
 
         $this->currentStatus = '';
 
@@ -174,6 +179,7 @@ class Dashboard extends Component
             'center' => '',
             'hours' => '',
         ]);
+
     }
 
     /**
@@ -327,38 +333,60 @@ class Dashboard extends Component
     public function get_user_data(): Collection|array
     {
         $user_login_id = session()->get('user')['id'];
-        return UsersData::with('tertiaryEdu', 'trainingSeminars', 'addresses', 'submittedFiles')
+        return UsersData::with('tertiaryEdu', 'trainingSeminars', 'addresses', 'submittedFiles', 'userLogin')
             ->where('user_login_id', $user_login_id)
             ->get();
     }
 
     public function populate_user_data():void {
         $cur_user_data = $this->get_user_data()[0];
-        dd($cur_user_data);
+        $this->prev_data = $cur_user_data;
+
+        // PERSONNAL INFO
         $this->givenName = $cur_user_data->fname;
         $this->middleName = $cur_user_data->mname;
         $this->surName = $cur_user_data->lname;
         $this->tel = $cur_user_data->contact_number;
-        $this->region = $cur_user_data->addresses->region;
-        $this->province = $cur_user_data->addresses->province;
-        $this->municipality = $cur_user_data->addresses->municipality;
-        $this->barangay = $cur_user_data->addresses->barangay;
-//        $this->email = $cur_user_data->civil_status;
+//        dd($this->tel);
+        $this->email = $cur_user_data->userLogin->email;
         $this->pob = $cur_user_data->place_of_birth;
         $this->dob = $cur_user_data->date_of_birth;
         $this->gender = $cur_user_data->gender;
         $this->citizenship = $cur_user_data->citizenship;
         $this->civilStatus = $cur_user_data->civil_status;
+
+        // DETERMINER (USER STATUS)
+        $this->currentStatus = $cur_user_data->current_status;
+
         $this->pl = $cur_user_data->programming_langs;
         $this->signature = $cur_user_data->e_sign;
         $this->yearLevel = $cur_user_data->year_level;
+
+        // EDUCATION
+        $this->university = $cur_user_data->tertiaryEdu->school_attended;
+        $this->degree = $cur_user_data->tertiaryEdu->degree;
+        $this->incYears = $cur_user_data->tertiaryEdu->inclusive_years;
+
+        // EMPLOYMENT
         $this->presentOffice = $cur_user_data->present_office;
         $this->telNum = $cur_user_data->telephone_number;
         $this->officeAddress = $cur_user_data->office_address;
         $this->officeCategory = $cur_user_data->office_category;
         $this->designationPosition = $cur_user_data->designation;
         $this->yearsPresentPosition = $cur_user_data->no_of_years_in_pos;
-        $this->currentStatus = $cur_user_data->current_status;
+
+        // ADDRESS
+        $this->region = $cur_user_data->addresses->region;
+        $this->province = $cur_user_data->addresses->province;
+        $this->municipality = $cur_user_data->addresses->municipality;
+        $this->barangay = $cur_user_data->addresses->barangay;
+
+        // SEMINARS
+//        $this->trainings = $cur_user_data->trainingSeminars->toArray();
+        $this->trainings->pop();
+        $this->trainings = $cur_user_data->trainingSeminars->map(function ($item) {
+            return $item->toArray();
+        });
     }
     public function update_users_data()
     {
@@ -411,8 +439,8 @@ class Dashboard extends Component
         $users_data = [
             'user_login_id'     => session()->get('user')['id'],
             'fname'             => $this->givenName,
-            'lname'             => $this->lname,
-            'mname'             => $this->mname,
+            'lname'             => $this->surName,
+            'mname'             => $this->middleName,
             'place_of_birth'    => $this->pob,
             'date_of_birth'     => $this->dob,
             'gender'            => $this->gender,
@@ -448,6 +476,8 @@ class Dashboard extends Component
 
         $user_login_id = session()->get('user')['id'];
         $user = UsersData::find($user_login_id);
+
+        dd($user);
 
         $user->update($users_data);
 
