@@ -65,7 +65,7 @@ Route::prefix('admin')->group(function () {
 });
 
 // USER SIDE ROUTES
-Route::prefix('user')->middleware(['userAuth'])->group(function () {
+Route::prefix('user')->group(function () {
     Route::get('/dashboard', User\Dashboard::class)->name('user.dashboard');
 });
 

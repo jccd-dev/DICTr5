@@ -391,7 +391,7 @@ class Dashboard extends Component
             return $item->toArray();
         });
     }
-    public function update_users_data()
+    public function update_users_data($user_id)
     {
         // update rules  base for current status of the user
         if (strtolower($this->currentStatus) == 'student') {
@@ -440,7 +440,6 @@ class Dashboard extends Component
         }
 
         $users_data = [
-            'user_login_id'     => session()->get('user')['id'],
             'fname'             => $this->givenName,
             'lname'             => $this->surName,
             'mname'             => $this->middleName,
@@ -477,10 +476,7 @@ class Dashboard extends Component
             'inclusive_years'   => $this->incYears
         ];
 
-        $user_login_id = session()->get('user')['id'];
-        $user = UsersData::find($user_login_id);
-
-        dd($user);
+        $user = UsersData::find($user_id);
 
         $user->update($users_data);
 
@@ -509,12 +505,11 @@ class Dashboard extends Component
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function update_passport(): bool
+    public function update_passport($user_id): bool
     {
 
         $file_helper = new FileHandler();
-        $user_login_id = session()->get('user')['id'];
-        $user = UsersData::find($user_login_id);
+        $user = UsersData::find($user_id);
 
         return $file_helper->update_the_file($this->passport, $user, 'passport');
     }
@@ -523,11 +518,10 @@ class Dashboard extends Component
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function update_psa(): bool
+    public function update_psa($user_id): bool
     {
         $file_helper = new FileHandler();
-        $user_login_id = session()->get('user')['id'];
-        $user = UsersData::find($user_login_id);
+        $user = UsersData::find($user_id);
 
         return $file_helper->update_the_file($this->psa, $user, 'psa');
     }
@@ -536,11 +530,10 @@ class Dashboard extends Component
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function update_id(): bool
+    public function update_id($user_id): bool
     {
         $file_helper = new FileHandler();
-        $user_login_id = session()->get('user')['id'];
-        $user = UsersData::find($user_login_id);
+        $user = UsersData::find($user_id);
 
         return $file_helper->update_the_file($this->validId, $user, 'validId');
     }
@@ -549,22 +542,19 @@ class Dashboard extends Component
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function update_diploma(): bool
+    public function update_diploma($user_id): bool
     {
         $file_helper = new FileHandler();
-        $user_login_id = session()->get('user')['id'];
-        $user = UsersData::find($user_login_id);
+        $user = UsersData::find($user_id);
 
         return $file_helper->update_the_file($this->diploma, $user, 'diploma_TOR');
     }
 
-    public function update_COE(){
+    public function update_COE($user_id): bool{
         $file_helper = new FileHandler();
-        $user_login_id =  session()->get('user')['id'];
-        $user = UsersData::find($user_login_id);
+        $user = UsersData::find($user_id);
 
-        // TODO make the coe submmission, for stundent
-        return $file_helper->update_the_file($this->coe, $user, 'coe');
+        return $file_helper->update_the_file($this->cert, $user, 'coe');
     }
 
 
