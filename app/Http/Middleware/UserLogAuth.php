@@ -12,7 +12,7 @@ class UserLogAuth {
     {
         // check if user session is already set else return to login page
         if (!Session::has('user')) {
-            return redirect('/user/login');
+            return redirect('/exam/login');
         }
 
         return $next($request);
