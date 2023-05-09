@@ -475,14 +475,12 @@ class Dashboard extends Component
         ];
 
         $user_login_id = session()->get('user')['id'];
-        $user = UsersData::find($user_login_id);
-
-        dd($user);
+        $user = UsersData::find($this->prev_data->id);
 
         $user->update($users_data);
 
-        $user->tertiaryEdu()->update($tertiary_edu);
-        $user->addresses()->update($address);
+        $user->tertiaryEdu->update($tertiary_edu);
+        $user->addresses->update($address);
 
         // TODO: provide the new $this->>training for update, if user update then include the ID
         // TODO if user add new training then append to $this->>taining but no ID
@@ -494,8 +492,8 @@ class Dashboard extends Component
         }
 
         // if user remove the training data
-        if (!is_null($this->toDeleteTrainings)) {
-        }
+//        if (!is_null($this->toDeleteTrainings)) {
+//        }
     }
 
     /**
@@ -507,7 +505,7 @@ class Dashboard extends Component
 
         $file_helper = new FileHandler();
         $user_login_id = session()->get('user')['id'];
-        $user = UsersData::find($user_login_id);
+        $user = UsersData::find($this->prev_data->id);
 
         return $file_helper->update_the_file($this->passport, $user, 'passport');
     }
@@ -520,7 +518,7 @@ class Dashboard extends Component
     {
         $file_helper = new FileHandler();
         $user_login_id = session()->get('user')['id'];
-        $user = UsersData::find($user_login_id);
+        $user = UsersData::find($this->prev_data->id);
 
         return $file_helper->update_the_file($this->psa, $user, 'psa');
     }
@@ -533,7 +531,7 @@ class Dashboard extends Component
     {
         $file_helper = new FileHandler();
         $user_login_id = session()->get('user')['id'];
-        $user = UsersData::find($user_login_id);
+        $user = UsersData::find($this->prev_data->id);
 
         return $file_helper->update_the_file($this->validId, $user, 'validId');
     }
@@ -546,7 +544,7 @@ class Dashboard extends Component
     {
         $file_helper = new FileHandler();
         $user_login_id = session()->get('user')['id'];
-        $user = UsersData::find($user_login_id);
+        $user = UsersData::find($this->prev_data->id);
 
         return $file_helper->update_the_file($this->diploma, $user, 'diploma_TOR');
     }
