@@ -6,6 +6,7 @@
     @elseif(request()->routeIs('admin.cms.calendar')) {{'Event Calendar'}}
     @elseif(request()->routeIs('admin.exam-schedule')) {{'Exam Schedule'}}
     @elseif(request()->routeIs('admin.inbox')) {{'Inbox'}}
+    @elseif(request()->routeIs('examinee.dashboard')) {{'Dashboard'}}
     @else {{'DICT Camarines Sur'}}
     @endif
 </title>

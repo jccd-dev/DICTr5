@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Mail;
 class DashboardController extends Controller
 {
     public function dashboard(){
-        dd(session()->get('user'));
+//        dd(session()->get('user'));
         return view('layouts.examinee.dashboard');
     }
 
