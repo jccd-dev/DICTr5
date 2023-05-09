@@ -32,6 +32,7 @@
             </div>
             <div class="flex flex-col font-quicksand max-w-[15rem] gap-3">
                 <button type="button" class="py-4 px-5 bg-custom-red font-semibold" @click="$openModal('cardModal')">Register Exam</button>
+                <button type="button" class="py-4 px-5 bg-custom-red font-semibold" wire:click="get_user_data">data Exam</button>
                 <button type="button" class="py-4 px-5 bg-dark-yellow font-semibold text-black">Download Completed Examination Form</button>
             </div>
         </div>

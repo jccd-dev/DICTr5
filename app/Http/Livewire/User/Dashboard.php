@@ -217,12 +217,13 @@ class Dashboard extends Component
 
         if ($validator->fails()) {
             $err_msgs = $validator->getMessageBag();
+            dd($err_msgs);
             foreach ($err_msgs->getMessages() as $field => $messages) {
                 foreach ($messages as $message) {
                     $this->addError($field, $message);
                 }
             }
-            $this->dispatchBrowserEvent('RegistrationValidationErrors', $err_msgs->getMessages());
+            $this->dispatchBrowserEvent('ValidationErrors', $err_msgs->getMessages());
             return;
         }
         $users_data = [
@@ -269,8 +270,8 @@ class Dashboard extends Component
             'ter_edu'   => $tertiary_edu
         ];
 
+        // dd($organized_users_data, $this->trainings);
         $this->insert_users_data($organized_users_data);
-        $this->dispatchBrowserEvent('RegistrationValidationSuccess', true);
     }
 
     /**
@@ -305,7 +306,7 @@ class Dashboard extends Component
             $this->psa != null ? $file_helper->store_files($this->psa, $submit, 'psa', $last_name) : null;
             $this->validId != null ? $file_helper->store_files($this->validId, $submit, 'validId', $last_name) : null;
             $this->diploma != null ? $file_helper->store_files($this->diploma, $submit, 'diploma_TOR', $last_name) : null;
-            $this->coe != null ? $file_helper->store_files($this->coe, $submit, 'coe', $last_name) : null;
+            $this->cert != null ? $file_helper->store_files($this->cert, $submit, 'coe', $last_name) : null;
 
             // insert into registration details table
             $user->regDetails()->create(['reg_date' => $user->date_accomplish]);
@@ -329,6 +330,7 @@ class Dashboard extends Component
         return UsersData::with('tertiaryEdu', 'trainingSeminars', 'addresses', 'submittedFiles')
             ->where('user_login_id', $user_login_id)
             ->get();
+
     }
 
     public function update_users_data()
@@ -425,8 +427,8 @@ class Dashboard extends Component
         $user->tertiaryEdu()->update($tertiary_edu);
         $user->addresses()->update($address);
 
-        // TODO: provide the new $this->>training for update, if user update then include the ID
-        // TODO if user add new training then append to $this->>taining but no ID
+        // TODO provide the new $this->training for update, if user update then include the ID
+        // TODO if user add new training then append to $this->taining but no ID
         foreach ($this->trainings as $training) {
             $training_id = $training['id'] ?? null;
             $training['user_id'] = $user->id; // Set the user_id

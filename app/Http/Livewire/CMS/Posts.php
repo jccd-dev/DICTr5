@@ -52,6 +52,9 @@ class Posts extends Component
     public $temp_images = [];
     public $admin_data;
 
+    public $admin_role;
+    public $cur_admin_id;
+
     protected $rules = [
         'category_id'    => 'required|numeric',
         'title'          => 'required|word_count:15',
@@ -76,20 +79,7 @@ class Posts extends Component
     public PostModel $post_model;
     private ImageHandlerHelper $imageHelper;
 
-    public function render()
-    {
-        // get admin name and id
-        if (Auth::check()){
 
-            $admin = Auth::user();
-
-            $this->admin_data = [
-                'id' => $admin->id,
-                'author' => $admin->name
-            ];
-        }
-        return view('livewire.cms.posts', ['posts' => $this->search_post(), 'all_category' => $this->get_all_categories(), 'author' => $this->admin_data])->layout('layouts.layout');
-    }
 
     public function __construct()
     {
@@ -103,13 +93,11 @@ class Posts extends Component
 
             $this->admin_data = [
                 'id' => $admin->id,
-                'author' => $admin->name
+                'author' => $admin->name,
+                'role' => $admin->role
             ];
         }
     }
-
-
-
 
     public function mount()
     {
@@ -153,9 +141,31 @@ class Posts extends Component
 
             $this->admin_data = [
                 'id' => $admin->id,
-                'author' => $admin->name
+                'author' => $admin->name,
+                'role' => $admin->role
             ];
         }
+        //todo why it become null when post is updated
+        $this->admin_role = $this->admin_role ?? Auth::user()->role;
+        $this->cur_admin_id = $this->cur_admin_id ?? Auth::user()->id;
+
+    }
+
+    public function render()
+    {
+        // get admin name and id
+        if (Auth::check()){
+
+            $admin = Auth::user();
+
+            $this->admin_data = [
+                'id' => $admin->id,
+                'author' => $admin->name,
+                'role' => $admin->role
+            ];
+        }
+
+        return view('livewire.cms.posts', ['posts' => $this->search_post(), 'all_category' => $this->get_all_categories(), 'author' => $this->admin_data])->layout('layouts.layout');
     }
 
     public function create_post($admin): void
@@ -302,6 +312,7 @@ class Posts extends Component
      */
     public function search_post(): Collection|array
     {
+        // dd($this->user_role);
         $posts = $this->post_model::query();
 
         $search_term = $this->search;
@@ -319,7 +330,7 @@ class Posts extends Component
             //return $posts->with('images')->get();
         }
 
-        if (!is_null($cat_id)) {
+        if (!is_null($cat_id) && $cat_id > 0) {
             $posts = $posts->whereHas('category', function ($query) use ($cat_id) {
                 $query->where('category_id', $cat_id);
             });
@@ -340,7 +351,31 @@ class Posts extends Component
                 ->whereDate('timestamp', '<=', $to_date);
         }
 
+
+        $posts = $this->filter_by_role($posts);
+
         return $posts->with('category')->get();
+    }
+
+    // filter data base from admin role
+    public function filter_by_role($posts){
+
+        switch (session()->get('admin_role')) {
+            case 100: // super admin
+                # show all data
+                break;
+            case 200: // normal admin
+                $posts->where('admin_id', session()->get('admin_id'));
+                break;
+            case 300: // creator (cms)
+                $posts->where('admin_id', session()->get('admin_id'));
+                break;
+            default: // no role no data to show
+                $posts->where('id', -1);
+                break;
+        }
+
+        return $posts;
     }
 
     public function updatePost(): bool
@@ -432,6 +467,7 @@ class Posts extends Component
                 $this->resetValidation();
                 $this->resetFields();
 
+                // dd($this->admin_role);
                 return true;
             }
         }
