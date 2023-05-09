@@ -9,7 +9,7 @@
         wire:model="{{ $model }}"
     />
     @if ($th)
-        <p class="text-sm">Current image: {{ basename($th) }}</p>
+        <p class="text-sm">Current upload: {{ basename($th) }}</p>
     @endif
     @error($err ?: $model) <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p> @enderror
 </div>

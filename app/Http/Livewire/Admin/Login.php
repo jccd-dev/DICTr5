@@ -60,6 +60,11 @@ class Login extends Component
             return response()->json(['error' => 'Invalid credentials'], 401);
         }
 
+        // Get the authenticated user
+        $user = auth()->user();
+        // Store the admin's role in the session
+        session(['admin_role' => $user->role, 'admin_id' => $user->id]);
+
         //store in cookie
         Cookie::queue('jwt_token', $token, 240); // expire after 5 hours
         return redirect('/admin/dashboard');

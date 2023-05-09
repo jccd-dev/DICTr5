@@ -11,7 +11,7 @@
         id="posts-form"
         class="flex w-full posts-form"
     >
-        <form action="#" method="POST" wire:submit.prevent="update_users_data" class="w-full flex flex-col">
+        <form action="#" method="POST" wire:submit.prevent="update_users_data({{ $user_data[0]->id }})" class="w-full flex flex-col">
             <div x-show="state == 1" class="w-full flex flex-col items-center">
                 <h1 class="font-bold font-quicksand text-xl flex self-start my-4">Personal Information</h1>
                 <div class="flex md:flex-row flex-col w-full gap-3">

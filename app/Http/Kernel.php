@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
         'jwt.roleCheck' => \App\Http\Middleware\AdminRoleCheck::class,
         'jwt.logAuth' => \App\Http\Middleware\JWTAuthAdmins::class,
         'jwt.isLoggedIn' => \App\Http\Middleware\IsLoggedIn::class,
+        'user.logAuth' => \App\Http\Middleware\UserLogAuth::class,
     ];
 }

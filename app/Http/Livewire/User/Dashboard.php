@@ -65,6 +65,8 @@ class Dashboard extends Component
 
     public mixed $prev_data;
     public mixed $prev_trainings;
+    public mixed $toDeleteTrainings = [];
+    public mixed $training_ids = [];
 
     protected $rules = [
         'givenName'     => "required|regex:/^[A-Za-z\s]+$/",
@@ -142,6 +144,8 @@ class Dashboard extends Component
         $this->officeCategory = '';
         $this->designationPosition = '';
         $this->yearsPresentPosition = '';
+        $this->toDeleteTrainings = [];
+        $this->training_ids = [];
 
         $this->fill([
             'trainings' => collect([[
@@ -168,8 +172,15 @@ class Dashboard extends Component
 
     public function popInput()
     {
-        if (count($this->trainings) != 1)
+        if (count($this->trainings) != 1) {
+            if (isset($this->training_ids)) {
+                $last_id = $this->training_ids[count($this->training_ids) - 1];
+                $this->training_ids->pop();
+                $this->toDeleteTrainings[] = $last_id;
+            }
+
             $this->trainings->pop();
+        }
     }
 
     public function addInput()
@@ -179,7 +190,6 @@ class Dashboard extends Component
             'center' => '',
             'hours' => '',
         ]);
-
     }
 
     /**
@@ -277,8 +287,12 @@ class Dashboard extends Component
             'ter_edu'   => $tertiary_edu
         ];
 
-        $this->insert_users_data($organized_users_data);
-        $this->dispatchBrowserEvent('RegistrationValidationSuccess', true);
+        // dd($organized_users_data, $this->trainings);
+        if ($this->insert_users_data($organized_users_data)) {
+            $this->dispatchBrowserEvent('RegistrationValidationSuccess', true);
+        } else {
+            $this->dispatchBrowserEvent('RegistrationValidationError', true);
+        }
     }
 
     /**
@@ -313,6 +327,7 @@ class Dashboard extends Component
             $this->psa != null ? $file_helper->store_files($this->psa, $submit, 'psa', $last_name) : null;
             $this->validId != null ? $file_helper->store_files($this->validId, $submit, 'validId', $last_name) : null;
             $this->diploma != null ? $file_helper->store_files($this->diploma, $submit, 'diploma_TOR', $last_name) : null;
+            $this->cert != null ? $file_helper->store_files($this->cert, $submit, 'coe', $last_name) : null;
 
             // insert into registration details table
             $user->regDetails()->create(['reg_date' => $user->date_accomplish]);
@@ -338,7 +353,8 @@ class Dashboard extends Component
             ->get();
     }
 
-    public function populate_user_data():void {
+    public function populate_user_data(): void
+    {
         $cur_user_data = $this->get_user_data()[0];
         $this->prev_data = $cur_user_data;
 
@@ -347,7 +363,7 @@ class Dashboard extends Component
         $this->middleName = $cur_user_data->mname;
         $this->surName = $cur_user_data->lname;
         $this->tel = $cur_user_data->contact_number;
-//        dd($this->tel);
+        //        dd($this->tel);
         $this->email = $cur_user_data->userLogin->email;
         $this->pob = $cur_user_data->place_of_birth;
         $this->dob = $cur_user_data->date_of_birth;
@@ -382,13 +398,30 @@ class Dashboard extends Component
         $this->barangay = $cur_user_data->addresses->barangay;
 
         // SEMINARS
-//        $this->trainings = $cur_user_data->trainingSeminars->toArray();
+        //        $this->trainings = $cur_user_data->trainingSeminars->toArray();
         $this->trainings->pop();
         $this->trainings = $cur_user_data->trainingSeminars->map(function ($item) {
             return $item->toArray();
         });
+
+        $this->training_ids = $cur_user_data->trainingSeminars->map(function ($item) {
+            return $item->id;
+        });
+
+        foreach ($cur_user_data->submittedFiles as $s) {
+            if (!isset($s)) break;
+            if ($s->requirement_type === "diploma_TOR") {
+                $this->diploma = $s->file_name;
+            } else if ($s->requirement_type === "validId") {
+                $this->validId = $s->file_name;
+            } else if ($s->requirement_type === "coe") {
+                $this->cert = $s->file_name;
+            } else if ($s->requirement_type === "psa") {
+                $this->psa = $s->file_name;
+            }
+        }
     }
-    public function update_users_data()
+    public function update_users_data($user_id)
     {
         // update rules  base for current status of the user
         if (strtolower($this->currentStatus) == 'student') {
@@ -437,7 +470,6 @@ class Dashboard extends Component
         }
 
         $users_data = [
-            'user_login_id'     => session()->get('user')['id'],
             'fname'             => $this->givenName,
             'lname'             => $this->surName,
             'mname'             => $this->middleName,
@@ -474,16 +506,15 @@ class Dashboard extends Component
             'inclusive_years'   => $this->incYears
         ];
 
-        $user_login_id = session()->get('user')['id'];
-        $user = UsersData::find($this->prev_data->id);
+        $user = UsersData::find($user_id);
 
         $user->update($users_data);
 
         $user->tertiaryEdu->update($tertiary_edu);
         $user->addresses->update($address);
 
-        // TODO: provide the new $this->>training for update, if user update then include the ID
-        // TODO if user add new training then append to $this->>taining but no ID
+        // TODO provide the new $this->training for update, if user update then include the ID
+        // TODO if user add new training then append to $this->taining but no ID
         foreach ($this->trainings as $training) {
             $training_id = $training['id'] ?? null;
             $training['user_id'] = $user->id; // Set the user_id
@@ -491,21 +522,39 @@ class Dashboard extends Component
             $user->trainingSeminars()->updateOrCreate(['id' => $training_id], $training);
         }
 
-        // if user remove the training data
-//        if (!is_null($this->toDeleteTrainings)) {
-//        }
+        // in case the user remove the training data
+        if (!is_null($this->toDeleteTrainings)) {
+            foreach ($this->toDeleteTrainings as $training_id) {
+                $training = $user->trainingSeminars()->where('id', $training_id)->first();
+                $training ? $training->delete() : null;
+            }
+        }
+
+        $this->dispatchBrowserEvent('RegUpdateValidationSuccess', true);
+    }
+
+    public function updateFiles($status, $user_id)
+    {
+        // $user_id = session()->get('user')['id'];
+        if ($status === "student") {
+            if (gettype($this->passport) !== "string") $this->update_passport($user_id);
+            if (gettype($this->psa) !== "string") $this->update_psa($user_id);
+            if (gettype($this->cert) !== "string") $this->update_COE($user_id);
+        } else {
+            if (gettype($this->validId) !== "string") $this->update_id($user_id);
+            if (gettype($this->diploma) !== "string") $this->update_diploma($user_id);
+        }
+        $this->dispatchBrowserEvent('FileUpdateSuccess', true);
     }
 
     /**
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function update_passport(): bool
+    public function update_passport($user_id): bool
     {
-
         $file_helper = new FileHandler();
-        $user_login_id = session()->get('user')['id'];
-        $user = UsersData::find($this->prev_data->id);
+        $user = UsersData::find($user_id);
 
         return $file_helper->update_the_file($this->passport, $user, 'passport');
     }
@@ -514,11 +563,10 @@ class Dashboard extends Component
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function update_psa(): bool
+    public function update_psa($user_id): bool
     {
         $file_helper = new FileHandler();
-        $user_login_id = session()->get('user')['id'];
-        $user = UsersData::find($this->prev_data->id);
+        $user = UsersData::find($user_id);
 
         return $file_helper->update_the_file($this->psa, $user, 'psa');
     }
@@ -527,11 +575,10 @@ class Dashboard extends Component
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function update_id(): bool
+    public function update_id($user_id): bool
     {
         $file_helper = new FileHandler();
-        $user_login_id = session()->get('user')['id'];
-        $user = UsersData::find($this->prev_data->id);
+        $user = UsersData::find($user_id);
 
         return $file_helper->update_the_file($this->validId, $user, 'validId');
     }
@@ -540,17 +587,19 @@ class Dashboard extends Component
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function update_diploma(): bool
+    public function update_diploma($user_id): bool
     {
         $file_helper = new FileHandler();
-        $user_login_id = session()->get('user')['id'];
-        $user = UsersData::find($this->prev_data->id);
+        $user = UsersData::find($user_id);
 
         return $file_helper->update_the_file($this->diploma, $user, 'diploma_TOR');
     }
 
-    public function update_COE(){
+    public function update_COE($user_id): bool
+    {
+        $file_helper = new FileHandler();
+        $user = UsersData::find($user_id);
 
+        return $file_helper->update_the_file($this->cert, $user, 'coe');
     }
-
 }

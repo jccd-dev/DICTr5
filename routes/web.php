@@ -15,6 +15,7 @@ use App\Http\Livewire\Admin\Login;
 use App\Http\Livewire\Admin\Dashboard;
 use App\Http\Livewire\User;
 use App\Http\Livewire\CMS\Slider;
+use App\Http\Controllers\Layouts\ViewAnnouncementController;
 use App\Http\Controllers\Examinee\DashboardController as UserDashboardController;
 use App\Http\Livewire\Admin\Inbox as CMSInbox;
 
@@ -38,6 +39,7 @@ Route::get('/testing', \App\Http\Livewire\CMS\Testing::class);
 Route::get('/about', function () {
     return view('pages.about');
 });
+Route::get('/announcement/{id}',[ViewAnnouncementController::class, 'view_announcement'])->name('view.announcement');
 
 // ADMIN SIDE ROUTES
 Route::prefix('admin')->group(function () {
@@ -76,7 +78,7 @@ Route::prefix('auth')->group(function () {
 // Diagnostic Exam
 Route::prefix('exam')->group(function () {
     Route::get('/login', [GoogleAuthController::class, 'user_login']);
-    Route::get('/dashboard', [UserDashboardController::class, 'dashboard'])->name('examinee.dashboard');
+    Route::get('/dashboard', [UserDashboardController::class, 'dashboard'])->name('examinee.dashboard')->middleware(['user.logAuth']);
     Route::get('/send-email', [UserDashboardController::class, 'sendEmail']);
 });
 

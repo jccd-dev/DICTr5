@@ -28,6 +28,9 @@ class AdminLoginController extends Controller
             // Handle the exception if needed
         }
 
+        // destroy session
+        session()->forget('admin_id');
+        session()->forget('admin_role');
         return redirect('/admin/login')->withCookie($cookie);
     }
 
