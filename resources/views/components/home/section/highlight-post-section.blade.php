@@ -14,9 +14,9 @@
                     <div class="flex flex-col justify-between">
                         <div>
                             {{-- top --}}
-                            <div class="rounded-xl border-b-4 border-b-dark-yellow overflow-hidden">
+                            <div class="rounded-xl border-b-4 border-b-dark-yellow overflow-hidden w-[23rem] h-[13rem]">
                                 {{-- top img --}}
-                                <img src="{{ asset('storage/images/'. $post->thumbnail) }}" class="" alt="">
+                                <img class="w-full h-full object-cover" src="{{ asset('storage/images/'. $post->thumbnail) }}" class="" alt="">
                             </div>
                             <div class="mt-5 px-3">
                                 {{-- top content --}}

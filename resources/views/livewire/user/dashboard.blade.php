@@ -1,4 +1,4 @@
-<div class="container mx-auto px-4 py-10 flex flex-col lg:flex-row gap-7" x-data="{ state: 1, hasVidData: false, err: [], currentStatus: 'professional' }">
+<div class="container mx-auto px-4 py-10 flex flex-col lg:flex-row gap-7" x-data="{ state: 1, hasVidData: false, err: [], currentStatus: '{{ $currentStatus ?: 'professional' }}', isFiles: false }">
 
 {{--  main  --}}
 
@@ -31,8 +31,18 @@
                 </div>
             </div>
             <div class="flex flex-col font-quicksand max-w-[15rem] gap-3">
-                <button type="button" class="py-4 px-5 bg-custom-red font-semibold" @click="$openModal('cardModal')">Register Exam</button>
-                <button type="button" class="py-4 px-5 bg-custom-red font-semibold" wire:click="get_user_data">data Exam</button>
+                @if(count($user_data))
+                    <button type="button" id="update-form-btn" class="py-4 px-5 bg-custom-red font-semibold" @click="$openModal('cardModal'); isFiles = false" wire:click="populate_user_data">
+                            Update Exam Form
+                    </button>
+                    <button type="button" id="update-file-btn"  class="py-4 px-5 bg-custom-red font-semibold" @click="$openModal('cardModal'); isFiles = true" wire:click="populate_user_data">
+                            Update Submitted Files
+                    </button>
+                @else
+                    <button type="button" id="register-form-btn"  class="py-4 px-5 bg-custom-red font-semibold" @click="$openModal('cardModal'); isFiles = false">
+                            Register Exam
+                    </button>
+                @endif
                 <button type="button" class="py-4 px-5 bg-dark-yellow font-semibold text-black">Download Completed Examination Form</button>
             </div>
         </div>
@@ -118,8 +128,18 @@
 
 
     <x-modal.card max-width="6xl" title="" blur wire:model.defer="cardModal">
-        @include("livewire.user.registration-modal")
+        <div x-show="isFiles">
+            @include("livewire.user.update-files-modal")
+        </div>
+        <div x-show="!isFiles">
+            @if(count($user_data))
+                @include("livewire.user.update-registration-modal")
+            @else
+                @include("livewire.user.registration-modal")
+            @endif
+        </div>
     </x-modal.card>
+
 
     <script>
         const addButton = document.querySelector('#add-trainings')
@@ -130,10 +150,25 @@
         const clearSign = document.querySelector('#clear-btn')
         const canvas = document.querySelector('#signature-pad');
 
+        let isInitialSign = true;
+
+        canvas.addEventListener('mousedown', () => {
+            if (!isInitialSign) return
+            canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+            isInitialSign = false;
+        })
+
         const signaturePad = new SignaturePad(canvas);
 
         clearSign.addEventListener("click", () => signaturePad.clear())
-
+        @if(count($user_data))
+            const image = new Image();
+            image.src = "{{ $user_data[0]->e_sign }}";
+            image.onload = function() {
+                canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height);
+            };
+        @endif
+        {{--signaturePad.fromDataURL("{{ $user_data[0]->e_sign }}");--}}
         saveSign.addEventListener("click", async () => {
             const dataURL = signaturePad.toDataURL();
             signInput.value = dataURL;

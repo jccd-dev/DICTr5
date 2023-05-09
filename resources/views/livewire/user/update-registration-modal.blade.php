@@ -11,7 +11,7 @@
         id="posts-form"
         class="flex w-full posts-form"
     >
-        <form action="#" method="POST" wire:submit.prevent="submit" class="w-full flex flex-col">
+        <form action="#" method="POST" wire:submit.prevent="update_users_data" class="w-full flex flex-col">
             <div x-show="state == 1" class="w-full flex flex-col items-center">
                 <h1 class="font-bold font-quicksand text-xl flex self-start my-4">Personal Information</h1>
                 <div class="flex md:flex-row flex-col w-full gap-3">
@@ -22,32 +22,38 @@
 
                     <div class="flex md:flex-row flex-col flex-1 gap-3" x-data="{ number: '' }">
                         <x-forms.input-form name="Surname" type="text" placeholder="Surname" model="surName" id="surname" classes="mb-3 md:mb-6 flex-1 flex-col" />
-{{--                        <x-forms.input-form name="Telephone Number" type="text" placeholder="Telephone Number" model="tel" id="tel-num" classes="mb-3 md:mb-6 flex-1 flex-col" />--}}
+                        {{--                        <x-forms.input-form name="Telephone Number" type="text" placeholder="Telephone Number" model="tel" id="tel-num" classes="mb-3 md:mb-6 flex-1 flex-col" />--}}
                         <div class="mb-3 md:mb-6 flex-1 flex-col">
                             <label for="Telephone Number" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Telephone Number</label>
                             <input
-                                type="text"
+                                type="number"
                                 id="tel-num"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="Telephone Number"
                                 wire:model.lazy="tel"
-                                x-model="number"
-                                x-on:input="number = number.replace(/[^0-9]/g, '')"
                             >
                             @error('tel') <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p> @enderror
                         </div>
                     </div>
                 </div>
+                @php
+                    if ($user_data) {
+                        $reg = $user_data[0]->addresses->region;
+                        $prov = $user_data[0]->addresses->province;
+                        $mun = $user_data[0]->addresses->municipality;
+                        $brgy = $user_data[0]->addresses->barangay;
+                    }
 
+                @endphp
                 <div class="flex md:flex-row flex-col w-full gap-3">
                     <div class="flex md:flex-row flex-col flex-1 gap-3" wire:ignore>
-                        <x-forms.select name="Region" model="region" id="region" classes="mb-3 md:mb-6 flex-1 flex-col" />
-                        <x-forms.select name="Province" model="province" id="province" classes="mb-3 md:mb-6 flex-1 flex-col" />
+                        <x-forms.select name="Region" model="region" id="region" :data-value="$reg" classes="mb-3 md:mb-6 flex-1 flex-col" />
+                        <x-forms.select name="Province" model="province" id="province" :data-value="$prov" classes="mb-3 md:mb-6 flex-1 flex-col" />
                     </div>
 
                     <div class="flex md:flex-row flex-col flex-1 gap-3" wire:ignore>
-                        <x-forms.select name="Municipality" model="municipality" id="municipality" classes="mb-3 md:mb-6 flex-1 flex-col" />
-                        <x-forms.select name="Barangay" model="barangay" id="barangay" classes="mb-3 md:mb-6 flex-1 flex-col" />
+                        <x-forms.select name="Municipality" model="municipality" id="municipality" :data-value="$mun" classes="mb-3 md:mb-6 flex-1 flex-col" />
+                        <x-forms.select name="Barangay" model="barangay" id="barangay" :data-value="$brgy" classes="mb-3 md:mb-6 flex-1 flex-col" />
                     </div>
                 </div>
 
@@ -100,16 +106,17 @@
                                 {{--                                        @if($i == 0)--}}
                                 {{--                                            @continue--}}
                                 {{--                                        @endif--}}
+
                                 <div class="flex md:flex-row flex-col w-full gap-3 relative" wire:key="trainings-{{ $i }}">
                                     <div class="flex flex-1" >
                                         <x-forms.input-form name="Course / Seminar Title" type="text" placeholder="Course / Seminar Title" model="trainings.{{ $i }}.course" id="seminar-{{ $i }}" classes="mb-3 md:mb-6 flex-1 flex-col" />
                                     </div>
-                                    <div class="flex flex-1" >
+                                    <div class="flex flex-1">
                                         <x-forms.input-form name="Training Center" type="text" placeholder="Training Center" model="trainings.{{ $i }}.center" id="training-center-{{ $i }}" classes="mb-3 md:mb-6 flex-1 flex-col" />
                                     </div>
-                                    <div class="flex flex-1 gap-3" >
+                                    <div class="flex flex-1 gap-3">
                                         <x-forms.input-form name="Total Training Hours" type="number" placeholder="Total Training Hours" model="trainings.{{ $i }}.hours" id="training-hours-{{ $i }}" classes="mb-3 md:mb-6 flex-1 flex-col" />
-{{--                                        <x-forms.file name="Upload Certificate" placeholder="Upload Certificate" model="trainings.{{ $i }}.certificate" id="certificate-{{ $i }}" accept=".pdf,.doc,.docx,image/*" classes="mb-3 md:mb-6 flex-1 flex-col" />--}}
+                                        {{--                                        <x-forms.file name="Upload Certificate" placeholder="Upload Certificate" model="trainings.{{ $i }}.certificate" id="certificate-{{ $i }}" accept=".pdf,.doc,.docx,image/*" classes="mb-3 md:mb-6 flex-1 flex-col" />--}}
                                     </div>
                                 </div>
                             @endforeach
@@ -229,27 +236,7 @@
                 <hr />
             </div>
             <div x-show="state == 4">
-                <div x-show="currentStatus == 'student'">
-                    <h1 class="font-bold font-quicksand text-xl flex self-start my-4">Required Documents</h1>
-                    <div class="w-full md:w-4/5 flex gap-3">
-                        <x-forms.file name="Upload Passport Size Image (required for students)" placeholder="Upload Passport Size Image" model="passport" id="passport" accept=".pdf,.doc,.docx,image/*" classes="mb-3 md:mb-6 flex-1 flex-col" />
-                        <x-forms.file name="PSA Birth Certificate (required for students)" placeholder="PSA Birth Certificate" model="psa" id="psa" accept=".pdf,.doc,.docx,image/*" classes="mb-3 md:mb-6 flex-1 flex-col" />
-                    </div>
-                    <div class="w-full md:w-2/5 flex gap-3">
-                        <x-forms.file name="COE / COG (required for students)" placeholder="COE / COG" model="cert" id="certs" accept=".pdf,.doc,.docx,image/*" classes="mb-3 md:mb-6 flex-1 flex-col" />
-                    </div>
-                </div>
-                <div x-show="currentStatus == 'professional'">
-                    <h1 class="font-bold font-quicksand text-xl flex self-start my-4">Required Documents</h1>
-                    <div class="w-full md:w-4/5 flex gap-3">
-                        <x-forms.file name="Valid ID (required for professional)" placeholder="Valid ID" model="validId" id="valid-id" accept=".pdf,.doc,.docx,image/*" classes="mb-3 md:mb-6 flex-1 flex-col" />
-                        <x-forms.file name="Diploma / TOR (required for prefessional)" placeholder="Diploma / TOR" model="diploma" id="diploma" accept=".pdf,.doc,.docx,image/*" classes="mb-3 md:mb-6 flex-1 flex-col" />
-                    </div>
-                </div>
-                <br />
-                <hr />
-
-                <div class="my-3">
+                <div class="">
                     <h1 class="font-bold font-quicksand text-base flex self-start my-1">IMPORTANT</h1>
                     <div class="flex items-center gap-3 mx-7">
                         <div class="flex items-center h-5">

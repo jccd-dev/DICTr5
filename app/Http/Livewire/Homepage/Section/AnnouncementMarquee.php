@@ -21,4 +21,8 @@ class AnnouncementMarquee extends Component
                                         ->take(3)
                                         ->get();
     }
+
+    public function redirect_announcement($id){
+        return redirect()->route('view.announcement', ['id' => $id]);
+    }
 }

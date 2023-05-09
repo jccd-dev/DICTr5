@@ -15,6 +15,7 @@ use App\Http\Livewire\Admin\Login;
 use App\Http\Livewire\Admin\Dashboard;
 use App\Http\Livewire\User;
 use App\Http\Livewire\CMS\Slider;
+use App\Http\Controllers\Layouts\ViewAnnouncementController;
 use App\Http\Controllers\Examinee\DashboardController as UserDashboardController;
 use App\Http\Livewire\Admin\Inbox as CMSInbox;
 
@@ -30,6 +31,7 @@ use App\Http\Livewire\Admin\Inbox as CMSInbox;
 */
 
 Route::get('/', [\App\Http\Controllers\Layouts\Layouts::class, 'render']);
+Route::get("/posts", [\App\View\Components\Pages\Posts::class, 'render']);
 Route::get('/testing', \App\Http\Livewire\CMS\Testing::class);
 
 
@@ -37,6 +39,7 @@ Route::get('/testing', \App\Http\Livewire\CMS\Testing::class);
 Route::get('/about', function () {
     return view('pages.about');
 });
+Route::get('/announcement/{id}',[ViewAnnouncementController::class, 'view_announcement'])->name('view.announcement');
 
 // ADMIN SIDE ROUTES
 Route::prefix('admin')->group(function () {

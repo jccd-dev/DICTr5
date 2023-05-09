@@ -412,14 +412,13 @@ class Posts extends Component
                     $this->addError('update.' . $field, $message);
                 }
             }
-            $this->dispatchBrowserEvent('ValidationErrors', $err_msgs->getMessages());
+            $this->dispatchBrowserEvent('UpdateValidationPostError', $err_msgs->getMessages());
             return false;
         } else {
-            $this->dispatchBrowserEvent('UpdatedValidationPostSuccess', true);
+            $this->dispatchBrowserEvent('UpdateValidationPostSuccess', true);
         }
 
         $this->populateImages($this->temp_images);
-
         if ($this->thumbnail !== $this->prev_data['thumbnail']) {
             //handle thumbnail image
             if (gettype($this->thumbnail) === 'object') {
@@ -464,10 +463,6 @@ class Posts extends Component
                 $this->imageHelper->del_image_on_db($this->to_delete_image, $this->post_id);
                 session()->flash('success', 'Post has been created!');
 
-                $this->resetValidation();
-                $this->resetFields();
-
-                // dd($this->admin_role);
                 return true;
             }
         }
