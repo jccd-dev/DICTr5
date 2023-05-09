@@ -3,9 +3,7 @@
 @section("content")
 
     <div>
-
         POSTS PAGE
-
     </div>
 
 @endsection

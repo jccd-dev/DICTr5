@@ -5,12 +5,11 @@ import {
     barangays,
 } from "select-philippines-address";
 
-// regions().then((region) => console.log(region));
-
 const regionSelect = document.querySelector('#region');
 const provinceSelect = document.querySelector("#province")
 const municipalitiesSelect = document.querySelector('#municipality')
 const barangaySelect = document.querySelector('#barangay')
+// const [reg, prov, mun, brgy] = document.querySelector('#barangay').parentElement.parentElement.parentElement.dataset.addr.split("|~|")
 
 const setOptions = (data, elementForm, getter, selected = "", parentSelected = "") => {
     let code = "";

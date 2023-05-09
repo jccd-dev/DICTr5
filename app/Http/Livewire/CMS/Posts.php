@@ -108,9 +108,6 @@ class Posts extends Component
         }
     }
 
-
-
-
     public function mount()
     {
         $this->post_model = new PostModel();
@@ -319,7 +316,7 @@ class Posts extends Component
             //return $posts->with('images')->get();
         }
 
-        if (!is_null($cat_id)) {
+        if (!is_null($cat_id) && $cat_id > 0) {
             $posts = $posts->whereHas('category', function ($query) use ($cat_id) {
                 $query->where('category_id', $cat_id);
             });
@@ -377,14 +374,13 @@ class Posts extends Component
                     $this->addError('update.' . $field, $message);
                 }
             }
-            $this->dispatchBrowserEvent('ValidationErrors', $err_msgs->getMessages());
+            $this->dispatchBrowserEvent('UpdateValidationPostError', $err_msgs->getMessages());
             return false;
         } else {
-            $this->dispatchBrowserEvent('UpdatedValidationPostSuccess', true);
+            $this->dispatchBrowserEvent('UpdateValidationPostSuccess', true);
         }
 
         $this->populateImages($this->temp_images);
-
         if ($this->thumbnail !== $this->prev_data['thumbnail']) {
             //handle thumbnail image
             if (gettype($this->thumbnail) === 'object') {
@@ -428,9 +424,6 @@ class Posts extends Component
                 $this->storeImages();
                 $this->imageHelper->del_image_on_db($this->to_delete_image, $this->post_id);
                 session()->flash('success', 'Post has been created!');
-
-                $this->resetValidation();
-                $this->resetFields();
 
                 return true;
             }
