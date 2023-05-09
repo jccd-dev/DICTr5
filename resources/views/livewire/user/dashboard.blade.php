@@ -1,7 +1,23 @@
-<div class="container mx-auto px-4 py-10 flex flex-col lg:flex-row gap-7" x-data="{ state: 1, hasVidData: false, err: [], currentStatus: '{{ $currentStatus ?: 'professional' }}', isFiles: false }">
+<div class="container relative mx-auto px-4 py-10 flex flex-col lg:flex-row gap-7" x-data="{ state: 1, hasVidData: false, err: [], currentStatus: '{{ $currentStatus ?: 'professional' }}', isFiles: false }">
 
 {{--  main  --}}
+    <div id="dismiss-alert" wire:ignore class="w-full hidden text-white bg-emerald-500 absolute -top-10 right-0 z-10">
+        <div class="container relative flex items-center justify-between px-6 py-4 mx-auto">
+            <div class="flex">
+                <svg viewBox="0 0 40 40" class="w-6 h-6 fill-current">
+                    <path d="M20 3.33331C10.8 3.33331 3.33337 10.8 3.33337 20C3.33337 29.2 10.8 36.6666 20 36.6666C29.2 36.6666 36.6667 29.2 36.6667 20C36.6667 10.8 29.2 3.33331 20 3.33331ZM16.6667 28.3333L8.33337 20L10.6834 17.65L16.6667 23.6166L29.3167 10.9666L31.6667 13.3333L16.6667 28.3333Z">
+                    </path>
+                </svg>
+                <p class="mx-3" id="message-alert"></p>
+            </div>
 
+            <button id="closeAlertBtn" class="p-1 transition-colors duration-300 transform rounded-md hover:bg-opacity-25 hover:bg-gray-600 focus:outline-none">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6 18L18 6M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </button>
+        </div>
+    </div>
     <div class="basis-3/4">
         <div class="flex flex-col lg:flex-row rounded-3xl bg-darker-blue text-white p-14 gap-14 lg:gap-7 justify-between pb-20 lg:pb-36">
             <div class="flex flex-col">
@@ -150,6 +166,25 @@
         const clearSign = document.querySelector('#clear-btn')
         const canvas = document.querySelector('#signature-pad');
 
+        const messageAlert = document.querySelector('#message-alert');
+        const dismissAlert = document.querySelector('#dismiss-alert');
+        const closeAlertBtn = document.querySelector('#closeAlertBtn');
+        const headings = document.querySelectorAll("h3");
+
+        let targetHeading;
+        for (let i = 0; i < headings.length; i++) {
+            console.log(headings)
+            if (headings[i]?.nextElementSibling?.tagName === "BUTTON") {
+                targetHeading = headings[i];
+                break;
+            }
+        }
+
+        closeAlertBtn.addEventListener('click', _ => {
+            dismissAlert.classList.toggle("hidden")
+            location.reload()
+        })
+
         let isInitialSign = true;
 
         canvas.addEventListener('mousedown', () => {
@@ -168,12 +203,46 @@
                 canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height);
             };
         @endif
-        {{--signaturePad.fromDataURL("{{ $user_data[0]->e_sign }}");--}}
         saveSign.addEventListener("click", async () => {
             const dataURL = signaturePad.toDataURL();
             signInput.value = dataURL;
             console.log(signInput.value)
             signInput.dispatchEvent(new Event('input'));
+        })
+
+        window.addEventListener('RegValidationSuccess', async _ => {
+            dismissAlert.classList.remove('hidden')
+            messageAlert.textContent = "Successfully Registered"
+            targetHeading.nextElementSibling.click()
+
+            setTimeout(() =>{
+                dismissAlert.classList.remove('hidden')
+                location.reload()
+            }, 2000)
+        })
+
+        window.addEventListener('RegUpdateValidationSuccess', async _ => {
+            dismissAlert.classList.remove('hidden')
+            messageAlert.textContent = "Successfully Updated Registration Form"
+            targetHeading.nextElementSibling.click()
+            console.log(1)
+
+            setTimeout(() =>{
+                dismissAlert.classList.remove('hidden')
+                location.reload()
+            }, 2000)
+        })
+
+        window.addEventListener('FileUpdateSuccess', async _ => {
+            dismissAlert.classList.remove('hidden')
+            messageAlert.textContent = "Successfully Uploaded Files"
+            targetHeading.nextElementSibling.click()
+            console.log(1)
+
+            setTimeout(() =>{
+                dismissAlert.classList.remove('hidden')
+                location.reload()
+            }, 2000)
         })
     </script>
 
