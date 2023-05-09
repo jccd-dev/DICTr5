@@ -84,17 +84,18 @@ class FileHandler
 
     /**
      * @description update a submitted file in server folder and database.
-     * @param $new_file
-     * @param $user
-     * @param $req_type
+     * @param $new_file : the actual file need to process
+     * @param $user : instance of the usermodel class
+     * @param string $req_type (psa, coe, passport, validId, diploma_TOR)
      * @return bool
      */
     public function update_the_file($new_file, $user, $req_type):bool{
         $old_file_name = '';
         $lname = $user->lname;
         $user_id = $user->id;
+
         $file = $user->submittedFiles()
-            ->where('user_id', $user_id)
+            ->where('requirement_type', $req_type)
             ->first();
 
         if ($file){
@@ -108,6 +109,7 @@ class FileHandler
         $new_file_name = $this->file_namer($lname, $req_type ,$file_extension);
 
         try {
+            // check if user have already submitted the file else it will insert
             $updated = $user->submittedFiles()->updateOrCreate(
                 ['requirement_type' => $req_type],
                 [
