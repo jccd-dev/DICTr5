@@ -35,6 +35,15 @@ use App\Http\Controllers\Admins\Examinee\Applicants;
 Route::get('/', [\App\Http\Controllers\Layouts\Layouts::class, 'render'])->name('homepage');
 Route::get("/posts", [\App\View\Components\Pages\Posts::class, 'render']);
 Route::get('/testing', \App\Http\Livewire\CMS\Testing::class);
+Route::get('/mandate-powers-and-functions', function(){
+    return view('static.mandate-powers-and-functions');
+});
+Route::get('/mission-vision', function(){
+    return view('static.mission-vision');
+});
+Route::get('/ra-10844', function(){
+    return view('static.ra-10844');
+});
 
 
 // STATIC PAGES ROUTES
