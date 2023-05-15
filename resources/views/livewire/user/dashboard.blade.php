@@ -21,7 +21,7 @@
     <div class="basis-3/4">
         <div class="flex flex-col lg:flex-row rounded-3xl bg-darker-blue text-white p-14 gap-14 lg:gap-7 justify-between pb-20 lg:pb-36">
             <div class="flex flex-col">
-                <div class="flex gap-7">
+                <div class="flex gap-7 ">
                     <div>
                         <img src="{{ asset('img/Group 44.svg') }}" alt="">
                     </div>
@@ -47,7 +47,7 @@
                 </div>
             </div>
             <div class="flex flex-col font-quicksand max-w-[15rem] gap-3">
-                @if(count($user_data))
+                @if(isset($user_data) && count($user_data))
                     <button type="button" id="update-form-btn" class="py-4 px-5 bg-custom-red font-semibold" @click="$openModal('cardModal'); isFiles = false" wire:click="populate_user_data">
                             Update Exam Form
                     </button>
@@ -148,7 +148,7 @@
             @include("livewire.user.update-files-modal")
         </div>
         <div x-show="!isFiles">
-            @if(count($user_data))
+            @if(isset($user_data) && count($user_data))
                 @include("livewire.user.update-registration-modal")
             @else
                 @include("livewire.user.registration-modal")
@@ -196,7 +196,7 @@
         const signaturePad = new SignaturePad(canvas);
 
         clearSign.addEventListener("click", () => signaturePad.clear())
-        @if(count($user_data))
+        @if(isset($user_data) && count($user_data))
             const image = new Image();
             image.src = "{{ $user_data[0]->e_sign }}";
             image.onload = function() {
