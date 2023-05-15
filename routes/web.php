@@ -44,6 +44,9 @@ Route::get('/mission-vision', function(){
 Route::get('/ra-10844', function(){
     return view('static.ra-10844');
 });
+Route::get('/dict-cam-sur-officials', function(){
+    return view('static.officials');
+});
 
 
 // STATIC PAGES ROUTES
