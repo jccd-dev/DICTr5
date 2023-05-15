@@ -76,8 +76,9 @@ Route::prefix('auth')->group(function () {
 });
 
 // Diagnostic Exam
+// For Testing
 Route::prefix('exam')->group(function () {
-    Route::get('/login', [GoogleAuthController::class, 'user_login']);
+    Route::get('/login', [GoogleAuthController::class, 'user_login'])->name('user.login');
     Route::get('/dashboard', [UserDashboardController::class, 'dashboard'])->name('examinee.dashboard')->middleware(['user.logAuth']);
     Route::get('/send-email', [UserDashboardController::class, 'sendEmail']);
 });
