@@ -53,7 +53,7 @@ Route::get('/dict-cam-sur-officials', function(){
 Route::get('/about', function () {
     return view('pages.about');
 });
-Route::get('/announcement/{id}',[ViewAnnouncementController::class, 'view_announcement'])->name('view.announcement');
+Route::get('/announcement/{id}', [ViewAnnouncementController::class, 'view_announcement'])->name('view.announcement');
 
 // ADMIN SIDE ROUTES
 Route::prefix('admin')->group(function () {
@@ -61,7 +61,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/login', Login::class)->name("admin.login")->middleware(['jwt.isLoggedIn']);
     Route::get('/logout', [AdminLoginController::class, 'logout'])->name("admin.logout");
 
-    Route::middleware(['jwt.logAuth'])->group(function (){
+    Route::middleware(['jwt.logAuth'])->group(function () {
         Route::get('/dashboard', Dashboard::class)->name("admin.dashboard");
         Route::get('/test', [AdminLoginController::class, 'test'])->name("admin.test");
 
@@ -75,7 +75,7 @@ Route::prefix('admin')->group(function () {
         });
 
         // manage admin accounts
-        Route::prefix('dict-admins')->group(function (){
+        Route::prefix('dict-admins')->group(function () {
             Route::get('/', 'AdminAccounts@render')->name('admin.accounts');
             Route::post('/create', [AdminAccounts::class, 'add_admin'])->name('admin.create');
             Route::get('/view/{id}', [AdminAccounts::class, 'access_admin'])->name('admin.access');
@@ -83,8 +83,8 @@ Route::prefix('admin')->group(function () {
             Route::delete('/delete/{id}', [AdminAccounts::class, 'delete_admin'])->name('admin.delete');
         });
 
-        Route::prefix('examinee')->group( function (){
-            Route::get('/', [Applicants::class, 'render'])->name('examinees');
+        Route::prefix('examinee')->group(function () {
+            Route::get('/', [Applicants::class, 'render'])->name('admin.examinees');
             Route::get('/search', [Applicants::class, 'search_examinees'])->name('search');
         });
 
