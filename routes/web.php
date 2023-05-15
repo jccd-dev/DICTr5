@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admins\AdminAccounts;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\Examinee\GoogleAuthController;
 use App\Http\Controllers\Admins\AdminLoginController;
@@ -18,6 +19,7 @@ use App\Http\Livewire\CMS\Slider;
 use App\Http\Controllers\Layouts\ViewAnnouncementController;
 use App\Http\Controllers\Examinee\DashboardController as UserDashboardController;
 use App\Http\Livewire\Admin\Inbox as CMSInbox;
+use App\Http\Controllers\Admins\Examinee\Applicants;
 
 /*
 |--------------------------------------------------------------------------
@@ -60,12 +62,27 @@ Route::prefix('admin')->group(function () {
         Route::get('/dashboard', Dashboard::class)->name("admin.dashboard");
         Route::get('/test', [AdminLoginController::class, 'test'])->name("admin.test");
 
+        // content management system routes
         Route::prefix('cms')->group(function () {
             Route::get('/slider', Slider::class)->name("admin.cms.slider");
             Route::get('/posts', Posts::class)->name('admin.cms.posts'); // Post::class
             Route::get('/category', \App\Http\Livewire\CMS\Category::class)->name('admin.cms.category'); // Post::class
             Route::get('/announcement', Announcements::class)->name('admin.cms.announcement');
             Route::get('/event-calendar', EventCalendar::class)->name('admin.cms.calendar');
+        });
+
+        // manage admin accounts
+        Route::prefix('dict-admins')->group(function (){
+            Route::get('/', 'AdminAccounts@render')->name('admin.accounts');
+            Route::post('/create', [AdminAccounts::class, 'add_admin'])->name('admin.create');
+            Route::get('/view/{id}', [AdminAccounts::class, 'access_admin'])->name('admin.access');
+            Route::get('/update/{id}', [AdminAccounts::class, 'update_admin'])->name('admin.update');
+            Route::delete('/delete/{id}', [AdminAccounts::class, 'delete_admin'])->name('admin.delete');
+        });
+
+        Route::prefix('examinee')->group( function (){
+            Route::get('/', [Applicants::class, 'render'])->name('examinees');
+            Route::get('/search', [Applicants::class, 'search_examinees'])->name('search');
         });
 
         Route::get('/exam-schedule', ExamSchedule::class)->name('admin.exam-schedule');
@@ -75,6 +92,7 @@ Route::prefix('admin')->group(function () {
 
 // USER SIDE ROUTES
 Route::prefix('user')->group(function () {
+    Route::get('/login', [GoogleAuthController::class, 'user_login'])->name('user.login');
     Route::get('/dashboard', User\Dashboard::class)->name('user.dashboard');
 });
 
@@ -85,8 +103,8 @@ Route::prefix('auth')->group(function () {
 });
 
 // Diagnostic Exam
+// For Testing
 Route::prefix('exam')->group(function () {
-    Route::get('/login', [GoogleAuthController::class, 'user_login']);
     Route::get('/dashboard', [UserDashboardController::class, 'dashboard'])->name('examinee.dashboard')->middleware(['user.logAuth']);
     Route::get('/send-email', [UserDashboardController::class, 'sendEmail']);
 });

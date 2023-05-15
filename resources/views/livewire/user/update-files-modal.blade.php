@@ -11,7 +11,7 @@
         id="posts-form"
         class="flex w-full posts-form"
     >
-        <form action="#" method="POST" @submit.prevent="$wire.updateFiles(currentStatus, {{ $user_data[0]->id }})" class="w-full flex flex-col">
+        <form action="#" method="POST" @submit.prevent="$wire.updateFiles(currentStatus, {{ isset($user_data) && count($user_data) ? $user_data[0]->id : '' }})" class="w-full flex flex-col">
             <div class="w-full flex flex-col items-center">
                 <div class="w-full">
                     <div class="flex flex-col mt-1">

@@ -18,8 +18,7 @@ class DashboardController extends Controller
     }
 
     public function sendEmail(){
-        // //
-        // Mail::to('@gmail.com')->send(new EmailUsers());
+//         Mail::to('airezbustamante@gmail.com')->send(new EmailUsers());
         return view('layouts.email.passed');
     }
 }

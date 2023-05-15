@@ -8,7 +8,7 @@
 <nav class="bg-white dark:bg-gray-900 border-b-2 border-custom-blue">
     <div class="container mx-auto  flex flex-wrap items-center justify-between mx-auto p-2">
         <a href="https://flowbite.com/" class="flex items-center">
-            <img src="{{ asset("img/DICT Standard Logos-05 1.png") }}" class="h-12" alt="Flowbite Logo" />
+            <img src="{{ asset("img/DICTR5CamSur.png") }}" class="h-12" alt="Flowbite Logo" />
         </a>
         <div class="flex items-center md:order-2">
             <button type="button" class="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
