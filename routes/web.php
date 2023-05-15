@@ -83,6 +83,7 @@ Route::prefix('admin')->group(function () {
 
 // USER SIDE ROUTES
 Route::prefix('user')->group(function () {
+    Route::get('/login', [GoogleAuthController::class, 'user_login'])->name('user.login');
     Route::get('/dashboard', User\Dashboard::class)->name('user.dashboard');
 });
 
@@ -95,7 +96,6 @@ Route::prefix('auth')->group(function () {
 // Diagnostic Exam
 // For Testing
 Route::prefix('exam')->group(function () {
-    Route::get('/login', [GoogleAuthController::class, 'user_login'])->name('user.login');
     Route::get('/dashboard', [UserDashboardController::class, 'dashboard'])->name('examinee.dashboard')->middleware(['user.logAuth']);
     Route::get('/send-email', [UserDashboardController::class, 'sendEmail']);
 });
