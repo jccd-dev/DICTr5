@@ -65,6 +65,8 @@ class Dashboard extends Component
 
     public mixed $prev_data;
     public mixed $prev_trainings;
+    public mixed $toDeleteTrainings = [];
+    public mixed $training_ids = [];
 
     protected $rules = [
         'givenName'     => "required|regex:/^[A-Za-z\s]+$/",
@@ -142,6 +144,8 @@ class Dashboard extends Component
         $this->officeCategory = '';
         $this->designationPosition = '';
         $this->yearsPresentPosition = '';
+        $this->toDeleteTrainings = [];
+        $this->training_ids = [];
 
         $this->fill([
             'trainings' => collect([[
@@ -168,8 +172,15 @@ class Dashboard extends Component
 
     public function popInput()
     {
-        if (count($this->trainings) != 1)
+        if (count($this->trainings) != 1) {
+            if (isset($this->training_ids)) {
+                $last_id = $this->training_ids[count($this->training_ids) - 1];
+                $this->training_ids->pop();
+                $this->toDeleteTrainings[] = $last_id;
+            }
+
             $this->trainings->pop();
+        }
     }
 
     public function addInput()
@@ -179,7 +190,6 @@ class Dashboard extends Component
             'center' => '',
             'hours' => '',
         ]);
-
     }
 
     /**
@@ -225,13 +235,12 @@ class Dashboard extends Component
 
         if ($validator->fails()) {
             $err_msgs = $validator->getMessageBag();
-            dd($err_msgs);
             foreach ($err_msgs->getMessages() as $field => $messages) {
                 foreach ($messages as $message) {
                     $this->addError($field, $message);
                 }
             }
-            $this->dispatchBrowserEvent('ValidationErrors', $err_msgs->getMessages());
+            $this->dispatchBrowserEvent('RegistrationValidationErrors', $err_msgs->getMessages());
             return;
         }
         $users_data = [
@@ -279,7 +288,11 @@ class Dashboard extends Component
         ];
 
         // dd($organized_users_data, $this->trainings);
-        $this->insert_users_data($organized_users_data);
+        if ($this->insert_users_data($organized_users_data)) {
+            $this->dispatchBrowserEvent('RegistrationValidationSuccess', true);
+        } else {
+            $this->dispatchBrowserEvent('RegistrationValidationError', true);
+        }
     }
 
     /**
@@ -338,10 +351,10 @@ class Dashboard extends Component
         return UsersData::with('tertiaryEdu', 'trainingSeminars', 'addresses', 'submittedFiles', 'userLogin')
             ->where('user_login_id', $user_login_id)
             ->get();
-
     }
 
-    public function populate_user_data():void {
+    public function populate_user_data(): void
+    {
         $cur_user_data = $this->get_user_data()[0];
         $this->prev_data = $cur_user_data;
 
@@ -350,7 +363,7 @@ class Dashboard extends Component
         $this->middleName = $cur_user_data->mname;
         $this->surName = $cur_user_data->lname;
         $this->tel = $cur_user_data->contact_number;
-//        dd($this->tel);
+        //        dd($this->tel);
         $this->email = $cur_user_data->userLogin->email;
         $this->pob = $cur_user_data->place_of_birth;
         $this->dob = $cur_user_data->date_of_birth;
@@ -385,11 +398,28 @@ class Dashboard extends Component
         $this->barangay = $cur_user_data->addresses->barangay;
 
         // SEMINARS
-//        $this->trainings = $cur_user_data->trainingSeminars->toArray();
+        //        $this->trainings = $cur_user_data->trainingSeminars->toArray();
         $this->trainings->pop();
         $this->trainings = $cur_user_data->trainingSeminars->map(function ($item) {
             return $item->toArray();
         });
+
+        $this->training_ids = $cur_user_data->trainingSeminars->map(function ($item) {
+            return $item->id;
+        });
+
+        foreach ($cur_user_data->submittedFiles as $s) {
+            if (!isset($s)) break;
+            if ($s->requirement_type === "diploma_TOR") {
+                $this->diploma = $s->file_name;
+            } else if ($s->requirement_type === "validId") {
+                $this->validId = $s->file_name;
+            } else if ($s->requirement_type === "coe") {
+                $this->cert = $s->file_name;
+            } else if ($s->requirement_type === "psa") {
+                $this->psa = $s->file_name;
+            }
+        }
     }
     public function update_users_data($user_id)
     {
@@ -480,8 +510,8 @@ class Dashboard extends Component
 
         $user->update($users_data);
 
-        $user->tertiaryEdu()->update($tertiary_edu);
-        $user->addresses()->update($address);
+        $user->tertiaryEdu->update($tertiary_edu);
+        $user->addresses->update($address);
 
         // TODO provide the new $this->training for update, if user update then include the ID
         // TODO if user add new training then append to $this->taining but no ID
@@ -494,11 +524,27 @@ class Dashboard extends Component
 
         // in case the user remove the training data
         if (!is_null($this->toDeleteTrainings)) {
-            foreach ($this->toDeleteTrainings as $training_id){
+            foreach ($this->toDeleteTrainings as $training_id) {
                 $training = $user->trainingSeminars()->where('id', $training_id)->first();
                 $training ? $training->delete() : null;
             }
         }
+
+        $this->dispatchBrowserEvent('RegUpdateValidationSuccess', true);
+    }
+
+    public function updateFiles($status, $user_id)
+    {
+        // $user_id = session()->get('user')['id'];
+        if ($status === "student") {
+            if (gettype($this->passport) !== "string") $this->update_passport($user_id);
+            if (gettype($this->psa) !== "string") $this->update_psa($user_id);
+            if (gettype($this->cert) !== "string") $this->update_COE($user_id);
+        } else {
+            if (gettype($this->validId) !== "string") $this->update_id($user_id);
+            if (gettype($this->diploma) !== "string") $this->update_diploma($user_id);
+        }
+        $this->dispatchBrowserEvent('FileUpdateSuccess', true);
     }
 
     /**
@@ -507,7 +553,6 @@ class Dashboard extends Component
      */
     public function update_passport($user_id): bool
     {
-
         $file_helper = new FileHandler();
         $user = UsersData::find($user_id);
 
@@ -550,13 +595,11 @@ class Dashboard extends Component
         return $file_helper->update_the_file($this->diploma, $user, 'diploma_TOR');
     }
 
-    public function update_COE($user_id): bool{
+    public function update_COE($user_id): bool
+    {
         $file_helper = new FileHandler();
         $user = UsersData::find($user_id);
 
         return $file_helper->update_the_file($this->cert, $user, 'coe');
     }
-
-
-
 }
