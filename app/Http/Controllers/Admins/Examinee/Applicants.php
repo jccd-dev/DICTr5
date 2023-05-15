@@ -48,7 +48,7 @@ class Applicants extends Controller
         $this->municipality = $request->municipality;
         $this->search_text = $request->search_text;
         $this->reg_status = $request->reg_status;
-        $this->order_by = $request->order_by;
+        $this->order_by = $request->order_by ? $request->order_by : $this->order_by;
 
         $data = UsersData::query()
             ->when($this->gender, function ($query, $genderValue){
