@@ -16,7 +16,9 @@ class EmailAdminAccount extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct(
+        protected array $data
+    )
     {
         //
     }
@@ -27,7 +29,7 @@ class EmailAdminAccount extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Email Admin Account',
+            subject: 'DICTR5 CamSur Account Credential',
         );
     }
 
@@ -38,6 +40,7 @@ class EmailAdminAccount extends Mailable
     {
         return new Content(
             view: 'layouts.email.admin-account',
+            with: $this->data,
         );
     }
 
