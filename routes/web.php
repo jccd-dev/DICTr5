@@ -44,6 +44,9 @@ Route::get('/mission-vision', function(){
 Route::get('/ra-10844', function(){
     return view('static.ra-10844');
 });
+Route::get('/agency', function(){
+    return view('static.agency');
+});
 
 
 // STATIC PAGES ROUTES
