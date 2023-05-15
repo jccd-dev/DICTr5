@@ -3,6 +3,7 @@
 namespace App\Helpers;
 use Illuminate\Http\Request;
 use App\Models\Examinee\UserLogs;
+use Tymon\JWTAuth\Claims\Collection;
 
 class UserLogActivity{
 
@@ -12,21 +13,21 @@ class UserLogActivity{
      * @param string $activity: string value
      * @return void
      */
-    public static function addToLog(Request $request, string $activity, string|int $admin_id): void {
+    public static function addToLog(Request $request, string $activity, string|int $user_id): void {
         $log = [];
         $log['activity'] = $activity;
         $log['end_point_access'] = $request->fullUrl();
-        $log['admin_id'] = $admin_id;
+        $log['user_id'] = $user_id;
 
-        AdminLogModel::create($log);
+       UserLogs::create($log);
     }
 
     /**
      * TITLE: GET ALL LOGS
      * Description: Retrieve all available logs
-     * @return collection of Std Class: data from 'admin_logs' table
+     * @return collection of Std Class: data from 'user_logs' table
      */
-    public static function logActivityLists(){
-    	return AdminLogModel::latest()->get();
+    public static function logActivityLists(): array|Collection{
+    	return UserLogs::all();
     }
 }
