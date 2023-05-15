@@ -5,7 +5,7 @@
         </div>
         <div class="ml-5">
             <h2 class = "font-bold  text-sm">Contact Information</h2>
-            <p class = "text-sm">EMAIL : <a href="#">example@dict.gov.ph</a></p>
+            <p class = "text-sm">EMAIL : <a href="#" class = "hover:text-sky-500">example@dict.gov.ph</a></p>
             <p class = "text-sm">PHONE : (882) 1938 284</p>
         </div>
 
@@ -13,19 +13,19 @@
       <div class = "flex-1 order-3  md:order-none">
         <h2 class = "font-bold font-quicksand">AFFLIATE SITES</h2>
         <br>
-        <a href = "#" class = "text-sm">ICT Knowledge Portal</a>
+        <a href = "#" class = "text-sm hover:text-sky-500">ICT Knowledge Portal</a>
         <br>
-        <a href = "#" class = "text-sm">Central Business Portal</a>
+        <a href = "#" class = "text-sm hover:text-sky-500">Central Business Portal</a>
         <br>
-        <a href = "#" class = "text-sm">Digital Governance Awards</a>
+        <a href = "#" class = "text-sm hover:text-sky-500">Digital Governance Awards</a>
         <br>
-        <a href = "#" class = "text-sm">National Computer Emergency Response Team</a>
+        <a href = "#" class = "text-sm hover:text-sky-500">National Computer Emergency Response Team</a>
         <br>
-        <a href = "#" class = "text-sm">Medium-Term Information Information and <br> Communications Technology Harmonization Initiative</a>
+        <a href = "#" class = "text-sm hover:text-sky-500">Medium-Term Information Information and <br> Communications Technology Harmonization Initiative</a>
         <br>
-        <a href = "#" class = "text-sm">Common Tower Registration Portal</a>
+        <a href = "#" class = "text-sm hover:text-sky-500">Common Tower Registration Portal</a>
         <br>
-        <a href = "#" class = "text-sm">Workplace Learning and Development Platform</a>
+        <a href = "#" class = "text-sm hover:text-sky-500">Workplace Learning and Development Platform</a>
       </div>
 
       <div class="flex-1 order-4 md:order-none">
@@ -77,40 +77,40 @@
 
                   <ul class="list-unstyled mb-0">
                      <li>
-                      <a href="#">GOV.PH</a>
+                      <a href="#" class = 'hover:text-sky-500'>GOV.PH</a>
                      </li>
                       <li>
-                         <a href="#">Open Data Portal</a>
+                         <a href="#" class = 'hover:text-sky-500'>Open Data Portal</a>
                       </li>
                       <li>
-                         <a href="#">Official Gazette</a>
+                         <a href="#" class = 'hover:text-sky-500'>Official Gazette</a>
                       </li>
                   </ul>
               </div>
                 <div class="flex-1">
-                    <h5 class="text-uppercase font-bold text-base">GOVERNMET LINKS</h5>
+                    <h5 class="text-uppercase font-bold text-base">GOVERNMENT LINKS</h5>
                     <br>
                     <ul class="list-unstyled mb-0">
                         <li>
-                            <a href="#!">Office of the President</a>
+                            <a href="#!" class = 'hover:text-sky-500'>Office of the President</a>
                         </li>
                         <li>
-                            <a href="#!">Office of the Vice President</a>
+                            <a href="#!" class = 'hover:text-sky-500'>Office of the Vice President</a>
                         </li>
                         <li>
-                            <a href="#!">Senate of the Philippines</a>
+                            <a href="#!" class = 'hover:text-sky-500'>Senate of the Philippines</a>
                         </li>
                         <li>
-                            <a href="#!">House of Representatives</a>
+                            <a href="#!" class = 'hover:text-sky-500'>House of Representatives</a>
                         </li>
                         <li>
-                            <a href="#!">Official Gazette</a>
+                            <a href="#!" class = 'hover:text-sky-500'>Official Gazette</a>
                         </li>
                         <li>
-                            <a href="#!">Supreme Court</a>
+                            <a href="#!" class = 'hover:text-sky-500'>Supreme Court</a>
                         </li>
                         <li>
-                            <a href="#!">Sandiganbayan</a>
+                            <a href="#!" class = 'hover:text-sky-500'>Sandiganbayan</a>
                         </li>
                     </ul>
                 </div>
@@ -120,3 +120,4 @@
     </section>
    </div>
 </div>
+

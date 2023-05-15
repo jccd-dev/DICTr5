@@ -20,11 +20,17 @@
                             @elseif(request()->routeIs('admin.cms.slider')) {{'Slider'}}
                             @elseif(request()->routeIs('admin.cms.posts')) {{'Posts'}}
                             @elseif(request()->routeIs('admin.inbox')) {{'Inbox'}}
+                            @elseif(request()->routeIs('admin.examinees')) {{'Exam Applicants'}}
                             @else {{'DICT Camarines Sur'}}
                             @endif
                         </h2>
                         <div id="main">
-                            {{ $slot }}
+                            @if (isset($slot))
+                                {{ $slot }}
+                            @else
+                                @yield('content')
+                            @endif
+
                         </div>
                     </div>
                 </main>
