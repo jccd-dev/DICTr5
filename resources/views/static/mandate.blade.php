@@ -2,6 +2,12 @@
 
 @section('content')
 
+<x-layouts.top-banner />
+
+<x-layouts.banner />
+
+<x-layouts.navbar />
+
 <div class = 'justify-center'>
     <div class = 'flex-col px-4 py-8'>
     <h1 class = 'text-3xl font-bold'>Mandate, Powers, and Functions</h1>
@@ -156,7 +162,7 @@
     <br>
     <br>
     
-    <p>Please click <a href="https://dict.gov.ph/wp-content/uploads/2018/03/What-is-DICT.pdf" class = ' hover:text-sky-400'>here</a> to download a copy of the DICT’s Mandate, Powers and Functions.</p>
+    <p>Please click <a href="https://dict.gov.ph/wp-content/uploads/2018/03/What-is-DICT.pdf" class = ' hover:text-sky-500'>here</a> to download a copy of the DICT’s Mandate, Powers and Functions.</p>
 
     </div>
 </div>

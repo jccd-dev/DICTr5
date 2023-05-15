@@ -2,6 +2,12 @@
 
 @section('content')
 
+<x-layouts.top-banner />
+
+<x-layouts.banner />
+
+<x-layouts.navbar />
+
 <div class = 'justify-center'>
     <div class = 'flex-col px-4 py-8'>
         <h1 class = 'text-3xl font-bold'>Republic Act No. 10844</h1>
