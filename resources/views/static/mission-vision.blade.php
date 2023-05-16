@@ -1,53 +1,56 @@
-<div class = "flex flex-row w-full p-10 gap-10 bg-white text-black container mx-auto justify-evenly flex-wrap">
-      <div class = "flex-1 order-1 md:order-none">
-        <div class =  "w-fit md:w-64">
-            <img src="{{asset('img/DICT Standard Commercial Logo .png')}}">
-        </div>
-        <div class="ml-5">
-            <h2 class = "font-bold  text-sm">Contact Information</h2>
-            <p class = "text-sm">EMAIL : <a href="#" class = "hover:text-sky-500">example@dict.gov.ph</a></p>
-            <p class = "text-sm">PHONE : (882) 1938 284</p>
-        </div>
+@extends('layouts.main-layout')
 
-      </div>
-      <div class = "flex-1 order-3  md:order-none">
-        <h2 class = "font-bold font-quicksand">AFFLIATE SITES</h2>
-        <br>
-        <a href = "#" class = "text-sm hover:text-sky-500">ICT Knowledge Portal</a>
-        <br>
-        <a href = "#" class = "text-sm hover:text-sky-500">Central Business Portal</a>
-        <br>
-        <a href = "#" class = "text-sm hover:text-sky-500">Digital Governance Awards</a>
-        <br>
-        <a href = "#" class = "text-sm hover:text-sky-500">National Computer Emergency Response Team</a>
-        <br>
-        <a href = "#" class = "text-sm hover:text-sky-500">Medium-Term Information Information and <br> Communications Technology Harmonization Initiative</a>
-        <br>
-        <a href = "#" class = "text-sm hover:text-sky-500">Common Tower Registration Portal</a>
-        <br>
-        <a href = "#" class = "text-sm hover:text-sky-500">Workplace Learning and Development Platform</a>
-      </div>
+@section('content')
 
-      <div class="flex-1 order-4 md:order-none">
-        <h2 class = "font-bold font-quicksand">Send Message/Feedback</h2>
-          <br>
-        <livewire:forms.footer-form />
-      </div>
-    <div class="flex-1 order-2 md:order-none">
-        <h2 class = "font-bold font-quicksand">Visitors</h2>
+<x-layouts.top-banner />
+
+<x-layouts.banner />
+
+<x-layouts.navbar />
+
+<div class = 'justify-center'>
+    <div class = 'flex-col px-4 py-8'>
+        <h1 class = 'text-3xl font-bold'>MISSION AND VISION</h1>
+    </div>
+
+    <hr>
+
+    <div class = 'p-4'>
+        <h2 class = 'text-base font-bold'>Mission</h2>
         <br>
-        <div class="flex flex-col">
-            <div class="flex gap-3">
-                <img src="{{ asset('img/Group 3.svg') }}" alt="">
-                <h2 class = "text-2xl font-quicksand font-black">19,560</h2>
-            </div>
-            <div class="font-quicksand flex flex-col mt-5 gap-2">
-                <span class="text-sm flex items-center">Users today: <span class="font-bold text-base ml-2">123</span></span>
-                <span class="text-sm flex items-center">Users this month: <span class="font-bold text-base ml-2">123</span></span>
-            </div>
-        </div>
-      </div>
+        <p class = 'italic'>"DICT of the people and for the people."</p>
+        <br>
+        <p>The Department of Information and Communications Technology commits to:<p>
+        <ul class = 'list-disc p-4'>
+            <li>Provide every Filipino access to vital ICT infostructure and services</li>
+            <li>Ensure sustainable growth of Philippine ICT-enabled industries 
+                resulting to creation of more jobs</li>
+            <li>Establish a One Digitized Government, One Nation</li> 
+            <li>Support the administration in fully achieving its goals</li>
+            <li>Be the enabler, innovator, achiever and leader in pushing the country’s 
+                development and transition towards a world-class digital economy</li>   
+        </ul>
+        <br>
+        <h2 class =  'text-base font-bold'>Vision</h2>
+        <br>
+        <p class = 'italic'>“An innovative, safe and happy nation that thrives through 
+            and is enabled by Information and Communications Technology.”</p>
+        <br>
+        <p>DICT aspires for the Philippines to develop and flourish through innovation 
+            and constant development of ICT in the pursuit of a progressive, safe, secured, contented 
+            and happy Filipino nation.</p>
+        <br>
+
+        <h2 class = 'text-base font-bold'>Core Values</h2>
+        <br>
+        <p>D – Dignity</p>
+        <p>I – Integrity</p>
+        <p>C – Competency and Compassion</p>
+        <p>T – Transparency</p>    
+    </div>
+
 </div>
+
 <div class= "w-full bg-[#2C2C2C] text-white text-sm p-10">
    <div class="flex flex-row container mx-auto ">
     <section class="w-full">
@@ -121,3 +124,4 @@
    </div>
 </div>
 
+@endsection

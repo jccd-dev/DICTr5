@@ -35,7 +35,7 @@ class Dashboard extends Component
     public string $civilStatus;
     public string $university;
     public string $degree;
-    public int $incYears;
+    public int|string $incYears;
 
     public string $currentStatus;
 
@@ -44,7 +44,7 @@ class Dashboard extends Component
 
     public int $yearLevel;
     public string $presentOffice;
-    public int $telNum;
+    public int|string $telNum;
     public string $officeAddress;
     public string $officeCategory;
     public string $designationPosition;

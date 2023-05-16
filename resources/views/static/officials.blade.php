@@ -1,53 +1,52 @@
-<div class = "flex flex-row w-full p-10 gap-10 bg-white text-black container mx-auto justify-evenly flex-wrap">
-      <div class = "flex-1 order-1 md:order-none">
-        <div class =  "w-fit md:w-64">
-            <img src="{{asset('img/DICT Standard Commercial Logo .png')}}">
-        </div>
-        <div class="ml-5">
-            <h2 class = "font-bold  text-sm">Contact Information</h2>
-            <p class = "text-sm">EMAIL : <a href="#" class = "hover:text-sky-500">example@dict.gov.ph</a></p>
-            <p class = "text-sm">PHONE : (882) 1938 284</p>
-        </div>
+@extends('layouts.main-layout')
 
-      </div>
-      <div class = "flex-1 order-3  md:order-none">
-        <h2 class = "font-bold font-quicksand">AFFLIATE SITES</h2>
-        <br>
-        <a href = "#" class = "text-sm hover:text-sky-500">ICT Knowledge Portal</a>
-        <br>
-        <a href = "#" class = "text-sm hover:text-sky-500">Central Business Portal</a>
-        <br>
-        <a href = "#" class = "text-sm hover:text-sky-500">Digital Governance Awards</a>
-        <br>
-        <a href = "#" class = "text-sm hover:text-sky-500">National Computer Emergency Response Team</a>
-        <br>
-        <a href = "#" class = "text-sm hover:text-sky-500">Medium-Term Information Information and <br> Communications Technology Harmonization Initiative</a>
-        <br>
-        <a href = "#" class = "text-sm hover:text-sky-500">Common Tower Registration Portal</a>
-        <br>
-        <a href = "#" class = "text-sm hover:text-sky-500">Workplace Learning and Development Platform</a>
-      </div>
+@section('content')
 
-      <div class="flex-1 order-4 md:order-none">
-        <h2 class = "font-bold font-quicksand">Send Message/Feedback</h2>
-          <br>
-        <livewire:forms.footer-form />
-      </div>
-    <div class="flex-1 order-2 md:order-none">
-        <h2 class = "font-bold font-quicksand">Visitors</h2>
-        <br>
-        <div class="flex flex-col">
-            <div class="flex gap-3">
-                <img src="{{ asset('img/Group 3.svg') }}" alt="">
-                <h2 class = "text-2xl font-quicksand font-black">19,560</h2>
+<x-layouts.top-banner />
+
+<x-layouts.banner />
+
+<x-layouts.navbar />
+
+<div class = 'flex-col w-full gap-10 justify-center'>
+        <div class = 'text-center p-10'>
+            <div class = 'flex justify-center'>
+                <img src="#" class = 'w-[10rem] h-[10rem] rounded-full bg-slate-400'>
             </div>
-            <div class="font-quicksand flex flex-col mt-5 gap-2">
-                <span class="text-sm flex items-center">Users today: <span class="font-bold text-base ml-2">123</span></span>
-                <span class="text-sm flex items-center">Users this month: <span class="font-bold text-base ml-2">123</span></span>
+            <p class = 'font-bold font-1xl'>Maria Peñafrancia L. Nepomuceno</p>
+            <p class = 'italic'>DICT Provincial Officer</p>
+            </p>
+        </div>   
+        <div class = 'flex flex-row  justify-center text-center'>
+            <div class = 'p-10 w-[20rem]'>
+            <div class = 'flex justify-center'>
+                <img src="#" class = 'w-[10rem] h-[10rem] rounded-full bg-slate-400'>
+            </div>
+                <p class = 'font-bold font-1xl'>Ralph Spencer Y. Talagtag</p>
+                <p class = 'italic'>Project Development Officer</p>
+            </div>
+            <div class = 'p-10 w-[20rem]'>
+            <div class = 'flex justify-center'>
+                <img src="#" class = 'w-[10rem] h-[10rem] rounded-full bg-slate-400'>
+            </div>
+            <p class = 'font-bold font-1xl'>Clint Vincent A. Gregorio</p>
+            <p class = 'italic'>Engineer II</p>
+            </div>
+            <div class = 'p-10 w-[20rem]'>
+            <div class = 'flex justify-center'>
+                <img src="#" class = 'w-[10rem] h-[10rem] rounded-full bg-slate-400'>
+            </div>
+            <p class = 'font-bold font-1xl'>Jhun Mar R. Traballo</p>
+            <p class = 'italic'>Engineer I</p>
             </div>
         </div>
-      </div>
+    </div>
+        <div class = 'w-full bg-[#18375a] h-[0.25rem]'>
+        </div>
+
+
 </div>
+
 <div class= "w-full bg-[#2C2C2C] text-white text-sm p-10">
    <div class="flex flex-row container mx-auto ">
     <section class="w-full">
@@ -121,3 +120,4 @@
    </div>
 </div>
 
+@endsection

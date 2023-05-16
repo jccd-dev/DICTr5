@@ -32,16 +32,28 @@ use App\Http\Controllers\Admins\Examinee\ManageApplicants;
 |
 */
 
-Route::get('/', [\App\Http\Controllers\Layouts\Layouts::class, 'render']);
+Route::get('/', [\App\Http\Controllers\Layouts\Layouts::class, 'render'])->name('homepage');
 Route::get("/posts", [\App\View\Components\Pages\Posts::class, 'render']);
 Route::get('/testing', \App\Http\Livewire\CMS\Testing::class);
+Route::get('/mandate-powers-and-functions', function(){
+    return view('static.mandate-powers-and-functions');
+});
+Route::get('/mission-vision', function(){
+    return view('static.mission-vision');
+});
+Route::get('/ra-10844', function(){
+    return view('static.ra-10844');
+});
+Route::get('/dict-cam-sur-officials', function(){
+    return view('static.officials');
+});
 
 
 // STATIC PAGES ROUTES
 Route::get('/about', function () {
     return view('pages.about');
 });
-Route::get('/announcement/{id}',[ViewAnnouncementController::class, 'view_announcement'])->name('view.announcement');
+Route::get('/announcement/{id}', [ViewAnnouncementController::class, 'view_announcement'])->name('view.announcement');
 
 // ADMIN SIDE ROUTES
 Route::prefix('admin')->group(function () {
@@ -49,7 +61,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/login', Login::class)->name("admin.login")->middleware(['jwt.isLoggedIn']);
     Route::get('/logout', [AdminLoginController::class, 'logout'])->name("admin.logout");
 
-    Route::middleware(['jwt.logAuth'])->group(function (){
+    Route::middleware(['jwt.logAuth'])->group(function () {
         Route::get('/dashboard', Dashboard::class)->name("admin.dashboard");
         Route::get('/test', [AdminLoginController::class, 'test'])->name("admin.test");
 
@@ -63,7 +75,7 @@ Route::prefix('admin')->group(function () {
         });
 
         // manage admin accounts
-        Route::prefix('dict-admins')->group(function (){
+        Route::prefix('dict-admins')->group(function () {
             Route::get('/', 'AdminAccounts@render')->name('admin.accounts');
             Route::post('/create', [AdminAccounts::class, 'add_admin'])->name('admin.create');
             Route::get('/view/{id}', [AdminAccounts::class, 'access_admin'])->name('admin.access');
@@ -84,6 +96,7 @@ Route::prefix('admin')->group(function () {
 
 // USER SIDE ROUTES
 Route::prefix('user')->group(function () {
+    Route::get('/login', [GoogleAuthController::class, 'user_login'])->name('user.login');
     Route::get('/dashboard', User\Dashboard::class)->name('user.dashboard');
 });
 
@@ -94,8 +107,8 @@ Route::prefix('auth')->group(function () {
 });
 
 // Diagnostic Exam
+// For Testing
 Route::prefix('exam')->group(function () {
-    Route::get('/login', [GoogleAuthController::class, 'user_login']);
     Route::get('/dashboard', [UserDashboardController::class, 'dashboard'])->name('examinee.dashboard')->middleware(['user.logAuth']);
     Route::get('/send-email', [UserDashboardController::class, 'sendEmail']);
 });
