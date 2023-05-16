@@ -12,7 +12,8 @@
     </style>
 
     <div class="w-[25rem] flex flex-col justify-center">
-        <form class="w-full" wire:submit.prevent="authenticate">
+        <form class="w-full flex flex-col" wire:submit.prevent="authenticate">
+            <img src="{{ asset('img/DICT.png') }}" class="w-56 self-center mb-10" alt="">
             <h1 class="font-bold font-quicksand text-3xl text-center mb-10">Admin Login</h1>
             @if(session()->has('invalid'))
                 <div class="text-red-400 font-bold">
@@ -41,7 +42,7 @@
                 @error('password') <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p> @enderror
             </div>
             <div>
-                <button type="submit">Submit</button>
+                <button type="submit" class="bg-custom-blue text-white w-full py-3 rounded-xl">LOGIN</button>
             </div>
         </form>
     </div>

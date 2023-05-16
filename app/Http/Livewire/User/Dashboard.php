@@ -418,6 +418,8 @@ class Dashboard extends Component
                 $this->cert = $s->file_name;
             } else if ($s->requirement_type === "psa") {
                 $this->psa = $s->file_name;
+            } else if ($s->requirement_type === "passport") {
+                $this->passport = $s->file_name;
             }
         }
     }
