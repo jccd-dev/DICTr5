@@ -92,16 +92,6 @@ class AdminAccounts extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $new_admin = new AdminModel();
-        $new_admin->fill([
-            'email'       => $request->email,
-            'password'    => $request->password,
-            'name'        => $request->name,
-            'office'      => $request->office,
-            'role'        => $request->role,
-            'designation' => $request->designation,
-        ]);
-
         $admin_to_update = AdminModel::find($admin_id);
 
         $admin_to_update->email = $request->email;
