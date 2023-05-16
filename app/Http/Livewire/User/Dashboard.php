@@ -9,6 +9,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use mysql_xdevapi\Session;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -329,9 +330,6 @@ class Dashboard extends Component
             $this->diploma != null ? $file_helper->store_files($this->diploma, $submit, 'diploma_TOR', $last_name) : null;
             $this->cert != null ? $file_helper->store_files($this->cert, $submit, 'coe', $last_name) : null;
 
-            // insert into registration details table
-            $user->regDetails()->create(['reg_date' => $user->date_accomplish]);
-
             return true;
         }
 
@@ -348,9 +346,12 @@ class Dashboard extends Component
     public function get_user_data(): Collection|array
     {
         $user_login_id = session()->get('user')['id'];
-        return UsersData::with('tertiaryEdu', 'trainingSeminars', 'addresses', 'submittedFiles', 'userLogin')
+        return UsersData::with('tertiaryEdu', 'trainingSeminars', 'addresses', 'submittedFiles', 'userLogin', 'userHistory')
             ->where('user_login_id', $user_login_id)
             ->get();
+
+        // use this to identify if user needs to reapply
+        // $user->userHistory()->exists();
     }
 
     public function populate_user_data(): void
@@ -421,7 +422,7 @@ class Dashboard extends Component
             }
         }
     }
-    public function update_users_data($user_id)
+    public function update_users_data($user_id): void
     {
         // update rules  base for current status of the user
         if (strtolower($this->currentStatus) == 'student') {
@@ -513,8 +514,6 @@ class Dashboard extends Component
         $user->tertiaryEdu->update($tertiary_edu);
         $user->addresses->update($address);
 
-        // TODO provide the new $this->training for update, if user update then include the ID
-        // TODO if user add new training then append to $this->taining but no ID
         foreach ($this->trainings as $training) {
             $training_id = $training['id'] ?? null;
             $training['user_id'] = $user->id; // Set the user_id
@@ -533,7 +532,7 @@ class Dashboard extends Component
         $this->dispatchBrowserEvent('RegUpdateValidationSuccess', true);
     }
 
-    public function updateFiles($status, $user_id)
+    public function updateFiles($status, $user_id): void
     {
         // $user_id = session()->get('user')['id'];
         if ($status === "student") {
@@ -601,5 +600,40 @@ class Dashboard extends Component
         $user = UsersData::find($user_id);
 
         return $file_helper->update_the_file($this->cert, $user, 'coe');
+    }
+
+    /**
+     * @param int|string $user_id
+     * @return bool
+     * @description apply to the exam after registering to the system
+     */
+    public function apply(int|string $user_id): bool{
+
+        $user = UsersData::with('regDetails')->find($user_id);
+        $reg = $user->regDetails;
+
+        if($user){
+
+            if(!$reg->exists())
+            {
+                $reg->user_id = $user_id;
+                $reg->reg_date = date('Y-m-d', strtotime('now'));
+                $reg->apply = 1;
+
+                if ($reg->save()) {
+                    session()->flash('success', 'Application sent');
+                    return true;
+                }
+
+                session()->flash('error', 'server error');
+                return false;
+            }
+            session()->flash('warning', 'You have already applied');
+            return false;
+        }
+
+        // it means that the user already applied
+        session()->flash('warning', 'You have to register first');
+        return false;
     }
 }

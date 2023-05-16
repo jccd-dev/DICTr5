@@ -5,6 +5,7 @@ namespace App\Models\Examinee;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class UserHistory extends Model {
 
@@ -24,6 +25,11 @@ class UserHistory extends Model {
 
     public function usersData() : BelongsTo{
         return $this->belongsTo(UsersData::class, 'user_id');
+    }
+
+    public function failedHistory(): HasOne
+    {
+        return $this->hasOne(FailedHistory::class, 'history_id', 'id');
     }
 
 

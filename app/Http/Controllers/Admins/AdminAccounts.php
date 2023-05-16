@@ -42,7 +42,7 @@ class AdminAccounts extends Controller
 
         $validator = Validator::make($request->all(),$this->rules);
 
-        if(!$validator->fails()){
+        if($validator->fails()){
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
@@ -63,7 +63,7 @@ class AdminAccounts extends Controller
 
         // TODO: inserted admin should receive an email with the password of his/her account
 
-        // return success msg with admin name fro confirmation
+        // return success msg with admin name for confirmation
         return response()->json([
             'success' => 'New admin Inserted',
             'admin'   => [

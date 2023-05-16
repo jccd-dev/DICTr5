@@ -31,9 +31,13 @@
             <option value="asc">Ascending</option>
             <option value="desc">Descending</option>
         </select>
+        <select name="is_applied">
+            <option value="">All</option>
+            <option value="1">Registered Only</option>
+            <option value="2">Applied</option>
+        </select>
     </form>
     <table>
-        {{$try}}
         <thead>
         <tr>
             <th>Name</th>
