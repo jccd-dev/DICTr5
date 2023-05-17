@@ -84,7 +84,7 @@ Route::prefix('admin')->group(function () {
         });
 
         Route::prefix('examinee')->group( function (){
-            Route::get('/', [ManageApplicants::class, 'render'])->name('examinees');
+            Route::get('/', [ManageApplicants::class, 'render'])->name('admin.examinees');
             Route::get('/search', [ManageApplicants::class, 'search_examinees'])->name('search');
             Route::get('/get-examinee/{id}', [ManageApplicants::class, 'select_examinees'])->name('update');
         });
