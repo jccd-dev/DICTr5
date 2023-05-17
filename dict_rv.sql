@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 16, 2023 at 05:24 AM
+-- Generation Time: May 17, 2023 at 06:03 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -173,7 +173,7 @@ CREATE TABLE `exam_schedules` (
   `id` int(11) NOT NULL,
   `exam_set` varchar(15) DEFAULT NULL,
   `venue` varchar(255) DEFAULT NULL,
-  `datetime` datetime NOT NULL,
+  `datetime` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `start_date` datetime DEFAULT NULL,
   `end_date` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -205,6 +205,7 @@ CREATE TABLE `feedbacks` (
   `email` varchar(250) NOT NULL,
   `cp_number` varchar(50) DEFAULT NULL,
   `is_read` int(11) DEFAULT 0,
+  `is_archived` int(2) NOT NULL DEFAULT 0,
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -392,7 +393,7 @@ INSERT INTO `training_seminars` (`id`, `user_id`, `course`, `center`, `hours`) V
 
 CREATE TABLE `users_data` (
   `id` int(11) NOT NULL,
-  `user_login_id` int(11) NOT NULL,
+  `user_login_id` int(11) DEFAULT NULL,
   `fname` varchar(250) NOT NULL,
   `lname` varchar(250) NOT NULL,
   `mname` varchar(250) NOT NULL,
