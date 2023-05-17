@@ -8,12 +8,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
+use WireUi\Traits\Actions;
 use App\Helpers\GetAdmin;
 use Livewire\WithPagination;
 
 class Announcements extends Component
 {
     use WithPagination;
+    use Actions;
 
     public $search = '';
     public $from = '';
@@ -21,6 +23,7 @@ class Announcements extends Component
     public $category;
     public $insertAnnArray = [];
     public $updateAnnArray = [];
+    public $statuses = [];
     public $isPublished;
     public $isUpdatedPublished;
     public $to_update_id;
@@ -227,6 +230,20 @@ class Announcements extends Component
                 ->orderBy('announcements.start_duration', 'desc')
                 ->paginate(10);
         }
+    }
+
+    public function change_status($id, $status){
+        $announcement = AnnouncementModel::find($id);
+        if($status){
+            $announcement->status = 1;
+        }else{
+            $announcement->status = 0;
+        }
+        $announcement->save();
+        $this->notification()->success(
+            $title = 'Status Update',
+            $description = 'Announcement Status has been updated'
+        );
     }
 
 }

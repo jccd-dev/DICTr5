@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 15, 2023 at 02:18 AM
+-- Generation Time: May 17, 2023 at 06:03 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -173,9 +173,23 @@ CREATE TABLE `exam_schedules` (
   `id` int(11) NOT NULL,
   `exam_set` varchar(15) DEFAULT NULL,
   `venue` varchar(255) DEFAULT NULL,
-  `datetime` datetime NOT NULL,
+  `datetime` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `start_date` datetime DEFAULT NULL,
   `end_date` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `failed_history`
+--
+
+CREATE TABLE `failed_history` (
+  `id` int(11) NOT NULL,
+  `history_id` int(11) NOT NULL,
+  `part_1` varchar(100) NOT NULL,
+  `part_2` varchar(100) NOT NULL,
+  `part_3` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -191,6 +205,7 @@ CREATE TABLE `feedbacks` (
   `email` varchar(250) NOT NULL,
   `cp_number` varchar(50) DEFAULT NULL,
   `is_read` int(11) DEFAULT 0,
+  `is_archived` int(2) NOT NULL DEFAULT 0,
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -292,18 +307,18 @@ CREATE TABLE `reg_details` (
   `exam_schedule_id` int(11) DEFAULT NULL,
   `reg_date` datetime DEFAULT NULL,
   `approved_date` datetime DEFAULT NULL,
-  `venue` text DEFAULT NULL,
-  `assigned_exam_set` varchar(50) DEFAULT NULL,
-  `status` int(1) NOT NULL DEFAULT 0
+  `status` int(1) NOT NULL DEFAULT 3,
+  `exam_status` varchar(100) NOT NULL DEFAULT 'Not Yet',
+  `apply` int(2) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `reg_details`
 --
 
-INSERT INTO `reg_details` (`id`, `user_id`, `exam_schedule_id`, `reg_date`, `approved_date`, `venue`, `assigned_exam_set`, `status`) VALUES
-(4, 6, NULL, '2023-05-13 17:19:02', NULL, NULL, NULL, 0),
-(5, 4, NULL, NULL, NULL, NULL, NULL, 1);
+INSERT INTO `reg_details` (`id`, `user_id`, `exam_schedule_id`, `reg_date`, `approved_date`, `status`, `exam_status`, `apply`) VALUES
+(4, 6, NULL, '2023-05-13 17:19:02', NULL, 0, '', 1),
+(5, 4, NULL, NULL, NULL, 1, '', 2);
 
 -- --------------------------------------------------------
 
@@ -378,7 +393,7 @@ INSERT INTO `training_seminars` (`id`, `user_id`, `course`, `center`, `hours`) V
 
 CREATE TABLE `users_data` (
   `id` int(11) NOT NULL,
-  `user_login_id` int(11) NOT NULL,
+  `user_login_id` int(11) DEFAULT NULL,
   `fname` varchar(250) NOT NULL,
   `lname` varchar(250) NOT NULL,
   `mname` varchar(250) NOT NULL,
@@ -422,9 +437,10 @@ CREATE TABLE `user_history` (
   `registration_date` datetime NOT NULL,
   `approved_date` datetime NOT NULL,
   `schedule` datetime NOT NULL,
+  `exam_set` varchar(50) NOT NULL,
   `venue` varchar(250) NOT NULL,
-  `assigned_exam_set` varchar(50) NOT NULL,
-  `status` int(1) NOT NULL
+  `status` int(1) NOT NULL,
+  `exam_result` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -438,16 +454,17 @@ CREATE TABLE `user_login` (
   `google_id` text NOT NULL,
   `email` varchar(60) NOT NULL,
   `fname` varchar(60) NOT NULL,
-  `lname` varchar(60) NOT NULL
+  `lname` varchar(60) NOT NULL,
+  `is_active` int(2) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `user_login`
 --
 
-INSERT INTO `user_login` (`id`, `google_id`, `email`, `fname`, `lname`) VALUES
-(1, 'sdsfsfd', 'dsad', 'asdad', 'asdads'),
-(2, 'dads', 'adad', 'adasd', 'adad');
+INSERT INTO `user_login` (`id`, `google_id`, `email`, `fname`, `lname`, `is_active`) VALUES
+(1, 'sdsfsfd', 'dsad', 'asdad', 'asdads', 0),
+(2, 'dads', 'adad', 'adasd', 'adad', 0);
 
 -- --------------------------------------------------------
 
@@ -514,6 +531,13 @@ ALTER TABLE `dict_admins`
 --
 ALTER TABLE `exam_schedules`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `failed_history`
+--
+ALTER TABLE `failed_history`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `history_id` (`history_id`);
 
 --
 -- Indexes for table `feedbacks`
@@ -651,6 +675,12 @@ ALTER TABLE `exam_schedules`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `failed_history`
+--
+ALTER TABLE `failed_history`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `feedbacks`
 --
 ALTER TABLE `feedbacks`
@@ -757,6 +787,12 @@ ALTER TABLE `announcements`
 ALTER TABLE `calendar`
   ADD CONSTRAINT `calendar_ibfk_1` FOREIGN KEY (`admin_id`) REFERENCES `dict_admins` (`id`) ON DELETE NO ACTION,
   ADD CONSTRAINT `calendar_ibfk_2` FOREIGN KEY (`category`) REFERENCES `post_categories` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `failed_history`
+--
+ALTER TABLE `failed_history`
+  ADD CONSTRAINT `failed_history_ibfk_1` FOREIGN KEY (`history_id`) REFERENCES `failed_history` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `posts`

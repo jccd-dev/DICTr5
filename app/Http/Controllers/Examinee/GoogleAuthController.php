@@ -37,7 +37,7 @@ class GoogleAuthController extends Controller
         }else{
             Session::put('user', ['id' => $account->id, 'fname' => $fname, 'lname' => $lname]);
         }
-        return redirect()->route('examinee.dashboard');
+        return redirect()->route('user.dashboard');
     }
 
     public function user_login(){

@@ -19,7 +19,8 @@ use App\Http\Livewire\CMS\Slider;
 use App\Http\Controllers\Layouts\ViewAnnouncementController;
 use App\Http\Controllers\Examinee\DashboardController as UserDashboardController;
 use App\Http\Livewire\Admin\Inbox as CMSInbox;
-use App\Http\Controllers\Admins\Examinee\Applicants;
+use App\Http\Controllers\Admins\Examinee\ManageApplicants;
+use App\Http\Controllers\Admins\SystemLogs;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,9 +33,21 @@ use App\Http\Controllers\Admins\Examinee\Applicants;
 |
 */
 
-Route::get('/', [\App\Http\Controllers\Layouts\Layouts::class, 'render']);
+Route::get('/', [\App\Http\Controllers\Layouts\Layouts::class, 'render'])->name('homepage');
 Route::get("/posts", [\App\View\Components\Pages\Posts::class, 'render']);
 Route::get('/testing', \App\Http\Livewire\CMS\Testing::class);
+Route::get('/mandate-powers-and-functions', function(){
+    return view('static.mandate-powers-and-functions');
+});
+Route::get('/mission-vision', function(){
+    return view('static.mission-vision');
+});
+Route::get('/ra-10844', function(){
+    return view('static.ra-10844');
+});
+Route::get('/dict-cam-sur-officials', function(){
+    return view('static.officials');
+});
 
 
 // STATIC PAGES ROUTES
@@ -71,18 +84,21 @@ Route::prefix('admin')->group(function () {
             Route::delete('/delete/{id}', [AdminAccounts::class, 'delete_admin'])->name('admin.delete');
         });
 
-        Route::prefix('examinee')->group(function () {
-            Route::get('/', [Applicants::class, 'render'])->name('admin.examinees');
-            Route::get('/search', [Applicants::class, 'search_examinees'])->name('search');
+        Route::prefix('examinee')->group( function (){
+            Route::get('/', [ManageApplicants::class, 'render'])->name('admin.examinees');
+            Route::get('/search', [ManageApplicants::class, 'search_examinees'])->name('search');
+            Route::get('/get-examinee/{id}', [ManageApplicants::class, 'select_examinees'])->name('update');
         });
 
         Route::get('/exam-schedule', ExamSchedule::class)->name('admin.exam-schedule');
         Route::get('/inbox', CMSInbox::class)->name('admin.inbox');
+        Route::get('/logs', [SystemLogs::class, 'display_logs'])->name('system-log');
     });
 });
 
 // USER SIDE ROUTES
 Route::prefix('user')->group(function () {
+    Route::get('/login', [GoogleAuthController::class, 'user_login'])->name('user.login');
     Route::get('/dashboard', User\Dashboard::class)->name('user.dashboard');
 });
 
@@ -93,8 +109,8 @@ Route::prefix('auth')->group(function () {
 });
 
 // Diagnostic Exam
+// For Testing
 Route::prefix('exam')->group(function () {
-    Route::get('/login', [GoogleAuthController::class, 'user_login']);
     Route::get('/dashboard', [UserDashboardController::class, 'dashboard'])->name('examinee.dashboard')->middleware(['user.logAuth']);
     Route::get('/send-email', [UserDashboardController::class, 'sendEmail']);
 });
