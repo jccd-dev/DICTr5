@@ -70,6 +70,8 @@ class Dashboard extends Component
     public mixed $toDeleteTrainings = [];
     public mixed $training_ids = [];
 
+    protected $rules;
+
 
     protected $except = ['cardModal', 'cardModal2'];
 
@@ -110,6 +112,7 @@ class Dashboard extends Component
         $this->yearsPresentPosition = '';
         $this->toDeleteTrainings = [];
         $this->training_ids = [];
+        $this->rules = [];
 
         $this->fill([
             'trainings' => collect([[
@@ -128,6 +131,17 @@ class Dashboard extends Component
 
         $this->signature = '';
     }
+
+    public function __construct()
+    {
+        parent::__construct();
+        $user_helper = new UserManagement();
+
+        $rules = $user_helper->rules;
+        $this->rules = $rules;
+    }
+
+
     public function render()
     {
         // get userlog_id from session
@@ -169,8 +183,10 @@ class Dashboard extends Component
         // update rules  base for current status of the user
         if (strtolower($this->currentStatus) == 'student') {
             $rules = array_merge($rules, $user_helper->student_rule);
+            $this->rules = array_merge($rules, $user_helper->student_rule);
         } else {
             $rules = array_merge($rules, $user_helper->prof_rule);
+            $this->rules = array_merge($rules, $user_helper->prof_rule);
         }
 
         $validator = Validator::make([
@@ -545,15 +561,15 @@ class Dashboard extends Component
      * @return bool
      * @description apply to the exam after registering to the system
      */
-    public function apply(int|string $user_id): bool{
+    public function apply(int|string $user_id): bool
+    {
 
         $user = UsersData::with('regDetails')->find($user_id);
         $reg = $user->regDetails;
 
-        if($user){
+        if ($user) {
 
-            if(!$reg->exists())
-            {
+            if (!$reg->exists()) {
                 $reg->user_id = $user_id;
                 $reg->reg_date = date('Y-m-d', strtotime('now'));
                 $reg->apply = 1;
