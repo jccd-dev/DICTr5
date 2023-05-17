@@ -5,8 +5,12 @@
     @if(request()->routeIs('admin.cms.announcement')) {{'Announcement'}}
     @elseif(request()->routeIs('admin.cms.calendar')) {{'Event Calendar'}}
     @elseif(request()->routeIs('admin.exam-schedule')) {{'Exam Schedule'}}
+    @elseif(request()->routeIs('admin.cms.category')) {{'Category'}}
+    @elseif(request()->routeIs('admin.cms.slider')) {{'Slider'}}
+    @elseif(request()->routeIs('admin.cms.posts')) {{'Posts'}}
     @elseif(request()->routeIs('admin.inbox')) {{'Inbox'}}
-    @elseif(request()->routeIs('examinee.dashboard')) {{'Dashboard'}}
+    @elseif(request()->routeIs('admin.examinees')) {{'Exam Applicants'}}
+    @elseif(request()->routeIs('admin.accounts')) {{'Admin Accounts'}}
     @else {{'DICT Camarines Sur'}}
     @endif
 </title>

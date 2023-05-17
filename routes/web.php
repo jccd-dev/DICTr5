@@ -77,7 +77,7 @@ Route::prefix('admin')->group(function () {
 
         // manage admin accounts
         Route::prefix('dict-admins')->group(function () {
-            Route::get('/', 'AdminAccounts@render')->name('admin.accounts');
+            Route::get('/', [AdminAccounts::class, 'render'])->name('admin.accounts');
             Route::post('/create', [AdminAccounts::class, 'add_admin'])->name('admin.create');
             Route::get('/view/{id}', [AdminAccounts::class, 'access_admin'])->name('admin.access');
             Route::get('/update/{id}', [AdminAccounts::class, 'update_admin'])->name('admin.update');
