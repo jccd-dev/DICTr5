@@ -34,6 +34,8 @@ class Announcement extends Model
         'end_duration',
     ];
 
+    public $timestamps = false;
+
     public function admin():BelongsTo {
         return $this->belongsTo(AdminModel::class, 'admin_id');
     }
