@@ -48,6 +48,7 @@ class AdminAccounts extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
+
         $new_admin = new AdminModel();
         $new_admin->fill([
             'email'       => $request->email,
@@ -57,6 +58,7 @@ class AdminAccounts extends Controller
             'role'        => $request->role,
             'designation' => $request->designation,
         ]);
+
 
         if (!$new_admin->save()) {
             // return server error if data not isnerted to database
@@ -81,7 +83,7 @@ class AdminAccounts extends Controller
     public function access_admin(int $admin_id): string
     {
         $admin_data = AdminModel::find($admin_id);
-        return view('', compact('admin_data'))->render();
+        return view('components.admin.update-admin-account-modal', compact('admin_data'))->render();
     }
 
     public function update_admin(Request $request, int $admin_id): JsonResponse
