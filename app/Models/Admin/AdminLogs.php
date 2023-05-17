@@ -19,4 +19,6 @@ class AdminLogs extends Model
     protected $fillable = [
         'admin_id', 'activity', 'end_point'
     ];
+
+    public $timestamps = false;
 }

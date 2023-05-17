@@ -20,6 +20,7 @@ use App\Http\Controllers\Layouts\ViewAnnouncementController;
 use App\Http\Controllers\Examinee\DashboardController as UserDashboardController;
 use App\Http\Livewire\Admin\Inbox as CMSInbox;
 use App\Http\Controllers\Admins\Examinee\ManageApplicants;
+use App\Http\Controllers\Admins\SystemLogs;
 
 /*
 |--------------------------------------------------------------------------
@@ -84,13 +85,14 @@ Route::prefix('admin')->group(function () {
         });
 
         Route::prefix('examinee')->group( function (){
-            Route::get('/', [ManageApplicants::class, 'render'])->name('examinees');
+            Route::get('/', [ManageApplicants::class, 'render'])->name('admin.examinees');
             Route::get('/search', [ManageApplicants::class, 'search_examinees'])->name('search');
             Route::get('/get-examinee/{id}', [ManageApplicants::class, 'select_examinees'])->name('update');
         });
 
         Route::get('/exam-schedule', ExamSchedule::class)->name('admin.exam-schedule');
         Route::get('/inbox', CMSInbox::class)->name('admin.inbox');
+        Route::get('/logs', [SystemLogs::class, 'display_logs'])->name('system-log');
     });
 });
 
