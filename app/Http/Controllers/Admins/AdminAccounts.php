@@ -42,7 +42,6 @@ class AdminAccounts extends Controller
      */
     public function add_admin(Request $request): JsonResponse
     {
-
         $validator = Validator::make($request->all(), $this->rules);
 
         if ($validator->fails()) {
