@@ -4,6 +4,7 @@ use App\Http\Controllers\Admins\AdminAccounts;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\Examinee\GoogleAuthController;
 use App\Http\Controllers\Admins\AdminLoginController;
+use App\Http\Controllers\VisitorController;
 use App\Http\Livewire\CMS\Post;
 use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\CMS\SliderBanner;
@@ -118,6 +119,9 @@ Route::prefix('exam')->group(function () {
 Route::get('/logout', function () {
     session()->flush();
 });
+
+//Visitor Counter
+Route::get('/visitor-counts', [VisitorController::class, 'incrementVisitor']);
 
 //testing for JWT middleware
 //Route::middleware(['jwt.logAuth', 'jwt.roleCheck:superadmin,normaladmin'])->group(function () {
