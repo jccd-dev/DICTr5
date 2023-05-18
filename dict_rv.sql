@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 17, 2023 at 06:03 AM
+-- Generation Time: May 18, 2023 at 05:13 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -206,6 +206,9 @@ CREATE TABLE `feedbacks` (
   `cp_number` varchar(50) DEFAULT NULL,
   `is_read` int(11) DEFAULT 0,
   `is_archived` int(2) NOT NULL DEFAULT 0,
+  `is_tech4ed` tinyint(2) DEFAULT 0,
+  `organization` varchar(250) DEFAULT NULL,
+  `tech4ed_course_training` varchar(250) DEFAULT NULL,
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -636,7 +639,7 @@ ALTER TABLE `user_logs`
 -- AUTO_INCREMENT for table `addresses`
 --
 ALTER TABLE `addresses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `admin_logs`
@@ -726,19 +729,19 @@ ALTER TABLE `submitted_files`
 -- AUTO_INCREMENT for table `tertiary_edu`
 --
 ALTER TABLE `tertiary_edu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `training_seminars`
 --
 ALTER TABLE `training_seminars`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `users_data`
 --
 ALTER TABLE `users_data`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `user_history`
@@ -750,7 +753,7 @@ ALTER TABLE `user_history`
 -- AUTO_INCREMENT for table `user_login`
 --
 ALTER TABLE `user_login`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `user_logs`
