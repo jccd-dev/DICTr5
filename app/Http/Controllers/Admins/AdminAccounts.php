@@ -22,15 +22,17 @@ class AdminAccounts extends Controller
     ];
 
     private $adminModel;
-    public function __construct(){
+    public function __construct()
+    {
         $this->adminModel = new AdminModel;
     }
 
     //TODO: view for adding new admins
-    public function render(): View{
+    public function render(): View
+    {
 
         $admins = AdminModel::all();
-        return view('', ['admins' => $admins]);
+        return view('AdminFunctions.admin-accounts', ['data' => $admins]);
     }
 
     /**
@@ -38,13 +40,14 @@ class AdminAccounts extends Controller
      * @return
      * @description Function for creating new admin
      */
-    public function add_admin(Request $request): JsonResponse{
+    public function add_admin(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), $this->rules);
 
-        $validator = Validator::make($request->all(),$this->rules);
-
-        if($validator->fails()){
+        if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
+
 
         $new_admin = new AdminModel();
         $new_admin->fill([
@@ -56,7 +59,8 @@ class AdminAccounts extends Controller
             'designation' => $request->designation,
         ]);
 
-        if(!$new_admin->save()){
+
+        if (!$new_admin->save()) {
             // return server error if data not isnerted to database
             return response()->json(['error' => 'Server Error'], 500);
         }
@@ -70,7 +74,6 @@ class AdminAccounts extends Controller
                 'name' => $new_admin->name
             ]
         ], 200);
-
     }
 
     /**
@@ -80,15 +83,15 @@ class AdminAccounts extends Controller
     public function access_admin(int $admin_id): string
     {
         $admin_data = AdminModel::find($admin_id);
-        return view('', compact('admin_data'))->render();
+        return view('components.admin.update-admin-account-modal', compact('admin_data'))->render();
     }
 
     public function update_admin(Request $request, int $admin_id): JsonResponse
     {
 
-        $validator = Validator::make($request->all(),$this->rules);
+        $validator = Validator::make($request->all(), $this->rules);
 
-        if(!$validator->fails()){
+        if (!$validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
@@ -101,18 +104,18 @@ class AdminAccounts extends Controller
         $admin_to_update->role = $request->role;
         $admin_to_update->designation = $request->designation;
 
-        if(!$admin_to_update->save()){
+        if (!$admin_to_update->save()) {
             return response()->json(['error' => 'Server Error'], 500);
         }
 
         return response()->json(['admn' => $admin_to_update->name], 200);
     }
 
-    public function delete_admin(int $admin_id): bool{
+    public function delete_admin(int $admin_id): bool
+    {
 
         $admin_to_delete = AdminModel::find($admin_id);
 
         return $admin_to_delete->delete() > 0;
     }
-
 }
