@@ -563,10 +563,10 @@ class Dashboard extends Component
 
         $user = UsersData::with('regDetails')->find($user_id);
         $reg = $user->regDetails;
-
+        // dd($user);
         if ($user) {
 
-            if (!$reg->exists()) {
+            if ($reg && !$reg->exists()) {
                 $reg->user_id = $user_id;
                 $reg->reg_date = date('Y-m-d', strtotime('now'));
                 $reg->apply = 1;

@@ -2,11 +2,11 @@
 
 {{--  main  --}}
 @if(session()->has('warning') || session()->has('erorr') || session()->has('success'))
-<div id="dismiss-alert" wire:ignore class="w-full hidden text-white
+<div id="dismiss-alert" wire:ignore class="w-full text-white
     {{ session()->has('success') ? 'bg-emerald-500' : '' }}
-    {{ session()->has('warning') ? 'bg-orange-300' : '' }}
+    {{ session()->has('warning') ? 'bg-orange-500' : '' }}
     {{ session()->has('error') ? 'bg-red-500' : '' }}
-    absolute -top-10 right-0 z-10">
+    fixed top-0 right-0 z-[1000]">
     <div class="container relative flex items-center justify-between px-6 py-4 mx-auto">
         <div class="flex">
             <svg viewBox="0 0 40 40" class="w-6 h-6 fill-current">
@@ -28,7 +28,7 @@
     </div>
 </div>
 @endif
-    <div id="dismiss-alert" wire:ignore class="w-full hidden text-white bg-emerald-500 absolute -top-10 right-0 z-10">
+    <div id="dismiss-alert" wire:ignore class="w-full hidden text-white bg-emerald-500 fixed top-0 right-0 z-[1000]">
         <div class="container relative flex items-center justify-between px-6 py-4 mx-auto">
             <div class="flex">
                 <svg viewBox="0 0 40 40" class="w-6 h-6 fill-current">
