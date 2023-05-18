@@ -77,6 +77,11 @@ class Dashboard extends Component
 
     public function updated($propertyName)
     {
+
+        $user_helper = new UserManagement();
+
+        $rules = $user_helper->rules;
+        $this->rules = $rules;
         $this->validateOnly($propertyName);
     }
 
@@ -130,15 +135,6 @@ class Dashboard extends Component
         $this->diploma = '';
 
         $this->signature = '';
-    }
-
-    public function __construct()
-    {
-        parent::__construct();
-        $user_helper = new UserManagement();
-
-        $rules = $user_helper->rules;
-        $this->rules = $rules;
     }
 
 
@@ -228,7 +224,7 @@ class Dashboard extends Component
         }
         $users_data = [
             // 'user_login_id'     => session()->get('user')['id'],
-            'user_login_id'     => 2, // note: for deve, it need to have atleast one data in user login table and use the id here
+            'user_login_id'     => session()->get('user')['id'], // note: for deve, it need to have atleast one data in user login table and use the id here
             'fname'             => $this->givenName,
             'lname'             => $this->surName,
             'mname'             => $this->middleName,
@@ -312,6 +308,7 @@ class Dashboard extends Component
     public function get_user_data(): Collection|array
     {
         $user_login_id = session()->get('user')['id'];
+        // dd($user_login_id);
         return UsersData::with('tertiaryEdu', 'trainingSeminars', 'addresses', 'submittedFiles', 'userLogin', 'userHistory')
             ->where('user_login_id', $user_login_id)
             ->get();
