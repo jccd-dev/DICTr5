@@ -16,6 +16,10 @@ class Feedback extends Model
         'cp_number',
         'email',
         'is_read',
+        'is_tech4ed',
+        'organization',
+        'tech4ed_course_training',
+        'is_archived',
     ];
 
     public $timestamps = false;
