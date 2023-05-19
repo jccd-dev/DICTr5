@@ -43,10 +43,10 @@ class ManageApplicants extends Controller
     /**
      * @param int $examinees_id
      * @return View|RedirectResponse
-     * @uses SELECT_EXAMINER
-     * @description return a data of specific examiner from database
+     * @uses SELECT_examinee
+     * @description return a data of specific examinee from database
      */
-    public function select_examiner(int $examinees_id): View|RedirectResponse {
+    public function select_examinee(int $examinees_id): View|RedirectResponse {
 
         $examinees_data = UsersData::with('addresses', 'tertiaryEdu', 'trainingSeminars', 'submittedFiles', 'regDetails', 'userHistory', 'userLogs')->where('id', $examinees_id)->first();
 
@@ -128,7 +128,7 @@ class ManageApplicants extends Controller
         *   2 => incomplete,
          *  3 => for evaluation (pending)
          *  4 => Approved
-         *  5 => Waiting for result
+         *  5 => Waiting for result //TODO how to know if applicant done taking the exam
          * ]
         */
 
@@ -168,7 +168,7 @@ class ManageApplicants extends Controller
         $message = $request->message;
         $result = $request->result;
 
-        // if examiner failed the tests
+        // if examinee failed the tests
         $part1 = $request->part1;
         $part2 = $request->part2;
         $part3 = $request->part3;
