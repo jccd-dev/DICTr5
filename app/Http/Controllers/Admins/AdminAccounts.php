@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Admins;
 
+use App\Mail\EmailAdminAccount;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Admin\AdminModel;
 use Illuminate\View\View;
@@ -66,7 +68,12 @@ class AdminAccounts extends Controller
         }
 
         // TODO: inserted admin should receive an email with the password of his/her account
-
+        $data = [
+            'email' => $request->email,
+            'password' => $request->password,
+            'url' => route('admin.login')
+        ];
+        Mail::to($request->email)->send(new EmailAdminAccount($data));
         // return success msg with admin name for confirmation
         return response()->json([
             'success' => 'New admin Inserted',
