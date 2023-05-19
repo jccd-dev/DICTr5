@@ -7,7 +7,8 @@ use App\Models\Examinee\UsersData;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Container\ContainerExceptionInterface;
 
-class UserManagement {
+class UserManagement
+{
 
     public $rules = [
         'givenName'     => "required|regex:/^[A-Za-z\s]+$/",
@@ -71,11 +72,11 @@ class UserManagement {
 
             $submit = $user->submittedFiles();
             // insert files into folder and database
-            $organized_data['passport'] != null ? $file_helper->store_files($organized_data['passport'], $submit, 'passport', $last_name) : null;
-            $organized_data['psa'] != null ? $file_helper->store_files($organized_data['psa'], $submit, 'psa', $last_name) : null;
-            $organized_data['validId'] != null ? $file_helper->store_files($organized_data['validId'], $submit, 'validId', $last_name) : null;
-            $organized_data['diploma'] != null ? $file_helper->store_files($organized_data['diploma'], $submit, 'diploma_TOR', $last_name) : null;
-            $organized_data['cert'] != null ? $file_helper->store_files($organized_data['cert'], $submit, 'coe', $last_name) : null;
+            $organized_data['files']['passport'] != null ? $file_helper->store_files($organized_data['files']['passport'], $submit, 'passport', $last_name) : null;
+            $organized_data['files']['psa'] != null ? $file_helper->store_files($organized_data['files']['psa'], $submit, 'psa', $last_name) : null;
+            $organized_data['files']['validId'] != null ? $file_helper->store_files($organized_data['files']['validId'], $submit, 'validId', $last_name) : null;
+            $organized_data['files']['diploma'] != null ? $file_helper->store_files($organized_data['files']['diploma'], $submit, 'diploma_TOR', $last_name) : null;
+            $organized_data['files']['cert'] != null ? $file_helper->store_files($organized_data['files']['cert'], $submit, 'coe', $last_name) : null;
 
             return true;
         }
@@ -83,7 +84,8 @@ class UserManagement {
         return false;
     }
 
-    public function update_users_data(array $organized_data, $user_id){
+    public function update_users_data(array $organized_data, $user_id)
+    {
 
         $user = UsersData::find($user_id);
 
@@ -163,6 +165,4 @@ class UserManagement {
 
         return $file_helper->update_the_file($cert, $user, 'coe');
     }
-
-
 }
