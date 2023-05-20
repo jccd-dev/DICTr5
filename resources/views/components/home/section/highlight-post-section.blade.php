@@ -10,7 +10,7 @@
                 @php
                     if ($index === 3) break;
                 @endphp
-                <div class="card w-[23rem] rounded-xl border-b-4 border-custom-red">
+                <div class="card w-[23rem] rounded-xl border-b-4 border-custom-red cursor-pointer" onclick="() => location.href = '{{ url('') }}'">
                     <div class="flex flex-col justify-between">
                         <div>
                             {{-- top --}}
