@@ -14,6 +14,14 @@
         <form action="#" method="POST" wire:submit.prevent="submit" class="w-full flex flex-col">
             <div x-show="state == 1" class="w-full flex flex-col items-center">
                 <h1 class="font-bold font-quicksand text-xl flex self-start my-4">Personal Information</h1>
+                <div class="flex justify-start w-full">
+                    <div class="">
+                        <div class="mb-4">
+                            <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                            <label for="default-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Exam Retaker</label>
+                        </div>
+                    </div>
+                </div>
                 <div class="flex md:flex-row flex-col w-full gap-3">
                     <div class="flex md:flex-row flex-col flex-1 gap-3">
                         <x-forms.input-form name="Given Name" type="text" placeholder="Given Name" model="givenName" id="given-name" classes="mb-3 md:mb-6 flex-1 flex-col" />
