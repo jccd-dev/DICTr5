@@ -1,10 +1,10 @@
-<div class="w-full mt-32">
+<div class="w-full mt-32 p-5">
     <div class="w-full flex flex-col justify-center">
-        <h1 class="text-center font-bold font-inter text-3xl">Services</h1>
-        <p class="text-center text-lg mt-3">Lorem ipsum dolor sit amet consectetur. Adipiscing pretium quam sapien leo magna.</p>
+        <h1 class="text-center font-bold font-inter text-2xl md:text-3xl">Services</h1>
+        <p class="text-center text-base md:text-lg mt-3">Lorem ipsum dolor sit amet consectetur. Adipiscing pretium quam sapien leo magna.</p>
     </div>
     <div class="flex justify-center mt-20 gap-8 flex-wrap">
-        <div class="card w-[15rem] h-[15rem] relative overflow-hidden rounded-xl">
+        <div class="card w-[10rem] h-[10rem] sm:w-[12rem] sm:h-[12rem] lg:w-[15rem] lg:h-[15rem] relative overflow-hidden rounded-xl">
             <div class="absolute -z-[1] w-full h-full top-0 left-0">
                 <img src="{{ asset('/img/sample card img 2.jpg') }}" class="w-full h-full object-cover" alt="">
             </div>
@@ -17,7 +17,7 @@
                 <span class="text-sm">enable • empower • transform </span>
             </div>
         </div>
-        <div class="card w-[15rem] h-[15rem] relative overflow-hidden rounded-xl">
+        <div class="card w-[10rem] h-[10rem] sm:w-[12rem] sm:h-[12rem] lg:w-[15rem] lg:h-[15rem] relative overflow-hidden rounded-xl">
             <div class="absolute -z-[1] w-full h-full top-0 left-0">
                 <img src="{{ asset('/img/sample card img 2.jpg') }}" class="w-full h-full object-cover" alt="">
             </div>
@@ -30,7 +30,7 @@
                 <span class="text-sm">enable • empower • transform </span>
             </div>
         </div>
-        <div class="card w-[15rem] h-[15rem] relative overflow-hidden rounded-xl">
+        <div class="card w-[10rem] h-[10rem] sm:w-[12rem] sm:h-[12rem] lg:w-[15rem] lg:h-[15rem] relative overflow-hidden rounded-xl">
             <div class="absolute -z-[1] w-full h-full top-0 left-0">
                 <img src="{{ asset('/img/sample card img 2.jpg') }}" class="w-full h-full object-cover" alt="">
             </div>
@@ -43,7 +43,7 @@
                 <span class="text-sm">enable • empower • transform </span>
             </div>
         </div>
-        <div class="card w-[15rem] h-[15rem] relative overflow-hidden rounded-xl">
+        <div class="card w-[10rem] h-[10rem] sm:w-[12rem] sm:h-[12rem] lg:w-[15rem] lg:h-[15rem] relative overflow-hidden rounded-xl">
             <div class="absolute -z-[1] w-full h-full top-0 left-0">
                 <img src="{{ asset('/img/sample card img 2.jpg') }}" class="w-full h-full object-cover" alt="">
             </div>
