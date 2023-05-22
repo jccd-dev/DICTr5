@@ -40,6 +40,8 @@ class FooterForm extends Component
         ]);
         $this->email = '';
         $this->message = '';
+        $this->name = '';
+        $this->cp_number = '';
         $this->dispatchBrowserEvent('FeedbackCreated', true);
     }
 
