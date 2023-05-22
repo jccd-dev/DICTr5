@@ -33,26 +33,26 @@ class ManageApplicants extends Controller
     public array $trainings = [];
     public array $toDeleteTrainings = [];
 
-    public function render(Request $request): View {
+    public function render(Request $request): View
+    {
 
         $searchValues = Cache::get($this->cache_key);
 
-        if($searchValues){
+        if ($searchValues) {
             $examinees = SearchExamineesHelper::search_with_cache($searchValues);
-        }
-        else{
-        $examinees = UsersData::with('tertiaryEdu', 'trainingSeminars', 'addresses', 'submittedFiles', 'userLogin')
-            ->paginate(20);
+        } else {
+            $examinees = UsersData::with('tertiaryEdu', 'trainingSeminars', 'addresses', 'submittedFiles', 'userLogin')
+                ->paginate(20);
 
-        $searchValues = [
-            'gender' => $this->gender,
-            'curr_status' => $this->curr_status,
-            'municipality' => $this->municipality,
-            'search_text' => $this->search_text,
-            'reg_status' => $this->reg_status,
-            'order_by' => $this->order_by,
-            'is_applied' => $this->is_applied,
-        ];
+            $searchValues = [
+                'gender' => $this->gender,
+                'curr_status' => $this->curr_status,
+                'municipality' => $this->municipality,
+                'search_text' => $this->search_text,
+                'reg_status' => $this->reg_status,
+                'order_by' => $this->order_by,
+                'is_applied' => $this->is_applied,
+            ];
         }
 
         $exam_schedule = new ExamSchedule();
@@ -67,16 +67,16 @@ class ManageApplicants extends Controller
      * @uses SELECT_examinee
      * @description return a data of specific examinee from database
      */
-    public function select_examinee(int $examinees_id): View|RedirectResponse {
-
+    public function select_examinee(int $examinees_id): View|RedirectResponse
+    {
         $examinees_data = UsersData::with('addresses', 'tertiaryEdu', 'trainingSeminars', 'submittedFiles', 'regDetails', 'userHistory', 'userLogs')->where('id', $examinees_id)->first();
-
+        // dd($examinees_data);
         // if record is null or not found
-        if(!$examinees_data){
+        if (!$examinees_data) {
             return redirect()->back()->with('error', 'Record cannot found');
         }
 
-        return view('record.show', ['examinees_data' => $examinees_data]);
+        return view('AdminFunctions.applicant-data', ['examinees_data' => $examinees_data]);
     }
 
     /**
@@ -119,15 +119,16 @@ class ManageApplicants extends Controller
      * @return JsonResponse
      * @uses VALIDATE_APPLICATION
      */
-    public function validate_application(Request $request, int|string $user_id): JsonResponse{
-         /** validation numbers [
-        *   1 => Disapproved,
-        *   2 => incomplete,
+    public function validate_application(Request $request, int|string $user_id): JsonResponse
+    {
+        /** validation numbers [
+         *   1 => Disapproved,
+         *   2 => incomplete,
          *  3 => for evaluation (pending)
          *  4 => Approved
          *  5 => Waiting for result //TODO how to know if applicant done taking the exam
          * ]
-        */
+         */
 
         $validation = (int)$request->validation;
         $examSchedule_id = (int)$request->exam_sched_id;
@@ -136,14 +137,14 @@ class ManageApplicants extends Controller
 
         $reg = $applicant->regDetails;
 
-        if($validation == 3){
+        if ($validation == 3) {
             $reg->exam_schedule_id = $examSchedule_id;
             $reg->approved_date = date('Y-m-d', strtotime('now'));
             $reg->exam_status = "Scheduled for Exam";
         }
 
         $reg->status = $validation;
-        if($reg->save()){
+        if ($reg->save()) {
             //TODO send email notification to applicant
             return response()->json(['success' => 'Validated Successfully'], 200);
         }
@@ -159,7 +160,8 @@ class ManageApplicants extends Controller
      * @description send email to user with the exam result
      * @uses SEND_EXAM_RESULT
      */
-    public function send_exam_result(Request $request, int|string $user_id){
+    public function send_exam_result(Request $request, int|string $user_id)
+    {
 
         $file = $request->pdf_file;
         $message = $request->message;
@@ -179,7 +181,7 @@ class ManageApplicants extends Controller
         // TODO send email
         $email = true;
 
-        if($email){
+        if ($email) {
 
             //update the user history
             $userHistory = $user->userHistory()->create([
@@ -193,7 +195,7 @@ class ManageApplicants extends Controller
                 'exam_result'       => $result
             ]);
 
-            if($result == 'failed'){
+            if ($result == 'failed') {
                 $userHistory->failedHistory()->create([
                     'part1' => $part1,
                     'part2' => $part2,
@@ -212,9 +214,10 @@ class ManageApplicants extends Controller
      * @uses DEACTIVATE_ACCOUNT
      * @description deactivate examines or user account it prevent them to login and use their accounts
      */
-    public function deactivate_account($user_id):bool{
+    public function deactivate_account($user_id): bool
+    {
         $user = UsersData::find($user_id);
-        if($user){
+        if ($user) {
             $user_login = Users::find($user->user_login_id);
 
             $user_login->is_active = 0;
@@ -225,7 +228,8 @@ class ManageApplicants extends Controller
         return false;
     }
 
-    public function add_user(Request $request){
+    public function add_user(Request $request)
+    {
         $user_helper = new UserManagement();
 
         $rules = $user_helper->rules;
@@ -238,7 +242,7 @@ class ManageApplicants extends Controller
 
         $validator = Validator::make($request->all, $rules);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
@@ -257,7 +261,7 @@ class ManageApplicants extends Controller
             'telephone_number'  => $request->post('telNum'),
             'office_address'    => $request->post('officeAddress'),
             'office_category'   => $request->post('officeCategory'),
-            'no_of_years_in_pos'=> $request->post('yearsPresentPosition'),
+            'no_of_years_in_pos' => $request->post('yearsPresentPosition'),
             'programming_langs' => $request->post('pl'),
             'e_sign'            => $request->post('signature'),
             'year_level'        => $request->post('yearLevel'),
@@ -287,7 +291,7 @@ class ManageApplicants extends Controller
         ];
 
         //process trainings
-        foreach ($request->post('course') as $key => $training){
+        foreach ($request->post('course') as $key => $training) {
             $center = $request->post('center')[$key];
             $hours = $request->post('hours')[$key];
 
@@ -309,7 +313,8 @@ class ManageApplicants extends Controller
         return $user_helper->insert_users_data($organized_users_data);
     }
 
-    public function update_users_data(Request $request, $user_id){
+    public function update_users_data(Request $request, $user_id)
+    {
 
         $user_helper = new UserManagement();
 
@@ -323,7 +328,7 @@ class ManageApplicants extends Controller
 
         $validator = Validator::make($request->all, $rules);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
@@ -342,7 +347,7 @@ class ManageApplicants extends Controller
             'telephone_number'  => $request->post('telNum'),
             'office_address'    => $request->post('officeAddress'),
             'office_category'   => $request->post('officeCategory'),
-            'no_of_years_in_pos'=> $request->post('yearsPresentPosition'),
+            'no_of_years_in_pos' => $request->post('yearsPresentPosition'),
             'programming_langs' => $request->post('pl'),
             'e_sign'            => $request->post('signature'),
             'year_level'        => $request->post('yearLevel'),
@@ -364,7 +369,7 @@ class ManageApplicants extends Controller
         ];
 
         //process trainings
-        foreach ($request->trainings('course') as $key => $training){
+        foreach ($request->trainings('course') as $key => $training) {
             $center = $request->trainings('center')[$key];
             $hours = $request->trainings('hours')[$key];
 
@@ -376,7 +381,7 @@ class ManageApplicants extends Controller
         }
 
         //process trainings
-        foreach ($request->post('course') as $key => $training){
+        foreach ($request->post('course') as $key => $training) {
             $center = $request->post('center')[$key];
             $hours = $request->post('hours')[$key];
 
@@ -463,4 +468,3 @@ class ManageApplicants extends Controller
         return $user_helper->update_psa($user_id, $file);
     }
 }
-

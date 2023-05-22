@@ -262,20 +262,5 @@
 </div>
 @vite(['resources/js/admin/examinees_list.js', 'resources/js/user/dashboard.js'])
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-<script>
-    // $(document).ready(function(){
-    //     $('#search-form input, #search-form select').on('change, input', function() {
-    //         var formData = $('#search-form').serialize();
-    //         $.ajax({
-    //             url: '{{ route('search') }}',
-    //             type: 'GET',
-    //             data: formData,
-    //             success: function(data) {
-    //                 $('#results').html(data);
-    //             }
-    //         });
-    //     });
-    // })
-</script>
 
 @endsection

@@ -37,16 +37,16 @@ use App\Http\Controllers\Admins\SystemLogs;
 Route::get('/', [\App\Http\Controllers\Layouts\Layouts::class, 'render'])->name('homepage');
 Route::get("/posts", [\App\View\Components\Pages\Posts::class, 'render']);
 Route::get('/testing', \App\Http\Livewire\CMS\Testing::class);
-Route::get('/mandate-powers-and-functions', function(){
+Route::get('/mandate-powers-and-functions', function () {
     return view('static.mandate-powers-and-functions');
 });
-Route::get('/mission-vision', function(){
+Route::get('/mission-vision', function () {
     return view('static.mission-vision');
 });
-Route::get('/ra-10844', function(){
+Route::get('/ra-10844', function () {
     return view('static.ra-10844');
 });
-Route::get('/dict-cam-sur-officials', function(){
+Route::get('/dict-cam-sur-officials', function () {
     return view('static.officials');
 });
 
@@ -85,10 +85,10 @@ Route::prefix('admin')->group(function () {
             Route::delete('/delete/{id}', [AdminAccounts::class, 'delete_admin'])->name('admin.delete');
         });
 
-        Route::prefix('examinee')->group( function (){
+        Route::prefix('examinee')->group(function () {
             Route::get('/', [ManageApplicants::class, 'render'])->name('admin.examinees');
             Route::get('/search', [ManageApplicants::class, 'search_examinees'])->name('search');
-            Route::get('/get-examinee/{id}', [ManageApplicants::class, 'select_examinees'])->name('update');
+            Route::get('/get-examinee/{id}', [ManageApplicants::class, 'select_examinee'])->name('admin.examinee.update');
         });
 
         Route::get('/exam-schedule', ExamSchedule::class)->name('admin.exam-schedule');
