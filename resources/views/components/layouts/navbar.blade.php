@@ -23,13 +23,13 @@
                 </button>
                 <div x-show="open" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opaity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="absolute left-0 w-48 origin-top-right rounded-md shadow-lg" style="display: none; z-index:100">
                   <div class="py-1 bg-white rounded-md shadow-xs">
-                    <a href="#" class="nav--top font-medium flex flex-row items-center px-4 py-2 text-sm text-gray-700 focus:text-gray-900 hover:text-gray-900 focus:outline-none hover:bg-gray-100 focus:bg-gray-100">
+                    <a href="{{url('/mandate-powers-and-functions')}}" class="nav--top font-medium flex flex-row items-center px-4 py-2 text-sm text-gray-700 focus:text-gray-900 hover:text-gray-900 focus:outline-none hover:bg-gray-100 focus:bg-gray-100">
                       Mandate, Powers and Function
                     </a>
-                    <a href="#" class="nav--top font-medium flex flex-row items-center px-4 py-2 text-sm text-gray-700 focus:text-gray-900 hover:text-gray-900 focus:outline-none hover:bg-gray-100 focus:bg-gray-100">
+                    <a href="{{url('/mission-vision')}}" class="nav--top font-medium flex flex-row items-center px-4 py-2 text-sm text-gray-700 focus:text-gray-900 hover:text-gray-900 focus:outline-none hover:bg-gray-100 focus:bg-gray-100">
                       Mission and Vision
                     </a>
-                    <a href="#" class="nav--top font-medium flex flex-row items-center px-4 py-2 text-sm text-gray-700 focus:text-gray-900 hover:text-gray-900 focus:outline-none hover:bg-gray-100 focus:bg-gray-100">
+                    <a href="{{url('/ra-10844')}}" class="nav--top font-medium flex flex-row items-center px-4 py-2 text-sm text-gray-700 focus:text-gray-900 hover:text-gray-900 focus:outline-none hover:bg-gray-100 focus:bg-gray-100">
                       Republic Act 10844
                     </a>
 
@@ -50,7 +50,7 @@
                             </a>
                         </div>
                     </div>
-                    <a href="#" class="nav--top font-medium flex flex-row items-center px-4 py-2 text-sm text-gray-700 focus:text-gray-900 hover:text-gray-900 focus:outline-none hover:bg-gray-100 focus:bg-gray-100">
+                    <a href="{{url('/dict-cam-sur-officials')}}" class="nav--top font-medium flex flex-row items-center px-4 py-2 text-sm text-gray-700 focus:text-gray-900 hover:text-gray-900 focus:outline-none hover:bg-gray-100 focus:bg-gray-100">
                       Officials
                     </a>
                   </div>
