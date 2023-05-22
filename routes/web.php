@@ -88,7 +88,12 @@ Route::prefix('admin')->group(function () {
         Route::prefix('examinee')->group( function (){
             Route::get('/', [ManageApplicants::class, 'render'])->name('admin.examinees');
             Route::get('/search', [ManageApplicants::class, 'search_examinees'])->name('search');
-            Route::get('/get-examinee/{id}', [ManageApplicants::class, 'select_examinees'])->name('update');
+            Route::get('/get-examinee/{id}', [ManageApplicants::class, 'select_examinees'])->name('examinee.get');
+            Route::post('/add-examinee', [ManageApplicants::class, 'add_user'])->name('examinee.add');
+            Route::post('/{id}/update-examinee', [ManageApplicants::class, 'update_users_data'])->name('examinee.update');
+            Route::post('/{id}/validation', [ManageApplicants::class, 'validate_application'])->name('examinee.validate');
+            Route::post('/{id}/send-result/', [ManageApplicants::class, 'send_exam_result'])->name('examinee.result');
+            Route::put('/{id}/deactivate', [ManageApplicants::class, 'deactivate_account'])->name('examinee.deactivate');
         });
 
         Route::get('/exam-schedule', ExamSchedule::class)->name('admin.exam-schedule');

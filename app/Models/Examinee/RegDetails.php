@@ -19,6 +19,7 @@ class RegDetails extends Model
       'reg_date',
       'approved_date',
       'status',
+      'apply'
     ];
 
     public function usersData() :BelongsTo{
