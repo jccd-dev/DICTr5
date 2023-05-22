@@ -5,6 +5,7 @@ namespace App\Http\Livewire\User;
 use App\Helpers\FileHandler;
 use App\Helpers\UserManagement;
 use App\Models\Examinee\UsersData;
+use App\Models\Examinee\Users;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
@@ -72,6 +73,8 @@ class Dashboard extends Component
 
     protected $rules;
 
+    public $training_limit = 1;
+
 
     protected $except = ['cardModal', 'cardModal2'];
 
@@ -87,15 +90,16 @@ class Dashboard extends Component
 
     public function mount()
     {
-        $this->givenName = '';
+        $u = Users::find(session()->get('user')['id']);
+        $this->givenName = $u->fname;
         $this->middleName = '';
-        $this->surName = '';
+        $this->surName = str_replace(",", "",  $u->lname);
         $this->tel = 0;
         $this->region = '';
         $this->province = '';
         $this->municipality = '';
         $this->barangay = '';
-        $this->email = '';
+        $this->email = $u->email;
         $this->pob = '';
         $this->dob = '';
         $this->gender = '';
@@ -141,7 +145,7 @@ class Dashboard extends Component
     public function render()
     {
         // get userlog_id from session
-        return view('livewire.user.dashboard', ['user_data' => $this->get_user_data()])->layout('layouts.user-layouts');
+        return view('livewire.user.dashboard', ['user_data' => $this->get_user_data(), "user" => Users::find(session()->get('user')['id'])])->layout('layouts.user-layouts');
     }
 
     public function popInput()
@@ -159,10 +163,15 @@ class Dashboard extends Component
 
     public function addInput()
     {
+
+        $this->training_limit += 1;
+        if ($this->training_limit > 3) return;
+
         $this->trainings->push([
             'course' => '',
             'center' => '',
             'hours' => '',
+            't' => $this->training_limit,
         ]);
     }
 

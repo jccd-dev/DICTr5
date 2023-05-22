@@ -53,8 +53,8 @@
                         <img src="{{ asset('img/Group 44.svg') }}" alt="">
                     </div>
                     <div class="font-quicksand flex flex-col">
-                        <h1 class="font-bold text-3xl">Keanu Reeves</h1>
-                        <a href="mailto:keanu.reeves@gmail.com" class="hover:underline">keanu.reeves@gmail.com</a>
+                        <h1 class="font-bold text-3xl">{{ $user->fname }} {{ str_replace(",", "", $user->lname) }}</h1>
+                        <a href="mailto:{{ $user->email }}" class="hover:underline">{{ $user->email }}</a>
                         <span>Professional</span>
                         <div class="flex gap-5 mt-10">
                             <div class="flex flex-col gap-2">
@@ -64,10 +64,20 @@
                                 <span>Telephone No.</span>
                             </div>
                             <div class="flex flex-col gap-2">
-                                <span class="font-semibold">September 2, 1964</span>
-                                <span class="font-semibold">Male</span>
-                                <span class="font-semibold">San Miguel, Nabua, Camarines Sur</span>
-                                <span class="font-semibold">09279386253</span>
+                                <span class="font-semibold">{{ isset($user_data->dob) ? $user_data->dob : "N/A" }}</span>
+                                <span class="font-semibold">{{ isset($user_data->gender) ? $user_data->gender : "N/A" }}</span>
+                                <span class="font-semibold">
+                                    @php
+                                        if(isset($user_data->addresses)) {
+                                            echo $user_data->addresses->barangay . ", ";
+                                            echo $user_data->addresses->municipality . ", ";
+                                            echo $user_data->addresses->province . ", ";
+                                        } else {
+                                            echo "N/A";
+                                        }
+                                    @endphp
+                                </span>
+                                <span class="font-semibold">{{ isset($user_data->tel) ? $user_data->tel : "N/A" }}</span>
                             </div>
                         </div>
                     </div>
