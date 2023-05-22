@@ -31,23 +31,28 @@
                 <div class="flex gap-3">
                     <select name="gender" class="bg-custom-blue py-3 font-quicksand bg-opacity-10 font-semibold border-none text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-fit p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <option value="">Select Gender</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
+                        <option value="male" {{ $searchValues['gender'] === 'male' ? 'selected' : '' }}>Male</option>
+                        <option value="female" {{ $searchValues['gender'] === 'female' ? 'selected' : '' }}>Female</option>
                     </select>
                     <select name="curr_status" class="bg-custom-blue py-3 font-quicksand bg-opacity-10 font-semibold border-none text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-fit p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <option value="">Select Status</option>
-                        <option value="student">Student</option>
-                        <option value="professional">Professional</option>
+                        <option value="student" {{ $searchValues['curr_status'] === 'student' ? 'selected' : '' }}>Student</option>
+                        <option value="professional" {{ $searchValues['curr_status'] === 'professional' ? 'selected' : ''}}>Professional</option>
                     </select>
                     <select name="reg_status" class="bg-custom-blue py-3 font-quicksand bg-opacity-10 font-semibold border-none text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-fit p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <option value="">Select Status</option>
-                        <option value="1">Approved</option>
-                        <option value="0">Pending</option>
+                        <option value="1" {{ $searchValues['reg_status'] == '1' ? 'selected' : ''}}>Approved</option>
+                        <option value="2" {{ $searchValues['reg_status'] == '2' ? 'selected' : ''}}>Pending</option>
                     </select>
-                    <select name="order_by" class="bg-custom-blue py-3 font-quicksand bg-opacity-10 font-semibold border-none text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-fit p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <option value="">Sort</option>
-                        <option value="asc">Ascending</option>
-                        <option value="desc">Descending</option>
+                    <select name="is_applied" class="bg-custom-blue py-3 font-quicksand bg-opacity-10 font-semibold border-none text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-fit p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option value="">Registration</option>
+                        <option value="1" {{ $searchValues['is_applied'] == '1' ? 'selected' : ''}}>Applied</option>
+                        <option value="2" {{ $searchValues['is_applied'] == '2' ? 'selected' : ''}}>Not Applied</option>
+                    </select>
+                    <select name="applicant" class="bg-custom-blue py-3 font-quicksand bg-opacity-10 font-semibold border-none text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-fit p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option value="">Applicants</option>
+                        <option value="1" {{ $searchValues['applicant'] == '1' ? 'selected' : ''}}>Online</option>
+                        <option value="2" {{ $searchValues['applicant'] == '2' ? 'selected' : ''}}>Manual</option>
                     </select>
                 </div>
                 <div class="flex gap-3 items-center">
@@ -55,7 +60,7 @@
                         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                             <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
                         </div>
-                        <input type="text" name="search" id="table-search" class="block h-full p-2.5 py-3 font-quicksand pl-10 text-base text-gray-900 border-0 rounded-lg w-48 bg-[#E6EEF6] focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search">
+                        <input type="text" name="search_text" value="{{ $searchValues['search_text'] ?? '' }}"id="table-search" class="block h-full p-2.5 py-3 font-quicksand pl-10 text-base text-gray-900 border-0 rounded-lg w-48 bg-[#E6EEF6] focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search">
                     </div>
                     <div>
                         <button

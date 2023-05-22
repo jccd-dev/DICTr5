@@ -8,8 +8,11 @@ use App\Models\Examinee\Users;
 use App\Helpers\UserManagement;
 use Illuminate\Http\JsonResponse;
 use App\Models\Examinee\UsersData;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Cache;
+use App\Helpers\SearchExamineesHelper;
 use App\Http\Livewire\Admin\ExamSchedule;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\Collection;
@@ -19,6 +22,7 @@ use Psr\Container\ContainerExceptionInterface;
 class ManageApplicants extends Controller
 {
 
+    private string $cache_key = 'search_items';
     public ?string $gender = null;
     public ?string $curr_status = null;
     public ?string $municipality = null;
@@ -26,18 +30,37 @@ class ManageApplicants extends Controller
     public string|int|null $reg_status = null;
     public string $order_by = 'asc';
     public string|int|null $is_applied = null;
+    public string|int|null $applicant = null;
+
     public array $trainings = [];
     public array $toDeleteTrainings = [];
 
     public function render(Request $request): View {
 
+        $searchValues = Cache::get($this->cache_key);
+
+        if($searchValues){
+            $examinees = SearchExamineesHelper::search_with_cache($searchValues);
+        }
+        else{
         $examinees = UsersData::with('tertiaryEdu', 'trainingSeminars', 'addresses', 'submittedFiles', 'userLogin')
             ->paginate(20);
+
+        $searchValues = [
+            'gender' => $this->gender,
+            'curr_status' => $this->curr_status,
+            'municipality' => $this->municipality,
+            'search_text' => $this->search_text,
+            'reg_status' => $this->reg_status,
+            'order_by' => $this->order_by,
+            'is_applied' => $this->is_applied,
+        ];
+        }
 
         $exam_schedule = new ExamSchedule();
         $exam_schedule_records = $exam_schedule->all();
 
-        return view('AdminFunctions/examinees-list', ['data' => $examinees, 'examSchedule' => $exam_schedule_records]);
+        return view('AdminFunctions/examinees-list', ['data' => $examinees, 'examSchedule' => $exam_schedule_records, 'searchValues' => $searchValues]);
     }
 
     /**
@@ -46,16 +69,16 @@ class ManageApplicants extends Controller
      * @uses SELECT_examinee
      * @description return a data of specific examinee from database
      */
-    public function select_examinee(int $examinees_id): View|RedirectResponse {
+    public function select_examinee(int $examinee_id): View|RedirectResponse {
 
-        $examinees_data = UsersData::with('addresses', 'tertiaryEdu', 'trainingSeminars', 'submittedFiles', 'regDetails', 'userHistory', 'userLogs')->where('id', $examinees_id)->first();
+        $examinee_data = UsersData::with('addresses', 'tertiaryEdu', 'trainingSeminars', 'submittedFiles', 'regDetails', 'userHistory', 'userLogs', 'userLogin')->where('id', $examinee_id)->first();
 
         // if record is null or not found
-        if(!$examinees_data){
+        if(!$examinee_data){
             return redirect()->back()->with('error', 'Record cannot found');
         }
 
-        return view('record.show', ['examinees_data' => $examinees_data]);
+        return view('record.show', ['examinee_data' => $examinee_data]);
     }
 
     /**
@@ -73,45 +96,22 @@ class ManageApplicants extends Controller
         $this->reg_status = $request->reg_status;
         $this->order_by = $request->order_by ? $request->order_by : $this->order_by;
         $this->is_applied = $request->is_applied;
+        $this->applicant = $request->applicant;
 
-        $data = UsersData::query()
-            ->when($this->gender, function ($query, $genderValue){
-                $query->where('gender', $genderValue);
-            })
-            ->when($this->reg_status, function ($query, $statusValue){
-                $query->whereHas('regDetails', function ($query) use ($statusValue){
-                    $query->where('status', $statusValue);
-                });
-            })
-            ->when($this->is_applied, function ($query, $applyValue){
-                $query->whereHas('regDetails', function ($query) use ($applyValue){
-                    $query->where('apply', $applyValue);
-                });
-            })
-            ->when($this->search_text, function($query, $searchValue){
-                $query->where(function ($query) use ($searchValue){
-                    $query->where('fname', 'like', '%'.$searchValue.'%')
-                        ->orWhere('lname', 'like', '%'.$searchValue.'%')
-                        ->orWhere('designation', 'like', '%'.$searchValue.'%');
-                })
-                ->orWhereHas('tertiaryEdu', function ($query) use ($searchValue){
-                    $query->where('degree', 'like', '%'.$searchValue.'%');
-                });
-            })
-            ->when($this->curr_status, function ($query, $currStatusValue){
-                $query->where('current_status', $currStatusValue);
-            })
-            //parent closure, with reference value
-            ->when($this->municipality, function ($query, $municipalityValue){
-                // nested closure, capture the reference value from parent
-                $query->whereHas('addresses', function ($query) use ($municipalityValue){
-                    $query->where('municipality', $municipalityValue);
-                });
-            })
-            // related tables
-            ->with('tertiaryEdu', 'addresses', 'regDetails')
-            ->orderBy('timestamp', $this->order_by)
-            ->paginate(20);
+        // put the search_items in the cache
+        $search_values = [
+            'gender' => $request->gender,
+            'curr_status' => $request->curr_status,
+            'search_text' => $request->search_text,
+            'reg_status' => $request->reg_status,
+            'order_by' => $request->order_by ? $request->order_by : $this->order_by,
+            'is_applied' => $request->is_applied,
+            'applicant' => $request->applicant,
+        ];
+
+        Cache::put($this->cache_key, $search_values, 600);
+
+        $data = SearchExamineesHelper::search_with_cache($search_values);
 
         return view('AdminFunctions/result', ['data' => $data]);
     }
@@ -126,23 +126,23 @@ class ManageApplicants extends Controller
          /** validation numbers [
         *   1 => Disapproved,
         *   2 => incomplete,
-         *  3 => for evaluation (pending)
+         *  3 => for evaluation (pending)/auto
          *  4 => Approved
-         *  5 => Waiting for result //TODO how to know if applicant done taking the exam
+         *  5 => Waiting for result
+         *  6 => Scheduled for exam
+         *  7 => Exam Done
          * ]
         */
-
-        $validation = (int)$request->validation;
-        $examSchedule_id = (int)$request->exam_sched_id;
+        $validation = (int)$request->post('validation');
+        $examSchedule_id = (int)$request->post('exam_sched_id');
 
         $applicant = UsersData::with('regDetails', 'userHistory')->find($user_id);
 
         $reg = $applicant->regDetails;
 
-        if($validation == 3){
+        if($validation == 4){
             $reg->exam_schedule_id = $examSchedule_id;
             $reg->approved_date = date('Y-m-d', strtotime('now'));
-            $reg->exam_status = "Scheduled for Exam";
         }
 
         $reg->status = $validation;
@@ -164,21 +164,16 @@ class ManageApplicants extends Controller
      */
     public function send_exam_result(Request $request, int|string $user_id){
 
-        $file = $request->pdf_file;
-        $message = $request->message;
-        $result = $request->result;
-
-        // if examinee failed the tests
-        $part1 = $request->part1;
-        $part2 = $request->part2;
-        $part3 = $request->part3;
+        $file = $request->file('pdf_file');
+        $message = $request->post('message');
+        $result = $request->post('result');
 
         $user = UsersData::with('userLogin', 'regDetails', 'userHistory.failedHistory')->find($user_id);
 
         $reg = $user->regDetails;
         $exam_data = ExamSchedule::find($reg->exam_schdule_id);
 
-        $user_email = $exam_data->email;
+        $user_email = $user->userLogin == null ? $user->email : $user->userLogin->email;
         // TODO send email
         $email = true;
 
@@ -197,6 +192,12 @@ class ManageApplicants extends Controller
             ]);
 
             if($result == 'failed'){
+
+                 // if examinee failed the tests
+                $part1 = $request->post('part1');
+                $part2 = $request->post('part2');
+                $part3 = $request->post('part3');
+
                 $userHistory->failedHistory()->create([
                     'part1' => $part1,
                     'part2' => $part2,
@@ -204,8 +205,17 @@ class ManageApplicants extends Controller
                 ]);
             }
 
+            if($result == 'passed'){
+                DB::table('visitor_count')->increment('passers');
+            }
+
             // reset the reg details data for the user
-            $reg->delete();
+            $reg->exam_schedule = null;
+            $reg->reg_date = null;
+            $reg->approved_date = null;
+            $reg->stattus = 7;
+            $reg->apply = 0;
+            $reg->save();
         }
     }
 
@@ -249,6 +259,7 @@ class ManageApplicants extends Controller
             'fname'             => $request->post('givenName'),
             'lname'             => $request->post('surName'),
             'mname'             => $request->post('middleName'),
+            'email'             => $request->post('email'),
             'place_of_birth'    => $request->post('pob'),
             'date_of_birth'     => date('Y-m-d', strtotime($request->post('dob'))),
             'gender'            => $request->post('gender'),
@@ -309,7 +320,13 @@ class ManageApplicants extends Controller
             'files'     => $files
         ];
 
-        return $user_helper->insert_users_data($organized_users_data);
+        $res = $user_helper->insert_users_data($organized_users_data);
+        if(is_array($res)){
+            $this->apply_examinee($res[1]);
+            return $res[0]; //true
+        }
+
+        return $res;
     }
 
     public function update_users_data(Request $request, $user_id){
@@ -334,6 +351,7 @@ class ManageApplicants extends Controller
             'fname'             => $request->post('givenName'),
             'lname'             => $request->post('surName'),
             'mname'             => $request->post('middleName'),
+            'email'             => $request->post('email'),
             'place_of_birth'    => $request->post('pob'),
             'date_of_birth'     => date('Y-m-d', strtotime($request->post('dob'))),
             'gender'            => $request->post('gender'),
@@ -464,6 +482,41 @@ class ManageApplicants extends Controller
         $user_helper = new UserManagement();
 
         return $user_helper->update_psa($user_id, $file);
+    }
+
+    public function apply_examinee(int|string $user_id): bool
+    {
+        $user = UsersData::with('regDetails', 'userHistory')->find($user_id);
+        $reg = $user->regDetails;
+        $history = $user->userHistory;
+        // dd($user);
+        if ($user) {
+
+            if ($reg && $reg->apply == 1) {
+                $reg->user_id = $user_id;
+                $reg->reg_date = date('Y-m-d', strtotime('now'));
+                $reg->apply = 1;
+
+                if ($reg->save()) {
+
+                    // count user as applicant if he/she is not a retaker.
+                    if(!$history->isEmpty()){
+                        DB::table('visitor_count')->increment('applicants');
+                    }
+                    session()->flash('success', 'Application sent');
+                    return true;
+                }
+
+                session()->flash('error', 'server error');
+                return false;
+            }
+            session()->flash('warning', 'Already applied');
+            return false;
+        }
+
+        // it means that the user already applied
+        session()->flash('warning', 'Register first');
+        return false;
     }
 }
 
