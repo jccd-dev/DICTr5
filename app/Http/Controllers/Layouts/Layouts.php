@@ -33,6 +33,8 @@ class Layouts extends Controller
         }
 
         $this->usersCounter['visitor'] = DB::table('visitor_count')->value('visitors');
+        $this->usersCounter['applicants'] = DB::table('visitor_count')->value('applicants');
+        $this->usersCounter['passers'] = DB::table('visitor_count')->value('passers');
 
     }
 

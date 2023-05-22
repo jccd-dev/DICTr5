@@ -8,15 +8,16 @@ use App\Models\Examinee\Users;
 use App\Helpers\UserManagement;
 use Illuminate\Http\JsonResponse;
 use App\Models\Examinee\UsersData;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
+use App\Helpers\SearchExamineesHelper;
 use App\Http\Livewire\Admin\ExamSchedule;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\Collection;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Container\ContainerExceptionInterface;
-use App\Helpers\SearchExamineesHelper;
 
 class ManageApplicants extends Controller
 {
@@ -69,7 +70,7 @@ class ManageApplicants extends Controller
      */
     public function select_examinee(int $examinees_id): View|RedirectResponse
     {
-        $examinees_data = UsersData::with('addresses', 'tertiaryEdu', 'trainingSeminars', 'submittedFiles', 'regDetails', 'userHistory', 'userLogs')->where('id', $examinees_id)->first();
+        $examinees_data = UsersData::with('addresses', 'tertiaryEdu', 'trainingSeminars', 'submittedFiles', 'regDetails', 'userHistory', 'userLogs', 'userLogin')->where('id', $examinees_id)->first();
         // dd($examinees_data);
         // if record is null or not found
         if (!$examinees_data) {
@@ -124,23 +125,22 @@ class ManageApplicants extends Controller
         /** validation numbers [
          *   1 => Disapproved,
          *   2 => incomplete,
-         *  3 => for evaluation (pending)
+         *  3 => for evaluation (pending)/auto
          *  4 => Approved
-         *  5 => Waiting for result //TODO how to know if applicant done taking the exam
+         *  5 => Waiting for result
+         *  6 => Scheduled for exam
          * ]
          */
-
-        $validation = (int)$request->validation;
-        $examSchedule_id = (int)$request->exam_sched_id;
+        $validation = (int)$request->post('validation');
+        $examSchedule_id = (int)$request->post('exam_sched_id');
 
         $applicant = UsersData::with('regDetails', 'userHistory')->find($user_id);
 
         $reg = $applicant->regDetails;
 
-        if ($validation == 3) {
+        if ($validation == 4) {
             $reg->exam_schedule_id = $examSchedule_id;
             $reg->approved_date = date('Y-m-d', strtotime('now'));
-            $reg->exam_status = "Scheduled for Exam";
         }
 
         $reg->status = $validation;
@@ -163,14 +163,9 @@ class ManageApplicants extends Controller
     public function send_exam_result(Request $request, int|string $user_id)
     {
 
-        $file = $request->pdf_file;
-        $message = $request->message;
-        $result = $request->result;
-
-        // if examinee failed the tests
-        $part1 = $request->part1;
-        $part2 = $request->part2;
-        $part3 = $request->part3;
+        $file = $request->file('pdf_file');
+        $message = $request->post('message');
+        $result = $request->post('result');
 
         $user = UsersData::with('userLogin', 'regDetails', 'userHistory.failedHistory')->find($user_id);
 
@@ -196,11 +191,21 @@ class ManageApplicants extends Controller
             ]);
 
             if ($result == 'failed') {
+
+                // if examinee failed the tests
+                $part1 = $request->post('part1');
+                $part2 = $request->post('part2');
+                $part3 = $request->post('part3');
+
                 $userHistory->failedHistory()->create([
                     'part1' => $part1,
                     'part2' => $part2,
                     'part3' => $part3
                 ]);
+            }
+
+            if ($result == 'passed') {
+                DB::table('visitor_count')->increment('passers');
             }
 
             // reset the reg details data for the user

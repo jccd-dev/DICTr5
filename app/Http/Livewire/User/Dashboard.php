@@ -2,18 +2,18 @@
 
 namespace App\Http\Livewire\User;
 
+use Livewire\Component;
+use mysql_xdevapi\Session;
 use App\Helpers\FileHandler;
+use Livewire\WithFileUploads;
 use App\Helpers\UserManagement;
 use App\Models\Examinee\UsersData;
-use App\Models\Examinee\Users;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Livewire\Component;
-use Livewire\WithFileUploads;
-use mysql_xdevapi\Session;
-use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Psr\Container\ContainerExceptionInterface;
 
 class Dashboard extends Component
 {
@@ -80,7 +80,6 @@ class Dashboard extends Component
 
     public function updated($propertyName)
     {
-
         $user_helper = new UserManagement();
 
         $rules = $user_helper->rules;
@@ -323,7 +322,7 @@ class Dashboard extends Component
             ->get();
 
         // use this to identify if user needs to reapply
-        // $user->userHistory()->exists();
+        // $user->userHistory()->isEmpty();
     }
 
     public function populate_user_data(): void
@@ -570,17 +569,23 @@ class Dashboard extends Component
     public function apply(int|string $user_id): bool
     {
 
-        $user = UsersData::with('regDetails')->find($user_id);
+        $user = UsersData::with('regDetails', 'userHistory')->find($user_id);
         $reg = $user->regDetails;
+        $history = $user->userHistory;
         // dd($user);
         if ($user) {
 
-            if ($reg && !$reg->exists()) {
+            if ($reg && !$reg->isEmpty()) {
                 $reg->user_id = $user_id;
                 $reg->reg_date = date('Y-m-d', strtotime('now'));
                 $reg->apply = 1;
 
                 if ($reg->save()) {
+
+                    // count user as applicant if he/she is not a retaker.
+                    if (!$history->isEmpty()) {
+                        DB::table('visitor_count')->increment('applicants');
+                    }
                     session()->flash('success', 'Application sent');
                     return true;
                 }

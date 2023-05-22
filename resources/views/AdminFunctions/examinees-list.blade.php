@@ -140,7 +140,14 @@
                                         </select>
                                     </td>
                                     <td class="px-6 py-4">
-                                        <button
+                                        <a href="{{ url('/admin/examinee/' . $user->id) }}" data-modal-target="deleteModal3" data-modal-show="deleteModal3" class="font-medium hover:underline flex gap-2 items-center bg-dark-blue bg-opacity-50 w-fit py-2 px-4 rounded-2xl">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                                              </svg>
+                                            <span class="font-semibold">View</span>
+                                        </a>
+
+                                        {{-- <button
                                             data-popover-target="popover-animation"
                                             data-popover-trigger="click"
                                             data-popover-placement="bottom"
@@ -150,7 +157,7 @@
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                                             </svg>
-                                        </button>
+                                        </button> --}}
                                     </td>
                                 </tr>
                             @else
@@ -189,7 +196,14 @@
                                         </select>
                                     </td>
                                     <td class="px-6 py-4">
-                                        <button
+                                        <a href="{{ url('/admin/examinee/' . $user->id) }}" data-modal-target="deleteModal3" data-modal-show="deleteModal3" class="font-medium hover:underline flex gap-2 items-center bg-dark-blue bg-opacity-50 w-fit py-2 px-4 rounded-2xl">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                                              </svg>
+                                            <span class="font-semibold">View</span>
+                                        </a>
+
+                                        {{-- <button
                                             data-popover-target="popover-animation"
                                             data-popover-trigger="click"
                                             data-popover-placement="bottom"
@@ -199,7 +213,7 @@
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                                             </svg>
-                                        </button>
+                                        </button> --}}
                                     </td>
                                 </tr>
                             @endif
@@ -212,7 +226,7 @@
 </div>
   @include('AdminFunctions.add-applicant')
 
-<div data-popover id="popover-animation" role="tooltip" class="absolute z-10 invisible inline-block w-48 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
+{{-- <div data-popover id="popover-animation" role="tooltip" class="absolute z-10 invisible inline-block w-48 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
     <div class="flex flex-col gap-1">
         <div class="px-3 py-2 cursor-pointer hover:bg-blue-100">
             <p class="flex gap-3 items-center font-quicksand font-semibold text-black">
@@ -259,7 +273,7 @@
             </p>
         </div>
     </div>
-</div>
+</div> --}}
 @vite(['resources/js/admin/examinees_list.js', 'resources/js/user/dashboard.js'])
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
