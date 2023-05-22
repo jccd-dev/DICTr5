@@ -51,7 +51,7 @@
 
 </div>
 
-<div class= "w-full bg-[#2C2C2C] text-white text-sm p-10">
+<div class= "w-full bg-[#2C2C2C] text-white text-xs p-4">
    <div class="flex flex-row container mx-auto ">
     <section class="w-full">
       <footer class="text-white w-full">
@@ -60,7 +60,7 @@
               <div class="">
                  <img
                   src="{{ asset('img/gov-seal2.png') }}"
-                  class="w-[10rem] lg:w-[15rem]"/>
+                  class="w-[8rem] lg:w-[10rem]"/>
               </div>
 
               <div class="flex-1 xl:flex-2">
@@ -77,16 +77,16 @@
                     Learn more about the Philippine government, its structure,
                     <br> how government works and the people behind it.
                   </p>
-
+                  <br>
                   <ul class="list-unstyled mb-0">
                      <li>
-                      <a href="#" class = 'hover:text-sky-500'>GOV.PH</a>
+                      <a href="https://www.gov.ph/" class = 'hover:text-sky-500'>GOV.PH</a>
                      </li>
                       <li>
-                         <a href="#" class = 'hover:text-sky-500'>Open Data Portal</a>
+                         <a href="https://www.gov.ph/data" class = 'hover:text-sky-500'>Open Data Portal</a>
                       </li>
                       <li>
-                         <a href="#" class = 'hover:text-sky-500'>Official Gazette</a>
+                         <a href="https://www.officialgazette.gov.ph/" class = 'hover:text-sky-500'>Official Gazette</a>
                       </li>
                   </ul>
               </div>
@@ -98,22 +98,22 @@
                             <a href="#!" class = 'hover:text-sky-500'>Office of the President</a>
                         </li>
                         <li>
-                            <a href="#!" class = 'hover:text-sky-500'>Office of the Vice President</a>
+                            <a href="http://ovp.gov.ph/" class = 'hover:text-sky-500'>Office of the Vice President</a>
                         </li>
                         <li>
-                            <a href="#!" class = 'hover:text-sky-500'>Senate of the Philippines</a>
+                            <a href="http://legacy.senate.gov.ph/" class = 'hover:text-sky-500'>Senate of the Philippines</a>
                         </li>
                         <li>
-                            <a href="#!" class = 'hover:text-sky-500'>House of Representatives</a>
+                            <a href="https://www.congress.gov.ph/" class = 'hover:text-sky-500'>House of Representatives</a>
                         </li>
                         <li>
-                            <a href="#!" class = 'hover:text-sky-500'>Official Gazette</a>
+                            <a href="https://www.officialgazette.gov.ph/" class = 'hover:text-sky-500'>Official Gazette</a>
                         </li>
                         <li>
-                            <a href="#!" class = 'hover:text-sky-500'>Supreme Court</a>
+                            <a href="https://sc.judiciary.gov.ph/" class = 'hover:text-sky-500'>Supreme Court</a>
                         </li>
                         <li>
-                            <a href="#!" class = 'hover:text-sky-500'>Sandiganbayan</a>
+                            <a href="https://sb.judiciary.gov.ph/" class = 'hover:text-sky-500'>Sandiganbayan</a>
                         </li>
                     </ul>
                 </div>
