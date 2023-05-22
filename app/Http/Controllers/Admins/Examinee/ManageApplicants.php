@@ -30,6 +30,7 @@ class ManageApplicants extends Controller
     public string|int|null $reg_status = null;
     public string $order_by = 'asc';
     public string|int|null $is_applied = null;
+    public string|int|null $applicant = null;
 
     public array $trainings = [];
     public array $toDeleteTrainings = [];
@@ -95,16 +96,17 @@ class ManageApplicants extends Controller
         $this->reg_status = $request->reg_status;
         $this->order_by = $request->order_by ? $request->order_by : $this->order_by;
         $this->is_applied = $request->is_applied;
+        $this->applicant = $request->applicant;
 
         // put the search_items in the cache
         $search_values = [
             'gender' => $request->gender,
             'curr_status' => $request->curr_status,
-            'municipality' => $request->municipality,
             'search_text' => $request->search_text,
             'reg_status' => $request->reg_status,
             'order_by' => $request->order_by ? $request->order_by : $this->order_by,
             'is_applied' => $request->is_applied,
+            'applicant' => $request->applicant,
         ];
 
         Cache::put($this->cache_key, $search_values, 600);
