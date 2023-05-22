@@ -10,15 +10,18 @@ use Illuminate\Http\JsonResponse;
 use App\Models\Examinee\UsersData;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Livewire\Admin\ExamSchedule;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\Collection;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Container\ContainerExceptionInterface;
+use App\Helpers\SearchExamineesHelper;
 
 class ManageApplicants extends Controller
 {
 
+    private string $cache_key = 'search_items';
     public ?string $gender = null;
     public ?string $curr_status = null;
     public ?string $municipality = null;
@@ -26,18 +29,36 @@ class ManageApplicants extends Controller
     public string|int|null $reg_status = null;
     public string $order_by = 'asc';
     public string|int|null $is_applied = null;
+
     public array $trainings = [];
     public array $toDeleteTrainings = [];
 
     public function render(Request $request): View {
 
+        $searchValues = Cache::get($this->cache_key);
+
+        if($searchValues){
+            $examinees = SearchExamineesHelper::search_with_cache($searchValues);
+        }
+        else{
         $examinees = UsersData::with('tertiaryEdu', 'trainingSeminars', 'addresses', 'submittedFiles', 'userLogin')
             ->paginate(20);
+
+        $searchValues = [
+            'gender' => $this->gender,
+            'curr_status' => $this->curr_status,
+            'municipality' => $this->municipality,
+            'search_text' => $this->search_text,
+            'reg_status' => $this->reg_status,
+            'order_by' => $this->order_by,
+            'is_applied' => $this->is_applied,
+        ];
+        }
 
         $exam_schedule = new ExamSchedule();
         $exam_schedule_records = $exam_schedule->all();
 
-        return view('AdminFunctions/examinees-list', ['data' => $examinees, 'examSchedule' => $exam_schedule_records]);
+        return view('AdminFunctions/examinees-list', ['data' => $examinees, 'examSchedule' => $exam_schedule_records, 'searchValues' => $searchValues]);
     }
 
     /**
@@ -74,44 +95,20 @@ class ManageApplicants extends Controller
         $this->order_by = $request->order_by ? $request->order_by : $this->order_by;
         $this->is_applied = $request->is_applied;
 
-        $data = UsersData::query()
-            ->when($this->gender, function ($query, $genderValue){
-                $query->where('gender', $genderValue);
-            })
-            ->when($this->reg_status, function ($query, $statusValue){
-                $query->whereHas('regDetails', function ($query) use ($statusValue){
-                    $query->where('status', $statusValue);
-                });
-            })
-            ->when($this->is_applied, function ($query, $applyValue){
-                $query->whereHas('regDetails', function ($query) use ($applyValue){
-                    $query->where('apply', $applyValue);
-                });
-            })
-            ->when($this->search_text, function($query, $searchValue){
-                $query->where(function ($query) use ($searchValue){
-                    $query->where('fname', 'like', '%'.$searchValue.'%')
-                        ->orWhere('lname', 'like', '%'.$searchValue.'%')
-                        ->orWhere('designation', 'like', '%'.$searchValue.'%');
-                })
-                ->orWhereHas('tertiaryEdu', function ($query) use ($searchValue){
-                    $query->where('degree', 'like', '%'.$searchValue.'%');
-                });
-            })
-            ->when($this->curr_status, function ($query, $currStatusValue){
-                $query->where('current_status', $currStatusValue);
-            })
-            //parent closure, with reference value
-            ->when($this->municipality, function ($query, $municipalityValue){
-                // nested closure, capture the reference value from parent
-                $query->whereHas('addresses', function ($query) use ($municipalityValue){
-                    $query->where('municipality', $municipalityValue);
-                });
-            })
-            // related tables
-            ->with('tertiaryEdu', 'addresses', 'regDetails')
-            ->orderBy('timestamp', $this->order_by)
-            ->paginate(20);
+        // put the search_items in the cache
+        $search_values = [
+            'gender' => $request->gender,
+            'curr_status' => $request->curr_status,
+            'municipality' => $request->municipality,
+            'search_text' => $request->search_text,
+            'reg_status' => $request->reg_status,
+            'order_by' => $request->order_by ? $request->order_by : $this->order_by,
+            'is_applied' => $request->is_applied,
+        ];
+
+        Cache::put($this->cache_key, $search_values, 600);
+
+        $data = SearchExamineesHelper::search_with_cache($search_values);
 
         return view('AdminFunctions/result', ['data' => $data]);
     }
