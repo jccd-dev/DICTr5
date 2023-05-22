@@ -49,7 +49,7 @@ class UserManagement
         'yearsPresentPosition' => "required|numeric"
     ];
 
-    public function insert_users_data(array $organized_data): bool
+    public function insert_users_data(array $organized_data): bool|array
     {
         $user = new UsersData();
         $file_helper = new FileHandler();
@@ -78,7 +78,7 @@ class UserManagement
             $organized_data['files']['diploma'] != null ? $file_helper->store_files($organized_data['files']['diploma'], $submit, 'diploma_TOR', $last_name) : null;
             $organized_data['files']['cert'] != null ? $file_helper->store_files($organized_data['files']['cert'], $submit, 'coe', $last_name) : null;
 
-            return true;
+            return [true, $user->id];
         }
 
         return false;

@@ -295,7 +295,11 @@ class Dashboard extends Component
         $user_helper = new UserManagement();
         $file_helper = new FileHandler();
 
-        return $user_helper->insert_users_data($organized_data);
+        $res = $user_helper->insert_users_data($organized_data);
+        if(is_array($res)){
+            return $res[0]; //true
+        }
+        return $res;
     }
 
 
@@ -567,7 +571,7 @@ class Dashboard extends Component
         // dd($user);
         if ($user) {
 
-            if ($reg && !$reg->isEmpty()) {
+            if ($reg && $reg->apply == 1) {
                 $reg->user_id = $user_id;
                 $reg->reg_date = date('Y-m-d', strtotime('now'));
                 $reg->apply = 1;

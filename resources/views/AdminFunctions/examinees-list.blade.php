@@ -44,10 +44,15 @@
                         <option value="1" {{ $searchValues['reg_status'] == '1' ? 'selected' : ''}}>Approved</option>
                         <option value="0" {{ $searchValues['reg_status'] == '0' ? 'selected' : ''}}>Pending</option>
                     </select>
-                    <select name="order_by" class="bg-custom-blue py-3 font-quicksand bg-opacity-10 font-semibold border-none text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-fit p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <option value="">Sort</option>
-                        <option value="asc" {{ $searchValues['order_by'] == 'asc' ? 'selected' : ''}}>Ascending</option>
-                        <option value="desc" {{ $searchValues['order_by'] == 'desc' ? 'selected' : ''}}>Descending</option>
+                    <select name="is_applied" class="bg-custom-blue py-3 font-quicksand bg-opacity-10 font-semibold border-none text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-fit p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option value="">Registration</option>
+                        <option value="1" {{}}>Applied</option>
+                        <option value="0" {{}}>Not Applied</option>
+                    </select>
+                    <select name="aplicants" class="bg-custom-blue py-3 font-quicksand bg-opacity-10 font-semibold border-none text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-fit p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option value="">Applicants</option>
+                        <option value="1" {{}}>Online</option>
+                        <option value="0" {{}}>Manual</option>
                     </select>
                 </div>
                 <div class="flex gap-3 items-center">

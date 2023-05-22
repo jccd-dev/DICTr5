@@ -68,16 +68,16 @@ class ManageApplicants extends Controller
      * @uses SELECT_examinee
      * @description return a data of specific examinee from database
      */
-    public function select_examinee(int $examinees_id): View|RedirectResponse {
+    public function select_examinee(int $examinee_id): View|RedirectResponse {
 
-        $examinees_data = UsersData::with('addresses', 'tertiaryEdu', 'trainingSeminars', 'submittedFiles', 'regDetails', 'userHistory', 'userLogs')->where('id', $examinees_id)->first();
+        $examinee_data = UsersData::with('addresses', 'tertiaryEdu', 'trainingSeminars', 'submittedFiles', 'regDetails', 'userHistory', 'userLogs', 'userLogin')->where('id', $examinee_id)->first();
 
         // if record is null or not found
-        if(!$examinees_data){
+        if(!$examinee_data){
             return redirect()->back()->with('error', 'Record cannot found');
         }
 
-        return view('record.show', ['examinees_data' => $examinees_data]);
+        return view('record.show', ['examinee_data' => $examinee_data]);
     }
 
     /**
@@ -128,6 +128,7 @@ class ManageApplicants extends Controller
          *  4 => Approved
          *  5 => Waiting for result
          *  6 => Scheduled for exam
+         *  7 => Exam Done
          * ]
         */
         $validation = (int)$request->post('validation');
@@ -170,7 +171,7 @@ class ManageApplicants extends Controller
         $reg = $user->regDetails;
         $exam_data = ExamSchedule::find($reg->exam_schdule_id);
 
-        $user_email = $exam_data->email;
+        $user_email = $user->userLogin == null ? $user->email : $user->userLogin->email;
         // TODO send email
         $email = true;
 
@@ -207,7 +208,12 @@ class ManageApplicants extends Controller
             }
 
             // reset the reg details data for the user
-            $reg->delete();
+            $reg->exam_schedule = null;
+            $reg->reg_date = null;
+            $reg->approved_date = null;
+            $reg->stattus = 7;
+            $reg->apply = 0;
+            $reg->save();
         }
     }
 
@@ -251,6 +257,7 @@ class ManageApplicants extends Controller
             'fname'             => $request->post('givenName'),
             'lname'             => $request->post('surName'),
             'mname'             => $request->post('middleName'),
+            'email'             => $request->post('email'),
             'place_of_birth'    => $request->post('pob'),
             'date_of_birth'     => date('Y-m-d', strtotime($request->post('dob'))),
             'gender'            => $request->post('gender'),
@@ -311,7 +318,13 @@ class ManageApplicants extends Controller
             'files'     => $files
         ];
 
-        return $user_helper->insert_users_data($organized_users_data);
+        $res = $user_helper->insert_users_data($organized_users_data);
+        if(is_array($res)){
+            $this->apply_examinee($res[1]);
+            return $res[0]; //true
+        }
+
+        return $res;
     }
 
     public function update_users_data(Request $request, $user_id){
@@ -336,6 +349,7 @@ class ManageApplicants extends Controller
             'fname'             => $request->post('givenName'),
             'lname'             => $request->post('surName'),
             'mname'             => $request->post('middleName'),
+            'email'             => $request->post('email'),
             'place_of_birth'    => $request->post('pob'),
             'date_of_birth'     => date('Y-m-d', strtotime($request->post('dob'))),
             'gender'            => $request->post('gender'),
@@ -466,6 +480,41 @@ class ManageApplicants extends Controller
         $user_helper = new UserManagement();
 
         return $user_helper->update_psa($user_id, $file);
+    }
+
+    public function apply_examinee(int|string $user_id): bool
+    {
+        $user = UsersData::with('regDetails', 'userHistory')->find($user_id);
+        $reg = $user->regDetails;
+        $history = $user->userHistory;
+        // dd($user);
+        if ($user) {
+
+            if ($reg && $reg->apply == 1) {
+                $reg->user_id = $user_id;
+                $reg->reg_date = date('Y-m-d', strtotime('now'));
+                $reg->apply = 1;
+
+                if ($reg->save()) {
+
+                    // count user as applicant if he/she is not a retaker.
+                    if(!$history->isEmpty()){
+                        DB::table('visitor_count')->increment('applicants');
+                    }
+                    session()->flash('success', 'Application sent');
+                    return true;
+                }
+
+                session()->flash('error', 'server error');
+                return false;
+            }
+            session()->flash('warning', 'Already applied');
+            return false;
+        }
+
+        // it means that the user already applied
+        session()->flash('warning', 'Register first');
+        return false;
     }
 }
 
