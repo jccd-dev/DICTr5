@@ -39,11 +39,10 @@
         <div class="flex flex-col">
             <div class="flex gap-3">
                 <img src="{{ asset('img/Group 3.svg') }}" alt="">
-                <h2 class = "text-2xl font-quicksand font-black">19,560</h2>
+                <h2 class = "text-2xl font-quicksand font-black">{{$data['visitor']}}</h2>
             </div>
             <div class="font-quicksand flex flex-col mt-5 gap-2">
-                <span class="text-sm flex items-center">Users today: <span class="font-bold text-base ml-2">123</span></span>
-                <span class="text-sm flex items-center">Users this month: <span class="font-bold text-base ml-2">123</span></span>
+                <span class="text-sm flex items-center">Registered Users: <span class="font-bold text-base ml-2">{{$data['registered']}}</span></span>
             </div>
         </div>
       </div>

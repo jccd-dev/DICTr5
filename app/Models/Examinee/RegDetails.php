@@ -18,8 +18,6 @@ class RegDetails extends Model
       'exam_schedule_id',
       'reg_date',
       'approved_date',
-      'venue',
-      'assigned_exam_set',
       'status',
     ];
 

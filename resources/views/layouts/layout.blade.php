@@ -21,6 +21,8 @@
                             @elseif(request()->routeIs('admin.cms.posts')) {{'Posts'}}
                             @elseif(request()->routeIs('admin.inbox')) {{'Inbox'}}
                             @elseif(request()->routeIs('admin.examinees')) {{'Exam Applicants'}}
+                            @elseif(request()->routeIs('admin.accounts')) {{'Admin Accounts'}}
+                            @elseif(request()->routeIs('admin.inbox')) {{'Inbox'}}
                             @else {{'DICT Camarines Sur'}}
                             @endif
                         </h2>

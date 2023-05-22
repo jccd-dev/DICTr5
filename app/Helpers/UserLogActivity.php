@@ -15,9 +15,9 @@ class UserLogActivity{
      */
     public static function addToLog(Request $request, string $activity, string|int $user_id): void {
         $log = [];
-        $log['activity'] = $activity;
-        $log['end_point_access'] = $request->fullUrl();
         $log['user_id'] = $user_id;
+        $log['activity'] = $activity;
+        $log['end_point'] = $request->fullUrl();
 
        UserLogs::create($log);
     }

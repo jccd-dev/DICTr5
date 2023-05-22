@@ -40,7 +40,7 @@ class EmailAdminAccount extends Mailable
     {
         return new Content(
             view: 'layouts.email.admin-account',
-            with: $this->data,
+            with: ['data' => $this->data],
         );
     }
 

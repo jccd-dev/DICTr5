@@ -4,6 +4,7 @@ use App\Http\Controllers\Admins\AdminAccounts;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\Examinee\GoogleAuthController;
 use App\Http\Controllers\Admins\AdminLoginController;
+use App\Http\Controllers\VisitorController;
 use App\Http\Livewire\CMS\Post;
 use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\CMS\SliderBanner;
@@ -19,7 +20,8 @@ use App\Http\Livewire\CMS\Slider;
 use App\Http\Controllers\Layouts\ViewAnnouncementController;
 use App\Http\Controllers\Examinee\DashboardController as UserDashboardController;
 use App\Http\Livewire\Admin\Inbox as CMSInbox;
-use App\Http\Controllers\Admins\Examinee\Applicants;
+use App\Http\Controllers\Admins\Examinee\ManageApplicants;
+use App\Http\Controllers\Admins\SystemLogs;
 
 /*
 |--------------------------------------------------------------------------
@@ -76,20 +78,22 @@ Route::prefix('admin')->group(function () {
 
         // manage admin accounts
         Route::prefix('dict-admins')->group(function () {
-            Route::get('/', 'AdminAccounts@render')->name('admin.accounts');
+            Route::get('/', [AdminAccounts::class, 'render'])->name('admin.accounts');
             Route::post('/create', [AdminAccounts::class, 'add_admin'])->name('admin.create');
             Route::get('/view/{id}', [AdminAccounts::class, 'access_admin'])->name('admin.access');
             Route::get('/update/{id}', [AdminAccounts::class, 'update_admin'])->name('admin.update');
             Route::delete('/delete/{id}', [AdminAccounts::class, 'delete_admin'])->name('admin.delete');
         });
 
-        Route::prefix('examinee')->group(function () {
-            Route::get('/', [Applicants::class, 'render'])->name('admin.examinees');
-            Route::get('/search', [Applicants::class, 'search_examinees'])->name('search');
+        Route::prefix('examinee')->group( function (){
+            Route::get('/', [ManageApplicants::class, 'render'])->name('admin.examinees');
+            Route::get('/search', [ManageApplicants::class, 'search_examinees'])->name('search');
+            Route::get('/get-examinee/{id}', [ManageApplicants::class, 'select_examinees'])->name('update');
         });
 
         Route::get('/exam-schedule', ExamSchedule::class)->name('admin.exam-schedule');
         Route::get('/inbox', CMSInbox::class)->name('admin.inbox');
+        Route::get('/logs', [SystemLogs::class, 'display_logs'])->name('system-log');
     });
 });
 
@@ -115,6 +119,9 @@ Route::prefix('exam')->group(function () {
 Route::get('/logout', function () {
     session()->flush();
 });
+
+//Visitor Counter
+Route::get('/visitor-counts', [VisitorController::class, 'incrementVisitor']);
 
 //testing for JWT middleware
 //Route::middleware(['jwt.logAuth', 'jwt.roleCheck:superadmin,normaladmin'])->group(function () {
