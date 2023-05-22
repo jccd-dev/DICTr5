@@ -22,6 +22,7 @@ use App\Http\Controllers\Examinee\DashboardController as UserDashboardController
 use App\Http\Livewire\Admin\Inbox as CMSInbox;
 use App\Http\Controllers\Admins\Examinee\ManageApplicants;
 use App\Http\Controllers\Admins\SystemLogs;
+use \App\Http\Controllers\UserDataController;
 
 /*
 |--------------------------------------------------------------------------
@@ -101,6 +102,7 @@ Route::prefix('admin')->group(function () {
 Route::prefix('user')->group(function () {
     Route::get('/login', [GoogleAuthController::class, 'user_login'])->name('user.login');
     Route::get('/dashboard', User\Dashboard::class)->name('user.dashboard');
+    Route::get('/generate_pdf', [UserDataController::class, 'generateILCDBForm'])->name('user.generate_pdf');
 });
 
 // Google OAuth

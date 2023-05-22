@@ -89,7 +89,7 @@
                             Register Exam
                     </button>
                 @endif
-                <button type="button" class="py-4 px-5 bg-dark-yellow font-semibold text-black">Download Completed Examination Form</button>
+                <button type="button" wire:click="generate_pdf" class="py-4 px-5 bg-dark-yellow font-semibold text-black">Download Completed Examination Form</button>
             </div>
         </div>
 
