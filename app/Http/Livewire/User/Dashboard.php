@@ -312,13 +312,26 @@ class Dashboard extends Component
     public function get_user_data(): Collection|array
     {
         $user_login_id = session()->get('user')['id'];
-        // dd($user_login_id);
-        return UsersData::with('tertiaryEdu', 'trainingSeminars', 'addresses', 'submittedFiles', 'userLogin', 'userHistory')
+
+        return UsersData::with('tertiaryEdu',
+            'trainingSeminars',
+            'addresses',
+            'submittedFiles',
+            'userLogin',
+            'userHistory.failedHistory',
+            'userHistoryLatest')
             ->where('user_login_id', $user_login_id)
             ->get();
 
-        // use this to identify if user needs to reapply
-        // $user->userHistory()->isEmpty();
+        /**
+        if(userHistoryLatest)
+            if(userHistoryLatest->exam_result == passed)
+                you already pass the test
+            else
+                reapply
+        else
+            apply
+         */
     }
 
     public function populate_user_data(): void

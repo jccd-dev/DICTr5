@@ -41,8 +41,12 @@
                     </select>
                     <select name="reg_status" class="bg-custom-blue py-3 font-quicksand bg-opacity-10 font-semibold border-none text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-fit p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <option value="">Select Status</option>
-                        <option value="1" {{ $searchValues['reg_status'] == '1' ? 'selected' : ''}}>Approved</option>
-                        <option value="2" {{ $searchValues['reg_status'] == '2' ? 'selected' : ''}}>Pending</option>
+                        <option value="1" {{ $searchValues['reg_status'] == '1' ? 'selected' : ''}}>Rejected</option>
+                        <option value="2" {{ $searchValues['reg_status'] == '2' ? 'selected' : ''}}>Incomplete Requirements</option>
+                        <option value="3" {{ $searchValues['reg_status'] == '3' ? 'selected' : ''}}>For Evaluation</option>
+                        <option value="4" {{ $searchValues['reg_status'] == '4' ? 'selected' : ''}}>Approved</option>
+                        <option value="5" {{ $searchValues['reg_status'] == '5' ? 'selected' : ''}}>Waiting for Result</option>
+                        <option value="6" {{ $searchValues['reg_status'] == '6' ? 'selected' : ''}}>Scheduled for Exam</option>
                     </select>
                     <select name="is_applied" class="bg-custom-blue py-3 font-quicksand bg-opacity-10 font-semibold border-none text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-fit p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <option value="">Registration</option>
@@ -129,11 +133,12 @@
                                     <td class="px-6 py-4">
                                         <select class="bg-[#00509D] bg-opacity-10 border-none text-black text-sm rounded-2xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                             <option selected>Choose status</option>
-                                            <option value="0">Disapproved</option>
-                                            <option value="1">Incomplete Requirements</option>
-                                            <option value="2">For Evaluation</option>
-                                            <option value="3">Approved</option>
-                                            <option value="4">Waiting for Result</option>
+                                            <option value="1">Disapproved</option>
+                                            <option value="2">Incomplete Requirements</option>
+                                            <option value="3">For Evaluation</option>
+                                            <option value="4">Approved</option>
+                                            <option value="5">Waiting for Result</option>
+                                            <option value="6">Scheduled for Exam</option>
                                         </select>
                                     </td>
                                     <td class="px-6 py-4">

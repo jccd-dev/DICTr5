@@ -54,6 +54,7 @@ class ManageApplicants extends Controller
             'reg_status' => $this->reg_status,
             'order_by' => $this->order_by,
             'is_applied' => $this->is_applied,
+            'applicant' => $this->applicant,
         ];
         }
 
@@ -124,30 +125,57 @@ class ManageApplicants extends Controller
      */
     public function validate_application(Request $request, int|string $user_id): JsonResponse{
          /** validation numbers [
-        *   1 => Disapproved,
-        *   2 => incomplete,
+         *  1 => Disapproved,
+         *  2 => incomplete,
          *  3 => for evaluation (pending)/auto
          *  4 => Approved
-         *  5 => Waiting for result
-         *  6 => Scheduled for exam
-         *  7 => Exam Done
+         *  5 => Scheduled for exam
+         *  6 => Waiting for result
          * ]
         */
         $validation = (int)$request->post('validation');
         $examSchedule_id = (int)$request->post('exam_sched_id');
+        $remark = $request->post('remarks');
 
         $applicant = UsersData::with('regDetails', 'userHistory')->find($user_id);
 
         $reg = $applicant->regDetails;
 
-        if($validation == 4){
-            $reg->exam_schedule_id = $examSchedule_id;
-            $reg->approved_date = date('Y-m-d', strtotime('now'));
+        $email_type = 0;
+        switch($validation){
+            case 1:
+                $email_type = 1;
+                $reg->status = 1;
+                break;
+            case 2:
+                $email_type = 2;
+                $reg->status = 2;
+                break;
+            case 4:
+                $email_type = 4;
+                $reg->approved_date = date('Y-m-d', strtotime('now'));
+                $reg->status = 4; // approved only
+                break;
+            case 5:
+                $email_type = 5;
+                $reg->exam_schedule_id = $examSchedule_id;
+                $reg->status = 5;
+                break;
+            case 6:
+                $reg->status = 6;
+                break;
+            default:
+                $reg->status = $validation;
         }
 
-        $reg->status = $validation;
         if($reg->save()){
+
             //TODO send email notification to applicant
+            $email_type == 1 ? email_function_for_reject : null;
+            $email_type == 2 ? email_function_for_incomplete : null;
+            $email_type == 4 ? email_function_for_approved : null;
+            $email_type == 5 ? email_function_for_schedule_exam : null;
+
             return response()->json(['success' => 'Validated Successfully'], 200);
         }
 
@@ -205,8 +233,10 @@ class ManageApplicants extends Controller
                 ]);
             }
 
+            //increment passer and delete the reg application data
             if($result == 'passed'){
                 DB::table('visitor_count')->increment('passers');
+                $reg->delete();
             }
 
             // reset the reg details data for the user
