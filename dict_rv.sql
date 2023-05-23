@@ -201,7 +201,7 @@ CREATE TABLE `failed_history` (
 CREATE TABLE `feedbacks` (
                              `id` int(11) NOT NULL,
                              `name` varchar(250) NOT NULL,
-                             `content` text NOT NULL,
+                             `content` text DEFAULT NULL,
                              `email` varchar(250) NOT NULL,
                              `cp_number` varchar(50) DEFAULT NULL,
                              `is_read` int(11) DEFAULT 0,
