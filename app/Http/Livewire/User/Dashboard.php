@@ -14,11 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Validator;
 use Psr\Container\NotFoundExceptionInterface;
-<<<<<<< HEAD
-use setasign\Fpdi\Fpdi;
-=======
 use Psr\Container\ContainerExceptionInterface;
->>>>>>> aecf27f47294a38ec53958938d337520c7c5c18a
 
 class Dashboard extends Component
 {
@@ -643,6 +639,7 @@ class Dashboard extends Component
                 'passport' => null,
                 'file_type' => null,
                 'training_seminar' => null,
+                'date_accomplish' => $user_data->date_accomplish,
             ];
 
             foreach ($user_data->submittedFiles as $file){

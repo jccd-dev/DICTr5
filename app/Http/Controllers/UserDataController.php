@@ -23,7 +23,9 @@ class UserDataController extends Controller
         $pdf->useTemplate($tplId, null, null, null, 210, true);
 
         // Passport Size
-        $pdf->Image(storage_path('app/public/fileSubmits/'.$data['passport']), 119, 25, 20, 26);
+        if(array_key_exists('passport', $data)){
+            $pdf->Image(storage_path('app/public/fileSubmits/'.$data['passport']), 119, 25, 20, 26);
+        }
 
         if($data['first_time']){
             // First Time
@@ -86,8 +88,23 @@ class UserDataController extends Controller
         $pdf->Write(0.1, $data['degree']);
 
         // Inclusive years
-        $pdf->SetXY(134, 88);
+        $pdf->SetXY(133, 88);
         $pdf->Write(0.1, $data['inclusive_years']);
+
+        // Those N/A in Tertiary Education
+        $pdf->SetXY(9, 92);
+        $pdf->Write(0.1, 'N/A');
+        $pdf->SetXY(71, 92);
+        $pdf->Write(0.1, 'N/A');
+        $pdf->SetXY(130, 92);
+        $pdf->Write(0.1, 'N/A');
+
+        $pdf->SetXY(9, 97);
+        $pdf->Write(0.1, 'N/A');
+        $pdf->SetXY(71, 97);
+        $pdf->Write(0.1, 'N/A');
+        $pdf->SetXY(130, 97);
+        $pdf->Write(0.1, 'N/A');
 
         // IT TRAININGS / SEMINARS
         if($data['training_seminar'] != null){
@@ -124,6 +141,17 @@ class UserDataController extends Controller
                 // Training Hours
                 $pdf->SetXY(132, 112);
                 $pdf->Write(0.1, $data['training_seminar'][0]['hours']);
+
+                // 2
+                // COURSE / SEMINAR
+                $pdf->SetXY(9, 116);
+                $pdf->Write(0.1, 'N/A');
+                // TRAINING CENTER
+                $pdf->SetXY(71, 116);
+                $pdf->Write(0.1, 'N/A');
+                // Training Hours
+                $pdf->SetXY(132, 116);
+                $pdf->Write(0.1, 'N/A');
             }
         }else{
             // 1
@@ -135,6 +163,17 @@ class UserDataController extends Controller
             $pdf->Write(0.1, 'N/A');
             // Training Hours
             $pdf->SetXY(132, 112);
+            $pdf->Write(0.1, 'N/A');
+
+            // 2
+            // COURSE / SEMINAR
+            $pdf->SetXY(9, 116);
+            $pdf->Write(0.1, 'N/A');
+            // TRAINING CENTER
+            $pdf->SetXY(71, 116);
+            $pdf->Write(0.1, 'N/A');
+            // Training Hours
+            $pdf->SetXY(132, 116);
             $pdf->Write(0.1, 'N/A');
         }
 
@@ -163,7 +202,7 @@ class UserDataController extends Controller
         }
 
         // Office Category
-        if($data['office_category'] == 'Government'){
+        if($data['office_category'] == 'government'){
             // Government
             $pdf->Image(public_path('img/checkmark.png'), 111, 132, 1.5, 0);
         }elseif($data['office_category'] == 'Private'){
@@ -226,11 +265,11 @@ class UserDataController extends Controller
 
         // Date Accomplished
         $pdf->SetXY(110, 185);
-        $pdf->Write(0.1, date('F d, Y'));
+        $pdf->Write(0.1, date('F d, Y', strtotime($data['date_accomplish'])));
 
         // Decode the base64 string and save it as an image file
-        $data = substr($data['e_sign'], strpos($data['e_sign'], ',') + 1);
-        $signatureImage = base64_decode($data);
+        $signature = substr($data['e_sign'], strpos($data['e_sign'], ',') + 1);
+        $signatureImage = base64_decode($signature);
         $signatureImagePath = storage_path('app/public/signature.png');
         file_put_contents($signatureImagePath, $signatureImage);
 
@@ -241,8 +280,8 @@ class UserDataController extends Controller
 //        $text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
 //        $pdf->MultiCell(0, 4, $text);
 
-        $filename = 'ApplicationForm.pdf';
-        $pdf->Output('D', $filename);
+        $filename = $data['lname'].'_ApplicationForm.pdf';
+        $pdf->Output('I', $filename);
 
     }
 }
