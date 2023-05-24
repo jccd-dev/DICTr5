@@ -32,6 +32,7 @@ class Inbox extends Component
                     ->where(fn($query) => $query
                         ->where('content', 'like', '%' . $this->search . '%')
                         ->orWhere('email', 'like', '%' . $this->search . '%')
+                        ->orWhere('name', 'like', '%' . $this->search . '%')
                     )
                     ->orderByDesc('timestamp')
                     ->paginate(5)
