@@ -2,9 +2,10 @@
 
 namespace App\Http\Livewire\CMS;
 
-use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
+use App\Helpers\AdminLogActivity;
 use App\Models\CMS\POST\PostCategory;
+use Illuminate\Support\Facades\Validator;
 
 class Category extends Component
 {
@@ -51,6 +52,7 @@ class Category extends Component
             'category' => ucfirst($this->category)
         ]);
 
+        AdminLogActivity::addToLog("created a category", session()->get('admin_id'));
         if ($category->exists) {
             session()->flash('error', 'Category exist!');
             return false;
@@ -71,6 +73,8 @@ class Category extends Component
         } else {
             $this->dispatchBrowserEvent('DeleteCategoryFail', true);
         }
+
+        AdminLogActivity::addToLog("deleted a category", session()->get('admin_id'));
         return $category->delete() > 0;
     }
 

@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Admins;
 
-use App\Mail\EmailAdminAccount;
-use Illuminate\Http\JsonResponse;
+use Illuminate\View\View;
 use Illuminate\Http\Request;
+use App\Mail\EmailAdminAccount;
+use App\Models\Admin\AdminModel;
+use App\Helpers\AdminLogActivity;
+use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
-use App\Models\Admin\AdminModel;
-use Illuminate\View\View;
 
 class AdminAccounts extends Controller
 {
@@ -66,8 +67,8 @@ class AdminAccounts extends Controller
             // return server error if data not isnerted to database
             return response()->json(['error' => 'Server Error'], 500);
         }
+        AdminLogActivity::addToLog("create new admin", session()->get('admin_id'));
 
-        // TODO: inserted admin should receive an email with the password of his/her account
         $data = [
             'email' => $request->email,
             'password' => $request->password,
@@ -75,6 +76,7 @@ class AdminAccounts extends Controller
         ];
         Mail::to($request->email)->send(new EmailAdminAccount($data));
         // return success msg with admin name for confirmation
+
         return response()->json([
             'success' => 'New admin Inserted',
             'admin'   => [
@@ -115,6 +117,15 @@ class AdminAccounts extends Controller
             return response()->json(['error' => 'Server Error'], 500);
         }
 
+        AdminLogActivity::addToLog("update admin {$admin_to_update->name}", session()->get('admin_id'));
+        $data = [
+            'email' => $request->email,
+            'password' => $request->password,
+            'url' => route('admin.login')
+        ];
+
+        Mail::to($request->email)->send(new EmailAdminAccount($data));
+
         return response()->json(['admn' => $admin_to_update->name], 200);
     }
 
@@ -123,6 +134,7 @@ class AdminAccounts extends Controller
 
         $admin_to_delete = AdminModel::find($admin_id);
 
+        AdminLogActivity::addToLog("delete admin {$admin_to_delete->name}", session()->get('admin_id'));
         return $admin_to_delete->delete() > 0;
     }
 }

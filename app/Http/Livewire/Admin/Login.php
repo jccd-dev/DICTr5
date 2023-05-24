@@ -2,15 +2,16 @@
 
 namespace App\Http\Livewire\Admin;
 
-use App\Models\Admin\AdminModel;
+use Livewire\Component;
 
 use Illuminate\Http\Request;
+use App\Models\Admin\AdminModel;
+use App\Helpers\AdminLogActivity;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
-use Livewire\Component;
 
 class Login extends Component
 {
@@ -67,6 +68,7 @@ class Login extends Component
 
         //store in cookie
         Cookie::queue('jwt_token', $token, 240); // expire after 5 hours
+        AdminLogActivity::addToLog('Logged In', Auth::user()->id);
         return redirect('/admin/dashboard');
     }
     public function render()

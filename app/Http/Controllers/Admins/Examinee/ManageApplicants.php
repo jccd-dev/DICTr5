@@ -6,10 +6,12 @@ use Illuminate\View\View;
 use Illuminate\Http\Request;
 use App\Models\Examinee\Users;
 use App\Helpers\UserManagement;
+use App\Helpers\AdminLogActivity;
 use Illuminate\Http\JsonResponse;
 use App\Models\Examinee\UsersData;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
 use App\Helpers\SearchExamineesHelper;
@@ -79,7 +81,9 @@ class ManageApplicants extends Controller
             return redirect()->back()->with('error', 'Record cannot found');
         }
 
+        AdminLogActivity::addToLog('select_examinee', session()->get('admin_id'));
         return view('record.show', ['examinee_data' => $examinee_data]);
+
     }
 
     /**
@@ -176,6 +180,7 @@ class ManageApplicants extends Controller
             $email_type == 4 ? email_function_for_approved : null;
             $email_type == 5 ? email_function_for_schedule_exam : null;
 
+            AdminLogActivity::addToLog("validate examinee {$applicant->id}", session()->get('admin_id'));
             return response()->json(['success' => 'Validated Successfully'], 200);
         }
 
@@ -246,6 +251,8 @@ class ManageApplicants extends Controller
             $reg->stattus = 7;
             $reg->apply = 0;
             $reg->save();
+
+            AdminLogActivity::addToLog("send exam result to {$user->id}", session()->get('admin_id'));
         }
     }
 
@@ -262,6 +269,7 @@ class ManageApplicants extends Controller
 
             $user_login->is_active = 0;
             $user_login->save();
+            AdminLogActivity::addToLog("deactivate user {$user_id}", session()->get('admin_id'));
             return true;
         }
 
@@ -353,6 +361,7 @@ class ManageApplicants extends Controller
         $res = $user_helper->insert_users_data($organized_users_data);
         if(is_array($res)){
             $this->apply_examinee($res[1]);
+            AdminLogActivity::addToLog("add new applicant", session()->get('admin_id'));
             return $res[0]; //true
         }
 
@@ -446,6 +455,7 @@ class ManageApplicants extends Controller
             'to_del_trainings' => $request->post('toDeleteTrainings')
         ];
 
+        AdminLogActivity::addToLog("update user {$user_id}", session()->get('admin_id'));
         $user_helper->update_users_data($organized_users_data, $user_id);
     }
 

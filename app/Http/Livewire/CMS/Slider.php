@@ -2,15 +2,16 @@
 
 namespace App\Http\Livewire\CMS;
 
-use Illuminate\Database\Eloquent\Collection;
 use Livewire\Component;
 use mysql_xdevapi\Session;
 use Illuminate\Support\Str;
 use Livewire\WithFileUploads;
 use App\Models\CMS\HomeBanner;
+use App\Helpers\AdminLogActivity;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Database\Eloquent\Collection;
 
 class Slider extends Component
 {
@@ -114,6 +115,7 @@ class Slider extends Component
             $this->banner_data = $validatedData;
             $this->banner_model->make_banner($validatedData) ? session()->flash('success', 'Slider Banner Created!') : session()->flash('error', 'Please try Again Later!');
             $this->dispatchBrowserEvent('ValidationSuccess', true);
+            AdminLogActivity::addToLog("created a banner", session()->get('admin_id'));
         }
         //insert data into database
     }
@@ -147,7 +149,6 @@ class Slider extends Component
      */
     public function update_banner(string|int $banner_id): void
     {
-        //validate Inputs data before inserting to database
         //validate Inputs data before inserting to database
         if ($this->image) {
             $validator = Validator::make([
@@ -186,6 +187,7 @@ class Slider extends Component
                 if ($this->banner_model->update_banner($validatedData, $this->banner_id)) {
                     $this->dispatchBrowserEvent('UpdateSliderSuccess', true);
                     session()->flash('success', 'Slider Banner Created!');
+                    AdminLogActivity::addToLog("updated banner", session()->get('admin_id'));
                 } else {
                     $this->dispatchBrowserEvent('UpdateSliderFailed', true);
                     session()->flash('error', 'Please try Again Later!');
@@ -228,6 +230,7 @@ class Slider extends Component
                 if ($this->banner_model->update_banner($validatedData, $this->banner_id)) {
                     $this->dispatchBrowserEvent('UpdateSliderSuccess', true);
                     session()->flash('success', 'Slider Banner Created!');
+                    AdminLogActivity::addToLog("updated banner", session()->get('admin_id'));
                 } else {
                     $this->dispatchBrowserEvent('UpdateSliderFailed', ["" => $validatedData]);
                     session()->flash('error', 'Please try Again Later!');

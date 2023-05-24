@@ -2,11 +2,11 @@
 
 namespace App\Http\Livewire\CMS;
 
-use App\Models\CMS\Announcement as AnnouncementModel;
-use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use App\Helpers\AdminLogActivity;
 use App\Models\CMS\POST\PostModel;
+use Illuminate\Support\Facades\DB;
 use App\Helpers\ImageHandlerHelper;
 use App\Models\CMS\POST\PostImages;
 use Illuminate\Support\Facades\Auth;
@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\Collection;
+use App\Models\CMS\Announcement as AnnouncementModel;
 
 class Posts extends Component
 {
@@ -250,6 +251,7 @@ class Posts extends Component
             }
 
             $this->dispatchBrowserEvent('ValidationPostSuccess', ['success' => 'success']);
+            AdminLogActivity::addToLog("created a post", session()->get('admin_id'));
         }
 
         session()->flash('error', 'Something went wrong please try again later!');
@@ -463,6 +465,7 @@ class Posts extends Component
                 $this->imageHelper->del_image_on_db($this->to_delete_image, $this->post_id);
                 session()->flash('success', 'Post has been created!');
 
+                AdminLogActivity::addToLog("updated a post", session()->get('admin_id'));
                 return true;
             }
         }
@@ -524,6 +527,7 @@ class Posts extends Component
             return true;
         }
         $this->dispatchBrowserEvent("DeletePostError", true);
+        AdminLogActivity::addToLog("deleted a post", session()->get('admin_id'));
         return false;
     }
 
