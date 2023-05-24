@@ -43,7 +43,7 @@
                 <div class="flex flex-col gap-5">
                     <h1 class="text-6xl font-bold font-quicksand">{{ $examinees_data->fname }} {{ $examinees_data->lname }}</h1>
                     <div class="flex flex-col font-quicksand font-medium gap-2">
-                        <span>{{ $examinees_data->userLogin->email }}</span>
+                        <span>{{ !isset($examinees_data->userLogin->email) ? "No email available" : $examinees_data->userLogin->email }}</span>
                         <span>{{ $examinees_data->contact_number }}</span>
                     </div>
                 </div>
@@ -157,7 +157,7 @@
         </div>
     </div>
 </div>
-@include('AdminFunctions.add-applicant')
+@include('AdminFunctions.add-applicant2')
 <div id="deleteModal3" tabindex="-1" class="fixed top-0 left-0 right-0 z-[51] hidden p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full flex justify-center">
     <div class="relative w-full max-w-md max-h-full flex items-center">
         <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
@@ -176,4 +176,247 @@
         </div>
     </div>
 </div>
+
+<script>
+    const messageAlert = document.querySelector("#message-alert");
+    const dismissAlert = document.querySelector("#dismiss-alert");
+    const closeAlertBtn = document.querySelector("#closeAlertBtn");
+    const formInputs = document.querySelectorAll(
+        "#add-applicant input, #add-applicant select"
+    );
+    const resultCon = document.querySelector("#results");
+    const addApplicant = document.querySelector("#add-applicant");
+    const headings = document.querySelectorAll("h3");
+    const saveSign = document.querySelector('#save-btn')
+    const signInput = document.querySelector('#signature')
+    const clearSign = document.querySelector('#clear-btn')
+    const canvas = document.querySelector('#signature-pad');
+
+    function listeners($data) {
+
+        addApplicant.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(addApplicant);
+
+        try {
+            let res = await fetch("/admin/examinee/add-examinee", {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                },
+                body: formData,
+            });
+            let data = await res.json();
+            if(data?.errors) throw data.errors
+
+            if (data === 1) {
+                dismissAlert.classList.remove("hidden");
+                messageAlert.textContent = "Successfully Added";
+                targetHeading.nextElementSibling.click();
+
+                setTimeout(() => {
+                    dismissAlert.classList.remove("hidden");
+                    location.reload();
+                }, 2000);
+            }
+        } catch (err) {
+            errorHandler(err);
+        }
+    });
+    const errorHandler = (err) => {
+
+        let p = addApplicant.querySelectorAll("p")
+        Array.from(p).forEach((el) => {
+                el.classList.add("hidden");
+            }
+        );
+        for (const key in err) {
+            formInputs.forEach((el) => {
+                if (el.name === key) {
+                    if (el.parentElement.querySelector("p")) {
+                        let p = el.parentElement.querySelector("p");
+                        p.classList.remove("hidden");
+                        p.textContent = err[key];
+                    } else if (el.parentElement.parentElement.querySelector("p")) {
+                        let p = el.parentElement.parentElement.querySelector("p");
+                        p.classList.remove("hidden");
+                        p.textContent = err[key];
+                    } else {
+                        let p =
+                            el.parentElement.parentElement.parentElement.querySelector(
+                                "p"
+                            );
+                        p.classList.remove("hidden");
+                        p.textContent = err[key];
+                    }
+                }
+            });
+        }
+
+        let hasSectionOneError = err.hasOwnProperty('givenName')
+                    || err.hasOwnProperty('middleName')
+                    || err.hasOwnProperty('surName')
+                    || err.hasOwnProperty('tel')
+                    || err.hasOwnProperty('province')
+                    || err.hasOwnProperty('municipality')
+                    || err.hasOwnProperty('barangay')
+                    || err.hasOwnProperty('surName')
+                    || err.hasOwnProperty('email')
+                    || err.hasOwnProperty('pob')
+                    || err.hasOwnProperty('dob')
+                    || err.hasOwnProperty('gender')
+                    || err.hasOwnProperty('citizenship')
+                    || err.hasOwnProperty('civilStatus');
+
+        let hasSectionTwoError = err.hasOwnProperty('thumbnail')
+            || err.hasOwnProperty('status')
+            || err.hasOwnProperty('images');
+
+        let hasSectionThreeError = err.hasOwnProperty('presentOffice')
+            || err.hasOwnProperty('telNum')
+            || err.hasOwnProperty('officeAddress')
+            || err.hasOwnProperty('officeCategory')
+            || err.hasOwnProperty('designationPosition')
+            || err.hasOwnProperty('yearsPresentPosition')
+            || err.hasOwnProperty('pl');
+
+        let hasSectionFourError = err.hasOwnProperty('signature')
+
+        if(hasSectionOneError) {
+            $data.state = 1;
+        } else if(hasSectionTwoError) {
+            $data.state = 2;
+        } else if (hasSectionThreeError) {
+            $data.state = 3;
+        } else if (hasSectionFourError) {
+            $data.state = 4;
+        }
+    };
+    }
+
+
+
+    let targetHeading;
+    for (let i = 0; i < headings.length; i++) {
+        console.log(headings);
+        if (headings[i]?.nextElementSibling?.tagName === "BUTTON") {
+            targetHeading = headings[i];
+            break;
+        }
+    }
+
+    closeAlertBtn.addEventListener("click", (_) => {
+        dismissAlert.classList.toggle("hidden");
+        location.reload();
+    });
+
+    const seminarsCon = document.querySelector("#seminars-attended-new");
+    const addTrainings = document.querySelector("#add-trainings");
+    const removeTrainings = document.querySelector("#remove-trainings");
+
+    // const messageAlert = document.querySelector("#message-alert");
+    // const dismissAlert = document.querySelector("#dismiss-alert");
+    // const closeAlertBtn = document.querySelector("#closeAlertBtn");
+    // const headings = document.querySelectorAll("h3");
+
+    /**
+    * Description placeholder
+    * @date 5/17/2023 - 11:56:52 AM
+    *
+    * @param {string} [value=""]
+    * @returns {string}
+    */
+    const trainingTemplate = ({ course, center, hours }) => {
+        return `
+            <div class="flex md:flex-row flex-col w-full gap-3 relative">
+                <div class="flex flex-1" >
+                    <div class="mb-3 md:mb-6 flex-1 flex-col">
+                        <label for="" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Course / Seminar Title</label>
+                            <input
+                                type="text"
+                                id=""
+                                name="seminars-course[]"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                value="${course}"
+                                placeholder="Course / Seminar Title"
+                            >
+                    </div>
+                </div>
+                <div class="flex flex-1" >
+                    <div class="mb-3 md:mb-6 flex-1 flex-col">
+                        <label for="" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Training Center</label>
+                            <input
+                                type="text"
+                                id=""
+                                name="seminars-center[]"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                value="${center}"
+                                placeholder="Training Center"
+                            >
+                    </div>
+                </div>
+                <div class="flex flex-1" >
+                    <div class="mb-3 md:mb-6 flex-1 flex-col">
+                        <label for="" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Total Training Hours</label>
+                            <input
+                                type="number"
+                                id=""
+                                name="seminars-hours[]"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                value="${hours}"
+                                placeholder="Total Training Hours"
+                            >
+                    </div>
+                </div>
+            </div>
+            `;
+    };
+
+
+    const Trainings = {
+        trainingTemplate: trainingTemplate,
+
+        add: function (value) {
+            console.log(value);
+            seminarsCon.insertAdjacentHTML("beforeend", this.trainingTemplate(value));
+        },
+
+        remove: function () {
+            const semCon = document.querySelector("#seminars-attended-new");
+            semCon.lastElementChild.remove();
+        },
+    };
+
+    @foreach ($examinees_data->trainingSeminars as $item)
+        Trainings.add({course: "{{ $item->course }}", center: "{{ $item->center }}", hours: parseInt("{{ $item->hours }}")})
+    @endforeach
+
+    let isInitialSign = true;
+
+        canvas.addEventListener('mousedown', () => {
+            if (!isInitialSign) return
+            canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+            isInitialSign = false;
+        })
+
+        const signaturePad = new SignaturePad(canvas);
+
+        clearSign.addEventListener("click", () => signaturePad.clear())
+
+        @if(isset($examinees_data) && count($examinees_data->toArray()))
+            const image = new Image();
+            image.src = "{{ $examinees_data->e_sign }}";
+            image.onload = function() {
+                canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height);
+            };
+        @endif
+        saveSign.addEventListener("click", async () => {
+            const dataURL = signaturePad.toDataURL();
+            signInput.value = dataURL;
+            console.log(signInput.value)
+            signInput.dispatchEvent(new Event('input'));
+        })
+</script>
+@vite(["resources/js/admin/applicant.js", "resources/js/user/dashboard.js"])
 @endsection

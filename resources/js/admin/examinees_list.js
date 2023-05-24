@@ -186,7 +186,3 @@ const handleChangeFormElements = async (e) => {
 
 addTrainings.addEventListener("click", () => Trainings.add());
 removeTrainings.addEventListener("click", () => Trainings.remove());
-
-(async () => {
-    console.log(await axios.get("/admin/examinee/q/7"));
-})();

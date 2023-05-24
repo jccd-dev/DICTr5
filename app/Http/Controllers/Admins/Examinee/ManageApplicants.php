@@ -80,17 +80,17 @@ class ManageApplicants extends Controller
         return view('AdminFunctions.applicant-data', ['examinees_data' => $examinees_data]);
     }
 
-    public function examinee(int $examinees_id): String|JsonResponse
-    {
-        $examinees_data = UsersData::with('addresses', 'tertiaryEdu', 'trainingSeminars', 'submittedFiles', 'regDetails', 'userHistory', 'userLogs', 'userLogin')->where('id', $examinees_id)->first();
-        // dd($examinees_data);
-        // if record is null or not found
-        if (!$examinees_data) {
-            return redirect()->back()->with('error', 'Record cannot found');
-        }
+    // public function examinee(int $examinees_id)
+    // {
+    //     $examinees_data = UsersData::with('addresses', 'tertiaryEdu', 'trainingSeminars', 'submittedFiles', 'regDetails', 'userHistory', 'userLogs', 'userLogin')->where('id', $examinees_id)->first();
+    //     // dd($examinees_data);
+    //     // if record is null or not found
+    //     if (!$examinees_data) {
+    //         return redirect()->back()->with('error', 'Record cannot found');
+    //     }
 
-        return json_encode($examinees_data);
-    }
+    //     return $examinees_data->toArray();
+    // }
 
     /**
      * @param Request $request
