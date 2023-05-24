@@ -35,6 +35,7 @@
 {{-- CKEDITOR --}}
 <script src="//cdn.ckeditor.com/4.21.0/standard/ckeditor.js"></script>
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
 {{--<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>--}}
 {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script> --}}

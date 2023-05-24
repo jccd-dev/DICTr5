@@ -90,6 +90,7 @@ Route::prefix('admin')->group(function () {
             Route::get('/search', [ManageApplicants::class, 'search_examinees'])->name('search');
             Route::get('/{id}', [ManageApplicants::class, 'select_examinee'])->name('examinee.get');
             Route::post('/add-examinee', [ManageApplicants::class, 'add_user'])->name('examinee.add');
+            Route::get('/q/{id}', [ManageApplicants::class, 'examinee'])->name('examinee.q');
             Route::post('/{id}/update-examinee', [ManageApplicants::class, 'update_users_data'])->name('examinee.update');
             Route::post('/{id}/validation', [ManageApplicants::class, 'validate_application'])->name('examinee.validate');
             Route::post('/{id}/send-result/', [ManageApplicants::class, 'send_exam_result'])->name('examinee.result');

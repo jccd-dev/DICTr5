@@ -24,7 +24,7 @@
             </button>
         </div>
     </div>
-    <div class="relative shadow-md bg-white rounded-2xl p-10">
+    <div class="relative shadow-md bg-white rounded-2xl">
         <div class="flex items-center justify-between py-4 w-full dark:bg-gray-800 px-10 pt-10">
             <a href="{{ url('/admin/examinee') }}" class="flex gap-3 items-center font-quicksand font-semibold">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">

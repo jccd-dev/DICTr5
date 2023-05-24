@@ -80,6 +80,18 @@ class ManageApplicants extends Controller
         return view('AdminFunctions.applicant-data', ['examinees_data' => $examinees_data]);
     }
 
+    public function examinee(int $examinees_id): String|JsonResponse
+    {
+        $examinees_data = UsersData::with('addresses', 'tertiaryEdu', 'trainingSeminars', 'submittedFiles', 'regDetails', 'userHistory', 'userLogs', 'userLogin')->where('id', $examinees_id)->first();
+        // dd($examinees_data);
+        // if record is null or not found
+        if (!$examinees_data) {
+            return redirect()->back()->with('error', 'Record cannot found');
+        }
+
+        return json_encode($examinees_data);
+    }
+
     /**
      * @param Request $request
      * @return View
@@ -235,17 +247,18 @@ class ManageApplicants extends Controller
 
     public function add_user(Request $request)
     {
+        // dd($request);
         $user_helper = new UserManagement();
 
         $rules = $user_helper->rules;
         // update rules  base for current status of the user
-        if (strtolower($request->currentStatus) == 'student') {
+        if (strtolower($request->post('current-status')) == 'student') {
             $rules = array_merge($rules, $user_helper->student_rule);
         } else {
             $rules = array_merge($rules, $user_helper->prof_rule);
         }
 
-        $validator = Validator::make($request->all, $rules);
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
@@ -270,7 +283,7 @@ class ManageApplicants extends Controller
             'programming_langs' => $request->post('pl'),
             'e_sign'            => $request->post('signature'),
             'year_level'        => $request->post('yearLevel'),
-            'current_status'    => $request->post('currentStatus'),
+            'current_status'    => $request->post('current-status'),
             'date_accomplish'   => date('Y-m-d H:i:s', strtotime('now'))
         ];
 
@@ -294,11 +307,11 @@ class ManageApplicants extends Controller
             'diploma'   => $request->file('diploma'),
             'cert'      => $request->file('cert')
         ];
-
+        // dd($request->post(''));
         //process trainings
-        foreach ($request->post('course') as $key => $training) {
-            $center = $request->post('center')[$key];
-            $hours = $request->post('hours')[$key];
+        foreach ($request->post('seminars-course') as $key => $training) {
+            $center = $request->post('seminars-center')[$key];
+            $hours = $request->post('seminars-hours')[$key];
 
             $this->trainings[] = [
                 'course' => $training,
