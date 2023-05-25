@@ -13,13 +13,20 @@ class UserLogActivity{
      * @param string $activity: string value
      * @return void
      */
-    public static function addToLog(Request $request, string $activity, string|int $user_id): void {
-        $log = [];
-        $log['user_id'] = $user_id;
-        $log['activity'] = $activity;
-        $log['end_point'] = $request->fullUrl();
+    public static function addToLog(string $activity, string|int $user_id): void {
+        try {
+            $url = $url ?? request()->fullUrl();
 
-       UserLogs::create($log);
+            $admin_log = new UserLogs();
+
+            $admin_log->admin_id = $user_id;
+            $admin_log->activity = $activity;
+            $admin_log->end_point = $url;
+
+            $admin_log->save();
+        } catch (\Throwable $th) {
+            \Log::error('Failed to log user activity: ' . $th->getMessage());
+        }
     }
 
     /**

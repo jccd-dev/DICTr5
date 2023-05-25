@@ -254,6 +254,12 @@ class ManageApplicants extends Controller
         AdminLogActivity::addToLog("send exam result to {$user->id}", session()->get('admin_id'));
     }
 
+    /**
+     * @param Request $request
+     * @param $user_id
+     * @return void
+     * @uses SENDTRANSCRIPT
+     */
     public function sendTranscript(Request $request, $user_id){
 
         $file = $request->file('pdf_file');
@@ -287,12 +293,21 @@ class ManageApplicants extends Controller
         return false;
     }
 
-    public function add_user(Request $request){
+    /**
+     * @param Request $request
+     * @return array|bool|JsonResponse|mixed
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @uses ADD_USER
+     * @description Manage to add manually users data in admin side.
+     */
+    public function add_user(Request $request): mixed
+    {
         $user_helper = new UserManagement();
 
         $rules = $user_helper->rules;
         // update rules  base for current status of the user
-        if (strtolower($request->currentStatus) == 'student') {
+        if (strtolower($request->post('currentStatus')) == 'student') {
             $rules = array_merge($rules, $user_helper->student_rule);
         } else {
             $rules = array_merge($rules, $user_helper->prof_rule);
@@ -379,13 +394,23 @@ class ManageApplicants extends Controller
         return $res;
     }
 
+    /**
+     * @param Request $request
+     * @param $user_id
+     * @return JsonResponse|void
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @uses UPDATE_USERS_DATA
+     * @description Update the existing user's data in admin side
+     *              admin can update all user's data if needed
+     */
     public function update_users_data(Request $request, $user_id){
 
         $user_helper = new UserManagement();
 
         $rules = $user_helper->rules;
         // update rules  base for current status of the user
-        if (strtolower($request->currentStatus) == 'student') {
+        if (strtolower($request->post('currentStatus')) == 'student') {
             $rules = array_merge($rules, $user_helper->student_rule);
         } else {
             $rules = array_merge($rules, $user_helper->prof_rule);
@@ -436,23 +461,13 @@ class ManageApplicants extends Controller
         ];
 
         //process trainings
-        foreach ($request->trainings('course') as $key => $training){
-            $center = $request->trainings('center')[$key];
-            $hours = $request->trainings('hours')[$key];
+        foreach ($request->input('course') as $key => $training){
+            $center = $request->input('center')[$key];
+            $hours = $request->input('hours')[$key];
+            $id = $request->input('trainingId')[$key];
 
             $this->trainings[] = [
-                'course' => $training,
-                'center' => $center,
-                'hours'  => $hours
-            ];
-        }
-
-        //process trainings
-        foreach ($request->post('course') as $key => $training){
-            $center = $request->post('center')[$key];
-            $hours = $request->post('hours')[$key];
-
-            $this->trainings[] = [
+                'id'     => $id,
                 'course' => $training,
                 'center' => $center,
                 'hours'  => $hours
@@ -535,6 +550,13 @@ class ManageApplicants extends Controller
         return $user_helper->update_psa($user_id, $file);
     }
 
+    /**
+     * @param int|string $user_id
+     * @return bool
+     * @uses APPLY_EXAMINEES
+     * @description unlike in user's/examinees side this function is auto called by other function
+     *              to automatically after it register by admin.
+     */
     public function apply_examinee(int|string $user_id): bool
     {
         $user = UsersData::with('regDetails', 'userHistory')->find($user_id);
