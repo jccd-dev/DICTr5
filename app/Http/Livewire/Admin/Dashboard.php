@@ -2,14 +2,18 @@
 
 namespace App\Http\Livewire\Admin;
 
-use App\Helpers\GetAdmin;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
-use App\Helpers\AdminLogActivity;
+use App\Models\Examinee\UsersData;
+use App\Models\Examinee\RegDetails;
+use App\Models\Examinee\UserHistory;
+use function PHPUnit\Framework\isNull;
 
 class Dashboard extends Component
 {
     public array $admin_data = [];
+
+    public ?string $year = null;
     public function render()
     {
         // Check if the user is authenticated
@@ -24,9 +28,44 @@ class Dashboard extends Component
                 'name' => $name,
             ])->layout("layouts.layout");
         }
+
         return view('livewire.admin.dashboard')->layout("layouts.layout");
     }
 
+    /**
+     * @return array
+     * @uses GETANALYTICSDATA
+     * @description
+     */
+    public function getAnalyticsData(): array{
+
+        $year = isNull($this->year) ? date('Y', strtotime('now')) : $this->year;
+        $total_applicants = UsersData::count();
+        $total_examinees = RegDetails::where('status', 5)->count();
+        $pending_requirements = RegDetails::where('status', 2)->count();
+        $complete_requirements = RegDetails::where('status', 4)->count();
+        $byMonthExamData = [];
+
+        $analytics = UserHistory::selectRaw('MONTH(timestamp) as month, COUNT(*) as count')
+            ->where('exam_result', 'passed')
+            ->whereRaw("DATE_FORMAT(timestamp, '%Y') = '$year'")
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
+
+        foreach ($analytics as $data){
+            $month = date('F', mktime(0, 0,0, $data->month, 1));
+            $byMonthExamData[$month] = $data->count;
+        }
+
+        return [
+            'applicants'   => $total_applicants,
+            'examinees'    => $total_examinees,
+            'pending'      => $pending_requirements,
+            'complete'     => $complete_requirements,
+            'analytics'    => $byMonthExamData
+        ];
+    }
     /**
      * @description use for logout redirect to log out route
      * @return null
