@@ -9,23 +9,24 @@
     <x-layouts.banner />
 
     <div class="relative md:max-xl:flex">
-        <img src="img/announcement.png" class="w-full" alt=""/>
+        <img src="img/announcement.png" class="w-full" alt="posts"/>
         <h1 class="absolute text-center text-5xl text-white top-2 mt-7 left-1/2 -translate-x-1/3 -translate-y-2">
            POST</h1>
            <h2 class="absolute text-center text-white ml-8 text-left text-2xl top-1/3 left-1/2 -translate-x-1/2">Provide every Filipino access to vital ICT infostructure and services. Ensure sustainable growth of Philippine ICT-enabled industries resulting to creation of more jobs. Establish a One Digitized Government, One Nation. Support the administration in fully achieving its goals.</h2>
     </div>
 
     <div class="container my-24 px-6 mx-auto">
+    <div class="block rounded-lg shadow-lg bg-white">
       <div class="flex flex-wrap items-center">
         <div class="hidden lg:flex grow-0 shrink-0 basis-auto lg:w-6/12 xl:w-4/12">
-          <img src="img/simreg.jpg" alt=""
+          <img src="img/simreg.jpg" class="ml-3" alt=""
             class="w-full rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg" />
         </div>
 
         <div class="grow-0 shrink-0 basis-auto w-full lg:w-6/12 xl:w-8/12">
           <div class="px-6 py-12 md:px-12">
             <h2 class="text-2xl font-bold mb-4">DICT supports the immediate implementation of Republic Act No. 11934 or the “Subscriber Identity Module (SIM) Registration Act”</h2>
-            <p class=" text-bold text-black-500 mb-6">
+            <p class=" text-bold text-black-500 mb-4">
               Lorem ipsum dolor sit amet consectetur, adipisicing elit. Earum maxime voluptas
               ipsam aliquam itaque cupiditate provident architecto expedita harum culpa odit,
               inventore rem molestias laborum repudiandae corporis pariatur quo eius iste!
@@ -39,7 +40,7 @@
             </p>
             </div>
         </div>
-            <p class="text-left text-black-500">
+            <p class="mb-8 ml-3 text-left text-black-500">
                  Lorem ipsum dolor sit amet consectetur, adipisicing elit. Earum maxime voluptas
               ipsam aliquam itaque cupiditate provident architecto expedita harum culpa odit,
               inventore rem molestias laborum repudiandae corporis pariatur quo eius iste!
@@ -55,7 +56,7 @@
         </p>
       </div>
     </div>
-    <div class="w-full mt-32" x-data="{ data: [1,2,3] }">
+    <div class="w-full mb-10 mt-32" x-data="{ data: [1,2,3] }">
     <div class="w-full flex flex-col justify-center">
     <h1 class="text-left ml-10  font-bold font-inter text-3xl">Related News</h1>
         <hr class="my-12 h-px border-t-0 bg-transparent bg-gradient-to-r from-transparent via-neutral-500 to-transparent opacity-100 dark:opacity-150" />
@@ -118,6 +119,7 @@
         </div>
     </div>
     </div>
+    <hr class="my-12 h-px border-t-0 bg-transparent bg-gradient-to-r from-transparent via-neutral-500 to-transparent opacity-100 dark:opacity-150" />
     <x-footer />
 </div>
 @endsection
