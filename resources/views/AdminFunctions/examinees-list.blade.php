@@ -89,16 +89,16 @@
                             Name
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Registration Date
+                            Gender
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Exam Date
+                            Current Status
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Exam Set
+                            Address
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Type
+                            Registration
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Applicant Status
@@ -128,26 +128,50 @@
                                         {{ $user->addresses ? $user->addresses->formatted_address : '' }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ $user->tertiaryEdu ? $user->tertiaryEdu->degree : '' }}
+                                        @if (empty($user->user_login_id))
+                                            Manual
+                                        @else
+                                            Online
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4">
-                                        <select class="bg-[#00509D] bg-opacity-10 border-none text-black text-sm rounded-2xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                            <option selected>Choose status</option>
-                                            <option value="1">Disapproved</option>
-                                            <option value="2">Incomplete Requirements</option>
-                                            <option value="3">For Evaluation</option>
-                                            <option value="4">Approved</option>
-                                            <option value="5">Waiting for Result</option>
-                                            <option value="6">Scheduled for Exam</option>
-                                        </select>
+                                        @if (empty($user->regDetails) OR $user->regDetails->apply == 0)
+                                            Not yet been applied
+                                        @else
+                                            @switch($user->regDetails->status)
+                                                @case(1)
+                                                    <i>Disapproved</i>
+                                                    @break
+                                                @case(2)
+                                                    <i>Incomplete Requirements</i>
+                                                    @break
+                                                @case(3)
+                                                    <i>For Evaluation</i>
+                                                    @break
+                                                @case(4)
+                                                    <i>Approved</i>
+                                                    @break
+                                                @case(5)
+                                                    <i>Scheduled for Exam</i>
+                                                    @break
+                                                @case(6)
+                                                    <i>Waiting for Result</i>
+                                                    @break
+                                                @default
+
+                                            @endswitch
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4">
-                                        <select class="bg-[#00509D] bg-opacity-10 border-none text-black text-sm rounded-2xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                            <option selected>Choose status</option>
-                                            <option value="0">Failed</option>
-                                            <option value="1">Processing</option>
-                                            <option value="2">Passed</option>
-                                        </select>
+                                        @if (empty($user->userHistoryLatest))
+                                            No Exam Results
+                                        @else
+                                            @if ($user->userHistoryLatest->exam_result == 'passed')
+                                                <i>Passed</i>
+                                            @else
+                                                <i>Passed</i>
+                                            @endif
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4">
                                         <a href="{{ url('/admin/examinee/' . $user->id) }}" class="font-medium hover:underline flex gap-2 items-center bg-dark-blue bg-opacity-50 w-fit py-2 px-4 rounded-2xl">
@@ -185,25 +209,50 @@
                                         {{ $user->addresses ? $user->addresses->formatted_address : '' }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ $user->tertiaryEdu ? $user->tertiaryEdu->degree : '' }}
+                                        @if (empty($user->user_login_id))
+                                            Manual
+                                        @else
+                                            Online
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4">
-                                        <select class="bg-[#00509D] bg-opacity-10 border-none text-black text-sm rounded-2xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                            <option selected>Choose status</option>
-                                            <option value="0">Disapproved</option>
-                                            <option value="1">Incomplete Requirements</option>
-                                            <option value="2">For Evaluation</option>
-                                            <option value="3">Approved</option>
-                                            <option value="4">Waiting for Result</option>
-                                        </select>
+                                        @if (empty($user->regDetails) OR $user->regDetails->apply == 0)
+                                            Not yet been applied
+                                            @else
+                                            @switch($user->regDetails->status)
+                                                @case(1)
+                                                    <i>Disapproved</i>
+                                                    @break
+                                                @case(2)
+                                                    <i>Incomplete Requirements</i>
+                                                    @break
+                                                @case(3)
+                                                    <i>For Evaluation</i>
+                                                    @break
+                                                @case(4)
+                                                    <i>Approved</i>
+                                                    @break
+                                                @case(5)
+                                                    <i>Scheduled for Exam</i>
+                                                    @break
+                                                @case(6)
+                                                    <i>Waiting for Result</i>
+                                                    @break
+                                                @default
+
+                                            @endswitch
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4">
-                                        <select class="bg-[#00509D] bg-opacity-10 border-none text-black text-sm rounded-2xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                            <option selected>Choose status</option>
-                                            <option value="0">Failed</option>
-                                            <option value="1">Processing</option>
-                                            <option value="2">Passed</option>
-                                        </select>
+                                        @if (empty($user->userHistoryLatest))
+                                            No Exam Results
+                                        @else
+                                            @if ($user->userHistoryLatest->exam_result == 'passed')
+                                                <i>Passed</i>
+                                            @else
+                                                <i>Passed</i>
+                                            @endif
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4">
                                         <a href="{{ url('/admin/examinee/' . $user->id) }}" class="font-medium hover:underline flex gap-2 items-center bg-dark-blue bg-opacity-50 w-fit py-2 px-4 rounded-2xl">

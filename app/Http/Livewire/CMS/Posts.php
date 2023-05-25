@@ -15,10 +15,11 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\Collection;
-use App\Models\CMS\Announcement as AnnouncementModel;
+use WireUi\Traits\Actions;
 
 class Posts extends Component
 {
+    use Actions;
     use WithFileUploads;
 
     //initialized variable that will hold values from input form
@@ -559,6 +560,20 @@ class Posts extends Component
         ]);
         $this->temp_images[] = $variable;
         $this->images = [];
+    }
+
+    public function change_status($id, $status){
+        $post = PostModel::find($id);
+        if($status){
+            $post->status = 1;
+        }else{
+            $post->status = 0;
+        }
+        $post->save();
+        $this->notification()->success(
+            $title = 'Status Update',
+            $description = 'Post Status has been updated'
+        );
     }
 
     public function get_all_categories()

@@ -93,7 +93,7 @@ class UsersData extends Model
     }
 
     public function userHistoryLatest(): HasOne{
-        return $this->hasOne(UserHistory::class)->latest('timestamp')->take(1);
+        return $this->hasOne(UserHistory::class, 'user_id', 'id')->latest('timestamp')->take(1);
     }
 
 }

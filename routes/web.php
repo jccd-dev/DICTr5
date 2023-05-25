@@ -95,6 +95,7 @@ Route::prefix('admin')->group(function () {
             Route::post('/{id}/update-examinee', [ManageApplicants::class, 'update_users_data'])->name('examinee.update');
             Route::post('/{id}/validation', [ManageApplicants::class, 'validate_application'])->name('examinee.validate');
             Route::post('/{id}/send-result/', [ManageApplicants::class, 'send_exam_result'])->name('examinee.result');
+            Route::post('/{id}/send-transcript', [ManageApplicants::class, 'sendTranscript'])->name('examinee.transcript');
             Route::put('/{id}/deactivate', [ManageApplicants::class, 'deactivate_account'])->name('examinee.deactivate');
 
             //manually apply the applicant
@@ -133,11 +134,6 @@ Route::get('/logout', function () {
 
 //Visitor Counter
 Route::get('/visitor-counts', [VisitorController::class, 'incrementVisitor']);
-
-//testing for JWT middleware
-//Route::middleware(['jwt.logAuth', 'jwt.roleCheck:superadmin,normaladmin'])->group(function () {
-//    Route::get('/posts', Posts::class)->name('admin.cms.posts');
-//});
 
 
 // For API

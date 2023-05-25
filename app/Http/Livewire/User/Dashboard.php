@@ -73,6 +73,8 @@ class Dashboard extends Component
     public mixed $toDeleteTrainings = [];
     public mixed $training_ids = [];
 
+    public mixed $additional_info = []; //FIXME
+
     protected $rules;
 
     public $training_limit = 1;
@@ -140,6 +142,7 @@ class Dashboard extends Component
         $this->diploma = '';
 
         $this->signature = '';
+        $this->additional_info = []; //FIXME
     }
 
 
@@ -219,7 +222,6 @@ class Dashboard extends Component
             'officeCategory'      => $this->officeCategory,
             'designationPosition' => $this->designationPosition,
             'yearsPresentPosition' => $this->yearsPresentPosition
-
         ], $rules);
 
         if ($validator->fails()) {
@@ -252,8 +254,9 @@ class Dashboard extends Component
             'no_of_years_in_pos' => $this->yearsPresentPosition,
             'programming_langs' => $this->pl,
             'e_sign'            => $this->signature,
-            'year_level'         => $this->yearLevel,
+            'year_level'        => $this->yearLevel,
             'current_status'    => $this->currentStatus,
+            'add_info'          => json_encode($this->additional_info), //FIXME
             'date_accomplish'   => date('Y-m-d H:i:s', strtotime('now'))
         ];
 
@@ -390,6 +393,8 @@ class Dashboard extends Component
         $this->municipality = $cur_user_data->addresses->municipality;
         $this->barangay = $cur_user_data->addresses->barangay;
 
+        $this->additional_info = json_decode($cur_user_data->add_info, true) ?? []; //FIXME
+
         // SEMINARS
         //        $this->trainings = $cur_user_data->trainingSeminars->toArray();
         $this->trainings->pop();
@@ -487,6 +492,7 @@ class Dashboard extends Component
             'e_sign'            => $this->signature,
             'yearLevel'         => $this->yearLevel,
             'current_status'    => $this->currentStatus,
+            'add_info'          => json_encode($this->additional_info), //FIXME
             'date_accomplish'   => date('Y-m-d H:i:s', strtotime('now'))
         ];
 

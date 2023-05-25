@@ -6,12 +6,10 @@ use Illuminate\View\View;
 use Illuminate\Http\Request;
 use App\Models\Examinee\Users;
 use App\Helpers\UserManagement;
-use App\Helpers\AdminLogActivity;
 use Illuminate\Http\JsonResponse;
 use App\Models\Examinee\UsersData;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
 use App\Helpers\SearchExamineesHelper;
@@ -32,7 +30,6 @@ class ManageApplicants extends Controller
     public string|int|null $reg_status = null;
     public string $order_by = 'asc';
     public string|int|null $is_applied = null;
-    public string|int|null $applicant = null;
 
     public array $trainings = [];
     public array $toDeleteTrainings = [];
@@ -48,7 +45,6 @@ class ManageApplicants extends Controller
             $examinees = UsersData::with('tertiaryEdu', 'trainingSeminars', 'addresses', 'submittedFiles', 'userLogin')
                 ->paginate(20);
 
-<<<<<<< HEAD
             $searchValues = [
                 'gender' => $this->gender,
                 'curr_status' => $this->curr_status,
@@ -58,18 +54,6 @@ class ManageApplicants extends Controller
                 'order_by' => $this->order_by,
                 'is_applied' => $this->is_applied,
             ];
-=======
-        $searchValues = [
-            'gender' => $this->gender,
-            'curr_status' => $this->curr_status,
-            'municipality' => $this->municipality,
-            'search_text' => $this->search_text,
-            'reg_status' => $this->reg_status,
-            'order_by' => $this->order_by,
-            'is_applied' => $this->is_applied,
-            'applicant' => $this->applicant,
-        ];
->>>>>>> c1de6c3d8f9b4a04490d921e60ca25e01cb4bb6f
         }
 
         $exam_schedule = new ExamSchedule();
@@ -84,7 +68,6 @@ class ManageApplicants extends Controller
      * @uses SELECT_examinee
      * @description return a data of specific examinee from database
      */
-<<<<<<< HEAD
     public function select_examinee(int $examinees_id): View|RedirectResponse
     {
         $examinees_data = UsersData::with('addresses', 'tertiaryEdu', 'trainingSeminars', 'submittedFiles', 'regDetails', 'userHistory', 'userLogs', 'userLogin')->where('id', $examinees_id)->first();
@@ -95,20 +78,6 @@ class ManageApplicants extends Controller
         }
 
         return view('AdminFunctions.applicant-data', ['examinees_data' => $examinees_data]);
-=======
-    public function select_examinee(int $examinee_id): View|RedirectResponse {
-
-        $examinee_data = UsersData::with('addresses', 'tertiaryEdu', 'trainingSeminars', 'submittedFiles', 'regDetails', 'userHistory', 'userLogs', 'userLogin')->where('id', $examinee_id)->first();
-
-        // if record is null or not found
-        if(!$examinee_data){
-            return redirect()->back()->with('error', 'Record cannot found');
-        }
-
-        AdminLogActivity::addToLog('select_examinee', session()->get('admin_id'));
-        return view('record.show', ['examinee_data' => $examinee_data]);
-
->>>>>>> c1de6c3d8f9b4a04490d921e60ca25e01cb4bb6f
     }
 
     // public function examinee(int $examinees_id)
@@ -138,17 +107,16 @@ class ManageApplicants extends Controller
         $this->reg_status = $request->reg_status;
         $this->order_by = $request->order_by ? $request->order_by : $this->order_by;
         $this->is_applied = $request->is_applied;
-        $this->applicant = $request->applicant;
 
         // put the search_items in the cache
         $search_values = [
             'gender' => $request->gender,
             'curr_status' => $request->curr_status,
+            'municipality' => $request->municipality,
             'search_text' => $request->search_text,
             'reg_status' => $request->reg_status,
             'order_by' => $request->order_by ? $request->order_by : $this->order_by,
             'is_applied' => $request->is_applied,
-            'applicant' => $request->applicant,
         ];
 
         Cache::put($this->cache_key, $search_values, 600);
@@ -164,33 +132,24 @@ class ManageApplicants extends Controller
      * @return JsonResponse
      * @uses VALIDATE_APPLICATION
      */
-<<<<<<< HEAD
     public function validate_application(Request $request, int|string $user_id): JsonResponse
     {
         /** validation numbers [
          *   1 => Disapproved,
          *   2 => incomplete,
-=======
-    public function validate_application(Request $request, int|string $user_id): JsonResponse{
-         /** validation numbers [
-         *  1 => Disapproved,
-         *  2 => incomplete,
->>>>>>> c1de6c3d8f9b4a04490d921e60ca25e01cb4bb6f
          *  3 => for evaluation (pending)/auto
          *  4 => Approved
-         *  5 => Scheduled for exam
-         *  6 => Waiting for result
+         *  5 => Waiting for result
+         *  6 => Scheduled for exam
          * ]
          */
         $validation = (int)$request->post('validation');
         $examSchedule_id = (int)$request->post('exam_sched_id');
-        $remark = $request->post('remarks');
 
         $applicant = UsersData::with('regDetails', 'userHistory')->find($user_id);
 
         $reg = $applicant->regDetails;
 
-<<<<<<< HEAD
         if ($validation == 4) {
             $reg->exam_schedule_id = $examSchedule_id;
             $reg->approved_date = date('Y-m-d', strtotime('now'));
@@ -198,44 +157,7 @@ class ManageApplicants extends Controller
 
         $reg->status = $validation;
         if ($reg->save()) {
-=======
-        $email_type = 0;
-        switch($validation){
-            case 1:
-                $email_type = 1;
-                $reg->status = 1;
-                break;
-            case 2:
-                $email_type = 2;
-                $reg->status = 2;
-                break;
-            case 4:
-                $email_type = 4;
-                $reg->approved_date = date('Y-m-d', strtotime('now'));
-                $reg->status = 4; // approved only
-                break;
-            case 5:
-                $email_type = 5;
-                $reg->exam_schedule_id = $examSchedule_id;
-                $reg->status = 5;
-                break;
-            case 6:
-                $reg->status = 6;
-                break;
-            default:
-                $reg->status = $validation;
-        }
-
-        if($reg->save()){
-
->>>>>>> c1de6c3d8f9b4a04490d921e60ca25e01cb4bb6f
             //TODO send email notification to applicant
-            $email_type == 1 ? email_function_for_reject : null;
-            $email_type == 2 ? email_function_for_incomplete : null;
-            $email_type == 4 ? email_function_for_approved : null;
-            $email_type == 5 ? email_function_for_schedule_exam : null;
-
-            AdminLogActivity::addToLog("validate examinee {$applicant->id}", session()->get('admin_id'));
             return response()->json(['success' => 'Validated Successfully'], 200);
         }
 
@@ -262,7 +184,7 @@ class ManageApplicants extends Controller
         $reg = $user->regDetails;
         $exam_data = ExamSchedule::find($reg->exam_schdule_id);
 
-        $user_email = $user->userLogin == null ? $user->email : $user->userLogin->email;
+        $user_email = $exam_data->email;
         // TODO send email
         $email = true;
 
@@ -294,25 +216,12 @@ class ManageApplicants extends Controller
                 ]);
             }
 
-<<<<<<< HEAD
             if ($result == 'passed') {
-=======
-            //increment passer and delete the reg application data
-            if($result == 'passed'){
->>>>>>> c1de6c3d8f9b4a04490d921e60ca25e01cb4bb6f
                 DB::table('visitor_count')->increment('passers');
-                $reg->delete();
             }
 
             // reset the reg details data for the user
-            $reg->exam_schedule = null;
-            $reg->reg_date = null;
-            $reg->approved_date = null;
-            $reg->stattus = 7;
-            $reg->apply = 0;
-            $reg->save();
-
-            AdminLogActivity::addToLog("send exam result to {$user->id}", session()->get('admin_id'));
+            $reg->delete();
         }
     }
 
@@ -330,7 +239,6 @@ class ManageApplicants extends Controller
 
             $user_login->is_active = 0;
             $user_login->save();
-            AdminLogActivity::addToLog("deactivate user {$user_id}", session()->get('admin_id'));
             return true;
         }
 
@@ -360,7 +268,6 @@ class ManageApplicants extends Controller
             'fname'             => $request->post('givenName'),
             'lname'             => $request->post('surName'),
             'mname'             => $request->post('middleName'),
-            'email'             => $request->post('email'),
             'place_of_birth'    => $request->post('pob'),
             'date_of_birth'     => date('Y-m-d', strtotime($request->post('dob'))),
             'gender'            => $request->post('gender'),
@@ -421,14 +328,7 @@ class ManageApplicants extends Controller
             'files'     => $files
         ];
 
-        $res = $user_helper->insert_users_data($organized_users_data);
-        if(is_array($res)){
-            $this->apply_examinee($res[1]);
-            AdminLogActivity::addToLog("add new applicant", session()->get('admin_id'));
-            return $res[0]; //true
-        }
-
-        return $res;
+        return $user_helper->insert_users_data($organized_users_data);
     }
 
     public function update_users_data(Request $request, $user_id)
@@ -454,7 +354,6 @@ class ManageApplicants extends Controller
             'fname'             => $request->post('givenName'),
             'lname'             => $request->post('surName'),
             'mname'             => $request->post('middleName'),
-            'email'             => $request->post('email'),
             'place_of_birth'    => $request->post('pob'),
             'date_of_birth'     => date('Y-m-d', strtotime($request->post('dob'))),
             'gender'            => $request->post('gender'),
@@ -518,11 +417,6 @@ class ManageApplicants extends Controller
             'training'         => $this->trainings,
             'to_del_trainings' => $request->post('toDeleteTrainings')
         ];
-<<<<<<< HEAD
-=======
-
-        AdminLogActivity::addToLog("update user {$user_id}", session()->get('admin_id'));
->>>>>>> c1de6c3d8f9b4a04490d921e60ca25e01cb4bb6f
         $user_helper->update_users_data($organized_users_data, $user_id);
     }
 
@@ -589,40 +483,5 @@ class ManageApplicants extends Controller
         $user_helper = new UserManagement();
 
         return $user_helper->update_psa($user_id, $file);
-    }
-
-    public function apply_examinee(int|string $user_id): bool
-    {
-        $user = UsersData::with('regDetails', 'userHistory')->find($user_id);
-        $reg = $user->regDetails;
-        $history = $user->userHistory;
-        // dd($user);
-        if ($user) {
-
-            if ($reg && $reg->apply == 1) {
-                $reg->user_id = $user_id;
-                $reg->reg_date = date('Y-m-d', strtotime('now'));
-                $reg->apply = 1;
-
-                if ($reg->save()) {
-
-                    // count user as applicant if he/she is not a retaker.
-                    if(!$history->isEmpty()){
-                        DB::table('visitor_count')->increment('applicants');
-                    }
-                    session()->flash('success', 'Application sent');
-                    return true;
-                }
-
-                session()->flash('error', 'server error');
-                return false;
-            }
-            session()->flash('warning', 'Already applied');
-            return false;
-        }
-
-        // it means that the user already applied
-        session()->flash('warning', 'Register first');
-        return false;
     }
 }

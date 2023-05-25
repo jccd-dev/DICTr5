@@ -48,7 +48,7 @@ class SearchExamineesHelper
                 }
             })
             // related tables
-            ->with('tertiaryEdu', 'addresses', 'regDetails')
+            ->with('tertiaryEdu', 'addresses', 'regDetails', 'userLogin', 'userHistoryLatest')
             ->orderBy('timestamp', $searchValues['order_by'])
             ->paginate(20);
     }

@@ -1,5 +1,6 @@
 <div class="relative" x-data="{ state: 1, hasVidData: false, err: [], stateUpdate: 1, hasVidDataUpdate: false, errUpdate: [], deleteImgName: '', deleteImgId: null, modalActive: 0, location1: 0, location2: 0, deletePostID: 0 }"
      x-init="listeners($data); listenerUpdate($data); ">
+    <x-notifications />
     <div id="dismiss-alert" wire:ignore class="w-full hidden text-white bg-emerald-400 absolute -top-10 right-0 z-10">
         <div class="container relative flex items-center justify-between px-6 py-4 mx-auto">
             <div class="flex items-center">
@@ -135,21 +136,11 @@
                                         {{ $val->category->category }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        <div class="flex items-center">
-                                            @if($val->status)
-                                                <label class="relative inline-flex items-center cursor-pointer">
-                                                    <input type="checkbox" checked="checked" value="{{ $val->id }}"  class="sr-only peer status-values">
-                                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                                                    <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">Published</span>
-                                                </label>
-                                            @else
-                                                <label class="relative inline-flex items-center cursor-pointer">
-                                                    <input type="checkbox" value="{{ $val->id }}" class="sr-only peer status-values">
-                                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                                                    <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">Unpublished</span>
-                                                </label>
-                                            @endif
-                                        </div>
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" {{($val->status) ? 'checked' : ''}} class="sr-only peer" wire:click="change_status({{$val->id}}, {{($val->status == 1) ? 0 : 1}})">
+                                            <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                                            <span class="ml-3 text-xs font-medium text-gray-900 dark:text-gray-300">Publish & Prioritize</span>
+                                        </label>
                                     </td>
                                     <td class="px-6 py-4">
                                         <a href="#" type="button" wire:click="get_post_data({{ $val->id }})" @click="state=1; stateUpdate=1; modalActive = 2" data-modal-target="update-post" data-modal-show="update-post" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
@@ -168,21 +159,11 @@
                                         {{ $val->category->category }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        <div class="flex items-center">
-                                            @if($val->status)
-                                                <label class="relative inline-flex items-center cursor-pointer">
-                                                    <input type="checkbox" checked="checked" value="{{ $val->id }}" class="sr-only peer status-values">
-                                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                                                    <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">Published</span>
-                                                </label>
-                                            @else
-                                                <label class="relative inline-flex items-center cursor-pointer">
-                                                    <input type="checkbox" value="{{ $val->id }}" class="sr-only peer status-values">
-                                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                                                    <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">Unpublished</span>
-                                                </label>
-                                            @endif
-                                        </div>
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" {{($val->status) ? 'checked' : ''}} class="sr-only peer" wire:click="change_status({{$val->id}}, {{($val->status == 1) ? 0 : 1}})">
+                                            <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                                            <span class="ml-3 text-xs font-medium text-gray-900 dark:text-gray-300">Publish & Prioritize</span>
+                                        </label>
                                     </td>
                                     <td class="px-6 py-4">
                                         <a href="#" type="button" wire:click="get_post_data({{ $val->id }})" @click="state=1; stateUpdate=1; modalActive = 2" data-modal-target="update-post" data-modal-show="update-post" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
