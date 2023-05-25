@@ -591,7 +591,7 @@
                                     <h1 class="font-bold font-quicksand text-lg flex self-start my-4">Signature</h1>
                                     <div class="w-fit rounded-xl border-2 border-custom-blue bg-custom-blue bg-opacity-5">
                                         <canvas id="signature-pad" width="400" height="200"></canvas>
-                                        <input type="text" hidden name="signature" id="signature" />
+                                        <input type="text" hidden name="signature" id="signature" value="{{ $examinees_data->e_sign }}" />
                                     </div>
                                     <div class="flex gap-3">
                                         <button type="button" id="clear-btn">Clear</button>

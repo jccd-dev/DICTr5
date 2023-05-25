@@ -344,7 +344,7 @@ class ManageApplicants extends Controller
             $rules = array_merge($rules, $user_helper->prof_rule);
         }
 
-        $validator = Validator::make($request->all, $rules);
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
@@ -387,9 +387,9 @@ class ManageApplicants extends Controller
         ];
 
         //process trainings
-        foreach ($request->trainings('course') as $key => $training) {
-            $center = $request->trainings('center')[$key];
-            $hours = $request->trainings('hours')[$key];
+        foreach ($request->post('course') as $key => $training) {
+            $center = $request->post('center')[$key];
+            $hours = $request->post('hours')[$key];
 
             $this->trainings[] = [
                 'course' => $training,
@@ -417,7 +417,6 @@ class ManageApplicants extends Controller
             'training'         => $this->trainings,
             'to_del_trainings' => $request->post('toDeleteTrainings')
         ];
-
         $user_helper->update_users_data($organized_users_data, $user_id);
     }
 

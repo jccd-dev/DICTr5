@@ -200,7 +200,7 @@
         const formData = new FormData(addApplicant);
 
         try {
-            let res = await fetch("/admin/examinee/add-examinee", {
+            let res = await fetch("/admin/examinee/{{ $examinees_data->id }}/update-examinee", {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
@@ -327,16 +327,17 @@
     * @param {string} [value=""]
     * @returns {string}
     */
-    const trainingTemplate = ({ course, center, hours }) => {
+    const trainingTemplate = ({ course, center, hours, id }) => {
         return `
-            <div class="flex md:flex-row flex-col w-full gap-3 relative">
+            <div data-id="${id}" class="flex md:flex-row flex-col w-full gap-3 relative">
+                <input type="hidden" name="trainingId[]" value="${id}">
                 <div class="flex flex-1" >
                     <div class="mb-3 md:mb-6 flex-1 flex-col">
                         <label for="" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Course / Seminar Title</label>
                             <input
                                 type="text"
                                 id=""
-                                name="seminars-course[]"
+                                name="course[]"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 value="${course}"
                                 placeholder="Course / Seminar Title"
@@ -349,7 +350,7 @@
                             <input
                                 type="text"
                                 id=""
-                                name="seminars-center[]"
+                                name="center[]"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 value="${center}"
                                 placeholder="Training Center"
@@ -362,7 +363,7 @@
                             <input
                                 type="number"
                                 id=""
-                                name="seminars-hours[]"
+                                name="hours[]"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 value="${hours}"
                                 placeholder="Total Training Hours"
@@ -373,24 +374,33 @@
             `;
     };
 
+    let toDeleteTrainings = [];
 
     const Trainings = {
         trainingTemplate: trainingTemplate,
+        index: 1,
 
         add: function (value) {
             console.log(value);
+            if(this.index > 3) return
             seminarsCon.insertAdjacentHTML("beforeend", this.trainingTemplate(value));
         },
 
         remove: function () {
             const semCon = document.querySelector("#seminars-attended-new");
+            toDeleteTrainings.push(semCon.lastElementChild.dataset.id)
             semCon.lastElementChild.remove();
         },
     };
 
+
+
+    addTrainings.addEventListener("click", () => Trainings.add({course: "", center: "", hours: 0, id:null}));
+removeTrainings.addEventListener("click", () => Trainings.remove());
     @foreach ($examinees_data->trainingSeminars as $item)
-        Trainings.add({course: "{{ $item->course }}", center: "{{ $item->center }}", hours: parseInt("{{ $item->hours }}")})
+        Trainings.add({course: "{{ $item->course }}", center: "{{ $item->center }}", hours: parseInt("{{ $item->hours }}"), id: {{ $item->id }}})
     @endforeach
+
 
     let isInitialSign = true;
 
