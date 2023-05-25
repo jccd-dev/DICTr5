@@ -203,8 +203,6 @@ class ManageApplicants extends Controller
      */
     public function send_exam_result(Request $request, int|string $user_id){
 
-        $file = $request->file('pdf_file');
-        $message = $request->post('message');
         $result = $request->post('result');
 
         $user = UsersData::with('userLogin', 'regDetails', 'userHistory.failedHistory')->find($user_id);
@@ -212,54 +210,61 @@ class ManageApplicants extends Controller
         $reg = $user->regDetails;
         $exam_data = ExamSchedule::find($reg->exam_schdule_id);
 
-        $user_email = $user->userLogin == null ? $user->email : $user->userLogin->email;
-        // TODO send email
-        $email = true;
-
-        if($email){
 
             //update the user history
-            $userHistory = $user->userHistory()->create([
-                'user_id'           => $user_id,
-                'registration_date' => $reg->reg_date,
-                'approved_date'     => $reg->approved_date,
-                'schedule'          => $exam_data->datetime,
-                'venue'             => $exam_data->venue,
-                'assigned_exam_set' => $exam_data->exam_set,
-                'status'            => $reg->status,
-                'exam_result'       => $result
+        $userHistory = $user->userHistory()->create([
+            'user_id'           => $user_id,
+            'registration_date' => $reg->reg_date,
+            'approved_date'     => $reg->approved_date,
+            'schedule'          => $exam_data->datetime,
+            'venue'             => $exam_data->venue,
+            'assigned_exam_set' => $exam_data->exam_set,
+            'status'            => $reg->status,
+            'exam_result'       => $result
+        ]);
+
+        if($result == 'failed'){
+
+                // if examinee failed the tests
+            $part1 = $request->post('part1');
+            $part2 = $request->post('part2');
+            $part3 = $request->post('part3');
+
+            $userHistory->failedHistory()->create([
+                'part1' => $part1,
+                'part2' => $part2,
+                'part3' => $part3
             ]);
-
-            if($result == 'failed'){
-
-                 // if examinee failed the tests
-                $part1 = $request->post('part1');
-                $part2 = $request->post('part2');
-                $part3 = $request->post('part3');
-
-                $userHistory->failedHistory()->create([
-                    'part1' => $part1,
-                    'part2' => $part2,
-                    'part3' => $part3
-                ]);
-            }
-
-            //increment passer and delete the reg application data
-            if($result == 'passed'){
-                DB::table('visitor_count')->increment('passers');
-                $reg->delete();
-            }
-
-            // reset the reg details data for the user
-            $reg->exam_schedule_id = null;
-            $reg->reg_date = null;
-            $reg->approved_date = null;
-            $reg->status = 0;
-            $reg->apply = 0;
-            $reg->save();
-
-            AdminLogActivity::addToLog("send exam result to {$user->id}", session()->get('admin_id'));
         }
+
+        //increment passer and delete the reg application data
+        if($result == 'passed'){
+            DB::table('visitor_count')->increment('passers');
+            $reg->delete();
+        }
+
+        // reset the reg details data for the user
+        $reg->exam_schedule_id = null;
+        $reg->reg_date = null;
+        $reg->approved_date = null;
+        $reg->status = 0;
+        $reg->apply = 0;
+        $reg->save();
+
+        AdminLogActivity::addToLog("send exam result to {$user->id}", session()->get('admin_id'));
+    }
+
+    public function sendTranscript(Request $request, $user_id){
+
+        $file = $request->file('pdf_file');
+
+        $user = UsersData::with('userLogin')->find($user_id);
+
+        $reg = $user->regDetails;
+
+        $user_email = $user->userLogin == null ? $user->email : $user->userLogin->email;
+
+        //todo ADD THE EMAIL PROCESS HERE.
     }
 
     /**
@@ -413,6 +418,7 @@ class ManageApplicants extends Controller
             'e_sign'            => $request->post('signature'),
             'year_level'        => $request->post('yearLevel'),
             'current_status'    => $request->post('currentStatus'),
+            'add_info'          => json_encode($request->input('additional_info', [])),
             'date_accomplish'   => date('Y-m-d H:i:s', strtotime('now'))
         ];
 
@@ -467,7 +473,6 @@ class ManageApplicants extends Controller
 
     public function updateFiles(Request $request, $status, $user_id): void
     {
-        // $user_id = session()->get('user')['id'];
         if ($status === "student") {
             if (gettype($request->file('passport')) !== "string") $this->update_passport($user_id, $request->file('passport'));
             if (gettype($request->file('psa')) !== "string") $this->update_psa($user_id, $request->file('psa'));
