@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Admin;
 use App\Helpers\GetAdmin;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use App\Helpers\AdminLogActivity;
 
 class Dashboard extends Component
 {

@@ -22,6 +22,7 @@ use App\Http\Controllers\Examinee\DashboardController as UserDashboardController
 use App\Http\Livewire\Admin\Inbox as CMSInbox;
 use App\Http\Controllers\Admins\Examinee\ManageApplicants;
 use App\Http\Controllers\Admins\SystemLogs;
+use \App\Http\Controllers\UserDataController;
 
 /*
 |--------------------------------------------------------------------------
@@ -95,6 +96,9 @@ Route::prefix('admin')->group(function () {
             Route::post('/{id}/validation', [ManageApplicants::class, 'validate_application'])->name('examinee.validate');
             Route::post('/{id}/send-result/', [ManageApplicants::class, 'send_exam_result'])->name('examinee.result');
             Route::put('/{id}/deactivate', [ManageApplicants::class, 'deactivate_account'])->name('examinee.deactivate');
+
+            //manually apply the applicant
+            Route::post('/{id}/apply-examinee', [ManageApplicants::class, 'apply_examinee'])->name('examinee.apply');
         });
 
         Route::get('/exam-schedule', ExamSchedule::class)->name('admin.exam-schedule');
@@ -107,6 +111,7 @@ Route::prefix('admin')->group(function () {
 Route::prefix('user')->group(function () {
     Route::get('/login', [GoogleAuthController::class, 'user_login'])->name('user.login');
     Route::get('/dashboard', User\Dashboard::class)->name('user.dashboard');
+    Route::get('/generate_pdf', [UserDataController::class, 'generateILCDBForm'])->name('user.generate_pdf');
 });
 
 // Google OAuth

@@ -25,9 +25,8 @@ class UserLogActivity{
     /**
      * TITLE: GET ALL LOGS
      * Description: Retrieve all available logs
-     * @return collection of Std Class: data from 'user_logs' table
      */
-    public static function logActivityLists(): array|Collection{
+    public static function logActivityLists(){
     	return UserLogs::all();
     }
 }

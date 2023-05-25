@@ -7,6 +7,7 @@ use mysql_xdevapi\Session;
 use App\Helpers\FileHandler;
 use Livewire\WithFileUploads;
 use App\Helpers\UserManagement;
+use App\Models\Examinee\UserHistory;
 use App\Models\Examinee\UsersData;
 use App\Models\Examinee\Users;
 use Illuminate\Database\Eloquent\Builder;
@@ -304,7 +305,11 @@ class Dashboard extends Component
         $user_helper = new UserManagement();
         $file_helper = new FileHandler();
 
-        return $user_helper->insert_users_data($organized_data);
+        $res = $user_helper->insert_users_data($organized_data);
+        if (is_array($res)) {
+            return $res[0]; //true
+        }
+        return $res;
     }
 
 
@@ -317,13 +322,28 @@ class Dashboard extends Component
     public function get_user_data(): Collection|array
     {
         $user_login_id = session()->get('user')['id'];
-        // dd($user_login_id);
-        return UsersData::with('tertiaryEdu', 'trainingSeminars', 'addresses', 'submittedFiles', 'userLogin', 'userHistory')
+
+        return UsersData::with(
+            'tertiaryEdu',
+            'trainingSeminars',
+            'addresses',
+            'submittedFiles',
+            'userLogin',
+            'userHistory.failedHistory',
+            'userHistoryLatest'
+        )
             ->where('user_login_id', $user_login_id)
             ->get();
 
-        // use this to identify if user needs to reapply
-        // $user->userHistory()->isEmpty();
+        /**
+        if(userHistoryLatest)
+            if(userHistoryLatest->exam_result == passed)
+                you already pass the test
+            else
+                reapply
+        else
+            apply
+         */
     }
 
     public function populate_user_data(): void
@@ -576,7 +596,7 @@ class Dashboard extends Component
         // dd($user);
         if ($user) {
 
-            if ($reg && !$reg->isEmpty()) {
+            if ($reg && $reg->apply == 1) {
                 $reg->user_id = $user_id;
                 $reg->reg_date = date('Y-m-d', strtotime('now'));
                 $reg->apply = 1;
@@ -601,5 +621,75 @@ class Dashboard extends Component
         // it means that the user already applied
         session()->flash('warning', 'You have to register first');
         return false;
+    }
+
+    /**
+     * @return
+     * @description Generation of ILCDB Form 2
+     */
+    public function generate_pdf()
+    {
+        $users_data = $this->get_user_data();
+        $data = [];
+        foreach ($users_data as $user_data) {
+            $data = [
+                'id' => $user_data->id,
+                'email' => $user_data->userLogin->email,
+                'fname' => $user_data->fname,
+                'lname' => $user_data->lname,
+                'mname' => $user_data->mname,
+                'place_of_birth' => $user_data->place_of_birth,
+                'date_of_birth' => date('F d, Y', strtotime($user_data->date_of_birth)),
+                'gender' => $user_data->gender,
+                'citizenship' => $user_data->citizenship,
+                'civil_status' => $user_data->civil_status,
+                'contact_number' => $user_data->contact_number,
+                'present_office' => $user_data->present_office,
+                'designation' => $user_data->designation,
+                'telephone_number' => $user_data->telephone_number,
+                'office_address' => $user_data->office_address,
+                'office_category' => $user_data->office_category,
+                'no_of_years_in_pos' => $user_data->no_of_years_in_pos,
+                'programming_langs' => $user_data->programming_langs,
+                'e_sign' => $user_data->e_sign,
+                'year_level' => $user_data->year_level,
+                'current_status' => $user_data->current_status,
+                'date_accomplished' => $user_data->date_accomplished,
+                'region' => $user_data->addresses->region,
+                'province' => $user_data->addresses->province,
+                'municipality' => $user_data->addresses->municipality,
+                'barangay' => $user_data->addresses->barangay,
+                'school_attended' => $user_data->tertiaryEdu->school_attended,
+                'degree' => $user_data->tertiaryEdu->degree,
+                'inclusive_years' => $user_data->tertiaryEdu->inclusive_years,
+                'passport' => null,
+                'file_type' => null,
+                'training_seminar' => null,
+                'date_accomplish' => $user_data->date_accomplish,
+            ];
+
+            foreach ($user_data->submittedFiles as $file) {
+                if ($file->requirement_type == 'passport') {
+                    $data['passport'] = $file->file_name;
+                    $data['file_type'] = $file->file_type;
+                }
+            }
+
+            foreach ($user_data->trainingSeminars as $ts) {
+                $data['training_seminar'][] = [
+                    'course' => $ts->course,
+                    'center' => $ts->center,
+                    'hours' => $ts->hours,
+                ];
+            }
+        }
+        $user_login_id = session()->get('user')['id'];
+        $user_history = UserHistory::where('user_id', $user_login_id)->count();
+        if (!$user_history > 0) {
+            $data['first_time'] = true;
+        } else {
+            $data['first_time'] = false;
+        }
+        return redirect()->route('user.generate_pdf', ['data' => $data]);
     }
 }

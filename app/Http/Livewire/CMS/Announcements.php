@@ -2,15 +2,16 @@
 
 namespace App\Http\Livewire\Cms;
 
+use Livewire\Component;
+use App\Helpers\GetAdmin;
+use WireUi\Traits\Actions;
+use Livewire\WithPagination;
+use App\Helpers\AdminLogActivity;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use App\Models\CMS\Announcement as AnnouncementModel;
 use App\Models\CMS\POST\PostCategory as PostCategoryModel;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
-use Livewire\Component;
-use WireUi\Traits\Actions;
-use App\Helpers\GetAdmin;
-use Livewire\WithPagination;
 
 class Announcements extends Component
 {
@@ -122,6 +123,7 @@ class Announcements extends Component
         }
 
         $this->insertAnnArray = [];
+        AdminLogActivity::addToLog("created announcement", session()->get('admin_id'));
 
     }
 
@@ -168,11 +170,14 @@ class Announcements extends Component
         }else{
             $this->dispatchBrowserEvent('UnsuccessfullyUpdatedAnnouncement', true);
         }
+
+        AdminLogActivity::addToLog("updated announcement", session()->get('admin_id'));
     }
 
     public function delete_announcement($id): void{
         $ann = AnnouncementModel::find($id);
         $deletedRows = $ann->delete();
+        AdminLogActivity::addToLog("deleted announcement", session()->get('admin_id'));
     }
 
     public function create_category($category){
@@ -181,6 +186,8 @@ class Announcements extends Component
         ]);
         $this->insertAnnArray['cat_id'] = $created_category->id;
         $this->updateAnnArray['cat_id'] = $created_category->id;
+
+        AdminLogActivity::addToLog("created category", session()->get('admin_id'));
     }
 
     public $create_modal = false;

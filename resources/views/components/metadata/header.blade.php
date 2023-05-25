@@ -4,6 +4,7 @@
 <title>
     @if(request()->routeIs('admin.cms.announcement')) {{'Announcement'}}
     @elseif(request()->routeIs('admin.cms.calendar')) {{'Event Calendar'}}
+    @elseif(request()->routeIs('admin.dashboard')) {{'Dashboard'}}
     @elseif(request()->routeIs('admin.exam-schedule')) {{'Exam Schedule'}}
     @elseif(request()->routeIs('admin.cms.category')) {{'Category'}}
     @elseif(request()->routeIs('admin.cms.slider')) {{'Slider'}}
@@ -61,7 +62,6 @@
 <wireui:styles />
 <wireui:scripts />
 
-@vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/utils/moment.js'])
 {{-- Fullcalendar --}}
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
 @livewireStyles
