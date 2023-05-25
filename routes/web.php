@@ -133,11 +133,6 @@ Route::get('/logout', function () {
 //Visitor Counter
 Route::get('/visitor-counts', [VisitorController::class, 'incrementVisitor']);
 
-//testing for JWT middleware
-//Route::middleware(['jwt.logAuth', 'jwt.roleCheck:superadmin,normaladmin'])->group(function () {
-//    Route::get('/posts', Posts::class)->name('admin.cms.posts');
-//});
-
 
 // For API
 Route::prefix('api')->group(function () {

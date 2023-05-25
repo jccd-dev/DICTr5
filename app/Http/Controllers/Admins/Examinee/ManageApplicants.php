@@ -45,7 +45,7 @@ class ManageApplicants extends Controller
             $examinees = SearchExamineesHelper::search_with_cache($searchValues);
         }
         else{
-        $examinees = UsersData::with('tertiaryEdu', 'trainingSeminars', 'addresses', 'submittedFiles', 'userLogin')
+        $examinees = UsersData::with('tertiaryEdu', 'trainingSeminars', 'addresses', 'submittedFiles', 'userLogin', 'userHistoryLatest')
             ->paginate(20);
 
         $searchValues = [
@@ -74,7 +74,7 @@ class ManageApplicants extends Controller
      */
     public function select_examinee(int $examinee_id): View|RedirectResponse {
 
-        $examinee_data = UsersData::with('addresses', 'tertiaryEdu', 'trainingSeminars', 'submittedFiles', 'regDetails', 'userHistory', 'userLogs', 'userLogin')->where('id', $examinee_id)->first();
+        $examinee_data = UsersData::with('addresses', 'tertiaryEdu', 'trainingSeminars', 'submittedFiles', 'regDetails', 'userHistory.failedHistory', 'userLogs', 'userLogin', 'userHistoryLatest')->where('id', $examinee_id)->first();
 
         // if record is null or not found
         if(!$examinee_data){

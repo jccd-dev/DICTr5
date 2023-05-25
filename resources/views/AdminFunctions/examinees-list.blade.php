@@ -89,16 +89,16 @@
                             Name
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Registration Date
+                            Gender
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Exam Date
+                            Current Status
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Exam Set
+                            Address
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Type
+                            Contact Number
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Applicant Status
@@ -128,7 +128,7 @@
                                         {{ $user->addresses ? $user->addresses->formatted_address : '' }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ $user->tertiaryEdu ? $user->tertiaryEdu->degree : '' }}
+                                        {{ $user->contact_number}}
                                     </td>
                                     <td class="px-6 py-4">
                                         <select class="bg-[#00509D] bg-opacity-10 border-none text-black text-sm rounded-2xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
