@@ -21,7 +21,8 @@ class Inbox extends Component
     // FOR FEEDBACK
     public $feedbackContent;
     public $onReadFeedback;
-    public $toDeleteFeedback;
+    public $toDeleteFeedback = 0;
+    public bool $feedback_modal;
 
     public function render()
     {
@@ -61,6 +62,7 @@ class Inbox extends Component
     public function mount(){
         $this->feedbackContent = '';
         $this->onReadFeedback = 0;
+        $this->feedback_modal = false;
     }
 
     public function updatingSearch(){
@@ -86,10 +88,12 @@ class Inbox extends Component
     // trigger when delete icon is clicked
     public function prepare_to_delete($id){
         $this->toDeleteFeedback = $id;
+        $this->feedback_modal = true;
     }
 
     // Delete feedback
     public function delete_feedback(){
+        $this->feedback_modal = false;
         $feedback = Feedback::find($this->toDeleteFeedback);
         $feedback->is_archived = 1;
         $feedback->save();
