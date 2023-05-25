@@ -2,15 +2,20 @@
 
 namespace App\Http\Livewire\User;
 
-use App\Helpers\FileHandler;
-use App\Models\Examinee\UsersData;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Validator;
+use App\Helpers\UserLogActivity;
 use Livewire\Component;
+use mysql_xdevapi\Session;
+use App\Helpers\FileHandler;
 use Livewire\WithFileUploads;
-use Psr\Container\ContainerExceptionInterface;
+use App\Helpers\UserManagement;
+use App\Models\Examinee\UserHistory;
+use App\Models\Examinee\UsersData;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Validator;
 use Psr\Container\NotFoundExceptionInterface;
+use Psr\Container\ContainerExceptionInterface;
 
 class Dashboard extends Component
 {
@@ -68,49 +73,18 @@ class Dashboard extends Component
     public mixed $toDeleteTrainings = [];
     public mixed $training_ids = [];
 
-    protected $rules = [
-        'givenName'     => "required|regex:/^[A-Za-z\s]+$/",
-        'middleName'    => "required|regex:/^[A-Za-z\s]+$/",
-        'surName'       => "required|regex:/^[A-Za-z\s]+$/",
-        'tel'           => "required|regex:/^09\d{9}$/",
-        'region'        => "required",
-        'province'      => "required",
-        'municipality'  => "required",
-        'barangay'      => "required",
-        'email'         => "required|email",
-        'pob'           => "required",
-        'dob'           => "required",
-        'gender'        => "required",
-        'citizenship'   => "required",
-        'civilStatus'   => "required",
-        'pl'            => "required",
-        'signature'     => "required",
-        'passport'      => "mimes:jpg,jpeg,png|max:5120|dimensions:min_width=826,min_height=1062|max:5120",
-        'psa'           => "mimes:jpg,jpeg,png,doc,pdf,docx|max:5120|max:5120",
-        'validId'       => "mimes:jpg,jpeg,png,doc,pdf,docx|max:5120|max:5120",
-        'diploma'       => "mimes:jpg,jpeg,png,doc,pdf,docx|max:5120|max:5120",
-        'trainings.*.center' => 'required|string',
-        'trainings.*.course' => 'required|string',
-        'trainings.*.hours' => 'required|numeric',
-    ];
+    public mixed $additional_info = []; //FIXME
 
-    private array $student_rule = [
-        'yearLevel' => "required|numeric"
-    ];
-
-    private array $prof_rule = [
-        'presentOffice'       => "required",
-        'telNum'              => "required",
-        'officeAddress'       => "required",
-        'officeCategory'      => "required",
-        'designationPosition' => "required",
-        'yearsPresentPosition' => "required|numeric"
-    ];
+    protected $rules;
 
     protected $except = ['cardModal', 'cardModal2'];
 
     public function updated($propertyName)
     {
+        $user_helper = new UserManagement();
+
+        $rules = $user_helper->rules;
+        $this->rules = $rules;
         $this->validateOnly($propertyName);
     }
 
@@ -146,6 +120,7 @@ class Dashboard extends Component
         $this->yearsPresentPosition = '';
         $this->toDeleteTrainings = [];
         $this->training_ids = [];
+        $this->rules = [];
 
         $this->fill([
             'trainings' => collect([[
@@ -163,7 +138,10 @@ class Dashboard extends Component
         $this->diploma = '';
 
         $this->signature = '';
+        $this->additional_info = []; //FIXME
     }
+
+
     public function render()
     {
         // get userlog_id from session
@@ -199,11 +177,16 @@ class Dashboard extends Component
     public function submit(): void
     {
 
+        $user_helper = new UserManagement();
+
+        $rules = $user_helper->rules;
         // update rules  base for current status of the user
         if (strtolower($this->currentStatus) == 'student') {
-            $this->rules = array_merge($this->rules, $this->student_rule);
+            $rules = array_merge($rules, $user_helper->student_rule);
+            $this->rules = array_merge($rules, $user_helper->student_rule);
         } else {
-            $this->rules = array_merge($this->rules, $this->prof_rule);
+            $rules = array_merge($rules, $user_helper->prof_rule);
+            $this->rules = array_merge($rules, $user_helper->prof_rule);
         }
 
         $validator = Validator::make([
@@ -230,8 +213,7 @@ class Dashboard extends Component
             'officeCategory'      => $this->officeCategory,
             'designationPosition' => $this->designationPosition,
             'yearsPresentPosition' => $this->yearsPresentPosition
-
-        ], $this->rules);
+        ], $rules);
 
         if ($validator->fails()) {
             $err_msgs = $validator->getMessageBag();
@@ -245,7 +227,7 @@ class Dashboard extends Component
         }
         $users_data = [
             // 'user_login_id'     => session()->get('user')['id'],
-            'user_login_id'     => 2, // note: for deve, it need to have atleast one data in user login table and use the id here
+            'user_login_id'     => session()->get('user')['id'], // note: for deve, it need to have atleast one data in user login table and use the id here
             'fname'             => $this->givenName,
             'lname'             => $this->surName,
             'mname'             => $this->middleName,
@@ -263,8 +245,9 @@ class Dashboard extends Component
             'no_of_years_in_pos' => $this->yearsPresentPosition,
             'programming_langs' => $this->pl,
             'e_sign'            => $this->signature,
-            'year_level'         => $this->yearLevel,
+            'year_level'        => $this->yearLevel,
             'current_status'    => $this->currentStatus,
+            'add_info'          => json_encode($this->additional_info), //FIXME
             'date_accomplish'   => date('Y-m-d H:i:s', strtotime('now'))
         ];
 
@@ -281,14 +264,26 @@ class Dashboard extends Component
             'inclusive_years'   => $this->incYears
         ];
 
+        $files = [
+            'passport'  => $this->passport,
+            'psa'       => $this->psa,
+            'validId'   => $this->validId,
+            'diploma'   => $this->diploma,
+            'cert'      => $this->cert
+        ];
+
         $organized_users_data = [
             'main_data' => $users_data,
             'address'   => $address,
-            'ter_edu'   => $tertiary_edu
+            'ter_edu'   => $tertiary_edu,
+            'training'  => $this->trainings,
+            'files'     => $files
         ];
+
 
         // dd($organized_users_data, $this->trainings);
         if ($this->insert_users_data($organized_users_data)) {
+            UserLogActivity::addToLog('Newly Register', '');
             $this->dispatchBrowserEvent('RegistrationValidationSuccess', true);
         } else {
             $this->dispatchBrowserEvent('RegistrationValidationError', true);
@@ -302,40 +297,15 @@ class Dashboard extends Component
      */
     public function insert_users_data(array $organized_data): bool
     {
-        $user = new UsersData();
+        $user_helper = new UserManagement();
         $file_helper = new FileHandler();
 
-        $user->fill($organized_data['main_data']);
-
-        // insert into main table users data
-        if ($user->save()) {
-            $user_id = $user->id;
-            $last_name = $user->lname;
-
-            // insert into tertiary education table
-            $user->tertiaryEdu()->create($organized_data['ter_edu']);
-
-            // insert into training seminars table
-            $user->trainingSeminars()->createMany($this->trainings);
-
-            // insert into address table
-            $user->addresses()->create($organized_data['address']);
-
-            $submit = $user->submittedFiles();
-            // insert files into folder and database
-            $this->passport != null ? $file_helper->store_files($this->passport, $submit, 'passport', $last_name) : null;
-            $this->psa != null ? $file_helper->store_files($this->psa, $submit, 'psa', $last_name) : null;
-            $this->validId != null ? $file_helper->store_files($this->validId, $submit, 'validId', $last_name) : null;
-            $this->diploma != null ? $file_helper->store_files($this->diploma, $submit, 'diploma_TOR', $last_name) : null;
-            $this->cert != null ? $file_helper->store_files($this->cert, $submit, 'coe', $last_name) : null;
-
-            // insert into registration details table
-            $user->regDetails()->create(['reg_date' => $user->date_accomplish]);
-
-            return true;
+        $res = $user_helper->insert_users_data($organized_data);
+        if(is_array($res)){
+            UserLogActivity::addToLog('Newly Register', $res[1]);
+            return $res[0]; //true
         }
-
-        return false;
+        return $res;
     }
 
 
@@ -348,9 +318,26 @@ class Dashboard extends Component
     public function get_user_data(): Collection|array
     {
         $user_login_id = session()->get('user')['id'];
-        return UsersData::with('tertiaryEdu', 'trainingSeminars', 'addresses', 'submittedFiles', 'userLogin')
+
+        return UsersData::with('tertiaryEdu',
+            'trainingSeminars',
+            'addresses',
+            'submittedFiles',
+            'userLogin',
+            'userHistory.failedHistory',
+            'userHistoryLatest')
             ->where('user_login_id', $user_login_id)
             ->get();
+
+        /**
+        if(userHistoryLatest)
+            if(userHistoryLatest->exam_result == passed)
+                you already pass the test
+            else
+                reapply
+        else
+            apply
+         */
     }
 
     public function populate_user_data(): void
@@ -397,6 +384,8 @@ class Dashboard extends Component
         $this->municipality = $cur_user_data->addresses->municipality;
         $this->barangay = $cur_user_data->addresses->barangay;
 
+        $this->additional_info = json_decode($cur_user_data->add_info, true) ?? []; //FIXME
+
         // SEMINARS
         //        $this->trainings = $cur_user_data->trainingSeminars->toArray();
         $this->trainings->pop();
@@ -418,16 +407,21 @@ class Dashboard extends Component
                 $this->cert = $s->file_name;
             } else if ($s->requirement_type === "psa") {
                 $this->psa = $s->file_name;
+            } else if ($s->requirement_type === "passport") {
+                $this->passport = $s->file_name;
             }
         }
     }
-    public function update_users_data($user_id)
+    public function update_users_data($user_id): void
     {
+        $user_helper = new UserManagement();
+
+        $rules = $user_helper->rules;
         // update rules  base for current status of the user
         if (strtolower($this->currentStatus) == 'student') {
-            $this->rules = array_merge($this->rules, $this->student_rule);
+            $rules = array_merge($rules, $user_helper->student_rule);
         } else {
-            $this->rules = array_merge($this->rules, $this->prof_rule);
+            $rules = array_merge($rules, $user_helper->prof_rule);
         }
 
         $validator = Validator::make([
@@ -455,7 +449,7 @@ class Dashboard extends Component
             'designationPosition' => $this->designationPosition,
             'yearsPresentPosition' => $this->yearsPresentPosition
 
-        ], $this->rules);
+        ], $rules);
 
         if ($validator->fails()) {
             $err_msgs = $validator->getMessageBag();
@@ -489,6 +483,7 @@ class Dashboard extends Component
             'e_sign'            => $this->signature,
             'yearLevel'         => $this->yearLevel,
             'current_status'    => $this->currentStatus,
+            'add_info'          => json_encode($this->additional_info), //FIXME
             'date_accomplish'   => date('Y-m-d H:i:s', strtotime('now'))
         ];
 
@@ -506,34 +501,22 @@ class Dashboard extends Component
             'inclusive_years'   => $this->incYears
         ];
 
-        $user = UsersData::find($user_id);
+        $organized_users_data = [
+            'main_data'        => $users_data,
+            'address'          => $address,
+            'ter_edu'          => $tertiary_edu,
+            'training'         => $this->trainings,
+            'to_del_trainings' => $this->toDeleteTrainings
+        ];
 
-        $user->update($users_data);
-
-        $user->tertiaryEdu->update($tertiary_edu);
-        $user->addresses->update($address);
-
-        // TODO provide the new $this->training for update, if user update then include the ID
-        // TODO if user add new training then append to $this->taining but no ID
-        foreach ($this->trainings as $training) {
-            $training_id = $training['id'] ?? null;
-            $training['user_id'] = $user->id; // Set the user_id
-            // if $this->>trainings has no id then i will create bew record, else update
-            $user->trainingSeminars()->updateOrCreate(['id' => $training_id], $training);
-        }
-
-        // in case the user remove the training data
-        if (!is_null($this->toDeleteTrainings)) {
-            foreach ($this->toDeleteTrainings as $training_id) {
-                $training = $user->trainingSeminars()->where('id', $training_id)->first();
-                $training ? $training->delete() : null;
-            }
-        }
+        $user_helper->update_users_data($organized_users_data, $user_id);
 
         $this->dispatchBrowserEvent('RegUpdateValidationSuccess', true);
+
+        UserLogActivity::addToLog('Update registered Data', $user_id);
     }
 
-    public function updateFiles($status, $user_id)
+    public function updateFiles($status, $user_id): void
     {
         // $user_id = session()->get('user')['id'];
         if ($status === "student") {
@@ -553,10 +536,9 @@ class Dashboard extends Component
      */
     public function update_passport($user_id): bool
     {
-        $file_helper = new FileHandler();
-        $user = UsersData::find($user_id);
+        $user_helper = new UserManagement();
 
-        return $file_helper->update_the_file($this->passport, $user, 'passport');
+        return $user_helper->update_psa($user_id, $this->passport);
     }
 
     /**
@@ -565,10 +547,9 @@ class Dashboard extends Component
      */
     public function update_psa($user_id): bool
     {
-        $file_helper = new FileHandler();
-        $user = UsersData::find($user_id);
+        $user_helper = new UserManagement();
 
-        return $file_helper->update_the_file($this->psa, $user, 'psa');
+        return $user_helper->update_psa($user_id, $this->psa);
     }
 
     /**
@@ -577,10 +558,9 @@ class Dashboard extends Component
      */
     public function update_id($user_id): bool
     {
-        $file_helper = new FileHandler();
-        $user = UsersData::find($user_id);
+        $user_helper = new UserManagement();
 
-        return $file_helper->update_the_file($this->validId, $user, 'validId');
+        return $user_helper->update_psa($user_id, $this->validId);
     }
 
     /**
@@ -589,17 +569,126 @@ class Dashboard extends Component
      */
     public function update_diploma($user_id): bool
     {
-        $file_helper = new FileHandler();
-        $user = UsersData::find($user_id);
+        $user_helper = new UserManagement();
 
-        return $file_helper->update_the_file($this->diploma, $user, 'diploma_TOR');
+        return $user_helper->update_psa($user_id, $this->diploma);
     }
 
     public function update_COE($user_id): bool
     {
-        $file_helper = new FileHandler();
-        $user = UsersData::find($user_id);
+        $user_helper = new UserManagement();
 
-        return $file_helper->update_the_file($this->cert, $user, 'coe');
+        return $user_helper->update_psa($user_id, $this->cert);
+    }
+
+    /**
+     * @param int|string $user_id
+     * @return bool
+     * @description apply to the exam after registering to the system
+     */
+    public function apply(int|string $user_id): bool
+    {
+
+        $user = UsersData::with('regDetails', 'userHistory')->find($user_id);
+        $reg = $user->regDetails;
+        $history = $user->userHistory;
+        // dd($user);
+        if ($user) {
+
+            if ($reg && $reg->apply == 1) {
+                $reg->user_id = $user_id;
+                $reg->reg_date = date('Y-m-d', strtotime('now'));
+                $reg->apply = 1;
+
+                if ($reg->save()) {
+
+                    // count user as applicant if he/she is not a retaker.
+                    if(!$history->isEmpty()){
+                        DB::table('visitor_count')->increment('applicants');
+                    }
+                    session()->flash('success', 'Application sent');
+                    UserLogActivity::addToLog('Apply for exam', $user_id);
+                    return true;
+                }
+
+                session()->flash('error', 'server error');
+                return false;
+            }
+            session()->flash('warning', 'You have already applied');
+            return false;
+        }
+
+        // it means that the user already applied
+        session()->flash('warning', 'You have to register first');
+        return false;
+    }
+
+    /**
+     * @return
+     * @description Generation of ILCDB Form 2
+     */
+    public function generate_pdf(){
+        $users_data = $this->get_user_data();
+        $data = [];
+        foreach($users_data as $user_data){
+            $data = [
+                'id' => $user_data->id,
+                'email' => $user_data->userLogin->email,
+                'fname' => $user_data->fname,
+                'lname' => $user_data->lname,
+                'mname' => $user_data->mname,
+                'place_of_birth' => $user_data->place_of_birth,
+                'date_of_birth' => date('F d, Y', strtotime($user_data->date_of_birth)),
+                'gender' => $user_data->gender,
+                'citizenship' => $user_data->citizenship,
+                'civil_status' => $user_data->civil_status,
+                'contact_number' => $user_data->contact_number,
+                'present_office' => $user_data->present_office,
+                'designation' => $user_data->designation,
+                'telephone_number' => $user_data->telephone_number,
+                'office_address' => $user_data->office_address,
+                'office_category' => $user_data->office_category,
+                'no_of_years_in_pos' => $user_data->no_of_years_in_pos,
+                'programming_langs' => $user_data->programming_langs,
+                'e_sign' => $user_data->e_sign,
+                'year_level' => $user_data->year_level,
+                'current_status' => $user_data->current_status,
+                'date_accomplished' => $user_data->date_accomplished,
+                'region' => $user_data->addresses->region,
+                'province' => $user_data->addresses->province,
+                'municipality' => $user_data->addresses->municipality,
+                'barangay' => $user_data->addresses->barangay,
+                'school_attended' => $user_data->tertiaryEdu->school_attended,
+                'degree' => $user_data->tertiaryEdu->degree,
+                'inclusive_years' => $user_data->tertiaryEdu->inclusive_years,
+                'passport' => null,
+                'file_type' => null,
+                'training_seminar' => null,
+                'date_accomplish' => $user_data->date_accomplish,
+            ];
+
+            foreach ($user_data->submittedFiles as $file){
+                if($file->requirement_type == 'passport'){
+                    $data['passport'] = $file->file_name;
+                    $data['file_type'] = $file->file_type;
+                }
+            }
+
+            foreach ($user_data->trainingSeminars as $ts){
+                $data['training_seminar'][] = [
+                    'course' => $ts->course,
+                    'center' => $ts->center,
+                    'hours' => $ts->hours,
+                ];
+            }
+        }
+        $user_login_id = session()->get('user')['id'];
+        $user_history = UserHistory::where('user_id', $user_login_id)->count();
+        if(!$user_history > 0){
+            $data['first_time'] = true;
+        }else{
+            $data['first_time'] = false;
+        }
+        return redirect()->route('user.generate_pdf', ['data' => $data]);
     }
 }

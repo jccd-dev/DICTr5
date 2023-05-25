@@ -2,11 +2,11 @@
 
 namespace App\Http\Livewire\CMS;
 
-use App\Models\CMS\Announcement as AnnouncementModel;
-use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use App\Helpers\AdminLogActivity;
 use App\Models\CMS\POST\PostModel;
+use Illuminate\Support\Facades\DB;
 use App\Helpers\ImageHandlerHelper;
 use App\Models\CMS\POST\PostImages;
 use Illuminate\Support\Facades\Auth;
@@ -15,9 +15,11 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\Collection;
+use WireUi\Traits\Actions;
 
 class Posts extends Component
 {
+    use Actions;
     use WithFileUploads;
 
     //initialized variable that will hold values from input form
@@ -250,6 +252,7 @@ class Posts extends Component
             }
 
             $this->dispatchBrowserEvent('ValidationPostSuccess', ['success' => 'success']);
+            AdminLogActivity::addToLog("created a post", session()->get('admin_id'));
         }
 
         session()->flash('error', 'Something went wrong please try again later!');
@@ -463,6 +466,7 @@ class Posts extends Component
                 $this->imageHelper->del_image_on_db($this->to_delete_image, $this->post_id);
                 session()->flash('success', 'Post has been created!');
 
+                AdminLogActivity::addToLog("updated a post", session()->get('admin_id'));
                 return true;
             }
         }
@@ -524,6 +528,7 @@ class Posts extends Component
             return true;
         }
         $this->dispatchBrowserEvent("DeletePostError", true);
+        AdminLogActivity::addToLog("deleted a post", session()->get('admin_id'));
         return false;
     }
 
@@ -555,6 +560,20 @@ class Posts extends Component
         ]);
         $this->temp_images[] = $variable;
         $this->images = [];
+    }
+
+    public function change_status($id, $status){
+        $post = PostModel::find($id);
+        if($status){
+            $post->status = 1;
+        }else{
+            $post->status = 0;
+        }
+        $post->save();
+        $this->notification()->success(
+            $title = 'Status Update',
+            $description = 'Post Status has been updated'
+        );
     }
 
     public function get_all_categories()

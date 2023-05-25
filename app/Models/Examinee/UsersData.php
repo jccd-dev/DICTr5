@@ -92,4 +92,8 @@ class UsersData extends Model
         return "{$last_name}, {$first_name} {$middle_name}";
     }
 
+    public function userHistoryLatest(): HasOne{
+        return $this->hasOne(UserHistory::class, 'user_id', 'id')->latest('timestamp')->take(1);
+    }
+
 }

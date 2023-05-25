@@ -8,3 +8,5 @@ const formdata = (el) => {
 
     return formData;
 };
+
+export default formdata;

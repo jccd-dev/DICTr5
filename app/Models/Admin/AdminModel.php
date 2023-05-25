@@ -32,6 +32,8 @@ class AdminModel extends Authenticatable implements JWTSubject
       'password', 'remember_token'
     ];
 
+    public $timestamps = false;
+
     /**
      * Get the unique identifier for the user.
      *

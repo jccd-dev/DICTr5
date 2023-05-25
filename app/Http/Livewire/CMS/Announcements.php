@@ -2,18 +2,21 @@
 
 namespace App\Http\Livewire\Cms;
 
-use App\Models\CMS\Announcement as AnnouncementModel;
-use App\Models\CMS\POST\PostCategory as PostCategoryModel;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
 use App\Helpers\GetAdmin;
+use WireUi\Traits\Actions;
 use Livewire\WithPagination;
+use App\Helpers\AdminLogActivity;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use App\Models\CMS\Announcement as AnnouncementModel;
+use App\Models\CMS\POST\PostCategory as PostCategoryModel;
 
 class Announcements extends Component
 {
     use WithPagination;
+    use Actions;
 
     public $search = '';
     public $from = '';
@@ -21,6 +24,7 @@ class Announcements extends Component
     public $category;
     public $insertAnnArray = [];
     public $updateAnnArray = [];
+    public $statuses = [];
     public $isPublished;
     public $isUpdatedPublished;
     public $to_update_id;
@@ -119,6 +123,7 @@ class Announcements extends Component
         }
 
         $this->insertAnnArray = [];
+        AdminLogActivity::addToLog("created announcement", session()->get('admin_id'));
 
     }
 
@@ -165,11 +170,14 @@ class Announcements extends Component
         }else{
             $this->dispatchBrowserEvent('UnsuccessfullyUpdatedAnnouncement', true);
         }
+
+        AdminLogActivity::addToLog("updated announcement", session()->get('admin_id'));
     }
 
     public function delete_announcement($id): void{
         $ann = AnnouncementModel::find($id);
         $deletedRows = $ann->delete();
+        AdminLogActivity::addToLog("deleted announcement", session()->get('admin_id'));
     }
 
     public function create_category($category){
@@ -178,6 +186,8 @@ class Announcements extends Component
         ]);
         $this->insertAnnArray['cat_id'] = $created_category->id;
         $this->updateAnnArray['cat_id'] = $created_category->id;
+
+        AdminLogActivity::addToLog("created category", session()->get('admin_id'));
     }
 
     public $create_modal = false;
@@ -227,6 +237,20 @@ class Announcements extends Component
                 ->orderBy('announcements.start_duration', 'desc')
                 ->paginate(10);
         }
+    }
+
+    public function change_status($id, $status){
+        $announcement = AnnouncementModel::find($id);
+        if($status){
+            $announcement->status = 1;
+        }else{
+            $announcement->status = 0;
+        }
+        $announcement->save();
+        $this->notification()->success(
+            $title = 'Status Update',
+            $description = 'Announcement Status has been updated'
+        );
     }
 
 }

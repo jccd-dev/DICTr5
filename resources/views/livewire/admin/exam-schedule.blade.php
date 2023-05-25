@@ -1,98 +1,100 @@
 <div class="pt-5">
-    <div class="flex flex-row">
-        <div class="basis-1/2">
-            <div class="flex flex-row">
-                <div class="p-3">
-                    <x-datetime-picker wire:model="from" without-time="true" />
-                </div>
-                <div class="p-3 mt-2">
-                    <span class="">-</span>
-                </div>
-                <div class="p-3">
-                    <x-datetime-picker wire:model="to" without-time="true" />
+    <div class="p-10 bg-white shadow-md rounded-2xl">
+        <div class="flex flex-row">
+            <div class="basis-1/2">
+                <div class="flex flex-row">
+                    <div class="p-3">
+                        <x-datetime-picker wire:model="from" without-time="true" />
+                    </div>
+                    <div class="p-3 mt-2">
+                        <span class="">-</span>
+                    </div>
+                    <div class="p-3">
+                        <x-datetime-picker wire:model="to" without-time="true" />
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="basis-1/2">
-            <div class="flex flex-row-reverse">
-                <div class="p-2">
-                    <button onclick="modalHandler('create_schedule_modal', true)" class="flex items-center gap-2 px-4 py-1 bg-[#00509D] bg-opacity-5 hover:bg-[#00509D] rounded">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="15" stroke="#f5f5f5" viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>
-                        <span>Add</span>
-                    </button>
-                </div>
-                <div class="p-2 mr-3">
-                    <div class="relative">
-                        <div class="absolute top-1/2 left-3 -translate-y-1/2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#474747" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <div class="basis-1/2">
+                <div class="flex flex-row-reverse">
+                    <div class="p-2">
+                        <button onclick="modalHandler('create_schedule_modal', true)" class="flex items-center gap-2 px-4 py-1 bg-[#00509D] bg-opacity-5 hover:bg-[#00509D] rounded">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="15" stroke="#f5f5f5" viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>
+                            <span>Add</span>
+                        </button>
+                    </div>
+                    <div class="p-2 mr-3">
+                        <div class="relative">
+                            <div class="absolute top-1/2 left-3 -translate-y-1/2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#474747" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                            </div>
+                            <input type="search" wire:model="search" id="search" class="w-56 drop-shadow-lg bg-[#00509D] bg-opacity-5 px-3 pl-10 py-2 rounded-md text-[#474747] text-sm" placeholder="Search">
                         </div>
-                        <input type="search" wire:model="search" id="search" class="w-56 drop-shadow-lg bg-[#00509D] bg-opacity-5 px-3 pl-10 py-2 rounded-md text-[#474747] text-sm" placeholder="Search">
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <br>
-    {{--  Table  --}}
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-                <th scope="col" class="px-6 py-3">
-                    Date
-                </th>
-                <th scope="col" class="px-6 py-3">
-                    Time
-                </th>
-                <th scope="col" class="px-6 py-3">
-                    Exam Set
-                </th>
-                <th scope="col" class="px-6 py-3">
-                    Venue
-                </th>
-                <th scope="col" class="px-6 py-3">
-                    Status
-                </th>
-                <th scope="col" class="px-6 py-3">
-                    Action
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            @forelse ($schedules as $sched)
-                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        {{date('F d, Y', strtotime($sched->start_date))}}
+        <br>
+        {{--  Table  --}}
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                    <th scope="col" class="px-6 py-3">
+                        Date
                     </th>
-                    <td class="px-6 py-4">
-                        {{date('h:i A', strtotime($sched->start_date)).' - '.date('h:i A', strtotime($sched->end_date))}}
-                    </td>
-                    <td class="px-6 py-4">
-                        {{$sched->exam_set}}
-                    </td>
-                    <td class="px-6 py-4">
-                        {{$sched->venue}}
-                    </td>
-                    <td class="px-6 py-4">
-                        @if($sched->end_date < date("Y-m-d H:i:s"))
-                            <div class="text-xs font-semibold p-1 bg-green-200 w-12 text-center rounded">Done</div>
-                        @else
-                            <div class="text-xs font-semibold p-1 bg-secondary-300 w-14 text-center rounded">Pending</div>
-                        @endif
-                    </td>
-                    <td class="px-6 py-4">
-                        <x-button blue sm label="Edit" wire:click="update_field({{$sched->id}})" onclick="update_schedule({{$sched->id}})" />
-                        <x-button red sm label="Delete" onclick="delete_schedule({{$sched->id}})" />
-                    </td>
+                    <th scope="col" class="px-6 py-3">
+                        Time
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Exam Set
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Venue
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Status
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Action
+                    </th>
                 </tr>
-            @empty
-                <tr colspan="6" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                </thead>
+                <tbody>
+                @forelse ($schedules as $sched)
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            {{date('F d, Y', strtotime($sched->start_date))}}
+                        </th>
+                        <td class="px-6 py-4">
+                            {{date('h:i A', strtotime($sched->start_date)).' - '.date('h:i A', strtotime($sched->end_date))}}
+                        </td>
+                        <td class="px-6 py-4">
+                            {{$sched->exam_set}}
+                        </td>
+                        <td class="px-6 py-4">
+                            {{$sched->venue}}
+                        </td>
+                        <td class="px-6 py-4">
+                            @if($sched->end_date < date("Y-m-d H:i:s"))
+                                <div class="text-xs font-semibold p-1 bg-green-200 w-12 text-center rounded">Done</div>
+                            @else
+                                <div class="text-xs font-semibold p-1 bg-secondary-300 w-14 text-center rounded">Pending</div>
+                            @endif
+                        </td>
+                        <td class="px-6 py-4">
+                            <x-button blue sm label="Edit" wire:click="update_field({{$sched->id}})" onclick="update_schedule({{$sched->id}})" />
+                            <x-button red sm label="Delete" onclick="delete_schedule({{$sched->id}})" />
+                        </td>
+                    </tr>
+                @empty
+                    <tr colspan="6" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
 
-                </tr>
-            @endforelse
-            </tbody>
-        </table>
+                    </tr>
+                @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 
 

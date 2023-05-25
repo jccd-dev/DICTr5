@@ -2,9 +2,10 @@
 
 namespace App\Http\Livewire\Admin;
 
-use App\Models\Admin\ExamSchedule as ExamScheduleModel;
-use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use App\Helpers\AdminLogActivity;
+use Illuminate\Support\Facades\DB;
+use App\Models\Admin\ExamSchedule as ExamScheduleModel;
 
 class ExamSchedule extends Component
 {
@@ -84,6 +85,7 @@ class ExamSchedule extends Component
         ];
         $status = ExamScheduleModel::create($create);
 
+        AdminLogActivity::addToLog("created event schedule", session()->get('admin_id'));
         $this->resetCreateForm();
         $this->dispatchBrowserEvent('ExamScheduleCreated', $status);
 
@@ -106,6 +108,8 @@ class ExamSchedule extends Component
     }
     public function delete_exam_schedule($id){
         $schedule = new ExamScheduleModel();
+
+        AdminLogActivity::addToLog("deleted exam schedule", session()->get('admin_id'));
         return $schedule->deleteSchedule($id);
     }
 
@@ -145,6 +149,8 @@ class ExamSchedule extends Component
             'start_date' => $validateData['update_sched_date'].' '.$validateData['update_sched_start_time'],
             'end_date' => $validateData['update_sched_date'].' '.$validateData['update_sched_end_time'],
         ]);
+
+        AdminLogActivity::addToLog("updated event schedule", session()->get('admin_id'));
         $this->resetUpdateField();
         $this->dispatchBrowserEvent('UpdateSchedule', $status);
 

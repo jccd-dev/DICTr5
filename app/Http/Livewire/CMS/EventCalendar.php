@@ -2,12 +2,14 @@
 
 namespace App\Http\Livewire\Cms;
 
-use App\Models\Admin\ExamSchedule as ExamScheduleModel;
 use Livewire\Component;
 use App\Models\CMS\Calendar;
+use App\Helpers\AdminLogActivity;
+use App\Models\CMS\POST\PostCategory;
 use Illuminate\Support\Facades\Validator;
 use App\Models\CMS\Calendar as EventCalendarModel;
-use App\Models\CMS\POST\PostCategory;
+use App\Models\Admin\ExamSchedule as ExamScheduleModel;
+
 class EventCalendar extends Component
 {
     public $today = [];
@@ -170,6 +172,7 @@ class EventCalendar extends Component
 
         $this->resetCreateEventInputs();
 
+        AdminLogActivity::addToLog("created an event", session()->get('admin_id'));
     }
 
     public function resetCreateEventInputs(){
@@ -206,6 +209,7 @@ class EventCalendar extends Component
 
     public function deleteEvent($id){
         $eventModel = new EventCalendarModel();
+        AdminLogActivity::addToLog("deleted an event", session()->get('admin_id'));
         return $eventModel->deleteEvent($id);
     }
 
@@ -270,6 +274,7 @@ class EventCalendar extends Component
         $this->update_event_modal = false;
         $this->dispatchBrowserEvent('UpdatedEvent', $response);
         $this->updateEventArr = [];
+        AdminLogActivity::addToLog("updated an event", session()->get('admin_id'));
     }
 
     public function updateMonthAndYear($date){
@@ -290,6 +295,7 @@ class EventCalendar extends Component
                 ]);
         $this->createEventArr['category'] = $created_category->id;
         $this->updateEventArr['category'] = $created_category->id;
+        AdminLogActivity::addToLog("created a category", session()->get('admin_id'));
     }
 
     public $create_event_modal = false;
@@ -339,6 +345,7 @@ class EventCalendar extends Component
             $this->dispatchBrowserEvent('ExamScheduleCreated', $status);
         }
 
+        AdminLogActivity::addToLog("created exam schedule", session()->get('admin_id'));
     }
 
     public function resetExamSchedForm(){

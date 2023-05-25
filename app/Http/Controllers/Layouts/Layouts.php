@@ -2,22 +2,46 @@
 
 namespace App\Http\Controllers\Layouts;
 
-use App\Http\Controllers\Controller;
+use Carbon\Carbon;
+use App\Models\VisitorModel;
 use App\Models\CMS\HomeBanner;
 use App\Models\CMS\POST\PostModel;
-use Carbon\Carbon;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+// use App\Http\Controllers\VisitorController;
+
 
 class Layouts extends Controller
 {
     public HomeBanner $banner_model;
     public PostModel $postModel;
+    public $usersCounter = [];
+
     public function __construct()
     {
         $this->banner_model = new HomeBanner();
         $this->postModel = new PostModel();
     }
 
+    public function mount(){
+
+        if (!session('visited')) {
+            session(['visited' => true]);
+
+            DB::table('visitor_count')->increment('visitors');
+        }
+
+        $this->usersCounter['visitor'] = DB::table('visitor_count')->value('visitors');
+        $this->usersCounter['applicants'] = DB::table('visitor_count')->value('applicants');
+        $this->usersCounter['passers'] = DB::table('visitor_count')->value('passers');
+
+    }
+
     public function render() {
+
+        $this->mount();
+        $this->usersCounter['registered'] = DB::table('users_data')->count();
         $banner = $this->banner_model->get();
         $posts = $this->postModel::priority()->get();
         $posts = $posts->map(function ($item) {
@@ -28,6 +52,7 @@ class Layouts extends Controller
             return $item;
         });
 
-        return view('welcome', ['data' => ['banner' => $banner, 'posts' => $posts]]);
+        return view('welcome', ['data' => [
+            'banner' => $banner, 'posts' => $posts, 'visitors' => $this->usersCounter]]);
     }
 }
