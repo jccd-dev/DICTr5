@@ -23,6 +23,7 @@
                             @elseif(request()->routeIs('admin.examinees')) {{'Exam Applicants'}}
                             @elseif(request()->routeIs('admin.accounts')) {{'Admin Accounts'}}
                             @elseif(request()->routeIs('admin.inbox')) {{'Inbox'}}
+                            @elseif(request()->routeIs('admin.exam-schedule')) {{'Exam Schedule'}}
                             @else {{'DICT Camarines Sur'}}
                             @endif
                         </h2>
