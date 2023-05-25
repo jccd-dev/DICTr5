@@ -45,7 +45,13 @@ class ManageApplicants extends Controller
             $examinees = SearchExamineesHelper::search_with_cache($searchValues);
         }
         else{
-        $examinees = UsersData::with('tertiaryEdu', 'trainingSeminars', 'addresses', 'submittedFiles', 'userLogin', 'userHistoryLatest')
+        $examinees = UsersData::with(
+            'tertiaryEdu',
+            'trainingSeminars',
+            'addresses',
+            'submittedFiles',
+            'userLogin',
+            'userHistoryLatest')
             ->paginate(20);
 
         $searchValues = [
@@ -245,10 +251,10 @@ class ManageApplicants extends Controller
             }
 
             // reset the reg details data for the user
-            $reg->exam_schedule = null;
+            $reg->exam_schedule_id = null;
             $reg->reg_date = null;
             $reg->approved_date = null;
-            $reg->stattus = 7;
+            $reg->status = 0;
             $reg->apply = 0;
             $reg->save();
 
