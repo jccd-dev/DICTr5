@@ -6,6 +6,8 @@ namespace App\Http\Controllers\Examinee;
 
 use App\Http\Controllers\Controller;
 use App\Mail\EmailAdminAccount;
+use App\Mail\EmailUsers;
+use App\Mail\RegistrationStatus;
 use App\Models\Examinee\UsersData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -20,6 +22,18 @@ class DashboardController extends Controller
     }
 
     public function sendEmail(){
+        $data = [
+            'first_name' => 'Christian',
+            'exam_start_date' => '2023-05-25 09:37:07',
+            'exam_end_date' => '2023-05-25 12:37:07',
+        ];
+//         Mail::to('cquelonio@gmail.com')->send(new EmailUsers(false, $data));
+//         Mail::to('cquelonio@gmail.com')->send(new RegistrationStatus(4));
+//         echo  "Success";
+        return view('layouts.email.exam-schedule', ['data' => $data]);
+    }
+
+    public function pdf_generator(){
         $data = [
             'email' => 'cquelonio@gmail.com',
             'password' => 'Qwerty123'
