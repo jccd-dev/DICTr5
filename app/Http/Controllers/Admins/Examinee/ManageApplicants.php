@@ -464,6 +464,8 @@ class ManageApplicants extends Controller
         $this->updateFiles($request, strtolower($request->post('current-status')), $user_id);
         AdminLogActivity::addToLog("update user {$user_id}", session()->get('admin_id'));
         $user_helper->update_users_data($organized_users_data, $user_id);
+
+        return 1;
     }
 
     public function updateFiles(Request $request, $status, $user_id): void

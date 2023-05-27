@@ -186,7 +186,6 @@ class Dashboard extends Component
      */
     public function submit(): void
     {
-        dd($this->additional_info);
         $user_helper = new UserManagement();
 
         $rules = $user_helper->rules;
@@ -232,7 +231,7 @@ class Dashboard extends Component
                     $this->addError($field, $message);
                 }
             }
-            $this->dispatchBrowserEvent('RegistrationValidationErrors', $err_msgs->getMessages());
+            $this->dispatchBrowserEvent('RegValidationErrors', $err_msgs->getMessages());
             return;
         }
         $users_data = [
@@ -294,9 +293,9 @@ class Dashboard extends Component
         // dd($organized_users_data, $this->trainings);
         if ($this->insert_users_data($organized_users_data)) {
             UserLogActivity::addToLog('Newly Register', '');
-            $this->dispatchBrowserEvent('RegistrationValidationSuccess', true);
+            $this->dispatchBrowserEvent('RegValidationSuccess', true);
         } else {
-            $this->dispatchBrowserEvent('RegistrationValidationError', true);
+            $this->dispatchBrowserEvent('RegValidationError', true);
         }
     }
 

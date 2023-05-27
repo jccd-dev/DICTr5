@@ -1,7 +1,6 @@
 @extends('layouts.layout')
 
 @section('content')
-
 <div class="relative" x-data=""
      x-init="">
     <div id="dismiss-alert" class="w-full hidden text-white bg-emerald-400 absolute -top-10 right-0 z-10">
@@ -161,10 +160,6 @@
     </div>
 </div>
 @include('AdminFunctions.add-applicant2')
-<button type="button" class="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800">
-    Open modal
-  </button>
-
   <div id="hs-slide-down-animation-modal2" class="hs-overlay hidden w-full h-full fixed top-0 left-0 z-[60] overflow-x-hidden overflow-y-auto">
     <div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
       <div class="flex flex-col bg-white border shadow-sm rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:shadow-slate-700/[.7]">
@@ -287,6 +282,7 @@
 
             const formData = new FormData(addApplicant);
 
+            console.log(123)
             try {
                 let res = await fetch("/admin/examinee/{{ $examinees_data->id }}/update-examinee", {
                     method: 'POST',
@@ -309,6 +305,7 @@
                     }, 2000);
                 }
             } catch (err) {
+                console.log(0)
                 errorHandler(err);
             }
         });
@@ -410,7 +407,6 @@
 
     let targetHeading;
     for (let i = 0; i < headings.length; i++) {
-        console.log(headings);
         if (headings[i]?.nextElementSibling?.tagName === "BUTTON") {
             targetHeading = headings[i];
             break;
