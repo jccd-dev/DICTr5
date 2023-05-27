@@ -10,9 +10,10 @@ use Livewire\WithFileUploads;
 use App\Helpers\UserManagement;
 use App\Models\Examinee\UserHistory;
 use App\Models\Examinee\UsersData;
+use App\Models\Examinee\Users;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Validator;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Container\ContainerExceptionInterface;
@@ -77,6 +78,9 @@ class Dashboard extends Component
 
     protected $rules;
 
+    public $training_limit = 1;
+
+
     protected $except = ['cardModal', 'cardModal2'];
 
     public function updated($propertyName)
@@ -90,15 +94,16 @@ class Dashboard extends Component
 
     public function mount()
     {
-        $this->givenName = '';
+        $u = Users::find(session()->get('user')['id']);
+        $this->givenName = $u->fname;
         $this->middleName = '';
-        $this->surName = '';
+        $this->surName = str_replace(",", "",  $u->lname);
         $this->tel = 0;
         $this->region = '';
         $this->province = '';
         $this->municipality = '';
         $this->barangay = '';
-        $this->email = '';
+        $this->email = $u->email;
         $this->pob = '';
         $this->dob = '';
         $this->gender = '';
@@ -145,7 +150,7 @@ class Dashboard extends Component
     public function render()
     {
         // get userlog_id from session
-        return view('livewire.user.dashboard', ['user_data' => $this->get_user_data()])->layout('layouts.user-layouts');
+        return view('livewire.user.dashboard', ['user_data' => $this->get_user_data(), "user" => Users::find(session()->get('user')['id'])])->layout('layouts.user-layouts');
     }
 
     public function popInput()
@@ -163,10 +168,15 @@ class Dashboard extends Component
 
     public function addInput()
     {
+
+        $this->training_limit += 1;
+        if ($this->training_limit > 3) return;
+
         $this->trainings->push([
             'course' => '',
             'center' => '',
             'hours' => '',
+            't' => $this->training_limit,
         ]);
     }
 
@@ -176,7 +186,6 @@ class Dashboard extends Component
      */
     public function submit(): void
     {
-
         $user_helper = new UserManagement();
 
         $rules = $user_helper->rules;
@@ -222,7 +231,7 @@ class Dashboard extends Component
                     $this->addError($field, $message);
                 }
             }
-            $this->dispatchBrowserEvent('RegistrationValidationErrors', $err_msgs->getMessages());
+            $this->dispatchBrowserEvent('RegValidationErrors', $err_msgs->getMessages());
             return;
         }
         $users_data = [
@@ -284,9 +293,9 @@ class Dashboard extends Component
         // dd($organized_users_data, $this->trainings);
         if ($this->insert_users_data($organized_users_data)) {
             UserLogActivity::addToLog('Newly Register', '');
-            $this->dispatchBrowserEvent('RegistrationValidationSuccess', true);
+            $this->dispatchBrowserEvent('RegValidationSuccess', true);
         } else {
-            $this->dispatchBrowserEvent('RegistrationValidationError', true);
+            $this->dispatchBrowserEvent('RegValidationError', true);
         }
     }
 
@@ -301,7 +310,7 @@ class Dashboard extends Component
         $file_helper = new FileHandler();
 
         $res = $user_helper->insert_users_data($organized_data);
-        if(is_array($res)){
+        if (is_array($res)) {
             UserLogActivity::addToLog('Newly Register', $res[1]);
             return $res[0]; //true
         }
@@ -319,13 +328,15 @@ class Dashboard extends Component
     {
         $user_login_id = session()->get('user')['id'];
 
-        return UsersData::with('tertiaryEdu',
+        return UsersData::with(
+            'tertiaryEdu',
             'trainingSeminars',
             'addresses',
             'submittedFiles',
             'userLogin',
             'userHistory.failedHistory',
-            'userHistoryLatest')
+            'userHistoryLatest'
+        )
             ->where('user_login_id', $user_login_id)
             ->get();
 
@@ -603,7 +614,7 @@ class Dashboard extends Component
                 if ($reg->save()) {
 
                     // count user as applicant if he/she is not a retaker.
-                    if(!$history->isEmpty()){
+                    if (!$history->isEmpty()) {
                         DB::table('visitor_count')->increment('applicants');
                     }
                     session()->flash('success', 'Application sent');
@@ -627,10 +638,11 @@ class Dashboard extends Component
      * @return
      * @description Generation of ILCDB Form 2
      */
-    public function generate_pdf(){
+    public function generate_pdf()
+    {
         $users_data = $this->get_user_data();
         $data = [];
-        foreach($users_data as $user_data){
+        foreach ($users_data as $user_data) {
             $data = [
                 'id' => $user_data->id,
                 'email' => $user_data->userLogin->email,
@@ -667,14 +679,14 @@ class Dashboard extends Component
                 'date_accomplish' => $user_data->date_accomplish,
             ];
 
-            foreach ($user_data->submittedFiles as $file){
-                if($file->requirement_type == 'passport'){
+            foreach ($user_data->submittedFiles as $file) {
+                if ($file->requirement_type == 'passport') {
                     $data['passport'] = $file->file_name;
                     $data['file_type'] = $file->file_type;
                 }
             }
 
-            foreach ($user_data->trainingSeminars as $ts){
+            foreach ($user_data->trainingSeminars as $ts) {
                 $data['training_seminar'][] = [
                     'course' => $ts->course,
                     'center' => $ts->center,
@@ -684,9 +696,9 @@ class Dashboard extends Component
         }
         $user_login_id = session()->get('user')['id'];
         $user_history = UserHistory::where('user_id', $user_login_id)->count();
-        if(!$user_history > 0){
+        if (!$user_history > 0) {
             $data['first_time'] = true;
-        }else{
+        } else {
             $data['first_time'] = false;
         }
         return redirect()->route('user.generate_pdf', ['data' => $data]);

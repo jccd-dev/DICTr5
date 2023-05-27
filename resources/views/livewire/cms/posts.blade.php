@@ -264,7 +264,7 @@
                     <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Add Post</h3>
                     <div
                         id="posts-form"
-                        class="flex w-[30rem] posts-form"
+                        class="flex w-[37rem] posts-form"
 
                         {{--    wire:ignore--}}
                     >
@@ -273,9 +273,9 @@
 
                                 <x-forms.input-form name="Title" type="text" placeholder="Title" model="title" id="title" classes="mb-6" />
 
-                                <x-forms.textarea-form name="Excerpt" placeholder="Excerpt" model="excerpt" id="excerpt" rows="3" classes="mb-6" />
+                                <x-forms.textarea-form name="excerpt" placeholder="Excerpt" model="excerpt" id="excerpt" rows="3" classes="mb-6" />
 
-                                <x-forms.textarea-form name="Content" placeholder="Content" model="content" id="content" rows="5" classes="mb-6" />
+                                <x-forms.textarea-form name="content" placeholder="Content" model="content" id="content" rows="5" classes="mb-6" />
 
                             </div>
                             <div x-show="state == 2">
@@ -368,7 +368,7 @@
                     <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Add Post</h3>
                     <div
                         id="posts-form"
-                        class="flex w-[30rem] posts-form"
+                        class="flex w-[37rem] posts-form"
 
                         {{--    wire:ignore--}}
                     >
@@ -377,9 +377,9 @@
 
                                 <x-forms.input-form name="Title" type="text" placeholder="Title" model="title" id="title" classes="mb-6" value="title" />
 
-                                <x-forms.textarea-form name="Excerpt" placeholder="Excerpt" model="excerpt" id="excerpt" rows="3" classes="mb-6" value="excerpt" />
+                                <x-forms.textarea-form name="updateExcerpt" placeholder="Excerpt" model="excerpt" id="excerpt" rows="3" classes="mb-6" value="excerpt" />
 
-                                <x-forms.textarea-form name="Content" placeholder="Content" model="content" id="excerpt" rows="5" classes="mb-6" value="content" />
+                                <x-forms.textarea-form name="updateContent" placeholder="Content" model="content" id="content" rows="5" classes="mb-6" value="content" />
 
                             </div>
                             <div x-show="stateUpdate == 2">
@@ -410,18 +410,19 @@
                                                                   <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                                                                 </svg>
                                                             </span>
-
                                                                 <img src="{{ asset('storage/images/'.$v) }}" class="w-full h-full object-cover cursor-default" @click.stop alt="">
                                                             </div>
                                                         @endforeach
                                                     @endforeach
 
 
-                                                    @foreach($images as $img)
-                                                        <div class="w-24 h-24">
-                                                            <img src="{{ $img->temporaryUrl() }}" class="w-full h-full object-cover" alt="">
-                                                        </div>
-                                                    @endforeach
+                                                    @if (isset($images) && count($images))
+                                                        @foreach($images as $img)
+                                                            <div class="w-24 h-24">
+                                                                <img src="{{ $img->temporaryUrl() }}" class="w-full h-full object-cover" alt="">
+                                                            </div>
+                                                        @endforeach
+                                                    @endif
                                                 @endif
                                                 @if($temp_images)
                                                     @foreach($temp_images as $key => $val)
@@ -487,7 +488,7 @@
         </div>
     </div>
 
-    <script>
+    <script type="text/javascript">
         const datePickerIcons = document.querySelectorAll("[name='from'], [name='to']")
         datePickerIcons.forEach((el) => {
             el.nextElementSibling.firstElementChild.lastElementChild.remove()
@@ -497,6 +498,8 @@
         const dismissAlert = document.querySelector('#dismiss-alert');
         const successAlert = document.querySelector('#success-alert');
         const errorAlert = document.querySelector('#error-alert');
+
+        document.querySelectorAll('.status-values').forEach(el => el.addEventListener('change', (e) => e.target.nextElementSibling.nextElementSibling.textContent = e.target.nextElementSibling.nextElementSibling.textContent === 'Published' ? 'Unpublished' : 'Published'))
 
         window.addEventListener('ValidationPostError', _ => {
             dismissAlert.classList.remove('hidden')
@@ -580,11 +583,20 @@
             }, 2000)
         })
 
-        document.addEventListener('DOMContentLoaded', () => {
+        let content = CKEDITOR.replace('content')
+        content.on('change', function(event){
+            console.log(event.editor.getData())
+            @this.set('content', event.editor.getData());
+        });
 
-            Alpine.data("posts-form", (d) => {
-                console.log(d)
-            });
+        let content2 = CKEDITOR.replace('updateContent')
+        content2.on('change', function(event){
+            console.log(event.editor.getData())
+            @this.set('content', event.editor.getData());
+        });
+
+        window.addEventListener('update_content', event => {
+            content2.setData(event.detail.content)
         })
 
         function listeners($data) {
