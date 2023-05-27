@@ -38,6 +38,7 @@ class UsersData extends Model
         'e_sign',
         'year_level',
         'current_status',
+        'add_info',
         'date_accomplish',
     ];
 

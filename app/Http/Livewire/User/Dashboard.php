@@ -186,7 +186,7 @@ class Dashboard extends Component
      */
     public function submit(): void
     {
-
+        dd($this->additional_info);
         $user_helper = new UserManagement();
 
         $rules = $user_helper->rules;

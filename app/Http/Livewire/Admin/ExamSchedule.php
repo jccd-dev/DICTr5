@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Helpers\AdminLogActivity;
 use Illuminate\Support\Facades\DB;
 use App\Models\Admin\ExamSchedule as ExamScheduleModel;
+use Request;
 
 class ExamSchedule extends Component
 {
@@ -36,10 +37,12 @@ class ExamSchedule extends Component
         $exam_schedule_model = new ExamScheduleModel();
         $this->schedules = $exam_schedule_model->filter_content($this->from, $this->to, $this->search);
         return view('livewire.admin.exam-schedule')
-                ->layout('layouts.layout');
+            ->layout('layouts.layout');
     }
 
-    public function mount(){
+    public function mount(Request $request, $id = null)
+    {
+        $this->search = $id;
         date_default_timezone_set("Asia/Manila");
 
         $this->resetUpdateField();
@@ -50,7 +53,8 @@ class ExamSchedule extends Component
         $this->to = date('Y-m-d', strtotime($date_to->max_datetime));
     }
 
-    public function resetUpdateField(){
+    public function resetUpdateField()
+    {
         // for inputs
         $this->update_sched_date = '';
         $this->update_sched_start_time = '';
@@ -59,7 +63,8 @@ class ExamSchedule extends Component
         $this->update_venue = '';
     }
 
-    public function create_event_schedule(){
+    public function create_event_schedule()
+    {
         $validateData = $this->validate(
             [
                 'sched_date' => 'required',
@@ -80,40 +85,44 @@ class ExamSchedule extends Component
         $create = [
             'exam_set' => $validateData['exam_set'],
             'venue' => $validateData['venue'],
-            'start_date' => $validateData['sched_date'].' '.$validateData['sched_start_time'],
-            'end_date' => $validateData['sched_date'].' '.$validateData['sched_end_time'],
+            'start_date' => $validateData['sched_date'] . ' ' . $validateData['sched_start_time'],
+            'end_date' => $validateData['sched_date'] . ' ' . $validateData['sched_end_time'],
         ];
         $status = ExamScheduleModel::create($create);
 
         AdminLogActivity::addToLog("created event schedule", session()->get('admin_id'));
         $this->resetCreateForm();
         $this->dispatchBrowserEvent('ExamScheduleCreated', $status);
-
     }
 
-    public function selectVenue($venue){
+    public function selectVenue($venue)
+    {
         $this->venue = $venue;
     }
 
-    public function selectUpdatedVenue($venue){
+    public function selectUpdatedVenue($venue)
+    {
         $this->update_venue = $venue;
     }
 
-    public function resetCreateForm(){
+    public function resetCreateForm()
+    {
         $this->sched_date = '';
         $this->sched_start_time = '';
         $this->sched_end_time = '';
         $this->venue = '';
         $this->exam_set = '';
     }
-    public function delete_exam_schedule($id){
+    public function delete_exam_schedule($id)
+    {
         $schedule = new ExamScheduleModel();
 
         AdminLogActivity::addToLog("deleted exam schedule", session()->get('admin_id'));
         return $schedule->deleteSchedule($id);
     }
 
-    public function update_field($id){
+    public function update_field($id)
+    {
         date_default_timezone_set("Asia/Manila");
         $sched = ExamScheduleModel::where('id', $id)->first();
         $this->update_id = $id;
@@ -124,7 +133,8 @@ class ExamSchedule extends Component
         $this->update_venue = $sched->venue;
     }
 
-    public function update_event_schedule(){
+    public function update_event_schedule()
+    {
         $validateData = $this->validate(
             [
                 'update_sched_date' => 'required',
@@ -146,13 +156,12 @@ class ExamSchedule extends Component
         $status = $exam_schedule_model->updateSchedule($this->update_id, [
             'exam_set' => $this->update_exam_set,
             'venue' => $this->update_venue,
-            'start_date' => $validateData['update_sched_date'].' '.$validateData['update_sched_start_time'],
-            'end_date' => $validateData['update_sched_date'].' '.$validateData['update_sched_end_time'],
+            'start_date' => $validateData['update_sched_date'] . ' ' . $validateData['update_sched_start_time'],
+            'end_date' => $validateData['update_sched_date'] . ' ' . $validateData['update_sched_end_time'],
         ]);
 
         AdminLogActivity::addToLog("updated event schedule", session()->get('admin_id'));
         $this->resetUpdateField();
         $this->dispatchBrowserEvent('UpdateSchedule', $status);
-
     }
 }

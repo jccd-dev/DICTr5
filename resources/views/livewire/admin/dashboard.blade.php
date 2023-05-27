@@ -142,11 +142,11 @@
                         </div>
                         <div class="flex flex-col gap-1">
                             <div class="flex gap-5 w-full">
-                                <a href="#" class="bg-white py-3 flex-1 text-center rounded-lg">
+                                <a href="{{ url('/admin/exam-schedule') }}" class="bg-white py-3 flex-1 text-center rounded-lg">
                                     Exam Details
                                 </a>
 
-                                <a href="#" class="border border-white py-3 flex-1 text-center rounded-lg text-white">
+                                <a href="{{ url('/admin/exam-schedule') }}" class="border border-white py-3 flex-1 text-center rounded-lg text-white">
                                     Add Exam
                                 </a>
                             </div>

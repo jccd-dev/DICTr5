@@ -294,7 +294,7 @@ class ManageApplicants extends Controller
 
         $rules = $user_helper->rules;
         // update rules  base for current status of the user
-        if (strtolower($request->post('currentStatus')) == 'student') {
+        if (strtolower($request->post('current-status')) == 'student') {
             $rules = array_merge($rules, $user_helper->student_rule);
         } else {
             $rules = array_merge($rules, $user_helper->prof_rule);
@@ -327,7 +327,8 @@ class ManageApplicants extends Controller
             'e_sign'            => $request->post('signature'),
             'year_level'        => $request->post('yearLevel'),
             'current_status'    => $request->post('current-status'),
-            'date_accomplish'   => date('Y-m-d H:i:s', strtotime('now'))
+            'add_info'          => json_encode($request->post('addInfo')),
+            'date_accomplish'   => date('Y-m-d H:i:s', strtotime('now')),
         ];
 
         $address = [
@@ -386,12 +387,11 @@ class ManageApplicants extends Controller
      */
     public function update_users_data(Request $request, $user_id)
     {
-
         $user_helper = new UserManagement();
 
         $rules = $user_helper->rules;
         // update rules  base for current status of the user
-        if (strtolower($request->post('currentStatus')) == 'student') {
+        if (strtolower($request->post('current-status')) == 'student') {
             $rules = array_merge($rules, $user_helper->student_rule);
         } else {
             $rules = array_merge($rules, $user_helper->prof_rule);
@@ -423,7 +423,8 @@ class ManageApplicants extends Controller
             'e_sign'            => $request->post('signature'),
             'year_level'        => $request->post('yearLevel'),
             'current_status'    => $request->post('current-status'),
-            'date_accomplish'   => date('Y-m-d H:i:s', strtotime('now'))
+            'add_info'          => json_encode($request->post('addInfo')),
+            'date_accomplish'   => date('Y-m-d H:i:s', strtotime('now')),
         ];
 
         $address = [
