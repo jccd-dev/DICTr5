@@ -10,9 +10,6 @@
         @yield('content')
 
         {{-- Footer Section --}}
-        @hasSection ('components.footer')
-            @include('components.footer')
-        @endif
 
         <x-layouts.accesability />
 

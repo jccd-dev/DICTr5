@@ -1,4 +1,4 @@
-<div class="w-full mt-32 p-5">
+<div class="w-full mt-16 p-5">
     <div class="w-full flex flex-col justify-center">
         <h1 class="text-center font-bold font-inter text-2xl md:text-3xl">Contact Center</h1>
         <p class="text-center text-base md:text-lg mt-3">Lorem ipsum dolor sit amet consectetur. Adipiscing pretium quam sapien leo magna.</p>

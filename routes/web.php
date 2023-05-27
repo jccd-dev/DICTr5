@@ -23,6 +23,7 @@ use App\Http\Livewire\Admin\Inbox as CMSInbox;
 use App\Http\Controllers\Admins\Examinee\ManageApplicants;
 use App\Http\Controllers\Admins\SystemLogs;
 use \App\Http\Controllers\UserDataController;
+use \App\View\Components\Pages\Posts as PostsView;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,7 +37,11 @@ use \App\Http\Controllers\UserDataController;
 */
 
 Route::get('/', [\App\Http\Controllers\Layouts\Layouts::class, 'render'])->name('homepage');
-Route::get("/posts", [\App\View\Components\Pages\Posts::class, 'render']);
+Route::get("/posts/{id}", function ($id) {
+    $component = new PostsView($id);
+
+    return $component->render();
+});
 Route::get('/testing', \App\Http\Livewire\CMS\Testing::class);
 Route::get('/mandate-powers-and-functions', function () {
     return view('static.mandate-powers-and-functions');

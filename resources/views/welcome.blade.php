@@ -18,9 +18,15 @@
     <x-home.section.highlight-post-section :data="$data['posts']" />
 @endif
 
+<hr class="my-12 h-px border-t-0 bg-transparent bg-gradient-to-r from-transparent via-neutral-500 to-transparent opacity-100 dark:opacity-150" />
+
 <x-home.section.calendar-section />
 
+<hr class="my-12 h-px border-t-0 bg-transparent bg-gradient-to-r from-transparent via-neutral-500 to-transparent opacity-100 dark:opacity-150" />
+
 <x-home.section.services-section />
+
+<hr class="my-12 h-px border-t-0 bg-transparent bg-gradient-to-r from-transparent via-neutral-500 to-transparent opacity-100 dark:opacity-150" />
 
 <x-home.section.contact-center-section />
 

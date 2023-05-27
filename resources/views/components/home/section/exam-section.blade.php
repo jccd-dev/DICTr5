@@ -13,7 +13,7 @@
                 </div>
             </div>
             <div class="right w-full lg:w-1/3 flex justify-start md:justify-center mt-18 lg:mt-32">
-                <a href="#" class="font-quicksand font-bold bg-white rounded-xl px-6 2xl:px-10 py-4 2xl:py-5 text-darker-blue text-sm 2xl:text-base">APPLY NOW</a>
+                <a href="/user/login" class="font-quicksand font-bold bg-white rounded-xl px-6 2xl:px-10 py-4 2xl:py-5 text-darker-blue text-sm 2xl:text-base">APPLY NOW</a>
             </div>
         </div>
     </div>
