@@ -10,7 +10,7 @@
         </div>
         <div class="hidden xl:block">
           <div class="flex items-center ">
-            <a href="#" class="nav--top font-semibold flex flex-row items-center xl:px-2 2xl:px-3 py-2 text-sm text-black rounded-md focus:outline-none focus:text-black">
+            <a href="/" class="nav--top font-semibold flex flex-row items-center xl:px-2 2xl:px-3 py-2 text-sm text-black rounded-md focus:outline-none focus:text-black">
               <span class="ml-2">HOME</span>
             </a>
             {{-- <a href="#" class="flex flex-row items-center xl:px-2 2xl:px-3 py-2 ml-4 text-sm text-black rounded-md hover:text-black  focus:outline-none focus:text-black">

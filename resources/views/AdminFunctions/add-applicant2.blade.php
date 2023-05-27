@@ -132,7 +132,7 @@
                                         name="email"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                         placeholder="Email"
-                                        value="{{ !isset($examinees_data->userLogin->email) ? "" : $examinees_data->userLogin->email }}"
+                                        value="{{ !isset($examinees_data->email) ? "" : $examinees_data->email }}"
                                     >
                                     <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                 </div>
@@ -279,11 +279,11 @@
                                 <h1 class="block mb-3 text-lg font-medium text-gray-900 dark:text-white">Current Status</h1>
                                 <div class="flex">
                                     <div class="flex items-center mr-4">
-                                        <input @change="currentStatus = 'student'" {{ $examinees_data->current_status != "student" ?: 'checked="checked"' }}" id="student" type="radio" value="student" name="current-status" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                        <input @change="currentStatus = 'student'" {{ $examinees_data->current_status != "student" ? '' : 'checked' }} id="student" type="radio" value="student" name="current-status" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                         <label for="student" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Student</label>
                                     </div>
                                     <div class="flex items-center mr-4">
-                                        <input {{ $examinees_data->current_status != 'professional' ?: 'checked="checked"' }}" @change="currentStatus = 'professional'" id="professional" type="radio" value="professional" name="current-status" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                        <input {{ $examinees_data->current_status != 'professional' ? '' : 'checked' }} @change="currentStatus = 'professional'" id="professional" type="radio" value="professional" name="current-status" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                         <label for="professional" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Professional</label>
                                     </div>
                                 </div>
@@ -299,7 +299,7 @@
                                             <select id="yearLevel" name="yearLevel" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                                 <option value="">Choose a year level</option>
                                                 @for ($i = 1; $i <= 6; $i++)
-                                                    <option {{ $examinees_data->year_level == $i ? "selected" : "" }}" value="{{ $i }}"">{{ $i }}"</option>
+                                                    <option {{ $examinees_data->year_level == $i ? "selected" : "" }} value="{{ $i }}">{{ $i }}</option>
                                                 @endfor
                                             </select>
                                             <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>

@@ -8,6 +8,7 @@ use App\Models\Examinee\Users;
 use App\Helpers\UserManagement;
 use Illuminate\Http\JsonResponse;
 use App\Models\Examinee\UsersData;
+use App\Helpers\AdminLogActivity;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
@@ -30,6 +31,7 @@ class ManageApplicants extends Controller
     public string|int|null $reg_status = null;
     public string $order_by = 'asc';
     public string|int|null $is_applied = null;
+    public string|int|null $applicant = null;
 
     public array $trainings = [];
     public array $toDeleteTrainings = [];
@@ -42,7 +44,7 @@ class ManageApplicants extends Controller
         if ($searchValues) {
             $examinees = SearchExamineesHelper::search_with_cache($searchValues);
         } else {
-            $examinees = UsersData::with('tertiaryEdu', 'trainingSeminars', 'addresses', 'submittedFiles', 'userLogin')
+            $examinees = UsersData::with('tertiaryEdu', 'trainingSeminars', 'addresses', 'submittedFiles', 'userLogin', 'userHistoryLatest')
                 ->paginate(20);
 
             $searchValues = [
@@ -53,13 +55,14 @@ class ManageApplicants extends Controller
                 'reg_status' => $this->reg_status,
                 'order_by' => $this->order_by,
                 'is_applied' => $this->is_applied,
+                'applicant' => $this->applicant,
             ];
         }
 
         $exam_schedule = new ExamSchedule();
         $exam_schedule_records = $exam_schedule->all();
 
-        return view('AdminFunctions/examinees-list', ['data' => $examinees, 'examSchedule' => $exam_schedule_records, 'searchValues' => $searchValues]);
+        return view('AdminFunctions.examinees-list', ['data' => $examinees, 'examSchedule' => $exam_schedule_records, 'searchValues' => $searchValues]);
     }
 
     /**
@@ -70,13 +73,13 @@ class ManageApplicants extends Controller
      */
     public function select_examinee(int $examinees_id): View|RedirectResponse
     {
-        $examinees_data = UsersData::with('addresses', 'tertiaryEdu', 'trainingSeminars', 'submittedFiles', 'regDetails', 'userHistory', 'userLogs', 'userLogin')->where('id', $examinees_id)->first();
+        $examinees_data = UsersData::with('addresses', 'tertiaryEdu', 'trainingSeminars', 'submittedFiles', 'regDetails', 'userHistory.failedHistory', 'userLogs', 'userLogin', 'userHistoryLatest')->where('id', $examinees_id)->first();
         // dd($examinees_data);
         // if record is null or not found
         if (!$examinees_data) {
             return redirect()->back()->with('error', 'Record cannot found');
         }
-
+        // dd($examinees_data);
         return view('AdminFunctions.applicant-data', ['examinees_data' => $examinees_data]);
     }
 
@@ -107,6 +110,7 @@ class ManageApplicants extends Controller
         $this->reg_status = $request->reg_status;
         $this->order_by = $request->order_by ? $request->order_by : $this->order_by;
         $this->is_applied = $request->is_applied;
+        $this->applicant = $request->applicant;
 
         // put the search_items in the cache
         $search_values = [
@@ -117,6 +121,7 @@ class ManageApplicants extends Controller
             'reg_status' => $request->reg_status,
             'order_by' => $request->order_by ? $request->order_by : $this->order_by,
             'is_applied' => $request->is_applied,
+            'applicant' => $request->applicant,
         ];
 
         Cache::put($this->cache_key, $search_values, 600);
@@ -267,6 +272,7 @@ class ManageApplicants extends Controller
         $users_data = [
             'fname'             => $request->post('givenName'),
             'lname'             => $request->post('surName'),
+            'email'             => $request->post('email'),
             'mname'             => $request->post('middleName'),
             'place_of_birth'    => $request->post('pob'),
             'date_of_birth'     => date('Y-m-d', strtotime($request->post('dob'))),
@@ -333,12 +339,11 @@ class ManageApplicants extends Controller
 
     public function update_users_data(Request $request, $user_id)
     {
-
         $user_helper = new UserManagement();
 
         $rules = $user_helper->rules;
         // update rules  base for current status of the user
-        if (strtolower($request->currentStatus) == 'student') {
+        if (strtolower($request->post('current-status')) == 'student') {
             $rules = array_merge($rules, $user_helper->student_rule);
         } else {
             $rules = array_merge($rules, $user_helper->prof_rule);
@@ -369,7 +374,7 @@ class ManageApplicants extends Controller
             'programming_langs' => $request->post('pl'),
             'e_sign'            => $request->post('signature'),
             'year_level'        => $request->post('yearLevel'),
-            'current_status'    => $request->post('currentStatus'),
+            'current_status'    => $request->post('current-status'),
             'date_accomplish'   => date('Y-m-d H:i:s', strtotime('now'))
         ];
 
@@ -385,25 +390,14 @@ class ManageApplicants extends Controller
             'degree'            => $request->post('degree'),
             'inclusive_years'   => $request->post('incYears')
         ];
-
         //process trainings
-        foreach ($request->post('course') as $key => $training) {
-            $center = $request->post('center')[$key];
-            $hours = $request->post('hours')[$key];
+        foreach ($request->input('course') as $key => $training) {
+            $center = $request->input('center')[$key];
+            $hours = $request->input('hours')[$key];
+            $id = $request->input('trainingId')[$key];
 
             $this->trainings[] = [
-                'course' => $training,
-                'center' => $center,
-                'hours'  => $hours
-            ];
-        }
-
-        //process trainings
-        foreach ($request->post('course') as $key => $training) {
-            $center = $request->post('center')[$key];
-            $hours = $request->post('hours')[$key];
-
-            $this->trainings[] = [
+                'id' => $id,
                 'course' => $training,
                 'center' => $center,
                 'hours'  => $hours
@@ -417,6 +411,9 @@ class ManageApplicants extends Controller
             'training'         => $this->trainings,
             'to_del_trainings' => $request->post('toDeleteTrainings')
         ];
+
+        $this->updateFiles($request, strtolower($request->post('current-status')), $user_id);
+        AdminLogActivity::addToLog("update user {$user_id}", session()->get('admin_id'));
         $user_helper->update_users_data($organized_users_data, $user_id);
     }
 
@@ -424,14 +421,13 @@ class ManageApplicants extends Controller
     {
         // $user_id = session()->get('user')['id'];
         if ($status === "student") {
-            if (gettype($request->file('passport')) !== "string") $this->update_passport($user_id, $request->file('passport'));
-            if (gettype($request->file('psa')) !== "string") $this->update_psa($user_id, $request->file('psa'));
-            if (gettype($request->file('cert')) !== "string") $this->update_COE($user_id, $request->file('cert'));
+            if (gettype($request->file('passport')) !== "string" && !is_null($request->file('passport'))) $this->update_passport($user_id, $request->file('passport'));
+            if (gettype($request->file('psa')) !== "string" && !is_null($request->file('psa'))) $this->update_psa($user_id, $request->file('psa'));
+            if (gettype($request->file('cert')) !== "string" && !is_null($request->file('cert'))) $this->update_COE($user_id, $request->file('cert'));
         } else {
-            if (gettype($request->file('validId')) !== "string") $this->update_id($user_id, $request->file('validId'));
-            if (gettype($request->file('diploma')) !== "string") $this->update_diploma($user_id, $request->file('diploma'));
+            if (gettype($request->file('validId')) !== "string" && !is_null($request->file('validId'))) $this->update_id($user_id, $request->file('validId'));
+            if (gettype($request->file('diploma')) !== "string" && !is_null($request->file('diploma'))) $this->update_diploma($user_id, $request->file('diploma'));
         }
-        $this->dispatchBrowserEvent('FileUpdateSuccess', true);
     }
 
     /**
@@ -442,7 +438,7 @@ class ManageApplicants extends Controller
     {
         $user_helper = new UserManagement();
 
-        return $user_helper->update_psa($user_id, $file);
+        return $user_helper->update_passport($user_id, $file);
     }
 
     /**
@@ -464,7 +460,7 @@ class ManageApplicants extends Controller
     {
         $user_helper = new UserManagement();
 
-        return $user_helper->update_psa($user_id, $file);
+        return $user_helper->update_id($user_id, $file);
     }
 
     /**
@@ -475,13 +471,13 @@ class ManageApplicants extends Controller
     {
         $user_helper = new UserManagement();
 
-        return $user_helper->update_psa($user_id, $file);
+        return $user_helper->update_diploma($user_id, $file);
     }
 
     public function update_COE($user_id, $file): bool
     {
         $user_helper = new UserManagement();
 
-        return $user_helper->update_psa($user_id, $file);
+        return $user_helper->update_COE($user_id, $file);
     }
 }

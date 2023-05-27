@@ -116,7 +116,7 @@
         </div>
         <!-- Slider main container -->
 
-        <div class="swiper w-2/5">
+        <div class="swiper w-2/5 rounded-3xl">
         <!-- Additional required wrapper -->
             <div class="swiper-wrapper w-full">
             <!-- Slides -->

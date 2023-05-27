@@ -374,7 +374,9 @@
             let data = await res.json();
             if(data?.errors) throw data.errors
 
-            if (data === 1) {
+            let [success, id] = data;
+
+            if (success) {
                 dismissAlert.classList.remove("hidden");
                 messageAlert.textContent = "Successfully Added";
                 targetHeading.nextElementSibling.click();
