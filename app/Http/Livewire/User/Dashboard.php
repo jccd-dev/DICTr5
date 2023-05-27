@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\User;
 
+use App\Helpers\UserLogActivity;
 use Livewire\Component;
 use mysql_xdevapi\Session;
 use App\Helpers\FileHandler;
@@ -292,6 +293,7 @@ class Dashboard extends Component
 
         // dd($organized_users_data, $this->trainings);
         if ($this->insert_users_data($organized_users_data)) {
+            UserLogActivity::addToLog('Newly Register', '');
             $this->dispatchBrowserEvent('RegistrationValidationSuccess', true);
         } else {
             $this->dispatchBrowserEvent('RegistrationValidationError', true);
@@ -310,6 +312,7 @@ class Dashboard extends Component
 
         $res = $user_helper->insert_users_data($organized_data);
         if (is_array($res)) {
+            UserLogActivity::addToLog('Newly Register', $res[1]);
             return $res[0]; //true
         }
         return $res;
@@ -521,6 +524,8 @@ class Dashboard extends Component
         $user_helper->update_users_data($organized_users_data, $user_id);
 
         $this->dispatchBrowserEvent('RegUpdateValidationSuccess', true);
+
+        UserLogActivity::addToLog('Update registered Data', $user_id);
     }
 
     public function updateFiles($status, $user_id): void
@@ -614,6 +619,7 @@ class Dashboard extends Component
                         DB::table('visitor_count')->increment('applicants');
                     }
                     session()->flash('success', 'Application sent');
+                    UserLogActivity::addToLog('Apply for exam', $user_id);
                     return true;
                 }
 

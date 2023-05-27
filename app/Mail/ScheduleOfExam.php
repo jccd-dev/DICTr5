@@ -9,24 +9,18 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class EmailUsers extends Mailable
+class ScheduleOfExam extends Mailable
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
-     * @param array $data elements:
-     *               - name => string complete name
-     *               - venue => string
-     *               - exam_sched => string exam schedule
-     *               For Failed:
-     *               - part1 => string percentage
-     *               - part2 => string percentage
-     *               - part3 => string percentage,
-     * @param bool $passed if pass or failed
+     * @param array $data : Contains:
+     *                  - first_name : string
+     *                  - exam_start_date : string
+     *                  - exam_end_date : string
      */
     public function __construct(
-        protected bool $passed,
         protected array $data
     )
     {
@@ -39,7 +33,7 @@ class EmailUsers extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Diagnostic Exam Result',
+            subject: 'ICT Proficiency Diagnostic Exam Schedule',
         );
     }
 
@@ -49,11 +43,8 @@ class EmailUsers extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'layouts.email.exam-result',
-            with: [
-                'data' => $this->data,
-                'passed' => $this->passed,
-            ]
+            view: 'layouts.email.exam-schedule',
+            with: ['data' => $this->data]
         );
     }
 

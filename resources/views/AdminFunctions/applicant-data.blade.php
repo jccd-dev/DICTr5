@@ -155,6 +155,7 @@
                             @endforeach
                         </tbody>
                     </table>
+                    {{ $data->links() }}
                 </div>
             </div>
         </div>
@@ -196,7 +197,7 @@
           <button type="button" class="hs-dropdown-toggle py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border font-medium bg-white text-gray-700 shadow-sm align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all text-sm dark:bg-slate-900 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white dark:focus:ring-offset-gray-800" data-hs-overlay="#hs-slide-down-animation-modal2">
             Close
           </button>
-          <a class="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800" href="#">
+          <a id="submitApplicantStatus" data-value="{{ $examinees_data->id }}" class="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800" href="#">
             Save changes
           </a>
         </div>
@@ -251,7 +252,6 @@
     <div data-popper-arrow></div>
 </div>
 
-
 <script>
     const messageAlert = document.querySelector("#message-alert");
     const dismissAlert = document.querySelector("#dismiss-alert");
@@ -284,104 +284,127 @@
     function listeners($data) {
 
         addApplicant.addEventListener("submit", async (event) => {
-        event.preventDefault();
+            event.preventDefault();
 
-        const formData = new FormData(addApplicant);
+            const formData = new FormData(addApplicant);
 
-        try {
-            let res = await fetch("/admin/examinee/{{ $examinees_data->id }}/update-examinee", {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                },
-                body: formData,
-            });
-            let data = await res.json();
-            if(data?.errors) throw data.errors
+            try {
+                let res = await fetch("/admin/examinee/{{ $examinees_data->id }}/update-examinee", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    },
+                    body: formData,
+                });
+                let data = await res.json();
+                if(data?.errors) throw data.errors
 
-            if (data === 1) {
-                dismissAlert.classList.remove("hidden");
-                messageAlert.textContent = "Successfully Added";
-                targetHeading.nextElementSibling.click();
-
-                setTimeout(() => {
+                if (data === 1) {
                     dismissAlert.classList.remove("hidden");
-                    location.reload();
-                }, 2000);
-            }
-        } catch (err) {
-            errorHandler(err);
-        }
-    });
-    const errorHandler = (err) => {
+                    messageAlert.textContent = "Successfully Added";
+                    targetHeading.nextElementSibling.click();
 
-        let p = addApplicant.querySelectorAll("p")
-        Array.from(p).forEach((el) => {
-                el.classList.add("hidden");
-            }
-        );
-        for (const key in err) {
-            formInputs.forEach((el) => {
-                if (el.name === key) {
-                    if (el.parentElement.querySelector("p")) {
-                        let p = el.parentElement.querySelector("p");
-                        p.classList.remove("hidden");
-                        p.textContent = err[key];
-                    } else if (el.parentElement.parentElement.querySelector("p")) {
-                        let p = el.parentElement.parentElement.querySelector("p");
-                        p.classList.remove("hidden");
-                        p.textContent = err[key];
-                    } else {
-                        let p =
-                            el.parentElement.parentElement.parentElement.querySelector(
-                                "p"
-                            );
-                        p.classList.remove("hidden");
-                        p.textContent = err[key];
-                    }
+                    setTimeout(() => {
+                        dismissAlert.classList.remove("hidden");
+                        location.reload();
+                    }, 2000);
                 }
-            });
+            } catch (err) {
+                errorHandler(err);
+            }
+        });
+        const errorHandler = (err) => {
+
+            let p = addApplicant.querySelectorAll("p")
+            Array.from(p).forEach((el) => {
+                    el.classList.add("hidden");
+                }
+            );
+            for (const key in err) {
+                formInputs.forEach((el) => {
+                    if (el.name === key) {
+                        if (el.parentElement.querySelector("p")) {
+                            let p = el.parentElement.querySelector("p");
+                            p.classList.remove("hidden");
+                            p.textContent = err[key];
+                        } else if (el.parentElement.parentElement.querySelector("p")) {
+                            let p = el.parentElement.parentElement.querySelector("p");
+                            p.classList.remove("hidden");
+                            p.textContent = err[key];
+                        } else {
+                            let p =
+                                el.parentElement.parentElement.parentElement.querySelector(
+                                    "p"
+                                );
+                            p.classList.remove("hidden");
+                            p.textContent = err[key];
+                        }
+                    }
+                });
+            }
+
+            let hasSectionOneError = err.hasOwnProperty('givenName')
+                        || err.hasOwnProperty('middleName')
+                        || err.hasOwnProperty('surName')
+                        || err.hasOwnProperty('tel')
+                        || err.hasOwnProperty('province')
+                        || err.hasOwnProperty('municipality')
+                        || err.hasOwnProperty('barangay')
+                        || err.hasOwnProperty('surName')
+                        || err.hasOwnProperty('email')
+                        || err.hasOwnProperty('pob')
+                        || err.hasOwnProperty('dob')
+                        || err.hasOwnProperty('gender')
+                        || err.hasOwnProperty('citizenship')
+                        || err.hasOwnProperty('civilStatus');
+
+            let hasSectionTwoError = err.hasOwnProperty('thumbnail')
+                || err.hasOwnProperty('status')
+                || err.hasOwnProperty('images');
+
+            let hasSectionThreeError = err.hasOwnProperty('presentOffice')
+                || err.hasOwnProperty('telNum')
+                || err.hasOwnProperty('officeAddress')
+                || err.hasOwnProperty('officeCategory')
+                || err.hasOwnProperty('designationPosition')
+                || err.hasOwnProperty('yearsPresentPosition')
+                || err.hasOwnProperty('pl');
+
+            let hasSectionFourError = err.hasOwnProperty('signature')
+
+            if(hasSectionOneError) {
+                $data.state = 1;
+            } else if(hasSectionTwoError) {
+                $data.state = 2;
+            } else if (hasSectionThreeError) {
+                $data.state = 3;
+            } else if (hasSectionFourError) {
+                $data.state = 4;
+            }
+        };
+
+        const submitApplicantStatus = document.querySelector('#submitApplicantStatus')
+        submitApplicantStatus.addEventListener('click', applicationStatusSubmit)
+        async function applicationStatusSubmit(event) {
+            try {
+                let select = event.target.parentElement.parentElement.querySelector('select')
+                let status = select.value;
+                let formData = new FormData();
+                formData.append('validation', status);
+                let res = await fetch('/admin/examinee/'+ event.target.dataset.value +'/validation', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    },
+                    body: formData
+                });
+                let data = await res.json();
+
+                console.log(status)
+            } catch(err) {
+                console.log(err)
+            }
         }
-
-        let hasSectionOneError = err.hasOwnProperty('givenName')
-                    || err.hasOwnProperty('middleName')
-                    || err.hasOwnProperty('surName')
-                    || err.hasOwnProperty('tel')
-                    || err.hasOwnProperty('province')
-                    || err.hasOwnProperty('municipality')
-                    || err.hasOwnProperty('barangay')
-                    || err.hasOwnProperty('surName')
-                    || err.hasOwnProperty('email')
-                    || err.hasOwnProperty('pob')
-                    || err.hasOwnProperty('dob')
-                    || err.hasOwnProperty('gender')
-                    || err.hasOwnProperty('citizenship')
-                    || err.hasOwnProperty('civilStatus');
-
-        let hasSectionTwoError = err.hasOwnProperty('thumbnail')
-            || err.hasOwnProperty('status')
-            || err.hasOwnProperty('images');
-
-        let hasSectionThreeError = err.hasOwnProperty('presentOffice')
-            || err.hasOwnProperty('telNum')
-            || err.hasOwnProperty('officeAddress')
-            || err.hasOwnProperty('officeCategory')
-            || err.hasOwnProperty('designationPosition')
-            || err.hasOwnProperty('yearsPresentPosition')
-            || err.hasOwnProperty('pl');
-
-        let hasSectionFourError = err.hasOwnProperty('signature')
-
-        if(hasSectionOneError) {
-            $data.state = 1;
-        } else if(hasSectionTwoError) {
-            $data.state = 2;
-        } else if (hasSectionThreeError) {
-            $data.state = 3;
-        } else if (hasSectionFourError) {
-            $data.state = 4;
-        }
-    };
     }
 
 

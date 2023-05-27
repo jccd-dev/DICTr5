@@ -8,7 +8,6 @@
             transform: scale(.6) !important;
             color: white !important;
         }
-
     </style>
     <!-- admin credentials can be access using this;-->
     {{-- @if(auth('jwt')->user()->name != null)
@@ -55,7 +54,7 @@
                         <img class="w-full h-full object-fit" src="{{ asset('img/Group 39.svg') }}" alt="">
                     </div>
                     <div class="flex flex-col gap-2 flex-1">
-                        <div class="font-inter font-bold text-3xl">12</div>
+                        <div class="font-inter font-bold text-3xl">{{ $data['applicants'] }}</div>
                         <div class="font-inter text-sm text-slate-600">Exam Applicants</div>
                     </div>
                     <div>
@@ -70,7 +69,7 @@
                         <img class="w-full h-full object-fit" src="{{ asset('img/ico/Group 39-2.svg') }}" alt="">
                     </div>
                     <div class="flex flex-col gap-2 flex-1">
-                        <div class="font-inter font-bold text-3xl">12</div>
+                        <div class="font-inter font-bold text-3xl">{{ $data['examinees'] }}</div>
                         <div class="font-inter text-sm text-slate-600">Total Examiners</div>
                     </div>
                     <div>
@@ -87,7 +86,7 @@
                         <img class="w-full h-full object-fit" src="{{ asset('img/ico/Group 39.svg') }}" alt="">
                     </div>
                     <div class="flex flex-col gap-2 flex-1">
-                        <div class="font-inter font-bold text-3xl">12</div>
+                        <div class="font-inter font-bold text-3xl">{{ $data['complete'] }}</div>
                         <div class="font-inter text-sm text-slate-600">Complete Requirements</div>
                     </div>
                     <div>
@@ -103,7 +102,7 @@
 
                     </div>
                     <div class="flex flex-col gap-2 flex-1">
-                        <div class="font-inter font-bold text-3xl">12</div>
+                        <div class="font-inter font-bold text-3xl">{{ $data['pending'] }}</div>
                         <div class="font-inter text-sm text-slate-600">Pending Requirements</div>
                     </div>
                     <div>
@@ -120,43 +119,6 @@
         <!-- Additional required wrapper -->
             <div class="swiper-wrapper w-full">
             <!-- Slides -->
-                <div class="swiper-slide w-full">
-                    <div class="w-full h-full bg-custom-blue rounded-3xl p-5 pb-3 flex flex-col justify-between">
-                        <div class="flex gap-5 text-white font-quicksand">
-                            <div>
-                                <img src="{{ asset('img/ico/Group 43.svg') }}" alt="">
-                            </div>
-                            <div class="flex flex-col gap-2 text-lg font-medium">
-                                <div>
-                                    <span>Venue:</span>
-                                    <span>Jesse M. Robredo Coliseum, Naga City</span>
-                                </div>
-                                <div>
-                                    <span>Date:</span>
-                                    <span>March 29, 2023</span>
-                                </div>
-                                <div>
-                                    <span>Time:</span>
-                                    <span>8:00 am</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex flex-col gap-1">
-                            <div class="flex gap-5 w-full">
-                                <a href="#" class="bg-white py-3 flex-1 text-center rounded-lg">
-                                    Exam Details
-                                </a>
-
-                                <a href="#" class="border border-white py-3 flex-1 text-center rounded-lg text-white">
-                                    Add Exam
-                                </a>
-                            </div>
-                            <div>
-                                <span class="flex gap-2 justify-center items-center text-white font-quicksand font-medium"><span class="flex w-3 h-3 bg-green-500 rounded-full"></span> Active Date</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div class="swiper-slide w-full">
                     <div class="w-full h-full bg-custom-blue rounded-3xl p-5 pb-3 flex flex-col justify-between">
                         <div class="flex gap-5 text-white font-quicksand">

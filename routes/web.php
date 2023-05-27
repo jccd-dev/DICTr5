@@ -50,6 +50,9 @@ Route::get('/ra-10844', function () {
 Route::get('/dict-cam-sur-officials', function () {
     return view('static.officials');
 });
+Route::get('/agency', function () {
+    return view('static.agency');
+});
 
 
 // STATIC PAGES ROUTES

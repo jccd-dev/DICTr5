@@ -8,6 +8,7 @@ use App\Models\Examinee\Users;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use App\Helpers\UserLogActivity;
 
 class GoogleAuthController extends Controller
 {
@@ -33,8 +34,14 @@ class GoogleAuthController extends Controller
                 'lname' => $lname
             ]);
 
+            UserLogActivity::addToLog('Logged In', ' $createdAcc->id');
             Session::put('user', ['id' => $createdAcc->id, 'fname' => $fname, 'lname' => $lname]);
         }else{
+            // if user account has been deactivated by the admin
+            if($account->is_activate == 0){
+                return redirect()->back()->with('alert', 'Your account has been deactivated');
+            }
+            UserLogActivity::addToLog('Logged In', ' $createdAcc->id');
             Session::put('user', ['id' => $account->id, 'fname' => $fname, 'lname' => $lname]);
         }
         return redirect()->route('user.dashboard');

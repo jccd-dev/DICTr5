@@ -228,6 +228,36 @@ class ManageApplicants extends Controller
             // reset the reg details data for the user
             $reg->delete();
         }
+
+        // reset the reg details data for the user
+        $reg->exam_schedule_id = null;
+        $reg->reg_date = null;
+        $reg->approved_date = null;
+        $reg->status = 0;
+        $reg->apply = 0;
+        $reg->save();
+
+        AdminLogActivity::addToLog("send exam result to {$user->id}", session()->get('admin_id'));
+    }
+
+    /**
+     * @param Request $request
+     * @param $user_id
+     * @return void
+     * @uses SENDTRANSCRIPT
+     */
+    public function sendTranscript(Request $request, $user_id)
+    {
+
+        $file = $request->file('pdf_file');
+
+        $user = UsersData::with('userLogin')->find($user_id);
+
+        $reg = $user->regDetails;
+
+        $user_email = $user->userLogin == null ? $user->email : $user->userLogin->email;
+
+        //todo ADD THE EMAIL PROCESS HERE.
     }
 
     /**
@@ -250,14 +280,21 @@ class ManageApplicants extends Controller
         return false;
     }
 
-    public function add_user(Request $request)
+    /**
+     * @param Request $request
+     * @return array|bool|JsonResponse|mixed
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @uses ADD_USER
+     * @description Manage to add manually users data in admin side.
+     */
+    public function add_user(Request $request): mixed
     {
-        // dd($request);
         $user_helper = new UserManagement();
 
         $rules = $user_helper->rules;
         // update rules  base for current status of the user
-        if (strtolower($request->post('current-status')) == 'student') {
+        if (strtolower($request->post('currentStatus')) == 'student') {
             $rules = array_merge($rules, $user_helper->student_rule);
         } else {
             $rules = array_merge($rules, $user_helper->prof_rule);
@@ -337,13 +374,24 @@ class ManageApplicants extends Controller
         return $user_helper->insert_users_data($organized_users_data);
     }
 
+    /**
+     * @param Request $request
+     * @param $user_id
+     * @return JsonResponse|void
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @uses UPDATE_USERS_DATA
+     * @description Update the existing user's data in admin side
+     *              admin can update all user's data if needed
+     */
     public function update_users_data(Request $request, $user_id)
     {
+
         $user_helper = new UserManagement();
 
         $rules = $user_helper->rules;
         // update rules  base for current status of the user
-        if (strtolower($request->post('current-status')) == 'student') {
+        if (strtolower($request->post('currentStatus')) == 'student') {
             $rules = array_merge($rules, $user_helper->student_rule);
         } else {
             $rules = array_merge($rules, $user_helper->prof_rule);
@@ -397,7 +445,7 @@ class ManageApplicants extends Controller
             $id = $request->input('trainingId')[$key];
 
             $this->trainings[] = [
-                'id' => $id,
+                'id'     => $id,
                 'course' => $training,
                 'center' => $center,
                 'hours'  => $hours
@@ -478,6 +526,48 @@ class ManageApplicants extends Controller
     {
         $user_helper = new UserManagement();
 
-        return $user_helper->update_COE($user_id, $file);
+        return $user_helper->update_psa($user_id, $file);
+    }
+
+    /**
+     * @param int|string $user_id
+     * @return bool
+     * @uses APPLY_EXAMINEES
+     * @description unlike in user's/examinees side this function is auto called by other function
+     *              to automatically after it register by admin.
+     */
+    public function apply_examinee(int|string $user_id): bool
+    {
+        $user = UsersData::with('regDetails', 'userHistory')->find($user_id);
+        $reg = $user->regDetails;
+        $history = $user->userHistory;
+        // dd($user);
+        if ($user) {
+
+            if ($reg && $reg->apply == 1) {
+                $reg->user_id = $user_id;
+                $reg->reg_date = date('Y-m-d', strtotime('now'));
+                $reg->apply = 1;
+
+                if ($reg->save()) {
+
+                    // count user as applicant if he/she is not a retaker.
+                    if (!$history->isEmpty()) {
+                        DB::table('visitor_count')->increment('applicants');
+                    }
+                    session()->flash('success', 'Application sent');
+                    return true;
+                }
+
+                session()->flash('error', 'server error');
+                return false;
+            }
+            session()->flash('warning', 'Already applied');
+            return false;
+        }
+
+        // it means that the user already applied
+        session()->flash('warning', 'Register first');
+        return false;
     }
 }

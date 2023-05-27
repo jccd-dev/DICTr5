@@ -60,17 +60,12 @@
                 @endif
             </td>
             <td class="px-6 py-4">
-                <button
-                    data-popover-target="popover-animation"
-                    data-popover-trigger="click"
-                    data-popover-placement="bottom"
-                    type="button"
-                    class="bg-[#00509D] bg-opacity-10 rounded-xl p-2"
-                    >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                    </svg>
-                </button>
+                <a href="{{ url('/admin/examinee/' . $user->id) }}" class="font-medium hover:underline flex gap-2 items-center bg-dark-blue bg-opacity-50 w-fit py-2 px-4 rounded-2xl">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                        </svg>
+                    <span class="font-semibold">View</span>
+                </a>
             </td>
         </tr>
     @else
@@ -134,17 +129,12 @@
                 @endif
             </td>
             <td class="px-6 py-4">
-                <button
-                    data-popover-target="popover-animation"
-                    data-popover-trigger="click"
-                    data-popover-placement="bottom"
-                    type="button"
-                    class="bg-[#00509D] bg-opacity-10 rounded-xl p-2"
-                    >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                    </svg>
-                </button>
+                <a href="{{ url('/admin/examinee/' . $user->id) }}" class="font-medium hover:underline flex gap-2 items-center bg-dark-blue bg-opacity-50 w-fit py-2 px-4 rounded-2xl">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                                              </svg>
+                                            <span class="font-semibold">View</span>
+                                        </a>
             </td>
         </tr>
     @endif

@@ -13,7 +13,7 @@
                 class="text-lg font-bold text-gray-800 dark:text-gray-200"
                 href="#"
             >
-                <img src="{{ asset("img/DICT Standard Logos-05 1.png") }}" alt="">
+                <img src="{{ asset("img/DICTStandardLogos-05.png") }}" alt="">
             </a>
             <ul class="mt-14">
                 <li class="relative py-1">
@@ -167,11 +167,11 @@
                     </div>
                 </li>
                 <li class="relative py-2">
-                    <div class="{{ request()->routeIs('admin.dashboard') ? 'bg-[#00509D] text-white' : 'text-gray-500 hover:text-gray-800' }} transition-colors duration-150 px-4 py-3 flex items-center rounded-lg">
+                    <div class="{{ request()->routeIs('admin.exam-schedule') ? 'bg-[#00509D] text-white' : 'text-gray-500 hover:text-gray-800' }} transition-colors duration-150 px-4 py-3 flex items-center rounded-lg">
                         <a
                             class="inline-flex items-center w-full text-sm "
 
-                            href="{{ route('admin.dashboard') }}"
+                            href="{{ route('admin.exam-schedule') }}"
                         >
                             <svg
                                 class="w-5 h-5"
