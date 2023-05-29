@@ -111,43 +111,43 @@
                                 @if($key % 2 === 0)
                                     <tr class="bg-[#FDC500] bg-opacity-25">
                                         <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
-                                            {{ $examinees_data->userHistory->registration_date }}
+                                            {{ $user->registration_date }}
                                         </th>
                                         <td class="px-6 py-4">
-                                            {{ $examinees_data->userHistory->approved_data }}
+                                            {{ $user->approved_data }}
                                         </td>
                                         <td class="px-6 py-4">
-                                            {{ $examinees_data->userHistory->schedule }}
+                                            {{ $user->schedule }}
                                         </td>
                                         <td class="px-6 py-4">
-                                            {{ $examinees_data->userHistory->exam_set }}
+                                            {{ $user->exam_set }}
                                         </td>
                                         <td class="px-6 py-4">
-                                            {{ $examinees_data->userHistory->status }}
+                                            {{ $user->status }}
                                         </td>
                                         <td class="px-6 py-4">
-                                            {{ $examinees_data->userHistory->result }}
+                                            {{ $user->result }}
                                         </td>
                                     </tr>
                                 @else
                                     <tr class="bg-[#FDC500] bg-opacity-10">
                                         <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
-                                            {{ $examinees_data->userHistory->registration_date }}
+                                            {{ $user->registration_date }}
                                         </th>
                                         <td class="px-6 py-4">
-                                            {{ $examinees_data->userHistory->approved_data }}
+                                            {{ $user->approved_data }}
                                         </td>
                                         <td class="px-6 py-4">
-                                            {{ $examinees_data->userHistory->schedule }}
+                                            {{ $user->schedule }}
                                         </td>
                                         <td class="px-6 py-4">
-                                            {{ $examinees_data->userHistory->exam_set }}
+                                            {{ $user->exam_set }}
                                         </td>
                                         <td class="px-6 py-4">
-                                            {{ $examinees_data->userHistory->status }}
+                                            {{ $user->status }}
                                         </td>
                                         <td class="px-6 py-4">
-                                            {{ $examinees_data->userHistory->result }}
+                                            {{ $user->result }}
                                         </td>
                                     </tr>
                                 @endif

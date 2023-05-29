@@ -555,15 +555,17 @@
                             <hr />
 
                             @php
-                                foreach (json_decode($examinees_data->add_info) as $key => $value) {
-                                    if ($value === 'PWD') {
-                                        $pwd = $value;
-                                    } else if ($value === 'Senior Citizen') {
-                                        $sc = $value;
-                                    } else if ($value === 'Solo Parent') {
-                                        $sp = $value;
-                                    } else if ($value === 'Member of an IP Group') {
-                                        $mipg = $value;
+                                if(!empty($examinees_data->add_info)){
+                                    foreach (json_decode($examinees_data->add_info) as $value) {
+                                        if ($value === 'PWD') {
+                                            $pwd = $value;
+                                        } else if ($value === 'Senior Citizen') {
+                                            $sc = $value;
+                                        } else if ($value === 'Solo Parent') {
+                                            $sp = $value;
+                                        } else if ($value === 'Member of an IP Group') {
+                                            $mipg = $value;
+                                        }
                                     }
                                 }
                             @endphp

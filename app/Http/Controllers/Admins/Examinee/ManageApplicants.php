@@ -234,7 +234,7 @@ class ManageApplicants extends Controller
         $reg->reg_date = null;
         $reg->approved_date = null;
         $reg->status = 0;
-        $reg->apply = 0;
+        $reg->apply = 2;
         $reg->save();
 
         AdminLogActivity::addToLog("send exam result to {$user->id}", session()->get('admin_id'));

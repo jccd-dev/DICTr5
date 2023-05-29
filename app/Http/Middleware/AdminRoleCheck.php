@@ -23,7 +23,7 @@ class AdminRoleCheck
             $allowedRoles = array_map('intval', $roles);
 
             if(!in_array(strval($adminRole), $allowedRoles)){
-                return redirect()->back()->with('Error', 'You cannot access this function');
+                return redirect()->back()->withErrors(['error' => 'You cannot access this function']);
             }
 
             return $next($request);
