@@ -23,9 +23,11 @@ class Dashboard extends Component
             // Access the 'role' property
             $role = $user->role;
             $name = $user->name;
+            $examSchedData = ExamSchedule::all();
             return view('livewire.admin.dashboard',[
                 'role' => $role,
                 'name' => $name,
+                'exam_sched' => $examSchedData,
             ])->layout("layouts.layout");
         }
 
