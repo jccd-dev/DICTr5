@@ -25,7 +25,6 @@ use App\Http\Controllers\Admins\Examinee\ManageApplicants;
 use App\Http\Controllers\Admins\SystemLogs;
 use \App\Http\Controllers\UserDataController;
 use \App\View\Components\Pages\Posts as PostsView;
-use App\Http\Controllers\Admins\AdminLogsController;
 
 /*
 |--------------------------------------------------------------------------

@@ -281,6 +281,7 @@
                 </table>
             </div>
         </div>
+        {{ $data->links() }}
     </div>
 </div>
   @include('AdminFunctions.add-applicant')

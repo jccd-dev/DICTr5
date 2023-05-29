@@ -12,6 +12,7 @@
     @elseif(request()->routeIs('admin.inbox')) {{'Inbox'}}
     @elseif(request()->routeIs('admin.examinees')) {{'Exam Applicants'}}
     @elseif(request()->routeIs('admin.accounts')) {{'Admin Accounts'}}
+    @elseif(request()->routeIs('admin.system-logs')) {{'All Logs'}}
     @else {{'DICT Camarines Sur'}}
     @endif
 </title>

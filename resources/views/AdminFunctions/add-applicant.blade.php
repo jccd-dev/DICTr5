@@ -503,6 +503,20 @@
                                         <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                     </div>
                                 </div>
+                                <div class="w-full md:w-2/5 flex gap-3">
+                                    <div class="mb-3 md:mb-6 flex-1 flex-col">
+                                        <label class="block mb-1 text-sm font-medium text-gray-900 dark:text-white" for="passport">Upload Passport Size Image (required for students)</label>
+                                        <input
+                                            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                                            id="passport"
+                                            type="file"
+                                            name="passport"
+                                            accept=".pdf,.doc,.docx,image/*"
+                                        />
+                                        <p class="passport-err hidden text-sm">Current upload: <span></span></p>
+                                        <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
+                                    </div>
+                                </div>
                             </div>
                             <br />
                             <hr />

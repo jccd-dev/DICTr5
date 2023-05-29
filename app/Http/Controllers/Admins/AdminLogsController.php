@@ -9,10 +9,9 @@ use App\Models\Admin\AdminLogs;
 
 class AdminLogsController extends Controller
 {
-
     public function render(): View
     {
-        $logs_data = AdminLogs::all();
+        $logs_data = AdminLogs::with('admin')->paginate(20);
 
         return view('AdminFunctions.system-logs', ['data' => $logs_data]);
     }

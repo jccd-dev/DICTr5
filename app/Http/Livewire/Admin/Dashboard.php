@@ -9,7 +9,6 @@ use App\Models\Examinee\RegDetails;
 use App\Models\Examinee\UserHistory;
 use Illuminate\Support\Facades\Auth;
 use function PHPUnit\Framework\isNull;
-use App\Models\Admin\ExamSchedule;
 
 class Dashboard extends Component
 {

@@ -1,7 +1,7 @@
 <div>
     <style>
         .swiper {
-            width: 600px;
+            /* width: 100%; */
         }
         .swiper-button-prev,
         .swiper-button-next {
@@ -47,16 +47,16 @@
             <li>View Analytics and Metrics</li>
         </ul>
     @endif --}}
-    <div class="w-full flex gap-5">
-        <div class="flex flex-col gap-10 h-fit w-3/5">
-            <div class="flex gap-10">
-                <div class="card p-5 rounded-xl bg-white w-[25rem] flex gap-5 items-center">
-                    <div class="flex w-[4rem] h-[4rem]">
+    <div class="w-full flex gap-2 2xl:gap-5">
+        <div class="flex flex-col gap-5 w-1/2 2xl:gap-10 h-fit 2xl:w-[60%]">
+            <div class="flex gap-5 2xl:gap-10">
+                <div class="card p-3 2xl:p-5 rounded-xl bg-white w-[17.5rem] 2xl:w-[25rem] flex gap-5 items-center">
+                    <div class="flex w-[3.25rem] h-[3.25rem] 2xl:w-[4rem] 2xl:h-[4rem]">
                         <img class="w-full h-full object-fit" src="{{ asset('img/Group 39.svg') }}" alt="">
                     </div>
                     <div class="flex flex-col gap-2 flex-1">
-                        <div class="font-inter font-bold text-3xl">{{ $data['applicants'] }}</div>
-                        <div class="font-inter text-sm text-slate-600">Exam Applicants</div>
+                        <div class="font-inter font-bold text-2xl 2xl:text-3xl">{{ $data['applicants'] }}</div>
+                        <div class="font-inter lg:text-xs 2xl:text-sm text-slate-600">Exam Applicants</div>
                     </div>
                     <div>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="text-custom-blue w-6 h-6">
@@ -65,13 +65,13 @@
 
                     </div>
                 </div>
-                <div class="card p-5 rounded-xl bg-white w-[25rem] flex gap-5 items-center">
-                    <div class="flex w-[4rem] h-[4rem]">
+                <div class="card p-3 2xl:p-5 rounded-xl bg-white w-[17.5rem] 2xl:w-[25rem] flex gap-5 items-center">
+                    <div class="flex w-[3.25rem] h-[3.25rem] 2xl:w-[4rem] 2xl:h-[4rem]">
                         <img class="w-full h-full object-fit" src="{{ asset('img/ico/Group 39-2.svg') }}" alt="">
                     </div>
                     <div class="flex flex-col gap-2 flex-1">
-                        <div class="font-inter font-bold text-3xl">{{ $data['examinees'] }}</div>
-                        <div class="font-inter text-sm text-slate-600">Total Examiners</div>
+                        <div class="font-inter font-bold text-2xl 2xl:text-3xl">{{ $data['examinees'] }}</div>
+                        <div class="font-inter lg:text-xs 2xl:text-sm text-slate-600">Total Examiners</div>
                     </div>
                     <div>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="text-custom-blue w-6 h-6">
@@ -81,14 +81,14 @@
                     </div>
                 </div>
             </div>
-            <div class="flex gap-10">
-                <div class="card p-5 rounded-xl bg-white w-[25rem] flex gap-5 items-center">
-                    <div class="flex w-[4rem] h-[4rem]">
+            <div class="flex gap-5 2xl:gap-10">
+                <div class="card p-3 2xl:p-5 rounded-xl bg-white w-[17.5rem] 2xl:w-[25rem] flex gap-5 items-center">
+                    <div class="flex w-[3.25rem] h-[3.25rem] 2xl:w-[4rem] 2xl:h-[4rem]">
                         <img class="w-full h-full object-fit" src="{{ asset('img/ico/Group 39.svg') }}" alt="">
                     </div>
                     <div class="flex flex-col gap-2 flex-1">
-                        <div class="font-inter font-bold text-3xl">{{ $data['complete'] }}</div>
-                        <div class="font-inter text-sm text-slate-600">Complete Requirements</div>
+                        <div class="font-inter font-bold text-2xl 2xl:text-3xl">{{ $data['complete'] }}</div>
+                        <div class="font-inter lg:text-xs 2xl:text-sm text-slate-600">Complete Requirements</div>
                     </div>
                     <div>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="text-custom-blue w-6 h-6">
@@ -97,14 +97,14 @@
 
                     </div>
                 </div>
-                <div class="card p-5 rounded-xl bg-white w-[25rem] flex gap-5 items-center">
-                    <div class="flex w-[4rem] h-[4rem]">
+                <div class="card p-3 2xl:p-5 rounded-xl bg-white w-[17.5rem] 2xl:w-[25rem] flex gap-5 items-center">
+                    <div class="flex w-[3.25rem] h-[3.25rem] 2xl:w-[4rem] 2xl:h-[4rem]">
                         <img class="w-full h-full object-fit" src="{{ asset('img/ico/Group 39-1.svg') }}" alt="">
 
                     </div>
                     <div class="flex flex-col gap-2 flex-1">
-                        <div class="font-inter font-bold text-3xl">{{ $data['pending'] }}</div>
-                        <div class="font-inter text-sm text-slate-600">Pending Requirements</div>
+                        <div class="font-inter font-bold text-2xl 2xl:text-3xl">{{ $data['pending'] }}</div>
+                        <div class="font-inter lg:text-xs 2xl:text-sm text-slate-600">Pending Requirements</div>
                     </div>
                     <div>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="text-custom-blue w-6 h-6">
@@ -116,44 +116,44 @@
         </div>
         <!-- Slider main container -->
 
-        <div class="swiper w-2/5 rounded-3xl">
+        <div class="swiper rounded-3xl w-[25rem] 2xl:w-[30rem]">
         <!-- Additional required wrapper -->
             <div class="swiper-wrapper w-full">
             <!-- Slides -->
                 @foreach ($exam_sched as $item)
                     <div class="swiper-slide w-full">
                         <div class="w-full h-full bg-custom-blue rounded-3xl p-5 pb-3 flex flex-col justify-between">
-                            <div class="flex gap-5 text-white font-quicksand">
+                            <div class="flex gap-3 text-white font-quicksand">
                                 <div>
                                     <img src="{{ asset('img/ico/Group 43.svg') }}" alt="">
                                 </div>
-                                <div class="flex flex-col gap-2 text-lg font-medium">
+                                <div class="flex flex-col gap-0 2xl:gap-2 text-lg font-medium">
                                     <div>
-                                        <span>Venue:</span>
-                                        <span>{{ $item->venue }}</span>
+                                        <span class="text-sm 2xl:text-base">Venue:</span>
+                                        <span class="text-sm 2xl:text-base">{{ $item->venue }}</span>
                                     </div>
                                     <div>
-                                        <span>Date:</span>
-                                        <span>{{ date('F j, Y', strtotime($item->start_date)) }}</span>
+                                        <span class="text-sm 2xl:text-base">Date:</span>
+                                        <span class="text-sm 2xl:text-base">{{ date('F j, Y', strtotime($item->start_date)) }}</span>
                                     </div>
                                     <div>
-                                        <span>Time:</span>
-                                        <span>{{ date('g:i a', strtotime($item->start_date)) }}</span>
+                                        <span class="text-sm 2xl:text-base">Time:</span>
+                                        <span class="text-sm 2xl:text-base">{{ date('g:i a', strtotime($item->start_date)) }}</span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="flex flex-col gap-1">
+                            <div class="flex mt-2 flex-col gap-1">
                                 <div class="flex gap-5 w-full">
-                                    <a href="{{ url('/admin/exam-schedule/'.$item->exam_set) }}" class="bg-white py-3 flex-1 text-center rounded-lg">
+                                    <a href="{{ url('/admin/exam-schedule/'.$item->exam_set) }}" class="bg-white text-sm 2xl:text-base py-2 2xl:py-3 flex-1 text-center rounded-lg">
                                         Exam Details
                                     </a>
 
-                                    <a href="{{ url('/admin/exam-schedule') }}" class="border border-white py-3 flex-1 text-center rounded-lg text-white">
+                                    <a href="{{ url('/admin/exam-schedule') }}" class="border border-white text-sm 2xl:text-base py-2 2xl:py-3 flex-1 text-center rounded-lg text-white">
                                         Add Exam
                                     </a>
                                 </div>
                                 <div>
-                                    <span class="flex gap-2 justify-center items-center text-white font-quicksand font-medium"><span class="flex w-3 h-3 bg-green-500 rounded-full"></span> Active Date</span>
+                                    <span class="flex gap-2 justify-center items-center text-white font-quicksand font-medium text-sm 2xl:text-base"><span class="flex w-3 h-3 bg-green-500 rounded-full"></span> Active Date</span>
                                 </div>
                             </div>
                         </div>
