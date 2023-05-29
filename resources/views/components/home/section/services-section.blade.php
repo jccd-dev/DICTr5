@@ -1,49 +1,49 @@
-<div class="w-full mt-32">
+<div class="w-full mt-16 mb-16 p-5">
     <div class="w-full flex flex-col justify-center">
-        <h1 class="text-center font-bold font-inter text-3xl">Services</h1>
-        <p class="text-center text-lg mt-3">Lorem ipsum dolor sit amet consectetur. Adipiscing pretium quam sapien leo magna.</p>
+        <h1 class="text-center font-bold font-inter text-2xl md:text-3xl">Services</h1>
+        <p class="text-center text-base md:text-lg mt-3">Lorem ipsum dolor sit amet consectetur. Adipiscing pretium quam sapien leo magna.</p>
     </div>
     <div class="flex justify-center mt-20 gap-8 flex-wrap">
-        <div class="card w-[15rem] h-[15rem] relative overflow-hidden rounded-xl">
+        <div class="card w-[10rem] h-[10rem] sm:w-[12rem] sm:h-[12rem] lg:w-[15rem] lg:h-[15rem] relative overflow-hidden rounded-xl">
             <div class="absolute -z-[1] w-full h-full top-0 left-0">
                 <img src="{{ asset('/img/sample card img 2.jpg') }}" class="w-full h-full object-cover" alt="">
             </div>
-            <div class="absolute top-1/3 left-0">
+            <div class="absolute top-[65%] -right-1/2 rotate-180">
                 <img src="{{ asset('/img/Map-1-right 1.png') }}" alt="">
             </div>
             <div class="absolute top-0 left-0 w-full h-full bg-[#00296B] bg-opacity-75 -z-[1]"></div>
             <div class="text-white p-3">
-                <h1 class="font-semibold text-xl">Tech4ED</h1>
+                <h1 class="font-semibold text-lg md:text-xl">Free Wifi4All</h1>
                 <span class="text-sm">enable • empower • transform </span>
             </div>
         </div>
-        <div class="card w-[15rem] h-[15rem] relative overflow-hidden rounded-xl">
+        <div class="card w-[10rem] h-[10rem] sm:w-[12rem] sm:h-[12rem] lg:w-[15rem] lg:h-[15rem] relative overflow-hidden rounded-xl">
             <div class="absolute -z-[1] w-full h-full top-0 left-0">
                 <img src="{{ asset('/img/sample card img 2.jpg') }}" class="w-full h-full object-cover" alt="">
             </div>
-            <div class="absolute top-1/3 left-0">
+            <div class="absolute top-3/4 -right-1/4 -rotate-90">
                 <img src="{{ asset('/img/Map-1-right 1.png') }}" alt="">
             </div>
             <div class="absolute top-0 left-0 w-full h-full bg-custom-red bg-opacity-75 -z-[1]"></div>
             <div class="text-white p-3">
-                <h1 class="font-semibold text-xl">Tech4ED</h1>
+                <h1 class="font-semibold text-lg md:text-xl">Project Click</h1>
                 <span class="text-sm">enable • empower • transform </span>
             </div>
         </div>
-        <div class="card w-[15rem] h-[15rem] relative overflow-hidden rounded-xl">
+        <div class="card w-[10rem] h-[10rem] sm:w-[12rem] sm:h-[12rem] lg:w-[15rem] lg:h-[15rem] relative overflow-hidden rounded-xl">
             <div class="absolute -z-[1] w-full h-full top-0 left-0">
                 <img src="{{ asset('/img/sample card img 2.jpg') }}" class="w-full h-full object-cover" alt="">
             </div>
-            <div class="absolute top-1/3 left-0">
+            <div class="absolute top-1/4 -right-1/2 rotate-90">
                 <img src="{{ asset('/img/Map-1-right 1.png') }}" alt="">
             </div>
             <div class="absolute top-0 left-0 w-full h-full bg-dark-yellow bg-opacity-[80%] -z-[1]"></div>
             <div class="text-white p-3">
-                <h1 class="font-semibold text-xl">Tech4ED</h1>
+                <h1 class="font-semibold text-lg md:text-xl">PNPKI</h1>
                 <span class="text-sm">enable • empower • transform </span>
             </div>
         </div>
-        <div class="card w-[15rem] h-[15rem] relative overflow-hidden rounded-xl cursor-pointer" data-modal-target="tech4ed_registration_modal" data-modal-toggle="tech4ed_registration_modal">
+        <div class="card cursor-pointer w-[10rem] h-[10rem] sm:w-[12rem] sm:h-[12rem] lg:w-[15rem] lg:h-[15rem] relative overflow-hidden rounded-xl" data-modal-target="tech4ed_registration_modal" data-modal-toggle="tech4ed_registration_modal">
             <div class="absolute -z-[1] w-full h-full top-0 left-0">
                 <img src="{{ asset('/img/sample card img 2.jpg') }}" class="w-full h-full object-cover" alt="">
             </div>
@@ -51,9 +51,9 @@
                 <img src="{{ asset('/img/Map-1-right 1.png') }}" alt="">
             </div>
             <div class="absolute top-0 left-0 w-full h-full bg-custom-blue bg-opacity-75 -z-[1]"></div>
-            <div class="text-white p-3">
-                <h1 class="font-semibold text-xl">Register Tech4ed Course</h1>
-                <span class="text-sm">Click here to register </span>
+            <div class="text-white p-3 flex flex-col h-full">
+                <h1 class="font-semibold text-lg md:text-xl">Register Tech4ed Course</h1>
+                <span class="text-sm md:text-base w-fit font-quicksand font-bold mt-1 md:mt-5 bg-white p-2 px-5 text-black z-10 text-center rounded-md">Click here to register </span>
             </div>
         </div>
     </div>

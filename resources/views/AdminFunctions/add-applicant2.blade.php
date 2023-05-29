@@ -3,7 +3,6 @@
       <div class="flex flex-col bg-white w-fit border shadow-sm rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:shadow-slate-700/[.7]">
         <div class="flex justify-between items-center py-3 px-4 border-b dark:border-gray-700">
           <h3 class="font-bold text-gray-800 dark:text-white">
-
           </h3>
           <button type="button" class="hs-dropdown-toggle inline-flex flex-shrink-0 justify-center items-center h-8 w-8 rounded-md text-gray-500 hover:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-white transition-all text-sm dark:focus:ring-gray-700 dark:focus:ring-offset-gray-800" data-hs-overlay="#hs-vertically-centered-modal">
             <span class="sr-only">Close</span>
@@ -12,7 +11,7 @@
             </svg>
           </button>
         </div>
-        <div class="p-4 overflow-y-auto w-[60rem]" x-data="{ state: 1, hasVidData: false, err: [], currentStatus: 'professional', isFiles: false }" x-init="listeners($data)">
+        <div class="p-4 overflow-y-auto w-[60rem]" x-data="{ state: 1, hasVidData: false, err: [], currentStatus: '{{ $examinees_data->current_status }}', isFiles: false }" x-init="listeners($data)">
             <div class="flex flex-col items-center gap-5">
                 <div class="flex flex-col items-center">
                     <h1 class="font-bold font-quicksand text-xl">ICT Proficiency Diagnostic Exam</h1>
@@ -48,6 +47,7 @@
                                                 name="givenName"
                                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                 placeholder="Given Name"
+                                                value="{{ $examinees_data->fname }}"
                                             >
                                             <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                     </div>
@@ -59,12 +59,13 @@
                                                 name="middleName"
                                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                 placeholder="Middle Name"
+                                                value="{{ $examinees_data->mname }}"
                                             >
                                             <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                     </div>
                                 </div>
 
-                                <div class="flex md:flex-row flex-col flex-1 gap-3" x-data="{ number: '' }">
+                                <div class="flex md:flex-row flex-col flex-1 gap-3" x-data="{ number: '{{ $examinees_data->contact_number }}' }">
                                     <div class="mb-3 md:mb-6 flex-1 flex-col">
                                         <label for="surName" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Surname</label>
                                             <input
@@ -73,6 +74,7 @@
                                                 name="surName"
                                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                 placeholder="Surname"
+                                                value="{{ $examinees_data->lname }}"
                                             >
                                             <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                     </div>
@@ -86,6 +88,7 @@
                                             placeholder="Telephone Number"
                                             x-model="number"
                                             x-on:input="number = number.replace(/[^0-9]/g, '')"
+                                            value="{{ $examinees_data->contact_number }}"
                                         >
                                         <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                     </div>
@@ -96,14 +99,14 @@
                                 <div class="flex md:flex-row flex-col flex-1 gap-3">
                                     <div class="mb-3 md:mb-6 flex-1 flex-col">
                                         <label for="region" class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Region</label>
-                                        <select id="region" name="region" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                        <select id="region" data-value="{{ $examinees_data->addresses->region }}" name="region" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                             <option selected value="">Choose a category</option>
                                         </select>
                                         <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                     </div>
                                     <div class="mb-3 md:mb-6 flex-1 flex-col">
                                         <label for="province" class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Province</label>
-                                        <select id="province" name="province" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                        <select id="province" data-value="{{ $examinees_data->addresses->province }}" name="province" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                             <option selected value="">Choose a category</option>
                                         </select>
                                         <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
@@ -113,14 +116,14 @@
                                 <div class="flex md:flex-row flex-col flex-1 gap-3">
                                     <div class="mb-3 md:mb-6 flex-1 flex-col">
                                         <label for="municipality" class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Municipality</label>
-                                        <select id="municipality" name="municipality" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                        <select id="municipality" data-value="{{ $examinees_data->addresses->municipality }}" name="municipality" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                             <option selected value="">Choose a category</option>
                                         </select>
                                         <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                     </div>
                                     <div class="mb-3 md:mb-6 flex-1 flex-col">
                                         <label for="barangay" class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Barangay</label>
-                                        <select id="barangay" name="barangay" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                        <select id="barangay" data-value="{{ $examinees_data->addresses->barangay }}" name="barangay" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                             <option selected value="">Choose a category</option>
                                         </select>
                                         <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
@@ -137,6 +140,7 @@
                                         name="email"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                         placeholder="Email"
+                                        value="{{ !isset($examinees_data->email) ? "" : $examinees_data->email }}"
                                     >
                                     <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                 </div>
@@ -148,6 +152,7 @@
                                             name="pob"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             placeholder="Place of Birth"
+                                            value="{{ $examinees_data->place_of_birth }}"
                                         >
                                         <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                 </div>
@@ -165,7 +170,9 @@
                                             type="text"
                                             name="dob"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder="Select date">
+                                            placeholder="Select date"
+                                            value="{{ $examinees_data->date_of_birth }}"
+                                            >
                                         </div>
                                         <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                 </div>
@@ -176,9 +183,9 @@
                                 <div class="mb-3 md:mb-6 flex-1 flex-col">
                                     <label for="gender" class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Gender</label>
                                     <select id="gender" name="gender" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                        <option selected value="">Choose a category</option>
-                                        <option value="male">Male</option>
-                                        <option value="female">Female</option>
+                                        <option value="">Choose a category</option>
+                                        <option {{ $examinees_data->gender == "male" ? "selected" : "" }} value="male">Male</option>
+                                        <option {{ $examinees_data->gender == "female" ? "selected" : "" }} value="female">Female</option>
                                     </select>
                                     <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                 </div>
@@ -190,17 +197,17 @@
                                             name="citizenship"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             placeholder="Citizenship"
+                                            value="{{ $examinees_data->citizenship }}"
                                         >
                                         <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                 </div>
                                 <div class="mb-3 md:mb-6 flex-1 flex-col">
                                     <label for="civil-status" class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Civil Status</label>
                                     <select id="civil-status" name="civilStatus" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                        <option selected value="">Choose a category</option>
-                                        <option value="single">Single</option>
-                                        <option value="married">Married</option>
-                                        <option value="divorced">Divorced</option>
-                                        <option value="widowed">Widowed</option>
+                                        <option value="">Choose a category</option>
+                                        @foreach (['single', 'married', 'divorced', 'widowed'] as $item)
+                                            <option {{ $examinees_data->civil_status == $item ? 'selected="selected"' : '' }} value="{{ $item }}">{{ Str::ucfirst($item) }}</option>
+                                        @endforeach
                                     </select>
                                     <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                 </div>
@@ -218,6 +225,7 @@
                                                 name="university"
                                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                 placeholder="University / School Attended"
+                                                value="{{ $examinees_data->tertiaryEdu->school_attended }}"
                                             >
                                             <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                     </div>
@@ -231,6 +239,7 @@
                                                 name="degree"
                                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                 placeholder="Degree Earned"
+                                                value="{{ $examinees_data->tertiaryEdu->degree }}"
                                             >
                                             <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                     </div>
@@ -242,6 +251,7 @@
                                                 name="incYears"
                                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                 placeholder="Inclusive Years"
+                                                value="{{ $examinees_data->tertiaryEdu->inclusive_years }}"
                                             >
                                             <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                     </div>
@@ -277,11 +287,11 @@
                                 <h1 class="block mb-3 text-lg font-medium text-gray-900 dark:text-white">Current Status</h1>
                                 <div class="flex">
                                     <div class="flex items-center mr-4">
-                                        <input @change="currentStatus = 'student'" id="student" type="radio" value="student" name="current-status" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                        <input @change="currentStatus = 'student'" {{ $examinees_data->current_status != "student" ? '' : 'checked' }} id="student" type="radio" value="student" name="current-status" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                         <label for="student" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Student</label>
                                     </div>
                                     <div class="flex items-center mr-4">
-                                        <input checked="checked" @change="currentStatus = 'professional'" id="professional" type="radio" value="professional" name="current-status" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                        <input {{ $examinees_data->current_status != 'professional' ? '' : 'checked' }} @change="currentStatus = 'professional'" id="professional" type="radio" value="professional" name="current-status" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                         <label for="professional" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Professional</label>
                                     </div>
                                 </div>
@@ -295,13 +305,10 @@
                                         <div class="mb-3 md:mb-6 flex-1 flex-col">
                                             <label for="yearLevel" class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Year Level</label>
                                             <select id="yearLevel" name="yearLevel" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                                <option selected value="">Choose a year level</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                                <option value="6">6</option>
+                                                <option value="">Choose a year level</option>
+                                                @for ($i = 1; $i <= 6; $i++)
+                                                    <option {{ $examinees_data->year_level == $i ? "selected" : "" }} value="{{ $i }}">{{ $i }}</option>
+                                                @endfor
                                             </select>
                                             <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                         </div>
@@ -320,6 +327,7 @@
                                                     name="presentOffice"
                                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                     placeholder="Present Office"
+                                                    value="{{ $examinees_data->present_office }}"
                                                 >
                                                 <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                         </div>
@@ -333,6 +341,7 @@
                                                     name="telNum"
                                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                     placeholder="Telephone Number"
+                                                    value="{{ $examinees_data->telephone_number }}"
                                                 >
                                                 <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                         </div>
@@ -348,6 +357,7 @@
                                                     name="officeAddress"
                                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                     placeholder="Office Address"
+                                                    value="{{ $examinees_data->office_address }}"
                                                 >
                                                 <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                         </div>
@@ -356,11 +366,11 @@
                                         <h1 class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Office Category</h1>
                                         <div class="flex">
                                             <div class="flex items-center mr-4">
-                                                <input id="government" type="radio" value="government" name="officeCategory" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                                <input id="government" {{ $examinees_data->office_category != 'government' ? "" : 'checked' }} type="radio" value="government" name="officeCategory" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                                 <label for="government" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Gov't</label>
                                             </div>
                                             <div class="flex items-center mr-4">
-                                                <input id="private" type="radio" value="private" name="officeCategory" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                                <input id="private" {{ $examinees_data->office_category != 'private' ? "" : 'checked' }} type="radio" value="private" name="officeCategory" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                                 <label for="private" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Private</label>
                                             </div>
                                         </div>
@@ -377,6 +387,7 @@
                                                     name="designationPosition"
                                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                     placeholder="Designation / Position"
+                                                    value="{{ $examinees_data->designation }}"
                                                 >
                                                 <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                         </div>
@@ -390,6 +401,7 @@
                                                     name="yearsPresentPosition"
                                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                     placeholder="No. of years in present position"
+                                                    value="{{ $examinees_data->no_of_years_in_pos }}"
                                                 >
                                                 <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                         </div>
@@ -400,29 +412,29 @@
                                 <h1 class="block mb-3 text-sm font-medium text-gray-900 dark:text-white">For Programming: <b>Check the language that you will use in the exam</b></h1>
                                 <div class="flex mb-3">
                                     <div class="flex flex-1 items-center mr-4">
-                                        <input id="visual-basic" type="radio" value="Visual Basic 6.0" name="pl" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                        <input {{ $examinees_data->programming_langs != 'Visual Basic 6.0' ? "" : 'checked' }} id="visual-basic" type="radio" value="Visual Basic 6.0" name="pl" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                         <label for="visual-basic" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Visual Basic 6.0</label>
                                     </div>
                                     <div class="flex flex-1 items-center mr-4">
-                                        <input id="cpp" type="radio" value="c++" name="pl" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                        <input {{ $examinees_data->programming_langs != 'C++' ? "" : 'checked' }} id="cpp" type="radio" value="C++" name="pl" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                         <label for="cpp" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">C++</label>
                                     </div>
                                     <div class="flex flex-1 items-center mr-4">
-                                        <input id="c-language" type="radio" value="C Language" name="pl" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                        <input {{ $examinees_data->programming_langs != 'C Language' ? "" : 'checked' }} id="c-language" type="radio" value="C Language" name="pl" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                         <label for="c-language" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">C Language</label>
                                     </div>
                                 </div>
                                 <div class="flex">
                                     <div class="flex flex-1 items-center mr-4">
-                                        <input id="vb-net" type="radio" value="VB.NET" name="pl" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                        <input {{ $examinees_data->programming_langs != 'VB.NET' ? "" : 'checked' }} id="vb-net" type="radio" value="VB.NET" name="pl" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                         <label for="vb-net" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">VB.NET</label>
                                     </div>
                                     <div class="flex flex-1 items-center mr-4">
-                                        <input id="c-sharp" type="radio" value="C#" name="pl" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                        <input {{ $examinees_data->programming_langs != 'C#' ? "" : 'checked' }} id="c-sharp" type="radio" value="C#" name="pl" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                         <label for="c-sharp" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">C#</label>
                                     </div>
                                     <div class="flex flex-1 items-center mr-4">
-                                        <input id="java" type="radio" value="Java" name="pl" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                        <input {{ $examinees_data->programming_langs != 'Java' ? "" : 'checked' }} id="java" type="radio" value="Java" name="pl" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                         <label for="java" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Java</label>
                                     </div>
                                 </div>
@@ -444,7 +456,14 @@
                                             name="passport"
                                             accept=".pdf,.doc,.docx,image/*"
                                         />
-                                        <p class="passport-err hidden text-sm">Current upload: <span></span></p>
+                                        @php
+                                            foreach ($examinees_data->submittedFiles as $key => $value) {
+                                                if ($value->requirement_type == "passport") {
+                                                    echo '<p class="passport-err text-sm">Current upload: <span>'.$value->file_name.'</span></p>';
+                                                    break;
+                                                }
+                                            }
+                                        @endphp
                                         <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                     </div>
                                     <div class="mb-3 md:mb-6 flex-1 flex-col">
@@ -456,7 +475,14 @@
                                             name="psa"
                                             accept=".pdf,.doc,.docx,image/*"
                                         />
-                                        <p class="psa-err hidden text-sm">Current upload: <span></span></p>
+                                        @php
+                                            foreach ($examinees_data->submittedFiles as $key => $value) {
+                                                if ($value->requirement_type == "psa") {
+                                                    echo '<p class="psa-err text-sm">Current upload: <span>'.$value->file_name.'</span></p>';
+                                                    break;
+                                                }
+                                            }
+                                        @endphp
                                         <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                     </div>
                                 </div>
@@ -470,7 +496,14 @@
                                             name="cert"
                                             accept=".pdf,.doc,.docx,image/*"
                                         />
-                                        <p class="certs-err hidden text-sm">Current upload: <span></span></p>
+                                        @php
+                                            foreach ($examinees_data->submittedFiles as $key => $value) {
+                                                if ($value->requirement_type == "coe") {
+                                                    echo '<p class="certs-err text-sm">Current upload: <span>'.$value->file_name.'</span></p>';
+                                                    break;
+                                                }
+                                            }
+                                        @endphp
                                         <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                     </div>
                                 </div>
@@ -487,7 +520,14 @@
                                             name="validId"
                                             accept=".pdf,.doc,.docx,image/*"
                                         />
-                                        <p class="valid-id-err hidden text-sm">Current upload: <span></span></p>
+                                        @php
+                                            foreach ($examinees_data->submittedFiles as $key => $value) {
+                                                if ($value->requirement_type == "validId") {
+                                                    echo '<p class="valid-err text-sm">Current upload: <span>'.$value->file_name.'</span></p>';
+                                                    break;
+                                                }
+                                            }
+                                        @endphp
                                         <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                     </div>
                                     <div class="mb-3 md:mb-6 flex-1 flex-col">
@@ -499,33 +539,54 @@
                                             name="diploma"
                                             accept=".pdf,.doc,.docx,image/*"
                                         />
-                                        <p class="diploma-err hidden text-sm">Current upload: <span></span></p>
+                                        @php
+                                            foreach ($examinees_data->submittedFiles as $key => $value) {
+                                                if ($value->requirement_type == "diploma_TOR") {
+                                                    echo '<p class="diploma-err text-sm">Current upload: <span>'.$value->file_name.'</span></p>';
+                                                    break;
+                                                }
+                                            }
+                                        @endphp
                                         <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                     </div>
                                 </div>
                             </div>
                             <br />
                             <hr />
+
+                            @php
+                                foreach (json_decode($examinees_data->add_info) as $key => $value) {
+                                    if ($value === 'PWD') {
+                                        $pwd = $value;
+                                    } else if ($value === 'Senior Citizen') {
+                                        $sc = $value;
+                                    } else if ($value === 'Solo Parent') {
+                                        $sp = $value;
+                                    } else if ($value === 'Member of an IP Group') {
+                                        $mipg = $value;
+                                    }
+                                }
+                            @endphp
                             <div class="w-full">
                                 <h1 class="block mb-3 text-sm font-medium text-gray-900 dark:text-white">ADDITIONAL INFO <b>(Please check that apply)</b></h1>
                                <div class="flex ">
                                     <div class="flex flex-1 mb-3">
                                         <div class="flex flex-1 items-center mr-4">
-                                            <input id="pwd" type="checkbox" value="PWD" name="addInfo[]" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                            <input id="pwd" type="checkbox" value="PWD" {{ isset($pwd) ? 'checked' : '' }} name="addInfo[]" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                             <label for="pwd" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">PWD</label>
                                         </div>
                                         <div class="flex flex-1 items-center mr-4">
-                                            <input id="senior-citizen" type="checkbox" value="Senior Citizen" name="addInfo[]" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                            <input id="senior-citizen" type="checkbox" {{ isset($sc) ? 'checked' : '' }} value="Senior Citizen" name="addInfo[]" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                             <label for="senior-citizen" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Senior Citizen</label>
                                         </div>
                                     </div>
                                     <div class="flex flex-1">
                                         <div class="flex flex-1 items-center mr-4">
-                                            <input id="solo-parent" type="checkbox" value="Solo Parent" name="addInfo[]" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                            <input id="solo-parent" type="checkbox" {{ isset($sp) ? 'checked' : '' }} value="Solo Parent" name="addInfo[]" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                             <label for="solo-parent" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Solo Parent</label>
                                         </div>
                                         <div class="flex flex-1 items-center mr-4">
-                                            <input id="ip-member" type="checkbox" value="Member of an IP Group" name="addInfo[]" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                            <input id="ip-member" type="checkbox" {{ isset($mipg) ? 'checked' : '' }} value="Member of an IP Group" name="addInfo[]" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                             <label for="ip-member" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Member of an IP Group</label>
                                         </div>
                                     </div>
@@ -551,7 +612,7 @@
                                     <h1 class="font-bold font-quicksand text-lg flex self-start my-4">Signature</h1>
                                     <div class="w-fit rounded-xl border-2 border-custom-blue bg-custom-blue bg-opacity-5">
                                         <canvas id="signature-pad" width="400" height="200"></canvas>
-                                        <input type="text" hidden name="signature" id="signature" />
+                                        <input type="text" hidden name="signature" id="signature" value="{{ $examinees_data->e_sign }}" />
                                     </div>
                                     <div class="flex gap-3">
                                         <button type="button" id="clear-btn">Clear</button>

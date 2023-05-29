@@ -10,7 +10,7 @@
         </div>
         <div class="hidden xl:block">
           <div class="flex items-center ">
-            <a href="#" class="nav--top font-semibold flex flex-row items-center xl:px-2 2xl:px-3 py-2 text-sm text-black rounded-md focus:outline-none focus:text-black">
+            <a href="/" class="nav--top font-semibold flex flex-row items-center xl:px-2 2xl:px-3 py-2 text-sm text-black rounded-md focus:outline-none focus:text-black">
               <span class="ml-2">HOME</span>
             </a>
             {{-- <a href="#" class="flex flex-row items-center xl:px-2 2xl:px-3 py-2 ml-4 text-sm text-black rounded-md hover:text-black  focus:outline-none focus:text-black">
@@ -34,18 +34,18 @@
                     </a>
 
                     <div class="relative" x-data="{ open: false}" x-on:mouseover="open = true" x-on:mouseleave="open = false">
-                        <a href="#" class="nav--top font-medium flex flex-row items-center px-4 py-2 text-sm text-gray-700 focus:text-gray-900 hover:text-gray-900 focus:outline-none hover:bg-gray-100 focus:bg-gray-100">
+                        <a href="{{ url('/agency') }}" class="nav--top font-medium flex flex-row items-center px-4 py-2 text-sm text-gray-700 focus:text-gray-900 hover:text-gray-900 focus:outline-none hover:bg-gray-100 focus:bg-gray-100">
                             Attached Agencies
                             <svg xmlns="http://www.w3.org/2000/svg" :class="{'rotate-90': open, '-rotate-90': !open}" class="w-4 h-4 mt-1 ml-2 transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
                         </a>
                         <div x-show="open" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opaity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="absolute top-0 left-full w-full origin-top-left rounded-md shadow-lg bg-white" style="z-index: 101">
-                            <a href="#" class="nav--top font-medium flex flex-row items-center px-4 py-2 text-sm text-gray-700 focus:text-gray-900 hover:text-gray-900 focus:outline-none hover:bg-gray-100 focus:bg-gray-100">
+                            <a href="https://ntc.gov.ph/" class="nav--top font-medium flex flex-row items-center px-4 py-2 text-sm text-gray-700 focus:text-gray-900 hover:text-gray-900 focus:outline-none hover:bg-gray-100 focus:bg-gray-100">
                             National Telecommunication Commission (NTC)
                             </a>
-                            <a href="#" class="nav--top font-medium flex flex-row items-center px-4 py-2 text-sm text-gray-700 focus:text-gray-900 hover:text-gray-900 focus:outline-none hover:bg-gray-100 focus:bg-gray-100">
+                            <a href="https://privacy.gov.ph/" class="nav--top font-medium flex flex-row items-center px-4 py-2 text-sm text-gray-700 focus:text-gray-900 hover:text-gray-900 focus:outline-none hover:bg-gray-100 focus:bg-gray-100">
                             National Privacy Commission (NPC)
                             </a>
-                            <a href="#" class="nav--top font-medium flex flex-row items-center px-4 py-2 text-sm text-gray-700 focus:text-gray-900 hover:text-gray-900 focus:outline-none hover:bg-gray-100 focus:bg-gray-100">
+                            <a href="#https://dict.gov.ph/cybercrime-investigation-and-coordinating-center-cicc/" class="nav--top font-medium flex flex-row items-center px-4 py-2 text-sm text-gray-700 focus:text-gray-900 hover:text-gray-900 focus:outline-none hover:bg-gray-100 focus:bg-gray-100">
                             Cybercrime Investigation and Coordinating Center (CICC)
                             </a>
                         </div>

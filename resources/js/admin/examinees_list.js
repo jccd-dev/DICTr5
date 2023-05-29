@@ -1,13 +1,21 @@
 import formdata from "../utils/formdata";
 import axios from "axios";
 
-const formSelects = document.querySelectorAll("#search-form select");
-const formInputs = document.querySelectorAll("#search-form input");
+const formFilterSelects = document.querySelectorAll("#search-form select");
+const formFilterInputs = document.querySelectorAll("#search-form input");
+// const formInputs = document.querySelectorAll(
+//     "#add-applicant input, #add-applicant select"
+// );
 const resultCon = document.querySelector("#results");
-const addApplicant = document.querySelector("#add-applicant");
+// const addApplicant = document.querySelector("#add-applicant");
 const seminarsCon = document.querySelector("#seminars-attended-new");
 const addTrainings = document.querySelector("#add-trainings");
 const removeTrainings = document.querySelector("#remove-trainings");
+
+// const messageAlert = document.querySelector("#message-alert");
+// const dismissAlert = document.querySelector("#dismiss-alert");
+// const closeAlertBtn = document.querySelector("#closeAlertBtn");
+// const headings = document.querySelectorAll("h3");
 
 /**
  * Description placeholder
@@ -88,6 +96,7 @@ Trainings.add();
 
 // handling form input elements
 const handleChangeFormElements = async (e) => {
+    e.preventDefault();
     let formData = formdata(document.querySelector("#search-form"));
     let res = await axios.get("/admin/examinee/search", {
         params: formData,
@@ -96,23 +105,84 @@ const handleChangeFormElements = async (e) => {
     resultCon.innerHTML = res.data;
 };
 
-[...formSelects].forEach((el) =>
+[...formFilterSelects].forEach((el) =>
     el.addEventListener("change", handleChangeFormElements)
 );
 
-[...formInputs].forEach((el) =>
+[...formFilterInputs].forEach((el) =>
     el.addEventListener("input", handleChangeFormElements)
 );
 
 // end
 
-addApplicant.addEventListener("submit", async (event) => {
-    event.preventDefault();
+// addApplicant.addEventListener("submit", async (event) => {
+//     event.preventDefault();
 
-    const formData = new FormData(addApplicant);
+//     const formData = new FormData(addApplicant);
 
-    console.log(formData);
-});
+//     try {
+//         let res = await axios.post("/admin/examinee/add-examinee", formData);
+
+//         if (res) {
+//             dismissAlert.classList.remove("hidden");
+//             messageAlert.textContent = "Successfully Added";
+//             targetHeading.nextElementSibling.click();
+
+//             setTimeout(() => {
+//                 dismissAlert.classList.remove("hidden");
+//                 location.reload();
+//             }, 2000);
+//         }
+//     } catch (err) {
+//         errorHandler(err.response?.data?.errors);
+//     }
+// });
+
+// const errorHandler = (err) => {
+//     console.log(formInputs);
+//     // formInputs.forEach((el) =>
+//     //     console.log(el.parentElement.parentElement.innerHTML)
+//     // );
+//     for (const key in err) {
+//         formInputs.forEach((el) => {
+//             console.log(el.name, key);
+//             if (el.name === key) {
+//                 console.log(2);
+//                 if (el.parentElement.querySelector("p")) {
+//                     let p = el.parentElement.querySelector("p");
+//                     console.log(p);
+//                     p.classList.remove("hidden");
+//                     p.textContent = err[key];
+//                 } else if (el.parentElement.parentElement.querySelector("p")) {
+//                     let p = el.parentElement.parentElement.querySelector("p");
+//                     p.classList.remove("hidden");
+//                     p.textContent = err[key];
+//                 } else {
+//                     let p =
+//                         el.parentElement.parentElement.parentElement.querySelector(
+//                             "p"
+//                         );
+//                     p.classList.remove("hidden");
+//                     p.textContent = err[key];
+//                 }
+//             }
+//         });
+//     }
+// };
+
+// let targetHeading;
+// for (let i = 0; i < headings.length; i++) {
+//     console.log(headings);
+//     if (headings[i]?.nextElementSibling?.tagName === "BUTTON") {
+//         targetHeading = headings[i];
+//         break;
+//     }
+// }
+
+// closeAlertBtn.addEventListener("click", (_) => {
+//     dismissAlert.classList.toggle("hidden");
+//     location.reload();
+// });
 
 addTrainings.addEventListener("click", () => Trainings.add());
 removeTrainings.addEventListener("click", () => Trainings.remove());

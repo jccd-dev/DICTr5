@@ -13,7 +13,7 @@
                 class="text-lg font-bold text-gray-800 dark:text-gray-200"
                 href="#"
             >
-                <img src="{{ asset("img/DICT Standard Logos-05 1.png") }}" alt="">
+                <img src="{{ asset("img/DICTStandardLogos-05.png") }}" alt="">
             </a>
             <ul class="mt-14">
                 <li class="relative py-1">
@@ -167,11 +167,11 @@
                     </div>
                 </li>
                 <li class="relative py-2">
-                    <div class="{{ request()->routeIs('admin.dashboard') ? 'bg-[#00509D] text-white' : 'text-gray-500 hover:text-gray-800' }} transition-colors duration-150 px-4 py-3 flex items-center rounded-lg">
+                    <div class="{{ request()->routeIs('admin.exam-schedule') ? 'bg-[#00509D] text-white' : 'text-gray-500 hover:text-gray-800' }} transition-colors duration-150 px-4 py-3 flex items-center rounded-lg">
                         <a
                             class="inline-flex items-center w-full text-sm "
 
-                            href="{{ route('admin.dashboard') }}"
+                            href="{{ route('admin.exam-schedule') }}"
                         >
                             <svg
                                 class="w-5 h-5"
@@ -197,11 +197,11 @@
                     </div>
                 </li>
                 <li class="relative py-2">
-                    <div class="{{ request()->routeIs('admin.dashboard') ? 'bg-[#00509D] text-white' : 'text-gray-500 hover:text-gray-800' }} transition-colors duration-150 px-4 py-3 flex items-center rounded-lg">
+                    <div class="{{ request()->routeIs('admin.system-log') ? 'bg-[#00509D] text-white' : 'text-gray-500 hover:text-gray-800' }} transition-colors duration-150 px-4 py-3 flex items-center rounded-lg">
                         <a
                             class="inline-flex items-center w-full text-sm "
 
-                            href="{{ route('admin.dashboard') }}"
+                            href="{{ route('admin.system-log') }}"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-book"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
                             <span
@@ -213,45 +213,7 @@
                         </a>
                     </div>
                 </li>
-                <li class="relative py-2">
-                    <div class="{{ request()->routeIs('admin.dashboard') ? 'bg-[#00509D] text-white' : 'text-gray-500 hover:text-gray-800' }} transition-colors duration-150 px-4 py-3 flex items-center rounded-lg">
-                        <a
-                            class="inline-flex items-center w-full text-sm "
-
-                            href="{{ route('admin.dashboard') }}"
-                        >
-                            <svg
-                                class="w-5 h-5"
-                                aria-hidden="true"
-                                fill="none"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
-                                ></path>
-                            </svg>
-                            <span
-                                class="ml-4 font-semibold text-base"
-                                style="font-family: Quicksand"
-                            >
-                    Calendar of Activities
-                  </span>
-                        </a>
-                    </div>
-                </li>
             </ul>
-            <div class="px-6 my-6">
-                <button
-                    class="flex items-center justify-between w-full px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
-                >
-                    Create account
-                    <span class="ml-2" aria-hidden="true">+</span>
-                </button>
-            </div>
         </div>
     </aside>
     <!-- Mobile sidebar -->
