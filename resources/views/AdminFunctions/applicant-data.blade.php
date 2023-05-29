@@ -43,7 +43,16 @@
                 <div class="flex flex-col gap-5">
                     <h1 class="text-6xl font-bold font-quicksand">{{ $examinees_data->fname }} {{ $examinees_data->lname }}</h1>
                     <div class="flex flex-col font-quicksand font-medium gap-2">
-                        <span>{{ !isset($examinees_data->email) ? "No email available" : $examinees_data->email }}</span>
+                        @if($examinees_data->user_login_id)
+                            <span>{{$examinees_data->userLogin->email}}</span>
+                        @else
+                            @if ($examinees_data->email)
+                                <span>{{$examinees_data->email}}</span>
+                            @else
+                                {{"No Email Available"}}
+                            @endif
+                        @endif
+
                         <span>{{ $examinees_data->contact_number }}</span>
                     </div>
                 </div>
