@@ -9,7 +9,7 @@ use App\Models\Admin\AdminLogs;
 class AdminLogsController extends Controller{
 
     public function render():View{
-        $logs_data = AdminLogs::all();
+        $logs_data = AdminLogs::with('admin')->get();
 
         return view('logsViews-sample', ['data' => $logs_data]);
     }
