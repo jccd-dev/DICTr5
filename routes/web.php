@@ -24,6 +24,7 @@ use App\Http\Controllers\Admins\Examinee\ManageApplicants;
 use App\Http\Controllers\Admins\SystemLogs;
 use \App\Http\Controllers\UserDataController;
 use \App\View\Components\Pages\Posts as PostsView;
+use App\Http\Controllers\Admins\AdminLogsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -86,7 +87,7 @@ Route::prefix('admin')->group(function () {
         });
 
         // manage admin accounts
-        Route::prefix('dict-admins')->group(function () {
+        Route::prefix('dict-admins')->middleware(['jwt.roleCheck:100'])->group(function () {
             Route::get('/', [AdminAccounts::class, 'render'])->name('admin.accounts');
             Route::post('/create', [AdminAccounts::class, 'add_admin'])->name('admin.create');
             Route::get('/view/{id}', [AdminAccounts::class, 'access_admin'])->name('admin.access');
@@ -94,7 +95,7 @@ Route::prefix('admin')->group(function () {
             Route::delete('/delete/{id}', [AdminAccounts::class, 'delete_admin'])->name('admin.delete');
         });
 
-        Route::prefix('examinee')->group(function () {
+        Route::prefix('examinee')->middleware(['jwt.roleCheck:100,200'])->group(function () {
             Route::get('/', [ManageApplicants::class, 'render'])->name('admin.examinees');
             Route::get('/search', [ManageApplicants::class, 'search_examinees'])->name('search');
             Route::get('/{id}', [ManageApplicants::class, 'select_examinee'])->name('examinee.get');
@@ -112,7 +113,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/exam-schedule', ExamSchedule::class)->name('admin.exam-schedule');
         Route::get('/exam-schedule/{id}', ExamSchedule::class)->name('admin.exam-schedule2');
         Route::get('/inbox', CMSInbox::class)->name('admin.inbox');
-        Route::get('/logs', [SystemLogs::class, 'display_logs'])->name('admin.system-log');
+        Route::get('/logs', [AdminLogsController::class, 'render'])->name('admin.system-log');
     });
 });
 
