@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 25, 2023 at 03:52 AM
+-- Generation Time: May 29, 2023 at 03:18 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -64,7 +64,9 @@ CREATE TABLE `admin_logs` (
 
 INSERT INTO `admin_logs` (`id`, `admin_id`, `activity`, `end_point`, `timestamp`) VALUES
 (1, 2, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-24 08:22:04'),
-(2, 2, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-25 00:50:26');
+(2, 2, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-25 00:50:26'),
+(3, 2, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-25 05:53:27'),
+(4, 2, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-29 00:56:09');
 
 -- --------------------------------------------------------
 
@@ -231,7 +233,8 @@ CREATE TABLE `inbox` (
   `user` varchar(250) NOT NULL,
   `email` varchar(250) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `intended_for` varchar(250) NOT NULL
+  `intended_for` varchar(250) NOT NULL,
+  `is_archived` int(2) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -455,6 +458,14 @@ CREATE TABLE `user_history` (
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Dumping data for table `user_history`
+--
+
+INSERT INTO `user_history` (`id`, `user_id`, `registration_date`, `approved_date`, `schedule`, `exam_set`, `venue`, `status`, `exam_result`, `timestamp`) VALUES
+(1, 6, '2023-05-25 07:51:36', '2023-05-25 07:51:36', '2023-05-25 07:51:36', '1', 'wfdgdg', 1, 'passed', '2023-05-25 05:52:24'),
+(2, 4, '2023-05-25 07:51:36', '2023-05-25 07:51:36', '2023-05-25 07:51:36', '2', 'sdfsfsfd', 2, 'passed', '2023-06-20 05:51:37');
+
 -- --------------------------------------------------------
 
 --
@@ -475,8 +486,8 @@ CREATE TABLE `user_login` (
 --
 
 INSERT INTO `user_login` (`id`, `google_id`, `email`, `fname`, `lname`, `is_active`) VALUES
-(1, 'sdsfsfd', 'dsad', 'asdad', 'asdads', 0),
-(2, 'dads', 'adad', 'adasd', 'adad', 0);
+(1, 'sdsfsfd', 'dsad', 'asdad', 'asdads', 1),
+(2, 'dads', 'adad', 'adasd', 'adad', 1);
 
 -- --------------------------------------------------------
 
@@ -680,7 +691,7 @@ ALTER TABLE `addresses`
 -- AUTO_INCREMENT for table `admin_logs`
 --
 ALTER TABLE `admin_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `announcements`
@@ -782,7 +793,7 @@ ALTER TABLE `users_data`
 -- AUTO_INCREMENT for table `user_history`
 --
 ALTER TABLE `user_history`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `user_login`
