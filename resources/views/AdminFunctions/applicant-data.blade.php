@@ -98,7 +98,7 @@
                                 Exam Date
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Venue
+                                Exam Set
                             </th>
                             <th scope="col" class="px-6 py-3">
                                 Status
@@ -135,7 +135,7 @@
                                             {{ $user->status }}
                                         </td>
                                         <td class="px-6 py-4">
-                                            {{ $user->result }}
+                                            {{ $user->exam_result }}
                                         </td>
                                     </tr>
                                 @else
@@ -156,7 +156,7 @@
                                             {{ $user->status }}
                                         </td>
                                         <td class="px-6 py-4">
-                                            {{ $user->result }}
+                                            {{ $user->exam_result }}
                                         </td>
                                     </tr>
                                 @endif
