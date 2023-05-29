@@ -4,6 +4,7 @@ use App\Http\Controllers\Admins\AdminAccounts;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\Examinee\GoogleAuthController;
 use App\Http\Controllers\Admins\AdminLoginController;
+use App\Http\Controllers\Admins\AdminLogsController;
 use App\Http\Controllers\VisitorController;
 use App\Http\Livewire\CMS\Post;
 use Illuminate\Support\Facades\Route;
@@ -112,7 +113,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/exam-schedule', ExamSchedule::class)->name('admin.exam-schedule');
         Route::get('/exam-schedule/{id}', ExamSchedule::class)->name('admin.exam-schedule2');
         Route::get('/inbox', CMSInbox::class)->name('admin.inbox');
-        Route::get('/logs', [SystemLogs::class, 'display_logs'])->name('admin.system-log');
+        Route::get('/logs', [AdminLogsController::class, 'render'])->name('admin.system-log');
     });
 });
 
