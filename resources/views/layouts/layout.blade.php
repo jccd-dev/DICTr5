@@ -2,7 +2,21 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <x-metadata.header />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    @vite(['resources/css/app.css', 'resources/js/admin/app.js', 'resources/js/utils/moment.js'])
 </head>
+<style>
+    /* Hide scrollbar for Chrome, Safari and Opera */
+html::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+html {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+</style>
 <body class="overflow-y-scroll overflow-x-hidden relative" x-data="data()">
         <x-admin.navbar>
         <!-- nav -->
@@ -15,6 +29,7 @@
                         >
                             @if(request()->routeIs('admin.cms.announcement')) {{'Announcement'}}
                             @elseif(request()->routeIs('admin.cms.calendar')) {{'Event Calendar'}}
+                            @elseif(request()->routeIs('admin.dashboard')) {{'Dashboard'}}
                             @elseif(request()->routeIs('admin.exam-schedule')) {{'Exam Schedule'}}
                             @elseif(request()->routeIs('admin.cms.category')) {{'Category'}}
                             @elseif(request()->routeIs('admin.cms.slider')) {{'Slider'}}

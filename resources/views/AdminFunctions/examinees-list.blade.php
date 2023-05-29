@@ -174,7 +174,14 @@
                                         @endif
                                     </td>
                                     <td class="px-6 py-4">
-                                        <button
+                                        <a href="{{ url('/admin/examinee/' . $user->id) }}" class="font-medium hover:underline flex gap-2 items-center bg-dark-blue bg-opacity-50 w-fit py-2 px-4 rounded-2xl">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                                              </svg>
+                                            <span class="font-semibold">View</span>
+                                        </a>
+
+                                        {{-- <button
                                             data-popover-target="popover-animation"
                                             data-popover-trigger="click"
                                             data-popover-placement="bottom"
@@ -184,7 +191,7 @@
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                                             </svg>
-                                        </button>
+                                        </button> --}}
                                     </td>
                                 </tr>
                             @else
@@ -248,7 +255,14 @@
                                         @endif
                                     </td>
                                     <td class="px-6 py-4">
-                                        <button
+                                        <a href="{{ url('/admin/examinee/' . $user->id) }}" class="font-medium hover:underline flex gap-2 items-center bg-dark-blue bg-opacity-50 w-fit py-2 px-4 rounded-2xl">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                                              </svg>
+                                            <span class="font-semibold">View</span>
+                                        </a>
+
+                                        {{-- <button
                                             data-popover-target="popover-animation"
                                             data-popover-trigger="click"
                                             data-popover-placement="bottom"
@@ -258,7 +272,7 @@
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                                             </svg>
-                                        </button>
+                                        </button> --}}
                                     </td>
                                 </tr>
                             @endif
@@ -271,7 +285,7 @@
 </div>
   @include('AdminFunctions.add-applicant')
 
-<div data-popover id="popover-animation" role="tooltip" class="absolute z-10 invisible inline-block w-48 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
+{{-- <div data-popover id="popover-animation" role="tooltip" class="absolute z-10 invisible inline-block w-48 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
     <div class="flex flex-col gap-1">
         <div class="px-3 py-2 cursor-pointer hover:bg-blue-100">
             <p class="flex gap-3 items-center font-quicksand font-semibold text-black">
@@ -318,23 +332,152 @@
             </p>
         </div>
     </div>
-</div>
-@vite(['resources/js/admin/examinees_list.js'])
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+</div> --}}
 <script>
-    // $(document).ready(function(){
-    //     $('#search-form input, #search-form select').on('change, input', function() {
-    //         var formData = $('#search-form').serialize();
-    //         $.ajax({
-    //             url: '{{ route('search') }}',
-    //             type: 'GET',
-    //             data: formData,
-    //             success: function(data) {
-    //                 $('#results').html(data);
-    //             }
-    //         });
-    //     });
-    // })
+    const messageAlert = document.querySelector("#message-alert");
+    const dismissAlert = document.querySelector("#dismiss-alert");
+    const closeAlertBtn = document.querySelector("#closeAlertBtn");
+    const formInputs = document.querySelectorAll(
+        "#add-applicant input, #add-applicant select"
+    );
+    const resultCon = document.querySelector("#results");
+    const addApplicant = document.querySelector("#add-applicant");
+    const headings = document.querySelectorAll("h3");
+    const saveSign = document.querySelector('#save-btn')
+    const signInput = document.querySelector('#signature')
+    const clearSign = document.querySelector('#clear-btn')
+    const canvas = document.querySelector('#signature-pad');
+    const signaturePad = new SignaturePad(canvas);
+    clearSign.addEventListener("click", () => signaturePad.clear())
+    saveSign.addEventListener("click", async () => {
+            const dataURL = signaturePad.toDataURL();
+            signInput.value = dataURL;
+            console.log(signInput.value)
+            signInput.dispatchEvent(new Event('input'));
+        })
+
+    function listeners($data) {
+
+        addApplicant.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(addApplicant);
+
+        try {
+            let res = await fetch("/admin/examinee/add-examinee", {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                },
+                body: formData,
+            });
+            let data = await res.json();
+            if(data?.errors) throw data.errors
+
+            let [success, id] = data;
+
+            if (success) {
+                dismissAlert.classList.remove("hidden");
+                messageAlert.textContent = "Successfully Added";
+                targetHeading.nextElementSibling.click();
+
+                setTimeout(() => {
+                    dismissAlert.classList.remove("hidden");
+                    location.reload();
+                }, 2000);
+            }
+        } catch (err) {
+            errorHandler(err);
+        }
+    });
+    const errorHandler = (err) => {
+
+        let p = addApplicant.querySelectorAll("p")
+        Array.from(p).forEach((el) => {
+                el.classList.add("hidden");
+            }
+        );
+        for (const key in err) {
+            formInputs.forEach((el) => {
+                if (el.name === key) {
+                    if (el.parentElement.querySelector("p")) {
+                        let p = el.parentElement.querySelector("p");
+                        p.classList.remove("hidden");
+                        p.textContent = err[key];
+                    } else if (el.parentElement.parentElement.querySelector("p")) {
+                        let p = el.parentElement.parentElement.querySelector("p");
+                        p.classList.remove("hidden");
+                        p.textContent = err[key];
+                    } else {
+                        let p =
+                            el.parentElement.parentElement.parentElement.querySelector(
+                                "p"
+                            );
+                        p.classList.remove("hidden");
+                        p.textContent = err[key];
+                    }
+                }
+            });
+        }
+
+        let hasSectionOneError = err.hasOwnProperty('givenName')
+                    || err.hasOwnProperty('middleName')
+                    || err.hasOwnProperty('surName')
+                    || err.hasOwnProperty('tel')
+                    || err.hasOwnProperty('province')
+                    || err.hasOwnProperty('municipality')
+                    || err.hasOwnProperty('barangay')
+                    || err.hasOwnProperty('surName')
+                    || err.hasOwnProperty('email')
+                    || err.hasOwnProperty('pob')
+                    || err.hasOwnProperty('dob')
+                    || err.hasOwnProperty('gender')
+                    || err.hasOwnProperty('citizenship')
+                    || err.hasOwnProperty('civilStatus');
+
+        let hasSectionTwoError = err.hasOwnProperty('thumbnail')
+            || err.hasOwnProperty('status')
+            || err.hasOwnProperty('images');
+
+        let hasSectionThreeError = err.hasOwnProperty('presentOffice')
+            || err.hasOwnProperty('telNum')
+            || err.hasOwnProperty('officeAddress')
+            || err.hasOwnProperty('officeCategory')
+            || err.hasOwnProperty('designationPosition')
+            || err.hasOwnProperty('yearsPresentPosition')
+            || err.hasOwnProperty('pl');
+
+        let hasSectionFourError = err.hasOwnProperty('signature')
+
+        if(hasSectionOneError) {
+            $data.state = 1;
+        } else if(hasSectionTwoError) {
+            $data.state = 2;
+        } else if (hasSectionThreeError) {
+            $data.state = 3;
+        } else if (hasSectionFourError) {
+            $data.state = 4;
+        }
+    };
+    }
+
+
+
+    let targetHeading;
+    for (let i = 0; i < headings.length; i++) {
+        console.log(headings);
+        if (headings[i]?.nextElementSibling?.tagName === "BUTTON") {
+            targetHeading = headings[i];
+            break;
+        }
+    }
+
+    closeAlertBtn.addEventListener("click", (_) => {
+        dismissAlert.classList.toggle("hidden");
+        location.reload();
+    });
 </script>
+@vite(['resources/js/admin/examinees_list.js', 'resources/js/user/dashboard.js'])
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
 @endsection

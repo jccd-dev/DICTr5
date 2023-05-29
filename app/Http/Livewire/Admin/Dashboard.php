@@ -23,9 +23,12 @@ class Dashboard extends Component
             // Access the 'role' property
             $role = $user->role;
             $name = $user->name;
-            return view('livewire.admin.dashboard',[
+            $examSchedData = ExamSchedule::all();
+            return view('livewire.admin.dashboard', [
                 'role' => $role,
                 'name' => $name,
+                'exam_sched' => $examSchedData,
+                'data' => $this->getAnalyticsData()
             ])->layout("layouts.layout");
         }
 
@@ -37,7 +40,8 @@ class Dashboard extends Component
      * @uses GETANALYTICSDATA
      * @description
      */
-    public function getAnalyticsData(): array{
+    public function getAnalyticsData(): array
+    {
 
         $year = isNull($this->year) ? date('Y', strtotime('now')) : $this->year;
         $total_applicants = UsersData::count();
@@ -53,8 +57,8 @@ class Dashboard extends Component
             ->orderBy('month')
             ->get();
 
-        foreach ($analytics as $data){
-            $month = date('F', mktime(0, 0,0, $data->month, 1));
+        foreach ($analytics as $data) {
+            $month = date('F', mktime(0, 0, 0, $data->month, 1));
             $byMonthExamData[$month] = $data->count;
         }
 
@@ -70,7 +74,8 @@ class Dashboard extends Component
      * @description use for logout redirect to log out route
      * @return null
      */
-    public function logout(){
+    public function logout()
+    {
         return $this->redirect('/admin/logout');
     }
 }

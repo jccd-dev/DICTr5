@@ -14,6 +14,14 @@
         <form action="#" method="POST" wire:submit.prevent="submit" class="w-full flex flex-col">
             <div x-show="state == 1" class="w-full flex flex-col items-center">
                 <h1 class="font-bold font-quicksand text-xl flex self-start my-4">Personal Information</h1>
+                <div class="flex justify-start w-full">
+                    <div class="">
+                        <div class="mb-4">
+                            <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                            <label for="default-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Exam Retaker</label>
+                        </div>
+                    </div>
+                </div>
                 <div class="flex md:flex-row flex-col w-full gap-3">
                     <div class="flex md:flex-row flex-col flex-1 gap-3">
                         <x-forms.input-form name="Given Name" type="text" placeholder="Given Name" model="givenName" id="given-name" classes="mb-3 md:mb-6 flex-1 flex-col" />
@@ -248,6 +256,33 @@
                 </div>
                 <br />
                 <hr />
+
+                <div class="w-full">
+                    <h1 class="block mb-3 text-sm font-medium text-gray-900 dark:text-white">ADDITIONAL INFO <b>(Please check that apply)</b></h1>
+                   <div class="flex ">
+                        <div class="flex flex-1 mb-3">
+                            <div class="flex flex-1 items-center mr-4">
+                                <input id="pwd" type="checkbox" wire:model="additional_info" value="PWD" name="addInfo" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                <label for="pwd" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">PWD</label>
+                            </div>
+                            <div class="flex flex-1 items-center mr-4">
+                                <input id="senior-citizen" wire:model="additional_info" type="checkbox" value="Senior Citizen" name="addInfo" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                <label for="senior-citizen" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Senior Citizen</label>
+                            </div>
+                        </div>
+                        <div class="flex flex-1">
+                            <div class="flex flex-1 items-center mr-4">
+                                <input id="solo-parent" wire:model="additional_info" type="checkbox" value="Solo Parent" name="addInfo" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                <label for="solo-parent" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Solo Parent</label>
+                            </div>
+                            <div class="flex flex-1 items-center mr-4">
+                                <input id="ip-member" wire:model="additional_info" type="checkbox" value="Member of an IP Group" name="addInfo" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                <label for="ip-member" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Member of an IP Group</label>
+                            </div>
+                        </div>
+                   </div>
+                    <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
+                </div>
 
                 <div class="my-3">
                     <h1 class="font-bold font-quicksand text-base flex self-start my-1">IMPORTANT</h1>
