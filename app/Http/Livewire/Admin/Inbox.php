@@ -6,6 +6,7 @@ use App\Models\CMS\Feedback;
 use Livewire\Component;
 use Livewire\WithPagination;
 use WireUi\Traits\Actions;
+use App\Models\CMS\Inbox as InboxModel;
 
 class Inbox extends Component
 {
@@ -22,7 +23,9 @@ class Inbox extends Component
     public $feedbackContent;
     public $onReadFeedback;
     public $toDeleteFeedback = 0;
+    public $toDeleteSentEmail = 0;
     public bool $feedback_modal;
+    public bool $sent_email_modal;
 
     public function render()
     {
@@ -63,6 +66,7 @@ class Inbox extends Component
         $this->feedbackContent = '';
         $this->onReadFeedback = 0;
         $this->feedback_modal = false;
+        $this->sent_email_modal = false;
     }
 
     public function updatingSearch(){
@@ -91,6 +95,11 @@ class Inbox extends Component
         $this->feedback_modal = true;
     }
 
+    public function prepare_to_delete_sent_email($id){
+        $this->toDeleteSentEmail = $id;
+        $this->sent_email_modal = true;
+    }
+
     // Delete feedback
     public function delete_feedback(){
         $this->feedback_modal = false;
@@ -102,6 +111,16 @@ class Inbox extends Component
             $description = 'Successfully archived the feedback'
         );
     }
+
     //FOR SENT EMAILS
-    // ...
+    public function delete_sent_email(){
+        $this->feedback_modal = false;
+        $sentemail = InboxModel::find($this->toDeleteSentEmail);
+        $sentemail->is_archived = 1;
+        $sentemail->save();
+        $this->notification()->success(
+            $title = 'Sent Email Deleted',
+            $description = 'Successfully archived the sent email'
+        );
+    }
 }

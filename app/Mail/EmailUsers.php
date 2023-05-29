@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Helpers\InboxHelper;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -22,7 +23,10 @@ class EmailUsers extends Mailable
      *               For Failed:
      *               - part1 => string percentage
      *               - part2 => string percentage
-     *               - part3 => string percentage,
+     *               - part3 => string percentage
+     *               *******************
+     *               - email => string
+     *               - intended_for => string
      * @param bool $passed if pass or failed
      */
     public function __construct(
@@ -30,7 +34,7 @@ class EmailUsers extends Mailable
         protected array $data
     )
     {
-        //
+        $inbox = new InboxHelper($data['name'], $data['email'], $data['intended_for']);
     }
 
     /**

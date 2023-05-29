@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Helpers\InboxHelper;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -19,12 +20,15 @@ class ScheduleOfExam extends Mailable
      *                  - first_name : string
      *                  - exam_start_date : string
      *                  - exam_end_date : string
+     *                  - name : string
+     *                  - email : string
+     *                  - intended_for : string
      */
     public function __construct(
         protected array $data
     )
     {
-        //
+        $inbox = new InboxHelper($data['name'], $data['email'], $data['intended_for']);
     }
 
     /**

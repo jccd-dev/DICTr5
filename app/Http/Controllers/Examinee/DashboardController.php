@@ -23,14 +23,16 @@ class DashboardController extends Controller
 
     public function sendEmail(){
         $data = [
-            'first_name' => 'Christian',
-            'exam_start_date' => '2023-05-25 09:37:07',
-            'exam_end_date' => '2023-05-25 12:37:07',
+            'name' => 'Christian E. Quelonio',
+            'email' => 'cquelonio@gmail.com',
+            'intended_for' => 'Sent Admin Account Credential',
+            'password' => 'Abcde_12345',
+            'url' => 'www.facebook.com',
         ];
 //         Mail::to('cquelonio@gmail.com')->send(new EmailUsers(false, $data));
-//         Mail::to('cquelonio@gmail.com')->send(new RegistrationStatus(4));
-//         echo  "Success";
-        return view('layouts.email.exam-schedule', ['data' => $data]);
+         Mail::to('cquelonio@gmail.com')->send(new EmailAdminAccount($data));
+         echo  "Success";
+//        return view('layouts.email.exam-schedule', ['data' => $data]);
     }
 
     public function pdf_generator(){
