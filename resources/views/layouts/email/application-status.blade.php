@@ -1,6 +1,6 @@
 <body style="padding: 5px;">
     <div style="background-color: #00296B; padding: 10px; text-align: center; border-radius: 15px">
-{{--        <img src="http://drive.google.com/uc?export=view&id=1EraE3XGC1fiwunSWciacvVSCTcOPCHty" style="width: 200px">--}}
+        <img src="http://drive.google.com/uc?export=view&id=1EraE3XGC1fiwunSWciacvVSCTcOPCHty" style="width: 200px">
         <h2 style="color:white">DICT Camarines Sur</h2>
         <p style="color:white; padding-left: 50px; padding-right: 50px;">This is to inform you that your Application status for the ICT Proficiency Diagnostic Exam has been carefully reviewed and processed. Your application status has been </p>
         <br>

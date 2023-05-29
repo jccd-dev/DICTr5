@@ -4,6 +4,7 @@ namespace App\Models\Admin;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AdminLogs extends Model
 {
@@ -21,4 +22,8 @@ class AdminLogs extends Model
     ];
 
     public $timestamps = false;
+
+    public function admin(): BelongsTo{
+        return $this->belongsTo(AdminModel::class, 'admin_id');
+    }
 }

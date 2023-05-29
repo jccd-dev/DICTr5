@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Helpers\InboxHelper;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -15,12 +16,18 @@ class EmailAdminAccount extends Mailable
 
     /**
      * Create a new message instance.
+     * @param array $data - contains:
+     *              name => string
+     *              email => string
+     *              password => string
+     *              url => string
+     *              intended_for => string
      */
     public function __construct(
         protected array $data
     )
     {
-        //
+        $inbox = new InboxHelper($data['name'], $data['email'], $data['intended_for']);
     }
 
     /**
