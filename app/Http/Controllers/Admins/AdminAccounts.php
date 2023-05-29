@@ -76,7 +76,9 @@ class AdminAccounts extends Controller
         $data = [
             'email' => $request->email,
             'password' => $request->password,
-            'url' => route('admin.login')
+            'url' => route('admin.login'),
+            'name' => $request->name,
+            'intended_for' => 'Sent Admin Account Credential',
         ];
         Mail::to($request->email)->send(new EmailAdminAccount($data));
         // return success msg with admin name for confirmation

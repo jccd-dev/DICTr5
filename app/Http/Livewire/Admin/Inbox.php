@@ -55,7 +55,16 @@ class Inbox extends Component
                     ->paginate(5)
             ];
         }else{
-            $data = [];
+            $data = [
+                'sent_emails' => InboxModel::where('is_archived', 0)
+                                    ->where(fn($query) => $query
+                                        ->where('user', 'like', '%' . $this->search . '%')
+                                        ->orWhere('intended_for', 'like', '%' . $this->search . '%')
+                                        ->orWhere('email', 'like', '%' . $this->search . '%')
+                                    )
+                                    ->orderByDesc('timestamp')
+                                    ->paginate(10)
+            ];
 
         }
         return view('livewire.admin.inbox', $data)
@@ -114,7 +123,7 @@ class Inbox extends Component
 
     //FOR SENT EMAILS
     public function delete_sent_email(){
-        $this->feedback_modal = false;
+        $this->sent_email_modal = false;
         $sentemail = InboxModel::find($this->toDeleteSentEmail);
         $sentemail->is_archived = 1;
         $sentemail->save();
