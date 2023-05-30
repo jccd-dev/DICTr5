@@ -20,17 +20,17 @@
     <div class="container my-24 px-6 mx-auto">
         <div class="block rounded-lg bg-white">
         <div class="flex flex-wrap items-center">
-            <div class="hidden lg:flex grow-0 shrink-0 basis-auto lg:w-6/12 xl:w-5/12">
+            <div class="w-full h-full lg:w-6/12 xl:w-5/12">
             <!-- Slider main container -->
-                <div class="swiper">
+                <div class="swiper w-full h-full">
                     <!-- Additional required wrapper -->
-                    <div class="swiper-wrapper">
+                    <div class="swiper-wrapper w-full h-full">
                     <!-- Slides -->
                     {{-- @dd($data['cur_post']) --}}
                     {{-- @foreach($data['cur_post']->)
                     @endforeach --}}
                         @foreach ($data['cur_post']->images as $img)
-                            <div class="swiper-slide">
+                            <div class="swiper-slide w-full" style="height:initial">
                                 <img src="{{ asset("storage/images/".$img->image_filename) }}" alt=""
                     class="w-full h-full object-cover" />
                             </div>

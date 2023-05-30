@@ -13,7 +13,7 @@
 
     <div class="w-[25rem] flex flex-col justify-center">
         <form class="w-full flex flex-col" wire:submit.prevent="authenticate">
-            <img src="{{ asset('img/DICT.png') }}" class="w-56 self-center mb-10" alt="">
+            <img src="{{ asset('img/DICT.png') }}" class="w-36 2xl:w-56 self-center mb-10" alt="">
             <h1 class="font-bold font-quicksand text-3xl text-center mb-10">Admin Login</h1>
             @if(session()->has('invalid'))
                 <div class="text-red-400 font-bold">
@@ -34,7 +34,7 @@
             <div class="mb-6">
                 <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Password</label>
                 <input
-                    type="text"
+                    type="password"
                     name="password"
                     id="password"
                     wire:model="password"

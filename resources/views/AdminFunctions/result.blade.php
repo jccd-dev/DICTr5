@@ -38,10 +38,10 @@
                             <i>Approved</i>
                             @break
                         @case(5)
-                            <i>Waiting for Result</i>
+                            <i>Scheduled for Exam</i>
                             @break
                         @case(6)
-                            <i>Scheduled for Exam</i>
+                            <i>Waiting for Result</i>
                             @break
                         @default
 
@@ -107,10 +107,10 @@
                             <i>Approved</i>
                             @break
                         @case(5)
-                            <i>Waiting for Result</i>
+                            <i>Scheduled for Exam</i>
                             @break
                         @case(6)
-                            <i>Scheduled for Exam</i>
+                            <i>Waiting for Result</i>
                             @break
                         @default
                             @break
