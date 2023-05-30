@@ -465,7 +465,7 @@
 
                                 <x-forms.select name="Category" model="category_id" id="" :options="$all_category" classes="mb-6" value="category_id" />
 
-                                <x-forms.input-form name="Link" type="url" placeholder="Video Link" model="vid_link" id="vid_link" classes="mb-6" value="vid_link" />
+                                <x-forms.input-form name="Link" type="text" placeholder="Video Link" model="vid_link" id="vid_link" classes="mb-6" value="vid_link" />
 
                             </div>
 

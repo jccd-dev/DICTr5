@@ -59,29 +59,34 @@
                     </p>
                 </div>
             </div>
-            <div class="w-full flex justify-center mt-20" id="embedd-con">
-                @if (strstr($data['cur_post']->vid_link, 'youtube'))
-                    <iframe class="w-full rounded-[2rem] h-[40rem]" src="{{ $data['cur_post']->vid_link }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-                @elseif(strstr($data['cur_post']->vid_link, 'drive'))
-                    <iframe class="w-full rounded-[2rem] h-[40rem]" src="{{ $data['cur_post']->vid_link }}" allow="autoplay"></iframe>
-                @endif
+            <div class="w-full">
+                <h1 class="mt-20 mb-5 font-bold font-inter text-xl 2xl:text-2xl">Watch our events</h1>
+                <div class="w-full flex justify-center h-[80vh]" id="embedd-con">
+
+                    @if (strstr($data['cur_post']->vid_link, 'youtube'))
+                        <iframe class="w-full rounded-[2rem] h-auto" src="{{ $data['cur_post']->vid_link }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    @elseif(strstr($data['cur_post']->vid_link, 'drive'))
+                        <iframe class="w-full rounded-[2rem] h-auto" src="{{ $data['cur_post']->vid_link }}" allow="autoplay"></iframe>
+                    @endif
+                </div>
             </div>
         </div>
         </div>
-    <div class="w-full mb-10 mt-32" x-data="{ data: [1,2,3] }">
+        {{-- @dd($data) --}}
+    <div class="w-full mb-10 mt-32">
         <div class="w-full flex flex-col justify-center">
             <h1 class="text-left ml-10  font-bold font-inter text-3xl">Related News</h1>
             <hr class="my-12 h-px border-t-0 bg-transparent bg-gradient-to-r from-transparent via-neutral-500 to-transparent opacity-100 dark:opacity-150" />
             <div class="flex justify-center">
                 <div class="mt-20 flex gap-10 flex-wrap justify-center">
-                    <template x-for="d in data">
-                        <div class="card w-[23rem] rounded-xl border-b-4 border-custom-red">
+                    @foreach ($data['posts'] as $post)
+                        <div class="card w-[23rem] rounded-xl border-b-4 border-custom-red cursor-pointer" onclick="(() => location.href = '/posts/{{ $post->id }}')()">
                             <div class="flex flex-col justify-between">
                                 <div>
                                     {{-- top --}}
                                     <div class="rounded-xl border-b-4 border-b-dark-yellow overflow-hidden w-[23rem] h-[13rem]">
                                         {{-- top img --}}
-                                        <img class="w-full h-full object-cover" src="{{ asset('img/posts.jpg') }}" class="" alt="">
+                                        <img class="w-full h-full object-cover" src="{{ asset('storage/images/'. $post->thumbnail) }}" class="" alt="">
                                     </div>
                                     <div class="mt-5 px-3">
                                         {{-- top content --}}
@@ -89,7 +94,7 @@
                                         {{-- caategory --}}
 
                                         <div>
-                                            <span class="bg-custom-blue rounded-full px-3 py-1 text-xs text-white font-semibold font-inter">News</span>
+                                            <span class="bg-custom-blue rounded-full px-3 py-1 text-xs text-white font-semibold font-inter">{{ $post->category->category }}</span>
                                         </div>
 
                                         {{-- main content --}}
@@ -97,12 +102,14 @@
                                         <div>
                                             {{-- title --}}
 
-                                            <h1 class="font-bold font-inter text-xl mt-2 leading-snug">Lorem ipsum dolor sit amet consectetur. Donec eleifend enim dignissim.</h1>
+                                            <h1 class="font-bold font-inter text-xl mt-2 leading-snug">{{ $post->title }}</h1>
 
                                             {{-- description --}}
 
                                             <p class="mt-5 text-justify">
-                                                Lorem ipsum dolor sit amet consectetur. Dictum feugiat pretium turpis duis diam luctus amet turpis laoreet. Non aenean nulla sit aliquam lobortis enim a volutpat. Dolor enim pharetra interdum scelerisque aliquam tempus diam.
+                                                @php
+                                                    echo htmlspecialchars_decode($post->content)
+                                                @endphp
                                             </p>
                                         </div>
                                     </div>
@@ -120,14 +127,14 @@
 
                                         {{-- right --}}
                                         <div>
-                                            <h3 class="font-semibold font-inter">Content Admin</h3>
-                                            <h5 class="text-sm">March 22, 2023 | 6 min read</h5>
+                                            <h3 class="font-semibold font-inter">{{ $post->author }}</h3>
+                                            <h5 class="text-sm">{{ date('F j, Y', strtotime($post->timestamp)) }} | {{ $post->elapsed }}</h5>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </template>
+                    @endforeach
                 </div>
             </div>
         </div>
