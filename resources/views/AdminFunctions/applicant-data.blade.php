@@ -183,27 +183,55 @@
             </svg>
           </button>
         </div>
-        <div class="p-4 overflow-y-auto">
-            <input type="hidden" name="exam_sched_id" value="">
-            <label for="status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select an option</label>
-            <select id="status" name="validation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                <option value="3" selected>For Evaluation</option>
-                <option value="1">Disapproved</option>
-                <option value="2">Incomplete</option>
-                <option value="4">Approved</option>
-                <option value="5">Waiting for result</option>
-                <option value="6">Scheduled for exam</option>
-            </select>
+        <form action="" id="submitAppForm">
+            <div class="p-4 overflow-y-auto" x-data="{statusValue: ''}">
+                <input type="hidden" name="exam_sched_id" value="">
+                <label for="status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select an option</label>
+                <select id="status" @change="statusValue = $event.target.value" name="validation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <option value="3" selected>For Evaluation</option>
+                    <option value="1">Disapproved</option>
+                    <option value="2">Incomplete</option>
+                    <option value="4">Approved</option>
+                    <option value="5">Waiting for result</option>
+                    <option value="6">Scheduled for exam</option>
+                </select>
+                <div class="mt-3 mb-3 md:mb-6 flex-1 flex-col" x-show="statusValue == 6">
+                    <label for="exam-sched" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Exam Schedule</label>
+                        <select
+                            id="exam-sched"
+                            name="exam-sched"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="Exam Schedule"
+                            :required="statusValue == 6"
+                        >
+                        @foreach ($examSched as $sched)
+                            <option value="{{ $sched->id }}">{{ $sched->venue }}</option>
+                        @endforeach
+                    </select>
+                        <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
+                </div>
 
-        </div>
-        <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t dark:border-gray-700">
-          <button type="button" class="hs-dropdown-toggle py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border font-medium bg-white text-gray-700 shadow-sm align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all text-sm dark:bg-slate-900 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white dark:focus:ring-offset-gray-800" data-hs-overlay="#hs-slide-down-animation-modal2">
-            Close
-          </button>
-          <a id="submitApplicantStatus" data-value="{{ $examinees_data->id }}" class="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800" href="#">
-            Save changes
-          </a>
-        </div>
+                <div class="mt-3 mb-3 md:mb-6 flex-1 flex-col" x-show="statusValue == 1 || statusValue == 2">
+                    <label for="remarks" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Remarks</label>
+                        <input
+                            type="text"
+                            id="remarks"
+                            name="remarks"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            :required="statusValue == 1 || statusValue == 2"
+                        >
+                        <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
+                </div>
+            </div>
+            <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t dark:border-gray-700">
+              <button type="button" class="hs-dropdown-toggle py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border font-medium bg-white text-gray-700 shadow-sm align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all text-sm dark:bg-slate-900 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white dark:focus:ring-offset-gray-800" data-hs-overlay="#hs-slide-down-animation-modal2">
+                Close
+              </button>
+              <button type="submit" id="submitApplicantStatus" data-value="{{ $examinees_data->id }}" class="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800" href="#">
+                Save changes
+              </button>
+            </div>
+        </form>
       </div>
     </div>
   </div>
@@ -389,14 +417,16 @@
         };
 
         const submitApplicantStatus = document.querySelector('#submitApplicantStatus')
-        submitApplicantStatus.addEventListener('click', applicationStatusSubmit)
+        const submitAppForm = document.querySelector('#submitAppForm')
+        submitAppForm.addEventListener('submit', applicationStatusSubmit)
         async function applicationStatusSubmit(event) {
+            event.preventDefault()
             try {
-                let select = event.target.parentElement.parentElement.querySelector('select')
+                let select = event.target.querySelector('select')
+                let btn = event.target.querySelector('button[type=submit]')
                 let status = select.value;
-                let formData = new FormData();
-                formData.append('validation', status);
-                let res = await fetch('/admin/examinee/'+ event.target.dataset.value +'/validation', {
+                let formData = new FormData(event.target);
+                let res = await fetch('/admin/examinee/'+ btn.dataset.value +'/validation', {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),

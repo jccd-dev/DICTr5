@@ -43,6 +43,7 @@ html {
                             @elseif(request()->routeIs('admin.accounts')) {{'Admin Accounts'}}
                             @elseif(request()->routeIs('admin.inbox')) {{'Inbox'}}
                             @elseif(request()->routeIs('admin.exam-schedule')) {{'Exam Schedule'}}
+                            @elseif(request()->routeIs('admin.system-log')) {{'All Logs'}}
                             @else {{'DICT Camarines Sur'}}
                             @endif
                         </h2>

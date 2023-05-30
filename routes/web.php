@@ -4,6 +4,7 @@ use App\Http\Controllers\Admins\AdminAccounts;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\Examinee\GoogleAuthController;
 use App\Http\Controllers\Admins\AdminLoginController;
+use App\Http\Controllers\Admins\AdminLogsController;
 use App\Http\Controllers\VisitorController;
 use App\Http\Livewire\CMS\Post;
 use Illuminate\Support\Facades\Route;
@@ -24,7 +25,6 @@ use App\Http\Controllers\Admins\Examinee\ManageApplicants;
 use App\Http\Controllers\Admins\SystemLogs;
 use \App\Http\Controllers\UserDataController;
 use \App\View\Components\Pages\Posts as PostsView;
-use App\Http\Controllers\Admins\AdminLogsController;
 
 /*
 |--------------------------------------------------------------------------

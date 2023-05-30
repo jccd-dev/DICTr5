@@ -92,7 +92,17 @@
                             Update Submitted Files
                     </button>
                     <button type="button" id="update-form-btn" class="py-4 px-5 bg-custom-red font-semibold" wire:click="apply({{ $user_data[0]->id }})" wire:ignore>
-                        Apply
+                        @php
+                            if(isset($userData->userHistory)) {
+                                if($userData->userHistory->status === 'passed') {
+                                    echo "Already passed the exam";
+                                } else {
+                                    echo "Reapply";
+                                }
+                            } else {
+                                echo "Apply";
+                            }
+                        @endphp
                     </button>
                 @else
                     <button type="button" id="register-form-btn"  class="py-4 px-5 bg-custom-red font-semibold" @click="$openModal('cardModal'); isFiles = false">

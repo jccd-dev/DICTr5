@@ -48,7 +48,7 @@ class Posts extends Component
         $this->mount();
         $this->usersCounter['registered'] = DB::table('users_data')->count();
         $banner = $this->banner_model->get();
-        $posts = $this->postModel::priority()->get();
+        $posts = $this->postModel::with('category')->priority()->get();
         $posts = $posts->map(function ($item) {
             $startedAt = Carbon::parse($item->timestamp);
             $endedAt = Carbon::parse(now());
