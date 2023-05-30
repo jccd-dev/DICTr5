@@ -213,21 +213,20 @@ class ManageApplicants extends Controller
      */
     public function send_exam_result(Request $request, int|string $user_id): JsonResponse
     {
-        $result = $request->post('result');
-
+        $result = $request->post('exam-result');
         $user = UsersData::with('userLogin', 'regDetails', 'userHistory.failedHistory')->find($user_id);
 
         $reg = $user->regDetails;
         $exam_data = ExamScheduleModel::find($reg->exam_schedule_id);
-
         //update the user history
+        // dd($user->userHistory());
         $userHistory = $user->userHistory()->create([
             'user_id'           => $user_id,
             'registration_date' => $reg->reg_date,
             'approved_date'     => $reg->approved_date,
             'schedule'          => $exam_data->datetime,
             'venue'             => $exam_data->venue,
-            'assigned_exam_set' => $exam_data->exam_set,
+            'exam_set' => $exam_data->exam_set,
             'status'            => $reg->status,
             'exam_result'       => $result
         ]);
@@ -245,9 +244,9 @@ class ManageApplicants extends Controller
         $part3 = $request->post('part3');
 
         $userHistory->failedHistory()->create([
-            'part1' => $part1,
-            'part2' => $part2,
-            'part3' => $part3
+            'part_1' => $part1,
+            'part_2' => $part2,
+            'part_3' => $part3
         ]);
 
         // reset the reg details data for the user

@@ -287,14 +287,50 @@
             </svg>
           </button>
         </div>
-        <form action="" id="submitResultAppForm" data-value="{{ $examinees_data->id }}">
+        <form action="" id="submitResultAppForm" x-data="{ result: 'passed' }" data-value="{{ $examinees_data->id }}">
             @csrf
             <div class="p-4 overflow-y-auto">
                 <label for="exam-result" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select an option</label>
-                <select id="exam-result" name="exam-result" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <select id="exam-result" x-model="result" name="exam-result" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <option value="passed" selected>Passed</option>
                     <option value="failed">Failed</option>
                 </select>
+            </div>
+            <div class="p-4 pt-0 flex-1 flex-col" x-show="result=='failed'">
+                <label for="part1" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Part 1</label>
+                    <input
+                        type="text"
+                        id="part1"
+                        name="part1"
+                        placeholder="Part 1"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        :required="result=='failed'"
+                    >
+                    <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
+            </div>
+            <div class="p-4 pt-0 flex-1 flex-col" x-show="result=='failed'">
+                <label for="part2" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Part 2</label>
+                    <input
+                        type="text"
+                        id="part2"
+                        name="part2"
+                        placeholder="Part 2"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        :required="result=='failed'"
+                    >
+                    <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
+            </div>
+            <div class="p-4 pt-0 flex-1 flex-col" x-show="result=='failed'">
+                <label for="part3" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Part 3</label>
+                    <input
+                        type="text"
+                        id="part3"
+                        name="part3"
+                        placeholder="Part 3"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        :required="result=='failed'"
+                    >
+                    <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
             </div>
             <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t dark:border-gray-700">
               <button type="button" class="hs-dropdown-toggle py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border font-medium bg-white text-gray-700 shadow-sm align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all text-sm dark:bg-slate-900 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white dark:focus:ring-offset-gray-800" data-hs-overlay="#hs-slide-down-animation-modal3">
@@ -397,7 +433,23 @@
 
         let data = await res.json()
 
+        if (data?.success) {
+            dismissAlert.classList.remove("hidden");
+            messageAlert.textContent = "Successfully Added";
+            let targetHeading;
+            for (let i = 0; i < headings.length; i++) {
+                if (headings[i]?.textContent.trim() === "Update Application Status") {
+                    targetHeading = headings[i];
+                    break;
+                }
+            }
+            targetHeading.nextElementSibling.click();
 
+            setTimeout(() => {
+                dismissAlert.classList.remove("hidden");
+                location.reload();
+            }, 2000);
+        }
     })
 
     const deleteApplicant = async (event) => {
@@ -536,7 +588,23 @@
                 });
                 let data = await res.json();
 
-                console.log(status)
+                if (data?.success) {
+                    dismissAlert.classList.remove("hidden");
+                    messageAlert.textContent = "Successfully Added";
+                    let targetHeading;
+                    for (let i = 0; i < headings.length; i++) {
+                        if (headings[i]?.textContent.trim() === "Update Application Status") {
+                            targetHeading = headings[i];
+                            break;
+                        }
+                    }
+                    targetHeading.nextElementSibling.click();
+
+                    setTimeout(() => {
+                        dismissAlert.classList.remove("hidden");
+                        location.reload();
+                    }, 2000);
+                }
             } catch(err) {
                 console.log(err)
             }
