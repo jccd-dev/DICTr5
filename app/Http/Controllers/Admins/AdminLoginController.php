@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers\Admins;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Cookie;
 use Tymon\JWTAuth\Exceptions\JWTException;
-use Tymon\JWTAuth\Facades\JWTAuth;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Contracts\Foundation\Application;
 
 class AdminLoginController extends Controller
 {
 
+    private string $cache_key = 'search_items';
     /**
      * @description use to remove the cookie and invalidate the token in jwt when log out
      * @return Application|\Illuminate\Foundation\Application|RedirectResponse|Redirector
@@ -31,6 +33,7 @@ class AdminLoginController extends Controller
         // destroy session
         session()->forget('admin_id');
         session()->forget('admin_role');
+        Cache::forget($this->cache_key);
         return redirect('/admin/login')->withCookie($cookie);
     }
 

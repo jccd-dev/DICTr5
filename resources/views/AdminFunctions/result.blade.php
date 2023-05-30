@@ -5,7 +5,17 @@
                 {{ $user->formatted_name }}
             </th>
             <td class="px-6 py-4">
-                {{ ucfirst($user->gender) }}
+                @if ($user->is_retaker == 'yes' AND !empty($user->userHistoryLatest))
+                    @if ($user->userHistoryLatest->exam_result == 'failed')
+                        Yes
+                    @else
+                        No
+                    @endif
+                @elseif ($user->is_retaker == 'yes' AND empty($user->userHistoryLatest))
+                    Yes
+                @else
+                    No
+                @endif
             </td>
             <td class="px-6 py-4">
                 {{ ucfirst($user->current_status) }}
@@ -74,7 +84,17 @@
                 {{ $user->formatted_name }}
             </th>
             <td class="px-6 py-4">
-                {{ ucfirst($user->gender) }}
+                @if ($user->is_retaker == 'yes' AND !empty($user->userHistoryLatest))
+                    @if ($user->userHistoryLatest->exam_result == 'failed')
+                        Yes
+                    @else
+                        No
+                    @endif
+                @elseif ($user->is_retaker == 'yes' AND empty($user->userHistoryLatest))
+                    Yes
+                @else
+                    No
+                @endif
             </td>
             <td class="px-6 py-4">
                 {{ ucfirst($user->current_status) }}

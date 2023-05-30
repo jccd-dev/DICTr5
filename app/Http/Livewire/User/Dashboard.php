@@ -2,18 +2,19 @@
 
 namespace App\Http\Livewire\User;
 
-use App\Helpers\UserLogActivity;
 use Livewire\Component;
 use mysql_xdevapi\Session;
 use App\Helpers\FileHandler;
 use Livewire\WithFileUploads;
-use App\Helpers\UserManagement;
-use App\Models\Examinee\UserHistory;
-use App\Models\Examinee\UsersData;
 use App\Models\Examinee\Users;
-use Illuminate\Database\Eloquent\Builder;
+use App\Helpers\UserManagement;
+use App\Helpers\UserLogActivity;
+use App\Models\Examinee\UsersData;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use App\Models\Examinee\RegDetails;
+use App\Models\Examinee\UserHistory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Validator;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Container\ContainerExceptionInterface;
@@ -600,13 +601,14 @@ class Dashboard extends Component
     public function apply(int|string $user_id): bool
     {
 
-        $user = UsersData::with('regDetails', 'userHistory')->find($user_id);
+        $user = UsersData::with('regDetails')->find($user_id);
         $reg = $user->regDetails;
-        $history = $user->userHistory;
+
         // dd($user);
         if ($user) {
 
-            if ($reg && $reg->apply == 1) {
+            if ($reg === null) {
+                $reg = new RegDetails();
                 $reg->user_id = $user_id;
                 $reg->reg_date = date('Y-m-d', strtotime('now'));
                 $reg->apply = 1;
@@ -614,9 +616,8 @@ class Dashboard extends Component
                 if ($reg->save()) {
 
                     // count user as applicant if he/she is not a retaker.
-                    if (!$history->isEmpty()) {
-                        DB::table('visitor_count')->increment('applicants');
-                    }
+                    DB::table('visitor_count')->increment('applicants');
+
                     session()->flash('success', 'Application sent');
                     UserLogActivity::addToLog('Apply for exam', $user_id);
                     return true;
@@ -625,8 +626,23 @@ class Dashboard extends Component
                 session()->flash('error', 'server error');
                 return false;
             }
-            session()->flash('warning', 'You have already applied');
-            return false;
+            elseif($reg){
+                $reg->apply = 1;
+
+                if ($reg->save()) {
+
+                    session()->flash('success', 'Application sent');
+                    UserLogActivity::addToLog('ReApply for exam', $user_id);
+                    return true;
+                }
+
+                session()->flash('error', 'server error');
+                return false;
+            }
+            else{
+                session()->flash('warning', 'You have already applied');
+                return false;
+            }
         }
 
         // it means that the user already applied

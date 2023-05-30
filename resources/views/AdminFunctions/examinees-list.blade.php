@@ -29,10 +29,10 @@
         <form id="search-form" class="flex w-full">
             <div class="flex items-center justify-between py-4 w-full dark:bg-gray-800 px-10 pt-10">
                 <div class="flex gap-3">
-                    <select name="gender" class="bg-custom-blue py-3 font-quicksand bg-opacity-10 font-semibold border-none text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-fit p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <option value="">Select Gender</option>
-                        <option value="male" {{ $searchValues['gender'] === 'male' ? 'selected' : '' }}>Male</option>
-                        <option value="female" {{ $searchValues['gender'] === 'female' ? 'selected' : '' }}>Female</option>
+                    <select name="retake" class="bg-custom-blue py-3 font-quicksand bg-opacity-10 font-semibold border-none text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-fit p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option value="">Retaker</option>
+                        <option value="yes" {{ $searchValues['retake'] === 'yes' ? 'selected' : '' }}>Yes</option>
+                        <option value="no" {{ $searchValues['retake'] === 'no' ? 'selected' : '' }}>No</option>
                     </select>
                     <select name="curr_status" class="bg-custom-blue py-3 font-quicksand bg-opacity-10 font-semibold border-none text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-fit p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <option value="">Select Status</option>
@@ -57,6 +57,11 @@
                         <option value="">Applicants</option>
                         <option value="1" {{ $searchValues['applicant'] == '1' ? 'selected' : ''}}>Online</option>
                         <option value="2" {{ $searchValues['applicant'] == '2' ? 'selected' : ''}}>Manual</option>
+                    </select>
+                    <select name="order_by" class="bg-custom-blue py-3 font-quicksand bg-opacity-10 font-semibold border-none text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-fit p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option value="">ORDER</option>
+                        <option value="asc" {{ $searchValues['order_by'] == 'asc' ? 'selected' : ''}}>ASC</option>
+                        <option value="desc" {{ $searchValues['order_by'] == 'desc' ? 'selected' : ''}}>DESC</option>
                     </select>
                 </div>
                 <div class="flex gap-3 items-center">
@@ -89,7 +94,7 @@
                             Name
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Gender
+                            Retaker?
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Current Status
@@ -119,7 +124,17 @@
                                         {{ $user->formatted_name }}
                                     </th>
                                     <td class="px-6 py-4">
-                                        {{ ucfirst($user->gender) }}
+                                        @if ($user->is_retaker == 'yes' AND !empty($user->userHistoryLatest))
+                                            @if ($user->userHistoryLatest->exam_result == 'failed')
+                                                Yes
+                                            @else
+                                                No
+                                            @endif
+                                        @elseif ($user->is_retaker == 'yes' AND empty($user->userHistoryLatest))
+                                            Yes
+                                        @else
+                                            No
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4">
                                         {{ ucfirst($user->current_status) }}
@@ -200,7 +215,17 @@
                                         {{ $user->formatted_name }}
                                     </th>
                                     <td class="px-6 py-4">
-                                        {{ $user->gender }}
+                                        @if ($user->is_retaker == 'yes' AND !empty($user->userHistoryLatest))
+                                            @if ($user->userHistoryLatest->exam_result == 'failed')
+                                                Yes
+                                            @else
+                                                No
+                                            @endif
+                                        @elseif ($user->is_retaker == 'yes' AND empty($user->userHistoryLatest))
+                                            Yes
+                                        @else
+                                            No
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4">
                                         {{ $user->current_status }}

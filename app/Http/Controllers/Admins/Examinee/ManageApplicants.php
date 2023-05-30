@@ -24,7 +24,7 @@ class ManageApplicants extends Controller
 {
 
     private string $cache_key = 'search_items';
-    public ?string $gender = null;
+    public ?string $retake = null;
     public ?string $curr_status = null;
     public ?string $municipality = null;
     public ?string $search_text = null;
@@ -48,7 +48,7 @@ class ManageApplicants extends Controller
                 ->paginate(20);
 
             $searchValues = [
-                'gender' => $this->gender,
+                'retake' => $this->retake,
                 'curr_status' => $this->curr_status,
                 'municipality' => $this->municipality,
                 'search_text' => $this->search_text,
@@ -103,7 +103,7 @@ class ManageApplicants extends Controller
      */
     public function search_examinees(Request $request): View
     {
-        $this->gender = $request->gender;
+        $this->retake = $request->retake;
         $this->curr_status = $request->curr_status;
         $this->municipality = $request->municipality;
         $this->search_text = $request->search_text;
@@ -114,7 +114,7 @@ class ManageApplicants extends Controller
 
         // put the search_items in the cache
         $search_values = [
-            'gender' => $request->gender,
+            'retake' => $request->retake,
             'curr_status' => $request->curr_status,
             'municipality' => $request->municipality,
             'search_text' => $request->search_text,
@@ -331,6 +331,7 @@ class ManageApplicants extends Controller
         }
 
         $users_data = [
+            'is_retaker'        => $request->post('retaker') ? 'yes' : 'no',
             'fname'             => $request->post('givenName'),
             'lname'             => $request->post('surName'),
             'email'             => $request->post('email'),
@@ -428,6 +429,7 @@ class ManageApplicants extends Controller
         }
 
         $users_data = [
+            'is_retake'         => $request->post('retake') ? 'yes' : 'no',
             'fname'             => $request->post('givenName'),
             'lname'             => $request->post('surName'),
             'mname'             => $request->post('middleName'),
