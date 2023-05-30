@@ -20,6 +20,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\Collection;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Container\ContainerExceptionInterface;
+use App\Models\Examinee\RegDetails;
+use App\Helpers\UserLogActivity;
 
 class ManageApplicants extends Controller
 {
@@ -216,7 +218,7 @@ class ManageApplicants extends Controller
         $user = UsersData::with('userLogin', 'regDetails', 'userHistory.failedHistory')->find($user_id);
 
         $reg = $user->regDetails;
-        $exam_data = ExamSchedule::find($reg->exam_schdule_id);
+        $exam_data = ExamScheduleModel::find($reg->exam_schedule_id);
 
         //update the user history
         $userHistory = $user->userHistory()->create([
@@ -566,11 +568,11 @@ class ManageApplicants extends Controller
     {
         $user = UsersData::with('regDetails', 'userHistory')->find($user_id);
         $reg = $user->regDetails;
-        $history = $user->userHistory;
         // dd($user);
         if ($user) {
 
-            if ($reg && $reg->apply == 1) {
+            if ($reg === null) {
+                $reg = new RegDetails();
                 $reg->user_id = $user_id;
                 $reg->reg_date = date('Y-m-d', strtotime('now'));
                 $reg->apply = 1;
@@ -578,22 +580,31 @@ class ManageApplicants extends Controller
                 if ($reg->save()) {
 
                     // count user as applicant if he/she is not a retaker.
-                    if (!$history->isEmpty()) {
-                        DB::table('visitor_count')->increment('applicants');
-                    }
+                    DB::table('visitor_count')->increment('applicants');
+
                     session()->flash('success', 'Application sent');
+                    UserLogActivity::addToLog('Apply for exam', $user_id);
                     return true;
                 }
 
                 session()->flash('error', 'server error');
                 return false;
-            }
-            session()->flash('warning', 'Already applied');
-            return false;
-        }
+            } elseif ($reg) {
+                $reg->apply = 1;
 
-        // it means that the user already applied
-        session()->flash('warning', 'Register first');
-        return false;
+                if ($reg->save()) {
+
+                    session()->flash('success', 'Application sent');
+                    UserLogActivity::addToLog('ReApply for exam', $user_id);
+                    return true;
+                }
+
+                session()->flash('error', 'server error');
+                return false;
+            } else {
+                session()->flash('warning', 'You have already applied');
+                return false;
+            }
+        }
     }
 }
