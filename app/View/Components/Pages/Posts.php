@@ -24,7 +24,7 @@ class Posts extends Component
     {
         $this->banner_model = new HomeBanner();
         $this->postModel = new PostModel();
-        $this->data = PostModel::where('id', $id)->first();
+        $this->data = PostModel::with('images')->where('id', $id)->first();
     }
 
     public function mount()
