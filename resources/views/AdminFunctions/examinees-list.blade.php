@@ -135,7 +135,7 @@
                                         @endif
                                     </td>
                                     <td class="px-6 py-4">
-                                        @if (empty($user->regDetails) OR $user->regDetails->apply == 0)
+                                        @if (empty($user->regDetails) OR $user->regDetails->apply == 2)
                                             Not yet been applied
                                         @else
                                             @switch($user->regDetails->status)
@@ -152,10 +152,10 @@
                                                     <i>Approved</i>
                                                     @break
                                                 @case(5)
-                                                    <i>Scheduled for Exam</i>
+                                                    <i>Waiting for Result</i>
                                                     @break
                                                 @case(6)
-                                                    <i>Waiting for Result</i>
+                                                    <i>Scheduled for Exam</i>
                                                     @break
                                                 @default
 
@@ -169,7 +169,7 @@
                                             @if ($user->userHistoryLatest->exam_result == 'passed')
                                                 <i>Passed</i>
                                             @else
-                                                <i>Passed</i>
+                                                <i>Failed</i>
                                             @endif
                                         @endif
                                     </td>
@@ -216,7 +216,7 @@
                                         @endif
                                     </td>
                                     <td class="px-6 py-4">
-                                        @if (empty($user->regDetails) OR $user->regDetails->apply == 0)
+                                        @if (empty($user->regDetails) OR $user->regDetails->apply == 2)
                                             Not yet been applied
                                             @else
                                             @switch($user->regDetails->status)
@@ -233,10 +233,10 @@
                                                     <i>Approved</i>
                                                     @break
                                                 @case(5)
-                                                    <i>Scheduled for Exam</i>
+                                                    <i>Waiting for Result</i>
                                                     @break
                                                 @case(6)
-                                                    <i>Waiting for Result</i>
+                                                    <i>Scheduled for Exam</i>
                                                     @break
                                                 @default
 
@@ -250,7 +250,7 @@
                                             @if ($user->userHistoryLatest->exam_result == 'passed')
                                                 <i>Passed</i>
                                             @else
-                                                <i>Passed</i>
+                                                <i>Failed</i>
                                             @endif
                                         @endif
                                     </td>
@@ -280,8 +280,10 @@
                     </tbody>
                 </table>
             </div>
+            <div class="mt-10">
+                {{ $data->links() }}
+            </div>
         </div>
-        {{ $data->links() }}
     </div>
 </div>
   @include('AdminFunctions.add-applicant')

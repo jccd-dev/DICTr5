@@ -114,6 +114,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/exam-schedule/{id}', ExamSchedule::class)->name('admin.exam-schedule2');
         Route::get('/inbox', CMSInbox::class)->name('admin.inbox');
         Route::get('/logs', [AdminLogsController::class, 'render'])->name('admin.system-log');
+        Route::get('/clean-logs', [AdminLogsController::class, 'clean_logs'])->name('admin.clean-logs');
     });
 });
 

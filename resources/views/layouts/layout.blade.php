@@ -19,6 +19,10 @@ html {
 </style>
 <body class="overflow-y-scroll overflow-x-hidden relative" x-data="data()">
         <x-admin.navbar>
+            {{-- TODO: add design --}}
+        @if($errors->has('error'))
+           {{$errors->first('error')}}
+        @endif
         <!-- nav -->
             <div class="flex flex-col flex-1 w-full">
                 <x-admin.header />

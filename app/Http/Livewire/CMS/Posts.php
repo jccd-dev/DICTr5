@@ -120,7 +120,7 @@ class Posts extends Component
         $this->content = '';
         $this->images = [];
         $this->image_names = [];
-        $this->vid_link = '';
+        $this->vid_link = '<iframe src="https://drive.google.com/file/d/1o-69DTgRAy3Expz6Ekj2r3ffd_7AFZFY/preview" width="640" height="480" allow="autoplay"></iframe>';
         $this->status = 0;
         $this->post_data = [];
         $this->post_id = 0;
@@ -171,6 +171,7 @@ class Posts extends Component
 
     public function create_post($admin): void
     {
+        $this->vid_link = $this->getLink();
         if (count($this->temp_images) > 0)
             $validator = Validator::make([
                 'category_id'   => $this->category_id,
@@ -202,6 +203,8 @@ class Posts extends Component
                 'vid_link'       => 'nullable|url',
                 'status'         => 'required|numeric',
             ]);
+
+
         if ($validator->fails()) {
             $err_msgs = $validator->getMessageBag();
             foreach ($err_msgs->getMessages() as $field => $messages) {
@@ -255,6 +258,18 @@ class Posts extends Component
         }
 
         session()->flash('error', 'Something went wrong please try again later!');
+    }
+
+    public function getLink(): string
+    {
+        $i = strpos($this->vid_link, "http");
+        $temp = "";
+        while ($this->getLink()[$i] !== '"') {
+            $temp .= $this->getLink()[$i];
+            $i++;
+        }
+
+        return $temp;
     }
 
 

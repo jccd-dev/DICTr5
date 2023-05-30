@@ -18,7 +18,7 @@
     </div>
 
     <div class="container my-24 px-6 mx-auto">
-        <div class="block rounded-lg shadow-lg bg-white">
+        <div class="block rounded-lg bg-white">
         <div class="flex flex-wrap items-center">
             <div class="hidden lg:flex grow-0 shrink-0 basis-auto lg:w-6/12 xl:w-5/12">
             <!-- Slider main container -->
@@ -29,18 +29,13 @@
                     {{-- @dd($data['cur_post']) --}}
                     {{-- @foreach($data['cur_post']->)
                     @endforeach --}}
-                        <div class="swiper-slide">
-                            <img src="{{ asset('img/simreg.jpg') }}" class="" alt=""
-                class="w-full rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg" />
-                        </div>
-                        <div class="swiper-slide">
-                            <img src="{{ asset('img/simreg.jpg') }}" class="" alt=""
-                class="w-full rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg" />
-                        </div>
-                        <div class="swiper-slide">
-                            <img src="{{ asset('img/simreg.jpg') }}" class="" alt=""
-                class="w-full rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg" />
-                        </div>
+                        @foreach ($data['cur_post']->images as $img)
+                            <div class="swiper-slide">
+                                <img src="{{ asset("storage/images/".$img->image_filename) }}" alt=""
+                    class="w-full h-full object-cover" />
+                            </div>
+                        @endforeach
+
                     </div>
                     <!-- If we need pagination -->
                     <div class="swiper-pagination"></div>
@@ -61,12 +56,15 @@
                         @php
                             echo htmlspecialchars_decode($data['cur_post']->content);
                         @endphp
-                        {{-- @dd($data['cur_post']->content) --}}
                     </p>
                 </div>
             </div>
-            <div class="w-full flex justify-center mt-20">
-                <iframe class="w-full rounded-[2rem] h-[40rem]" src="https://www.youtube.com/embed/4_MDP6TcHwU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            <div class="w-full flex justify-center mt-20" id="embedd-con">
+                @if (strstr($data['cur_post']->vid_link, 'youtube'))
+                    <iframe class="w-full rounded-[2rem] h-[40rem]" src="{{ $data['cur_post']->vid_link }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                @elseif(strstr($data['cur_post']->vid_link, 'drive'))
+                    <iframe class="w-full rounded-[2rem] h-[40rem]" src="{{ $data['cur_post']->vid_link }}" allow="autoplay"></iframe>
+                @endif
             </div>
         </div>
         </div>
@@ -161,4 +159,8 @@
 </div>
 
 <x-footer :data="$data['visitors']" />
+<script>
+    const embedCon = document.querySelector('#embedd-con')
+
+</script>
 @endsection

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 29, 2023 at 03:18 AM
+-- Generation Time: May 29, 2023 at 05:18 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -66,7 +66,14 @@ INSERT INTO `admin_logs` (`id`, `admin_id`, `activity`, `end_point`, `timestamp`
 (1, 2, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-24 08:22:04'),
 (2, 2, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-25 00:50:26'),
 (3, 2, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-25 05:53:27'),
-(4, 2, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-29 00:56:09');
+(4, 2, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-29 00:56:09'),
+(5, 3, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-29 01:55:24'),
+(6, 3, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-29 02:01:52'),
+(7, 2, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-29 02:08:37'),
+(8, 2, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-29 02:08:39'),
+(9, 1, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-29 02:12:19'),
+(10, 1, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-29 02:12:21'),
+(11, 3, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-29 02:20:19');
 
 -- --------------------------------------------------------
 
@@ -691,7 +698,7 @@ ALTER TABLE `addresses`
 -- AUTO_INCREMENT for table `admin_logs`
 --
 ALTER TABLE `admin_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `announcements`
@@ -847,7 +854,7 @@ ALTER TABLE `calendar`
 -- Constraints for table `failed_history`
 --
 ALTER TABLE `failed_history`
-  ADD CONSTRAINT `failed_history_ibfk_1` FOREIGN KEY (`history_id`) REFERENCES `failed_history` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `failed_history_ibfk_1` FOREIGN KEY (`history_id`) REFERENCES `user_history` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `posts`

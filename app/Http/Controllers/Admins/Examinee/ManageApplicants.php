@@ -44,8 +44,7 @@ class ManageApplicants extends Controller
         if ($searchValues) {
             $examinees = SearchExamineesHelper::search_with_cache($searchValues);
         } else {
-            $examinees = UsersData::with('tertiaryEdu', 'trainingSeminars', 'addresses', 'submittedFiles', 'userLogin', 'userHistoryLatest')
-                ->paginate(20);
+            $examinees = UsersData::with('tertiaryEdu', 'trainingSeminars', 'addresses', 'submittedFiles', 'userLogin', 'userHistoryLatest')->paginate(20);
 
             $searchValues = [
                 'gender' => $this->gender,
@@ -234,7 +233,7 @@ class ManageApplicants extends Controller
         $reg->reg_date = null;
         $reg->approved_date = null;
         $reg->status = 0;
-        $reg->apply = 0;
+        $reg->apply = 2;
         $reg->save();
 
         AdminLogActivity::addToLog("send exam result to {$user->id}", session()->get('admin_id'));
