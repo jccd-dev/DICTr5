@@ -8,8 +8,8 @@ class SearchExamineesHelper
     public static function search_with_cache($searchValues){
 
        return UsersData::query()
-            ->when($searchValues['gender'], function ($query, $genderValue){
-                $query->where('gender', $genderValue);
+            ->when($searchValues['retake'], function ($query, $retakeValue){
+                $query->where('is_retaker', $retakeValue);
             })
             ->when($searchValues['reg_status'], function ($query, $statusValue){
                 $query->whereHas('regDetails', function ($query) use ($statusValue){
@@ -18,8 +18,13 @@ class SearchExamineesHelper
             })
             ->when($searchValues['is_applied'], function ($query, $applyValue){
                 $query->whereHas('regDetails', function ($query) use ($applyValue){
-                    $query->where('apply', $applyValue);
-                });
+                    if($applyValue == 1){
+                        $query->where('apply', $applyValue);
+                    }
+                    else{
+                        $query->where('apply', '=', $applyValue);
+                    }
+                })->orWhereDoesntHave('regDetails');
             })
             ->when($searchValues['search_text'], function($query, $searchValue){
                 $query->where(function ($query) use ($searchValue){
