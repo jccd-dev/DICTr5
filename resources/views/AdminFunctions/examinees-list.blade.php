@@ -280,6 +280,9 @@
                     </tbody>
                 </table>
             </div>
+            <div class="mt-10">
+                {{ $data->links() }}
+            </div>
         </div>
     </div>
 </div>

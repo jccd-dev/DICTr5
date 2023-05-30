@@ -6,7 +6,7 @@
 
     <!-- Desktop sidebar -->
     <aside
-        class="z-20 hidden w-80 overflow-y-auto bg-white dark:bg-gray-800 md:block flex-shrink-0 px-5"
+        class="z-20 hidden w-64 2xl:w-80 overflow-y-auto bg-white dark:bg-gray-800 md:block flex-shrink-0 px-3 2xl:px-5"
     >
         <div class="py-4 pt-12 px-5 text-gray-500 dark:text-gray-400">
             <a

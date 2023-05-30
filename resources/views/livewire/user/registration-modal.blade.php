@@ -253,6 +253,9 @@
                         <x-forms.file name="Valid ID (required for professional)" placeholder="Valid ID" model="validId" id="valid-id" accept=".pdf,.doc,.docx,image/*" classes="mb-3 md:mb-6 flex-1 flex-col" />
                         <x-forms.file name="Diploma / TOR (required for prefessional)" placeholder="Diploma / TOR" model="diploma" id="diploma" accept=".pdf,.doc,.docx,image/*" classes="mb-3 md:mb-6 flex-1 flex-col" />
                     </div>
+                    <div class="w-full md:w-2/5 flex gap-3">
+                        <x-forms.file name="Upload Passport Size Image (required for students)" placeholder="Upload Passport Size Image" model="passport" id="passport" accept=".pdf,.doc,.docx,image/*" classes="mb-3 md:mb-6 flex-1 flex-col" />
+                    </div>
                 </div>
                 <br />
                 <hr />

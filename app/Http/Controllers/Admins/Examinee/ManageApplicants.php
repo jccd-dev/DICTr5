@@ -15,6 +15,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
 use App\Helpers\SearchExamineesHelper;
 use App\Http\Livewire\Admin\ExamSchedule;
+use App\Models\Admin\ExamSchedule as ExamScheduleModel;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\Collection;
 use Psr\Container\NotFoundExceptionInterface;
@@ -44,8 +45,7 @@ class ManageApplicants extends Controller
         if ($searchValues) {
             $examinees = SearchExamineesHelper::search_with_cache($searchValues);
         } else {
-            $examinees = UsersData::with('tertiaryEdu', 'trainingSeminars', 'addresses', 'submittedFiles', 'userLogin', 'userHistoryLatest')
-                ->paginate(20);
+            $examinees = UsersData::with('tertiaryEdu', 'trainingSeminars', 'addresses', 'submittedFiles', 'userLogin', 'userHistoryLatest')->paginate(20);
 
             $searchValues = [
                 'gender' => $this->gender,
@@ -74,13 +74,13 @@ class ManageApplicants extends Controller
     public function select_examinee(int $examinees_id): View|RedirectResponse
     {
         $examinees_data = UsersData::with('addresses', 'tertiaryEdu', 'trainingSeminars', 'submittedFiles', 'regDetails', 'userHistory.failedHistory', 'userLogs', 'userLogin', 'userHistoryLatest')->where('id', $examinees_id)->first();
-        // dd($examinees_data);
+        $exam_schedule = new ExamScheduleModel();
         // if record is null or not found
         if (!$examinees_data) {
             return redirect()->back()->with('error', 'Record cannot found');
         }
         // dd($examinees_data);
-        return view('AdminFunctions.applicant-data', ['examinees_data' => $examinees_data]);
+        return view('AdminFunctions.applicant-data', ['examinees_data' => $examinees_data, 'examSched' => $exam_schedule::all()]);
     }
 
     // public function examinee(int $examinees_id)
@@ -149,7 +149,7 @@ class ManageApplicants extends Controller
          * ]
          */
         $validation = (int)$request->post('validation');
-        $examSchedule_id = (int)$request->post('exam_sched_id');
+        $examSchedule_id = (int)$request->post('exam-sched');
         $remark = $request->post('remarks');
 
         $applicant = UsersData::with('regDetails', 'userHistory')->find($user_id);
@@ -159,7 +159,7 @@ class ManageApplicants extends Controller
         $reg->exam_schedule_id = $examSchedule_id;
         $reg->approved_date = date('Y-m-d', strtotime('now'));
         $email_type = 0;
-        switch($validation){
+        switch ($validation) {
             case 1:
                 $email_type = 1;
                 $reg->status = 1;
@@ -174,11 +174,11 @@ class ManageApplicants extends Controller
                 $reg->status = 4; // approved only
                 break;
             case 5:
-                $email_type = 5;
-                $reg->exam_schedule_id = $examSchedule_id;
                 $reg->status = 5;
                 break;
             case 6:
+                $email_type = 6;
+                $reg->exam_schedule_id = $examSchedule_id;
                 $reg->status = 6;
                 break;
             default:
@@ -187,13 +187,13 @@ class ManageApplicants extends Controller
         }
 
         $reg->status = $validation;
-        if($reg->save()){
+        if ($reg->save()) {
 
             //TODO send email notification to applicant
-            $email_type == 1 ? email_function_for_reject : null;
-            $email_type == 2 ? email_function_for_incomplete : null;
-            $email_type == 4 ? email_function_for_approved : null;
-            $email_type == 5 ? email_function_for_schedule_exam : null;
+            // $email_type == 1 ? email_function_for_reject : null;
+            // $email_type == 2 ? email_function_for_incomplete : null;
+            // $email_type == 4 ? email_function_for_approved : null;
+            // $email_type == 5 ? email_function_for_schedule_exam : null;
 
             return response()->json(['success' => 'Validated Successfully'], 200);
         }
@@ -255,13 +255,12 @@ class ManageApplicants extends Controller
         $reg->status = 0;
         $reg->apply = 2;
 
-        if(!$reg->save()){
+        if (!$reg->save()) {
             return response()->json(['error' => 'server Error'], 500);
         }
 
         AdminLogActivity::addToLog("send exam result to {$user->id}", session()->get('admin_id'));
         return response()->json(['success' => ''], 200);
-
     }
 
     /**
