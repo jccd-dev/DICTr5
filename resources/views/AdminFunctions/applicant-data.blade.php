@@ -158,13 +158,13 @@
                                 @if($key % 2 === 0)
                                     <tr class="bg-[#FDC500] bg-opacity-25">
                                         <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
-                                            {{ $user->registration_date }}
+                                            {{ date('F j, Y', strtotime($user->registration_date)) }}
                                         </th>
                                         <td class="px-6 py-4">
                                             {{ $user->approved_data }}
                                         </td>
                                         <td class="px-6 py-4">
-                                            {{ $user->schedule }}
+                                            {{ date('F j, Y g:i a', strtotime($user->schedule)) }}
                                         </td>
                                         <td class="px-6 py-4">
                                             {{ $user->exam_set }}
@@ -179,13 +179,13 @@
                                 @else
                                     <tr class="bg-[#FDC500] bg-opacity-10">
                                         <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
-                                            {{ $user->registration_date }}
+                                            {{ date('F j, Y', strtotime($user->registration_date)) }}
                                         </th>
                                         <td class="px-6 py-4">
                                             {{ $user->approved_data }}
                                         </td>
                                         <td class="px-6 py-4">
-                                            {{ $user->schedule }}
+                                            {{ date('F j, Y g:i a', strtotime($user->schedule)) }}
                                         </td>
                                         <td class="px-6 py-4">
                                             {{ $user->exam_set }}
@@ -226,21 +226,20 @@
                 <input type="hidden" name="exam_sched_id" value="">
                 <label for="status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select an option</label>
                 <select id="status" @change="statusValue = $event.target.value" name="validation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    <option value="3" selected>For Evaluation</option>
                     <option value="1">Disapproved</option>
                     <option value="2">Incomplete</option>
                     <option value="4">Approved</option>
-                    <option value="5">Waiting for result</option>
-                    <option value="6">Scheduled for exam</option>
+                    <option value="5">Scheduled for exam</option>
+                    <option value="6">Waiting for result</option>
                 </select>
-                <div class="mt-3 mb-3 md:mb-6 flex-1 flex-col" x-show="statusValue == 6">
+                <div class="mt-3 mb-3 md:mb-6 flex-1 flex-col" x-show="statusValue == 5">
                     <label for="exam-sched" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Exam Schedule</label>
                         <select
                             id="exam-sched"
                             name="exam-sched"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="Exam Schedule"
-                            :required="statusValue == 6"
+                            :required="statusValue == 5"
                         >
                         @foreach ($examSched as $sched)
                             <option value="{{ $sched->id }}">{{ $sched->venue }}</option>
