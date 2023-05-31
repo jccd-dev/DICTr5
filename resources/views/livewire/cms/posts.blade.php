@@ -331,7 +331,7 @@
                             <div x-show="state == 3">
                                 <x-forms.select name="Category" model="category_id" id="category" :options="$all_category" classes="mb-6" />
 
-                                <x-forms.input-form name="Link" type="url" placeholder="Video Link" model="vid_link" id="video_link" classes="mb-6" />
+                                <x-forms.input-form name="Link" type="text" placeholder="Video Link" model="vid_link" id="video_link" classes="mb-6" />
 
                             </div>
 
