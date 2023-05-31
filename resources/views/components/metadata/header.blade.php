@@ -13,6 +13,7 @@
     @elseif(request()->routeIs('admin.examinees')) {{'Exam Applicants'}}
     @elseif(request()->routeIs('admin.accounts')) {{'Admin Accounts'}}
     @elseif(request()->routeIs('admin.system-logs')) {{'All Logs'}}
+    @elseif(request()->routeIs('examinee.get')) {{'Applicant Data'}}
     @else {{'DICT Camarines Sur'}}
     @endif
 </title>
@@ -58,6 +59,9 @@
 <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.min.css" rel="stylesheet">
 {{-- CKEDITOR --}}
 <script src="//cdn.ckeditor.com/4.21.0/standard/ckeditor.js"></script>
+{{-- PDFViewer--}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+
 
 <!-- Styles -->
 <wireui:styles />

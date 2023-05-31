@@ -110,11 +110,13 @@ Route::prefix('admin')->group(function () {
             Route::get('/{id}/apply-examinee', [ManageApplicants::class, 'apply_examinee'])->name('examinee.apply');
         });
 
-        Route::get('/exam-schedule', ExamSchedule::class)->name('admin.exam-schedule');
-        Route::get('/exam-schedule/{id}', ExamSchedule::class)->name('admin.exam-schedule2');
-        Route::get('/inbox', CMSInbox::class)->name('admin.inbox');
-        Route::get('/logs', [AdminLogsController::class, 'render'])->name('admin.system-log');
-        Route::get('/clean-logs', [AdminLogsController::class, 'clean_logs'])->name('admin.clean-logs');
+        Route::middleware(['jwt.roleCheck:100,200'])->group(function () {
+            Route::get('/exam-schedule', ExamSchedule::class)->name('admin.exam-schedule');
+            Route::get('/exam-schedule/{id}', ExamSchedule::class)->name('admin.exam-schedule2');
+            Route::get('/inbox', CMSInbox::class)->name('admin.inbox');
+            Route::get('/logs', [AdminLogsController::class, 'render'])->name('admin.system-log');
+            Route::get('/clean-logs', [AdminLogsController::class, 'clean_logs'])->name('admin.clean-logs');
+        });
     });
 });
 
@@ -138,9 +140,10 @@ Route::prefix('exam')->group(function () {
     Route::get('/send-email', [UserDashboardController::class, 'sendEmail']);
 });
 
-Route::get('/logout', function () {
+Route::get('/user/logout', function () {
     session()->flush();
-});
+    return redirect()->route('homepage');
+})->name('user.logout');
 
 //Visitor Counter
 Route::get('/visitor-counts', [VisitorController::class, 'incrementVisitor']);

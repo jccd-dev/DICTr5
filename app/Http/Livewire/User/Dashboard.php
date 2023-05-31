@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\User;
 
+use App\Models\Examinee\SubmittedFiles;
 use Livewire\Component;
 use mysql_xdevapi\Session;
 use App\Helpers\FileHandler;
@@ -18,6 +19,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Validator;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Container\ContainerExceptionInterface;
+use App\Models\Admin\ExamSchedule;
 
 class Dashboard extends Component
 {
@@ -56,6 +58,8 @@ class Dashboard extends Component
     public string $designationPosition;
     public string $yearsPresentPosition;
 
+    public array|object $file_uploaded;
+
     public string $pl;
     public mixed $passport = null;
     public mixed $psa = null;
@@ -80,6 +84,9 @@ class Dashboard extends Component
     protected $rules;
 
     public $training_limit = 1;
+    public $retaker;
+
+    public bool $view_file_modal = false;
 
 
     protected $except = ['cardModal', 'cardModal2'];
@@ -96,6 +103,7 @@ class Dashboard extends Component
     public function mount()
     {
         $u = Users::find(session()->get('user')['id']);
+        $this->retaker = '';
         $this->givenName = $u->fname;
         $this->middleName = '';
         $this->surName = str_replace(",", "",  $u->lname);
@@ -144,14 +152,25 @@ class Dashboard extends Component
         $this->diploma = '';
 
         $this->signature = '';
-        $this->additional_info = []; //FIXME
+
+        $userdata = $this->get_user_data();
+        foreach ($userdata as $u){
+            $this->file_uploaded = $u->submittedFiles;
+        }
     }
 
 
     public function render()
     {
         // get userlog_id from session
-        return view('livewire.user.dashboard', ['user_data' => $this->get_user_data(), "user" => Users::find(session()->get('user')['id'])])->layout('layouts.user-layouts');
+        return view(
+            'livewire.user.dashboard',
+            [
+                'user_data' => $this->get_user_data(),
+                "user" => Users::find(session()->get('user')['id']),
+                'sched' => ExamSchedule::find($this->get_user_data()[0]->regDetails->exam_schedule_id)
+            ]
+        )->layout('layouts.user-layouts');
     }
 
     public function popInput()
@@ -241,6 +260,7 @@ class Dashboard extends Component
             'fname'             => $this->givenName,
             'lname'             => $this->surName,
             'mname'             => $this->middleName,
+            'email'               => $this->email,
             'place_of_birth'    => $this->pob,
             'date_of_birth'     => date('Y-m-d', strtotime($this->dob)),
             'gender'            => $this->gender,
@@ -258,6 +278,7 @@ class Dashboard extends Component
             'year_level'        => $this->yearLevel,
             'current_status'    => $this->currentStatus,
             'add_info'          => json_encode($this->additional_info), //FIXME
+            'is_retaker'        => $this->retaker ? "yes" : "no",
             'date_accomplish'   => date('Y-m-d H:i:s', strtotime('now'))
         ];
 
@@ -329,18 +350,20 @@ class Dashboard extends Component
     {
         $user_login_id = session()->get('user')['id'];
 
-        return UsersData::with(
+        $user = UsersData::with(
             'tertiaryEdu',
             'trainingSeminars',
             'addresses',
             'submittedFiles',
             'userLogin',
             'userHistory.failedHistory',
-            'userHistoryLatest'
+            'userHistoryLatest',
+            'regDetails'
         )
             ->where('user_login_id', $user_login_id)
             ->get();
 
+        return $user;
         /**
         if(userHistoryLatest)
             if(userHistoryLatest->exam_result == passed)
@@ -356,6 +379,7 @@ class Dashboard extends Component
     {
         $cur_user_data = $this->get_user_data()[0];
         $this->prev_data = $cur_user_data;
+        $this->retaker = $cur_user_data->is_retaker;
 
         // PERSONNAL INFO
         $this->givenName = $cur_user_data->fname;
@@ -479,6 +503,7 @@ class Dashboard extends Component
             'fname'             => $this->givenName,
             'lname'             => $this->surName,
             'mname'             => $this->middleName,
+            'email'               => $this->email,
             'place_of_birth'    => $this->pob,
             'date_of_birth'     => $this->dob,
             'gender'            => $this->gender,
@@ -496,6 +521,7 @@ class Dashboard extends Component
             'yearLevel'         => $this->yearLevel,
             'current_status'    => $this->currentStatus,
             'add_info'          => json_encode($this->additional_info), //FIXME
+            'is_retaker'        => $this->retaker ? "yes" : "no",
             'date_accomplish'   => date('Y-m-d H:i:s', strtotime('now'))
         ];
 
@@ -625,8 +651,7 @@ class Dashboard extends Component
 
                 session()->flash('error', 'server error');
                 return false;
-            }
-            elseif($reg){
+            } elseif ($reg) {
                 $reg->apply = 1;
 
                 if ($reg->save()) {
@@ -638,8 +663,7 @@ class Dashboard extends Component
 
                 session()->flash('error', 'server error');
                 return false;
-            }
-            else{
+            } else {
                 session()->flash('warning', 'You have already applied');
                 return false;
             }
@@ -661,6 +685,7 @@ class Dashboard extends Component
         foreach ($users_data as $user_data) {
             $data = [
                 'id' => $user_data->id,
+                'is_retaker' => $user_data->is_retaker,
                 'email' => $user_data->userLogin->email,
                 'fname' => $user_data->fname,
                 'lname' => $user_data->lname,
@@ -685,6 +710,7 @@ class Dashboard extends Component
                 'region' => $user_data->addresses->region,
                 'province' => $user_data->addresses->province,
                 'municipality' => $user_data->addresses->municipality,
+                'add_info' => $user_data->add_info,
                 'barangay' => $user_data->addresses->barangay,
                 'school_attended' => $user_data->tertiaryEdu->school_attended,
                 'degree' => $user_data->tertiaryEdu->degree,
@@ -712,11 +738,13 @@ class Dashboard extends Component
         }
         $user_login_id = session()->get('user')['id'];
         $user_history = UserHistory::where('user_id', $user_login_id)->count();
-        if (!$user_history > 0) {
-            $data['first_time'] = true;
-        } else {
-            $data['first_time'] = false;
-        }
         return redirect()->route('user.generate_pdf', ['data' => $data]);
+    }
+
+    public function view_file_submitted($id){
+        $submitted_file = SubmittedFiles::where('id', $id)->first();
+        $file_name = $submitted_file->file_name;
+        $this->dispatchBrowserEvent('show_file', $file_name);
+        $this->view_file_modal = true;
     }
 }
