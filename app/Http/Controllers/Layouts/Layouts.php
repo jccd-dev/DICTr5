@@ -38,20 +38,6 @@ class Layouts extends Controller
         $this->usersCounter['passers'] = DB::table('visitor_count')->value('passers');
     }
 
-
-
-    public function getLink($vid_link): string
-    {
-        $i = strpos($vid_link, "https");
-        $temp = "";
-        while ($vid_link[$i] !== '"') {
-            $temp .= $vid_link[$i];
-            $i++;
-        }
-
-        return $temp;
-    }
-
     public function render()
     {
 
@@ -59,10 +45,6 @@ class Layouts extends Controller
         $this->usersCounter['registered'] = DB::table('users_data')->count();
         $banner = $this->banner_model->get();
         $posts = $this->postModel::priority()->get();
-        foreach ($posts as $post) {
-            // dd($post);
-            $post->vid_link = $this->getLink($post->vid_link);
-        }
         $posts = $posts->map(function ($item) {
             $startedAt = Carbon::parse($item->timestamp);
             $endedAt = Carbon::parse(now());
