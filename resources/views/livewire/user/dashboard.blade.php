@@ -486,6 +486,12 @@
                 <span class="p-4 font-quicksand font-semibold absolute top-0 left-0 text-xs text-white w-fit">Proficiency Diagnostic Exam Result (March 2023)</span>
                 <!-- Modal body -->
                 <div class="p-6 px-14 pb-24 space-y-6 w-full flex flex-col items-center justify-center pt-24 text-white">
+
+
+                    {{-- Failed template --}}
+
+                    {{-- START --}}
+
                     {{-- <div class="flex gap-5 items-center">
                         <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M28 55C42.9117 55 55 42.9117 55 28C55 13.0883 42.9117 1 28 1C13.0883 1 1 13.0883 1 28C1 42.9117 13.0883 55 28 55Z" stroke="#FB2F2F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -519,6 +525,14 @@
                             <td><span class="text-[#FFD500] font-semibold">25.00 %</span></td>
                         </tr>
                     </table> --}}
+
+                    {{-- END --}}
+
+
+                    {{-- Processing template --}}
+
+                    {{-- START --}}
+
                     {{-- <div class="flex gap-5 items-center">
                         <svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M27 1V11.4" stroke="#FFD500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -544,6 +558,14 @@
                         <p>ralph.talagtag@dict.gov.ph</p>
                         <p>09XXXXXXXXX</p>
                     </div> --}}
+
+                    {{-- END --}}
+
+
+                    {{-- Passed template --}}
+
+                    {{-- START --}}
+
                     {{-- <div class="flex gap-5 items-center">
                         <svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M53 24.6229V27.0149C52.9968 32.6216 51.1813 38.077 47.8243 42.5676C44.4672 47.0582 39.7485 50.3433 34.3719 51.933C28.9953 53.5227 23.2489 53.3318 17.9896 51.3888C12.7304 49.4458 8.2401 45.8547 5.1885 41.1512C2.13689 36.4478 0.687457 30.8838 1.05636 25.2893C1.42526 19.6947 3.59274 14.3693 7.23553 10.1073C10.8783 5.84521 15.8012 2.87488 21.2701 1.63926C26.7389 0.403647 32.4607 0.968958 37.582 3.25088" stroke="#44D600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -559,6 +581,14 @@
                             Congratulations! You are qualified to receive ICT Proficiency Certification Examination.
                         </p>
                     </div> --}}
+
+                    {{-- END --}}
+
+
+
+                    {{-- Approved template --}}
+
+                    {{-- START --}}
                     <div class="flex gap-5 items-center">
                         <svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M53 24.6229V27.0149C52.9968 32.6216 51.1813 38.077 47.8243 42.5676C44.4672 47.0582 39.7485 50.3433 34.3719 51.933C28.9953 53.5227 23.2489 53.3318 17.9896 51.3888C12.7304 49.4458 8.2401 45.8547 5.1885 41.1512C2.13689 36.4478 0.687457 30.8838 1.05636 25.2893C1.42526 19.6947 3.59274 14.3693 7.23553 10.1073C10.8783 5.84521 15.8012 2.87488 21.2701 1.63926C26.7389 0.403647 32.4607 0.968958 37.582 3.25088" stroke="#44D600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -575,6 +605,8 @@
                         </p>
                     </div>
                 </div>
+
+                {{-- END --}}
 
                 {{-- <svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M53 24.6229V27.0149C52.9968 32.6216 51.1813 38.077 47.8243 42.5676C44.4672 47.0582 39.7485 50.3433 34.3719 51.933C28.9953 53.5227 23.2489 53.3318 17.9896 51.3888C12.7304 49.4458 8.2401 45.8547 5.1885 41.1512C2.13689 36.4478 0.687457 30.8838 1.05636 25.2893C1.42526 19.6947 3.59274 14.3693 7.23553 10.1073C10.8783 5.84521 15.8012 2.87488 21.2701 1.63926C26.7389 0.403647 32.4607 0.968958 37.582 3.25088" stroke="#44D600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
