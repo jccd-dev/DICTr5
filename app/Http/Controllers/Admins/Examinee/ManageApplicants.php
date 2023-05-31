@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admins\Examinee;
 
+use App\Mail\RegistrationStatus;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use App\Models\Examinee\Users;
@@ -196,6 +197,12 @@ class ManageApplicants extends Controller
             // $email_type == 2 ? email_function_for_incomplete : null;
             // $email_type == 4 ? email_function_for_approved : null;
             // $email_type == 5 ? email_function_for_schedule_exam : null;
+            $data = [
+                'name' => $applicant->formatted_name,
+                'email' => '',
+                'intended_for' => 'Sent Registration Status'
+            ];
+            Mail::to('cquelonio@gmail.com')->send(new RegistrationStatus($email_type, $data));
 
             return response()->json(['success' => 'Validated Successfully'], 200);
         }
