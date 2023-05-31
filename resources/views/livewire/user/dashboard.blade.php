@@ -56,9 +56,6 @@
                     <div class="font-quicksand flex flex-col">
                         <span class="flex gap-10 items-center"><h1 class="font-bold text-3xl">{{ $user->fname }} {{ str_replace(",", "", $user->lname) }}</h1>
                             <span class="absolute top-10 right-0 sm:top-0 flex items-center text-sm font-medium text-white sm:relative">
-                                @if ($sched->status)
-                                    
-                                @endif
                                 <span class="flex w-2.5 h-2.5 bg-green-500 rounded-full mr-1.5 flex-shrink-0"></span>
                                 Approved
                             </span>

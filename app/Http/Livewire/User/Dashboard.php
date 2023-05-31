@@ -154,7 +154,7 @@ class Dashboard extends Component
         $this->signature = '';
 
         $userdata = $this->get_user_data();
-        foreach ($userdata as $u){
+        foreach ($userdata as $u) {
             $this->file_uploaded = $u->submittedFiles;
         }
     }
@@ -168,7 +168,7 @@ class Dashboard extends Component
             [
                 'user_data' => $this->get_user_data(),
                 "user" => Users::find(session()->get('user')['id']),
-                'sched' => ExamSchedule::find($this->get_user_data()[0]->regDetails->exam_schedule_id)
+                'sched' => ExamSchedule::find($this->get_user_data()[0]->regDetails->exam_schedule_id) ?? null
             ]
         )->layout('layouts.user-layouts');
     }
@@ -741,7 +741,8 @@ class Dashboard extends Component
         return redirect()->route('user.generate_pdf', ['data' => $data]);
     }
 
-    public function view_file_submitted($id){
+    public function view_file_submitted($id)
+    {
         $submitted_file = SubmittedFiles::where('id', $id)->first();
         $file_name = $submitted_file->file_name;
         $this->dispatchBrowserEvent('show_file', $file_name);
