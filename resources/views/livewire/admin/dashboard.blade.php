@@ -11,19 +11,19 @@
     </style>
     {{-- @dd($exam_sched) --}}
     <!-- admin credentials can be access using this;-->
-    {{-- @if(auth('jwt')->user()->name != null)
-        {{auth('jwt')->user()->name}}
-        <br>
-    @endif --}}
+    @if(auth('jwt')->user()->name != null)
+        {{-- {{auth('jwt')->user()->name}} --}}
+        {{-- <br> --}}
+    @endif
 
     <!-- admin credentials can be access using this;-->
-    {{-- @can('admins_only', auth('jwt')->user())
-        <div style="font-size: 1rem; font-weight: bold">Admins Only</div>
-    @endcan --}}
+    @can('admins_only', auth('jwt')->user())
+        {{-- <div style="font-size: 1rem; font-weight: bold">Admins Only</div> --}}
+    @endcan
 
 
-    {{-- Admin Dashboard
-    @if($role === 100)
+    {{-- Admin Dashboard --}}
+    {{-- @if($role === 100)
         <h2>Super Admin Features</h2>
         <h5>{{$name}}</h5>
         <ul>

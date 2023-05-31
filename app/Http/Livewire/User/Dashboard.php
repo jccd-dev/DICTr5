@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Validator;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Container\ContainerExceptionInterface;
+use App\Models\Admin\ExamSchedule;
 
 class Dashboard extends Component
 {
@@ -80,6 +81,7 @@ class Dashboard extends Component
     protected $rules;
 
     public $training_limit = 1;
+    public $retaker;
 
 
     protected $except = ['cardModal', 'cardModal2'];
@@ -96,6 +98,7 @@ class Dashboard extends Component
     public function mount()
     {
         $u = Users::find(session()->get('user')['id']);
+        $this->retaker = '';
         $this->givenName = $u->fname;
         $this->middleName = '';
         $this->surName = str_replace(",", "",  $u->lname);
@@ -151,7 +154,14 @@ class Dashboard extends Component
     public function render()
     {
         // get userlog_id from session
-        return view('livewire.user.dashboard', ['user_data' => $this->get_user_data(), "user" => Users::find(session()->get('user')['id'])])->layout('layouts.user-layouts');
+        return view(
+            'livewire.user.dashboard',
+            [
+                'user_data' => $this->get_user_data(),
+                "user" => Users::find(session()->get('user')['id']),
+                'sched' => ExamSchedule::find($this->get_user_data()[0]->regDetails->exam_schedule_id)
+            ]
+        )->layout('layouts.user-layouts');
     }
 
     public function popInput()
@@ -241,6 +251,7 @@ class Dashboard extends Component
             'fname'             => $this->givenName,
             'lname'             => $this->surName,
             'mname'             => $this->middleName,
+            'email'               => $this->email,
             'place_of_birth'    => $this->pob,
             'date_of_birth'     => date('Y-m-d', strtotime($this->dob)),
             'gender'            => $this->gender,
@@ -258,6 +269,7 @@ class Dashboard extends Component
             'year_level'        => $this->yearLevel,
             'current_status'    => $this->currentStatus,
             'add_info'          => json_encode($this->additional_info), //FIXME
+            'is_retaker'        => $this->retaker ? "yes" : "no",
             'date_accomplish'   => date('Y-m-d H:i:s', strtotime('now'))
         ];
 
@@ -329,18 +341,20 @@ class Dashboard extends Component
     {
         $user_login_id = session()->get('user')['id'];
 
-        return UsersData::with(
+        $user = UsersData::with(
             'tertiaryEdu',
             'trainingSeminars',
             'addresses',
             'submittedFiles',
             'userLogin',
             'userHistory.failedHistory',
-            'userHistoryLatest'
+            'userHistoryLatest',
+            'regDetails'
         )
             ->where('user_login_id', $user_login_id)
             ->get();
 
+        return $user;
         /**
         if(userHistoryLatest)
             if(userHistoryLatest->exam_result == passed)
@@ -356,6 +370,7 @@ class Dashboard extends Component
     {
         $cur_user_data = $this->get_user_data()[0];
         $this->prev_data = $cur_user_data;
+        $this->retaker = $cur_user_data->is_retaker;
 
         // PERSONNAL INFO
         $this->givenName = $cur_user_data->fname;
@@ -479,6 +494,7 @@ class Dashboard extends Component
             'fname'             => $this->givenName,
             'lname'             => $this->surName,
             'mname'             => $this->middleName,
+            'email'               => $this->email,
             'place_of_birth'    => $this->pob,
             'date_of_birth'     => $this->dob,
             'gender'            => $this->gender,
@@ -496,6 +512,7 @@ class Dashboard extends Component
             'yearLevel'         => $this->yearLevel,
             'current_status'    => $this->currentStatus,
             'add_info'          => json_encode($this->additional_info), //FIXME
+            'is_retaker'        => $this->retaker ? "yes" : "no",
             'date_accomplish'   => date('Y-m-d H:i:s', strtotime('now'))
         ];
 
@@ -625,8 +642,7 @@ class Dashboard extends Component
 
                 session()->flash('error', 'server error');
                 return false;
-            }
-            elseif($reg){
+            } elseif ($reg) {
                 $reg->apply = 1;
 
                 if ($reg->save()) {
@@ -638,8 +654,7 @@ class Dashboard extends Component
 
                 session()->flash('error', 'server error');
                 return false;
-            }
-            else{
+            } else {
                 session()->flash('warning', 'You have already applied');
                 return false;
             }
