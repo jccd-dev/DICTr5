@@ -163,12 +163,16 @@ class Dashboard extends Component
     public function render()
     {
         // get userlog_id from session
+        $hasData = false;
+        if (isset($this->get_user_data()[0]->regDetails)) {
+            $hasData = true;
+        }
         return view(
             'livewire.user.dashboard',
             [
                 'user_data' => $this->get_user_data(),
                 "user" => Users::find(session()->get('user')['id']),
-                'sched' => ExamSchedule::find($this->get_user_data()[0]->regDetails->exam_schedule_id) ?? null
+                'sched' => $hasData ? ExamSchedule::find($this->get_user_data()[0]->regDetails->exam_schedule_id) : null
             ]
         )->layout('layouts.user-layouts');
     }
