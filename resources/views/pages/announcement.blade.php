@@ -18,7 +18,7 @@
 
     <x-home.section.details-section />
 
-    <x-footer :data="$data['visitor']" />
+    <x-footer :data="$visitors" />
 
 @endsection
 

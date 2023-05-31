@@ -27,7 +27,7 @@ class UserDataController extends Controller
             $pdf->Image(storage_path('app/public/fileSubmits/'.$data['passport']), 119, 25, 20, 26);
         }
 
-        if(!$data['is_retaker']){
+        if($data['is_retaker'] == 'no'){
             // First Time
             $pdf->Image(public_path('img/checkmark.png'), 102, 46, 2, 0);
         }else{
@@ -62,9 +62,9 @@ class UserDataController extends Controller
         //Gender
         $pdf->SetXY(89, 75);
         if($data['gender'] == 'male'){
-            $pdf->Write(0.1, "M");
+            $pdf->Write(0.1, "Male");
         }else{
-            $pdf->Write(0.1, "F");
+            $pdf->Write(0.1, "Female");
         }
 
         // Citizenship
