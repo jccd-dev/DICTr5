@@ -45,15 +45,16 @@
             </button>
         </div>
     </div>
+    {{-- @dd($sched) --}}
     <div class="basis-3/4">
         <div class="flex flex-col lg:flex-row rounded-3xl bg-darker-blue text-white p-14 gap-14 lg:gap-7 justify-between pb-20 lg:pb-36">
             <div class="flex flex-col">
-                <div class="flex gap-7 ">
+                <div class="flex gap-7 flex-wrap relative">
                     <div>
                         <img src="{{ asset('img/Group 44.svg') }}" alt="">
                     </div>
                     <div class="font-quicksand flex flex-col">
-                        <h1 class="font-bold text-3xl">{{ $user->fname }} {{ str_replace(",", "", $user->lname) }}</h1>
+                        <span class="flex gap-10 items-center"><h1 class="font-bold text-3xl">{{ $user->fname }} {{ str_replace(",", "", $user->lname) }}</h1><span class="absolute top-10 right-0 sm:top-0 flex items-center text-sm font-medium text-white sm:relative"><span class="flex w-2.5 h-2.5 bg-green-500 rounded-full mr-1.5 flex-shrink-0"></span>Approved</span></span>
                         <a href="mailto:{{ $user->email }}" class="hover:underline">{{ $user->email }}</a>
                         <span>Professional</span>
                         <div class="flex gap-5 mt-10">
@@ -64,20 +65,21 @@
                                 <span>Telephone No.</span>
                             </div>
                             <div class="flex flex-col gap-2">
-                                <span class="font-semibold">{{ isset($user_data->dob) ? $user_data->dob : "N/A" }}</span>
-                                <span class="font-semibold">{{ isset($user_data->gender) ? $user_data->gender : "N/A" }}</span>
+                                <span class="font-semibold">{{ isset($user_data[0]->date_of_birth) ? date('F j, Y',strtotime($user_data[0]->date_of_birth)) : "N/A" }}</span>
+                                <span class="font-semibold">{{ isset($user_data[0]->gender) ? $user_data[0]->gender : "N/A" }}</span>
                                 <span class="font-semibold">
                                     @php
-                                        if(isset($user_data->addresses)) {
-                                            echo $user_data->addresses->barangay . ", ";
-                                            echo $user_data->addresses->municipality . ", ";
-                                            echo $user_data->addresses->province . ", ";
+                                        if(isset($user_data[0]->addresses)) {
+                                            echo $user_data[0]->addresses->barangay . ", ";
+                                            echo $user_data[0]->addresses->municipality . ", ";
+                                            echo $user_data[0]->addresses->province . ", ";
+                                            echo $user_data[0]->addresses->region;
                                         } else {
                                             echo "N/A";
                                         }
                                     @endphp
                                 </span>
-                                <span class="font-semibold">{{ isset($user_data->tel) ? $user_data->tel : "N/A" }}</span>
+                                <span class="font-semibold">{{ isset($user_data[0]->contact_number) ? $user_data[0]->contact_number : "N/A" }}</span>
                             </div>
                         </div>
                     </div>
@@ -132,33 +134,28 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            February 10, 2023
-                        </th>
-                        <td class="px-6 py-4">
-                            9:00 AM - 12:00 PM
-                        </td>
-                        <td class="px-6 py-4">
-                            Naga City Digital Innovation Hub
-                        </td>
-                    </tr>
-                    <tr class="border-b bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            May 24, 2023
-                        </th>
-                        <td class="px-6 py-4">
-                            9:00 AM - 12:00 PM
-                        </td>
-                        <td class="px-6 py-4">
-                            Naga City Digital Innovation Hub
-                        </td>
-                    </tr>
+                        <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
+                            @if (isset($sched))
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    {{ date('F j, Y',strtotime($sched->start_date)) }}
+                                </th>
+                                <td class="px-6 py-4">
+                                    {{ date('h:i a',strtotime($sched->start_date)) }} - {{ date('h:i a',strtotime($sched->end_date)) }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ $sched->venue }}
+                                </td>
+                            @else
+                                <td colspan="3" class="px-6 py-4 text-center">
+                                    No Upcoming Exam
+                                </td>
+                            @endif
+                        </tr>
                     </tbody>
                 </table>
             </div>
             <br><br>
-            <span class="text-lg font-bold">Exam History</span><br>
+            <span class="text-lg font-bold">Application and Exam History</span><br>
             <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -375,27 +372,112 @@
     <!-- Results Modal -->
     <!-- Failed -->
     <div id="failed_modal" data-modal-backdrop="static" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
-        <div class="relative w-full max-w-2xl max-h-full">
+        <div class="relative w-full max-w-3xl max-h-full">
             <!-- Modal content -->
-            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <div class="relative bg-darker-blue rounded-lg shadow dark:bg-gray-700">
                 <!-- Modal header -->
-                <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
-                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                        Static modal
-                    </h3>
+                <div class="flex items-start absolute top-0 right-0 justify-between p-4 rounded-t">
                     <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="failed_modal">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                     </button>
                 </div>
+                <span class="p-4 font-quicksand font-semibold absolute top-0 left-0 text-xs text-white w-fit">Proficiency Diagnostic Exam Result (March 2023)</span>
                 <!-- Modal body -->
-                <div class="p-6 space-y-6">
-                    <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                        With less than a month to go before the European Union enacts new consumer privacy laws for its citizens, companies around the world are updating their terms of service agreements to comply.
-                    </p>
-                    <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                        The European Union’s General Data Protection Regulation (G.D.P.R.) goes into effect on May 25 and is meant to ensure a common set of data rights in the European Union. It requires organizations to notify users as soon as possible of high-risk data breaches that could personally affect them.
-                    </p>
+                <div class="p-6 px-14 pb-24 space-y-6 w-full flex flex-col items-center justify-center pt-24 text-white">
+                    {{-- <div class="flex gap-5 items-center">
+                        <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M28 55C42.9117 55 55 42.9117 55 28C55 13.0883 42.9117 1 28 1C13.0883 1 1 13.0883 1 28C1 42.9117 13.0883 55 28 55Z" stroke="#FB2F2F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M36.0999 19.9L19.8999 36.1" stroke="#FB2F2F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M19.8999 19.9L36.0999 36.1" stroke="#FB2F2F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+
+                        <div>
+                            <h1 class="text-5xl font-quicksand text-white font-semibold">Failed</h1>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-center">
+                            We regret to inform you that based on the result of the Diagnostic Examination conducted last <span>March 29, 2023</span>, you are not qualified to take the ICT Proficiency Certification Examination.
+                        </p>
+                    </div>
+                    <table>
+                        <tr>
+                            <td><span>Part 1 (Multiple Choice)</span></td>
+                            <td><span class="px-5">:</span></td>
+                            <td><span class="text-[#FFD500] font-semibold">5.00 %</span></td>
+                        </tr>
+                        <tr>
+                            <td><span>Part 2 (Program Simulation)</span></td>
+                            <td><span class="px-5">:</span></td>
+                            <td><span class="text-[#FFD500] font-semibold">15.00 %</span></td>
+                        </tr>
+                        <tr>
+                            <td><span>Part 3 (Mini Programming)</span></td>
+                            <td><span class="px-5">:</span></td>
+                            <td><span class="text-[#FFD500] font-semibold">25.00 %</span></td>
+                        </tr>
+                    </table> --}}
+                    {{-- <div class="flex gap-5 items-center">
+                        <svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M27 1V11.4" stroke="#FFD500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M27 42.6V53" stroke="#FFD500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M8.61792 8.61816L15.9759 15.9762" stroke="#FFD500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M38.0239 38.0239L45.3819 45.3819" stroke="#FFD500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M1 27H11.4" stroke="#FFD500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M42.6001 27H53.0001" stroke="#FFD500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M8.61792 45.3819L15.9759 38.0239" stroke="#FFD500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M38.0239 15.9762L45.3819 8.61816" stroke="#FFD500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                            
+                        <div>
+                            <h1 class="text-5xl font-quicksand text-white font-semibold">Processing</h1>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-center font-quicksand font-medium">
+                            Results are still in the process of evaluation. For more information you can contact the DICT R5 Camarines Sur thru
+                        </p>
+                    </div>
+                    <div class="flex flex-col items-center font-quicksand font-medium">
+                        <p>ralph.talagtag@dict.gov.ph</p>
+                        <p>09XXXXXXXXX</p>
+                    </div> --}}
+                    {{-- <div class="flex gap-5 items-center">
+                        <svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M53 24.6229V27.0149C52.9968 32.6216 51.1813 38.077 47.8243 42.5676C44.4672 47.0582 39.7485 50.3433 34.3719 51.933C28.9953 53.5227 23.2489 53.3318 17.9896 51.3888C12.7304 49.4458 8.2401 45.8547 5.1885 41.1512C2.13689 36.4478 0.687457 30.8838 1.05636 25.2893C1.42526 19.6947 3.59274 14.3693 7.23553 10.1073C10.8783 5.84521 15.8012 2.87488 21.2701 1.63926C26.7389 0.403647 32.4607 0.968958 37.582 3.25088" stroke="#44D600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M53 6L26.8462 32L19 24.2078" stroke="#44D600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                            
+                        <div>
+                            <h1 class="text-5xl font-quicksand text-white font-semibold">Passed</h1>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-center font-quicksand font-medium">
+                            Congratulations! You are qualified to receive ICT Proficiency Certification Examination.
+                        </p>
+                    </div> --}}
+                    <div class="flex gap-5 items-center">
+                        <svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M53 24.6229V27.0149C52.9968 32.6216 51.1813 38.077 47.8243 42.5676C44.4672 47.0582 39.7485 50.3433 34.3719 51.933C28.9953 53.5227 23.2489 53.3318 17.9896 51.3888C12.7304 49.4458 8.2401 45.8547 5.1885 41.1512C2.13689 36.4478 0.687457 30.8838 1.05636 25.2893C1.42526 19.6947 3.59274 14.3693 7.23553 10.1073C10.8783 5.84521 15.8012 2.87488 21.2701 1.63926C26.7389 0.403647 32.4607 0.968958 37.582 3.25088" stroke="#44D600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M53 6L26.8462 32L19 24.2078" stroke="#44D600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                            
+                        <div>
+                            <h1 class="text-5xl font-quicksand text-white font-semibold">Approved</h1>
+                        </div>
+                    </div>
+                    <div class="pt-5">
+                        <p class="text-center font-quicksand font-medium">
+                            Application has been approved! You are scheduled to take the diagnostic exam on May 1, 2023 12:00 am at Naga City Coloseum. Be there before the given time.
+                        </p>
+                    </div>
                 </div>
+
+                {{-- <svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M53 24.6229V27.0149C52.9968 32.6216 51.1813 38.077 47.8243 42.5676C44.4672 47.0582 39.7485 50.3433 34.3719 51.933C28.9953 53.5227 23.2489 53.3318 17.9896 51.3888C12.7304 49.4458 8.2401 45.8547 5.1885 41.1512C2.13689 36.4478 0.687457 30.8838 1.05636 25.2893C1.42526 19.6947 3.59274 14.3693 7.23553 10.1073C10.8783 5.84521 15.8012 2.87488 21.2701 1.63926C26.7389 0.403647 32.4607 0.968958 37.582 3.25088" stroke="#44D600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M53 6L26.8462 32L19 24.2078" stroke="#44D600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg> --}}
             </div>
         </div>
     </div>
@@ -463,6 +545,47 @@
                 dismissAlert.classList.remove('hidden')
                 location.reload()
             }, 2000)
+        })
+
+        window.addEventListener('RegValidationErrors', async (err) => {
+            let hasSectionOneError = err.hasOwnProperty('givenName')
+                        || err.hasOwnProperty('middleName')
+                        || err.hasOwnProperty('surName')
+                        || err.hasOwnProperty('tel')
+                        || err.hasOwnProperty('province')
+                        || err.hasOwnProperty('municipality')
+                        || err.hasOwnProperty('barangay')
+                        || err.hasOwnProperty('surName')
+                        || err.hasOwnProperty('email')
+                        || err.hasOwnProperty('pob')
+                        || err.hasOwnProperty('dob')
+                        || err.hasOwnProperty('gender')
+                        || err.hasOwnProperty('citizenship')
+                        || err.hasOwnProperty('civilStatus');
+
+            let hasSectionTwoError = err.hasOwnProperty('thumbnail')
+                || err.hasOwnProperty('status')
+                || err.hasOwnProperty('images');
+
+            let hasSectionThreeError = err.hasOwnProperty('presentOffice')
+                || err.hasOwnProperty('telNum')
+                || err.hasOwnProperty('officeAddress')
+                || err.hasOwnProperty('officeCategory')
+                || err.hasOwnProperty('designationPosition')
+                || err.hasOwnProperty('yearsPresentPosition')
+                || err.hasOwnProperty('pl');
+
+            let hasSectionFourError = err.hasOwnProperty('signature')
+
+            if(hasSectionOneError) {
+                $data.state = 1;
+            } else if(hasSectionTwoError) {
+                $data.state = 2;
+            } else if (hasSectionThreeError) {
+                $data.state = 3;
+            } else if (hasSectionFourError) {
+                $data.state = 4;
+            }
         })
 
         window.addEventListener('RegUpdateValidationSuccess', async _ => {

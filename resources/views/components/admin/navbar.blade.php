@@ -100,38 +100,29 @@
                             >
                                 <a class="w-full" href="{{route('admin.cms.category')}}">Category</a>
                             </li>
-                            <li
-                                class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                            >
-                                <a class="w-full" href="pages/forgot-password.html">
-                                    Forgot password
-                                </a>
-                            </li>
-                            <li
-                                class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                            >
-                                <a class="w-full" href="pages/blank.html">Blank</a>
-                            </li>
                         </ul>
                     </template>
                 </li>
-                <li class="relative py-2">
-                    <div class="{{ request()->routeIs('admin.inbox') ? 'bg-[#00509D] text-white' : 'text-gray-500 hover:text-gray-800' }} transition-colors duration-150 px-4 py-3 flex items-center rounded-lg">
-                        <a
-                            class="inline-flex items-center w-full text-sm "
+                @can('admins_only', auth('jwt')->user())
+                    <li class="relative py-2">
+                        <div class="{{ request()->routeIs('admin.inbox') ? 'bg-[#00509D] text-white' : 'text-gray-500 hover:text-gray-800' }} transition-colors duration-150 px-4 py-3 flex items-center rounded-lg">
+                            <a
+                                class="inline-flex items-center w-full text-sm "
 
-                            href="{{ route('admin.inbox') }}"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-send"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-                            <span
-                                class="ml-4 font-semibold text-base"
-                                style="font-family: Quicksand"
+                                href="{{ route('admin.inbox') }}"
                             >
-                    Inbox
-                  </span>
-                        </a>
-                    </div>
-                </li>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-send"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                                <span
+                                    class="ml-4 font-semibold text-base"
+                                    style="font-family: Quicksand"
+                                >
+                        Inbox
+                    </span>
+                            </a>
+                        </div>
+                    </li>
+                @endcan
+                @can('manage_admins', auth('jwt')->user())
                 <li class="relative py-2">
                     <div class="{{ request()->routeIs('admin.accounts') ? 'bg-[#00509D] text-white' : 'text-gray-500 hover:text-gray-800' }} transition-colors duration-150 px-4 py-3 flex items-center rounded-lg">
                         <a
@@ -149,6 +140,8 @@
                         </a>
                     </div>
                 </li>
+                @endcan
+                @can('admins_only', auth('jwt')->user())
                 <li class="relative py-2">
                     <div class="{{ request()->routeIs('admin.examinees') ? 'bg-[#00509D] text-white' : 'text-gray-500 hover:text-gray-800' }} transition-colors duration-150 px-4 py-3 flex items-center rounded-lg">
                         <a
@@ -166,6 +159,8 @@
                         </a>
                     </div>
                 </li>
+                @endcan
+                @can('admins_only', auth('jwt')->user())
                 <li class="relative py-2">
                     <div class="{{ request()->routeIs('admin.exam-schedule') ? 'bg-[#00509D] text-white' : 'text-gray-500 hover:text-gray-800' }} transition-colors duration-150 px-4 py-3 flex items-center rounded-lg">
                         <a
@@ -196,6 +191,8 @@
                         </a>
                     </div>
                 </li>
+                @endcan
+                @can('admins_only', auth('jwt')->user())
                 <li class="relative py-2">
                     <div class="{{ request()->routeIs('admin.system-log') ? 'bg-[#00509D] text-white' : 'text-gray-500 hover:text-gray-800' }} transition-colors duration-150 px-4 py-3 flex items-center rounded-lg">
                         <a
@@ -213,6 +210,7 @@
                         </a>
                     </div>
                 </li>
+                @endcan
             </ul>
         </div>
     </aside>
