@@ -107,7 +107,7 @@ Route::prefix('admin')->group(function () {
             Route::get('/{id}/deactivate', [ManageApplicants::class, 'deactivate_account'])->name('examinee.deactivate');
 
             //manually apply the applicant
-            Route::post('/{id}/apply-examinee', [ManageApplicants::class, 'apply_examinee'])->name('examinee.apply');
+            Route::get('/{id}/apply-examinee', [ManageApplicants::class, 'apply_examinee'])->name('examinee.apply');
         });
 
         Route::get('/exam-schedule', ExamSchedule::class)->name('admin.exam-schedule');
