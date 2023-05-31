@@ -54,7 +54,12 @@
                         <img src="{{ asset('img/Group 44.svg') }}" alt="">
                     </div>
                     <div class="font-quicksand flex flex-col">
-                        <span class="flex gap-10 items-center"><h1 class="font-bold text-3xl">{{ $user->fname }} {{ str_replace(",", "", $user->lname) }}</h1><span class="absolute top-10 right-0 sm:top-0 flex items-center text-sm font-medium text-white sm:relative"><span class="flex w-2.5 h-2.5 bg-green-500 rounded-full mr-1.5 flex-shrink-0"></span>Approved</span></span>
+                        <span class="flex gap-10 items-center"><h1 class="font-bold text-3xl">{{ $user->fname }} {{ str_replace(",", "", $user->lname) }}</h1>
+                            <span class="absolute top-10 right-0 sm:top-0 flex items-center text-sm font-medium text-white sm:relative">
+                                <span class="flex w-2.5 h-2.5 bg-green-500 rounded-full mr-1.5 flex-shrink-0"></span>
+                                Approved
+                            </span>
+                        </span>
                         <a href="mailto:{{ $user->email }}" class="hover:underline">{{ $user->email }}</a>
                         <span>Professional</span>
                         <div class="flex gap-5 mt-10">
@@ -283,34 +288,42 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @if($file_uploaded != null)
-                        @forelse($file_uploaded as $file)
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <th scope="row" class="flex flex-row px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    <svg fill="none" class="w-5 text-[#00509D]" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path>
-                                    </svg>
-                                    {{$file->file_name}}
-                                </th>
-                                <td class="">
-                                    <a href="{{ asset('storage/fileSubmits/'.$file->file_name) }}" target="_blank" class="px-3 py-1 text-xs font-medium text-center text-black bg-[#FDC500] rounded-lg hover:bg-yellow-300 focus:ring-4 focus:outline-none focus:ring-yellow-200">Preview</a>
-    {{--                                <button type="button" class="px-3 py-1 text-xs font-medium text-center text-white bg-[#00509D] rounded-lg hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300">Replace</button>--}}
-                                </td>
-                            </tr>
-                        @empty
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <th scope="row" class="flex flex-row px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    NO FILE SUBMITTED
-                                </th>
-                            </tr>
-                        @endforelse
-                    @else
-                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                            <th scope="row" class="flex flex-row px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                NO FILE SUBMITTED
-                            </th>
-                        </tr>
-                    @endif
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <th scope="row" class="flex flex-row px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <svg fill="none" class="w-5 text-[#00509D]" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path>
+                            </svg>
+                            TOR_ Reeves.pdf
+                        </th>
+                        <td class="">
+                            <button type="button" class="px-3 py-1 text-xs font-medium text-center text-black bg-[#FDC500] rounded-lg hover:bg-yellow-300 focus:ring-4 focus:outline-none focus:ring-yellow-200">Preview</button>
+                            <button type="button" class="px-3 py-1 text-xs font-medium text-center text-white bg-[#00509D] rounded-lg hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300">Replace</button>
+                        </td>
+                    </tr>
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <th scope="row" class="flex flex-row px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <svg fill="none" class="w-5 text-[#00509D]" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path>
+                            </svg>
+                            Birth_Certificate.png
+                        </th>
+                        <td class="">
+                            <button type="button" class="px-3 py-1 text-xs font-medium text-center text-black bg-[#FDC500] rounded-lg hover:bg-yellow-300 focus:ring-4 focus:outline-none focus:ring-yellow-200">Preview</button>
+                            <button type="button" class="px-3 py-1 text-xs font-medium text-center text-white bg-[#00509D] rounded-lg hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300">Replace</button>
+                        </td>
+                    </tr>
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <th scope="row" class="flex flex-row px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <svg fill="none" class="w-5 text-[#00509D]" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path>
+                            </svg>
+                            PassportSizeImage.jpg
+                        </th>
+                        <td class="">
+                            <button type="button" class="px-3 py-1 text-xs font-medium text-center text-black bg-[#FDC500] rounded-lg hover:bg-yellow-300 focus:ring-4 focus:outline-none focus:ring-yellow-200">Preview</button>
+                            <button type="button" class="px-3 py-1 text-xs font-medium text-center text-white bg-[#00509D] rounded-lg hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300">Replace</button>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -358,16 +371,6 @@
             @endif
         </div>
     </x-modal.card>
-
-    <!--  View Submitted Modal -->
-    <x-modal wire:model.defer="view_file_modal" blur>
-        <x-card title="Submitted File">
-            <p class="text-gray-600">
-                Submitted File
-            </p>
-            <div id="pdf-container"></div>
-        </x-card>
-    </x-modal>
 
     <!-- Results Modal -->
     <!-- Failed -->
@@ -611,10 +614,6 @@
                 location.reload()
             }, 2000)
         })
-
-        window.addEventListener('show_file', event => {
-            console.log('{{ asset('storage/fileSubmits') }}/'+event.detail);
-        });
     </script>
 
     @vite(['resources/js/user/dashboard.js', 'resources/js/user/seminarsHandler.js'])
