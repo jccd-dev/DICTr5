@@ -27,7 +27,7 @@ class UserDataController extends Controller
             $pdf->Image(storage_path('app/public/fileSubmits/'.$data['passport']), 119, 25, 20, 26);
         }
 
-        if($data['first_time']){
+        if(!$data['is_retaker']){
             // First Time
             $pdf->Image(public_path('img/checkmark.png'), 102, 46, 2, 0);
         }else{
@@ -254,14 +254,21 @@ class UserDataController extends Controller
         }
 
         // Additional Information
-        // PWD
-        $pdf->Image(public_path('img/checkmark.png'), 45, 156, 1.5, 0);
-        // Senior Citizen
-        $pdf->Image(public_path('img/checkmark.png'), 58, 156, 1.5, 0);
-        // Solo Parent
-        $pdf->Image(public_path('img/checkmark.png'), 78, 156, 1.5, 0);
-        // Member of an IP Group
-        $pdf->Image(public_path('img/checkmark.png'), 94, 156, 1.5, 0);
+        $add_info = $data['add_info'];
+        $decoded_add_info = json_decode($add_info);
+        if(in_array('PWD', $decoded_add_info)){
+            // PWD
+            $pdf->Image(public_path('img/checkmark.png'), 45, 156, 1.5, 0);
+        }elseif(in_array('Senior Citizen', $decoded_add_info)){
+            // Senior Citizen
+            $pdf->Image(public_path('img/checkmark.png'), 58, 156, 1.5, 0);
+        }elseif(in_array('Solo Parent', $decoded_add_info)){
+            // Solo Parent
+            $pdf->Image(public_path('img/checkmark.png'), 78, 156, 1.5, 0);
+        }elseif(in_array('Member of an IP Group', $decoded_add_info)){
+            // Member of an IP Group
+            $pdf->Image(public_path('img/checkmark.png'), 94, 156, 1.5, 0);
+        }
 
         // Date Accomplished
         $pdf->SetXY(110, 185);

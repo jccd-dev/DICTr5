@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\User;
 
+use App\Models\Examinee\SubmittedFiles;
 use Livewire\Component;
 use mysql_xdevapi\Session;
 use App\Helpers\FileHandler;
@@ -56,6 +57,8 @@ class Dashboard extends Component
     public string $designationPosition;
     public string $yearsPresentPosition;
 
+    public array|object $file_uploaded;
+
     public string $pl;
     public mixed $passport = null;
     public mixed $psa = null;
@@ -80,6 +83,8 @@ class Dashboard extends Component
     protected $rules;
 
     public $training_limit = 1;
+
+    public bool $view_file_modal = false;
 
 
     protected $except = ['cardModal', 'cardModal2'];
@@ -144,7 +149,11 @@ class Dashboard extends Component
         $this->diploma = '';
 
         $this->signature = '';
-        $this->additional_info = []; //FIXME
+
+        $userdata = $this->get_user_data();
+        foreach ($userdata as $u){
+            $this->file_uploaded = $u->submittedFiles;
+        }
     }
 
 
@@ -661,6 +670,7 @@ class Dashboard extends Component
         foreach ($users_data as $user_data) {
             $data = [
                 'id' => $user_data->id,
+                'is_retaker' => $user_data->is_retaker,
                 'email' => $user_data->userLogin->email,
                 'fname' => $user_data->fname,
                 'lname' => $user_data->lname,
@@ -685,6 +695,7 @@ class Dashboard extends Component
                 'region' => $user_data->addresses->region,
                 'province' => $user_data->addresses->province,
                 'municipality' => $user_data->addresses->municipality,
+                'add_info' => $user_data->add_info,
                 'barangay' => $user_data->addresses->barangay,
                 'school_attended' => $user_data->tertiaryEdu->school_attended,
                 'degree' => $user_data->tertiaryEdu->degree,
@@ -712,11 +723,13 @@ class Dashboard extends Component
         }
         $user_login_id = session()->get('user')['id'];
         $user_history = UserHistory::where('user_id', $user_login_id)->count();
-        if (!$user_history > 0) {
-            $data['first_time'] = true;
-        } else {
-            $data['first_time'] = false;
-        }
         return redirect()->route('user.generate_pdf', ['data' => $data]);
+    }
+
+    public function view_file_submitted($id){
+        $submitted_file = SubmittedFiles::where('id', $id)->first();
+        $file_name = $submitted_file->file_name;
+        $this->dispatchBrowserEvent('show_file', $file_name);
+        $this->view_file_modal = true;
     }
 }

@@ -138,9 +138,10 @@ Route::prefix('exam')->group(function () {
     Route::get('/send-email', [UserDashboardController::class, 'sendEmail']);
 });
 
-Route::get('/logout', function () {
+Route::get('/user/logout', function () {
     session()->flush();
-});
+    return redirect()->route('homepage');
+})->name('user.logout');
 
 //Visitor Counter
 Route::get('/visitor-counts', [VisitorController::class, 'incrementVisitor']);
