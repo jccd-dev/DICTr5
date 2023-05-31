@@ -119,7 +119,7 @@ Route::prefix('admin')->group(function () {
 });
 
 // USER SIDE ROUTES
-Route::prefix('user')->group(function () {
+Route::prefix('user')->middleware(['user.logAuth'])->group(function () {
     Route::get('/login', [GoogleAuthController::class, 'user_login'])->name('user.login');
     Route::get('/dashboard', User\Dashboard::class)->name('user.dashboard');
     Route::get('/generate_pdf', [UserDataController::class, 'generateILCDBForm'])->name('user.generate_pdf');

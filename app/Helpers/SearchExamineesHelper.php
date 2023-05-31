@@ -17,14 +17,17 @@ class SearchExamineesHelper
                 });
             })
             ->when($searchValues['is_applied'], function ($query, $applyValue){
-                $query->whereHas('regDetails', function ($query) use ($applyValue){
-                    if($applyValue == 1){
+                if($applyValue == 1){
+                    $query->whereHas('regDetails', function ($query) use ($applyValue){
                         $query->where('apply', $applyValue);
-                    }
-                    else{
-                        $query->where('apply', '=', $applyValue);
-                    }
-                })->orWhereDoesntHave('regDetails');
+                    });
+                }
+                else{
+                    $query->whereHas('regDetails', function ($query) use ($applyValue){
+                        $query->where('apply', $applyValue);
+                    })->orWhereDoesntHave('regDetails');
+                }
+
             })
             ->when($searchValues['search_text'], function($query, $searchValue){
                 $query->where(function ($query) use ($searchValue){

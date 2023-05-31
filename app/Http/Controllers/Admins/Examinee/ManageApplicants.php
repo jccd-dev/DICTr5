@@ -154,7 +154,7 @@ class ManageApplicants extends Controller
         $examSchedule_id = (int)$request->post('exam-sched');
         $remark = $request->post('remarks');
 
-        $applicant = UsersData::with('regDetails', 'userHistory')->find($user_id);
+        $applicant = UsersData::with('regDetails', 'userHistory', 'userLogin')->find($user_id);
 
         $reg = $applicant->regDetails;
 
@@ -176,12 +176,15 @@ class ManageApplicants extends Controller
                 $reg->status = 4; // approved only
                 break;
             case 5:
-                $reg->status = 5;
-                break;
-            case 6:
+                if($reg->status != 4){
+                    return response()->json(['error' => 'Applicant is not approve yet'], 400);
+                }
                 $email_type = 6;
                 $reg->exam_schedule_id = $examSchedule_id;
                 $reg->status = 6;
+                break;
+            case 6:
+               $reg->status = 5;
                 break;
             default:
                 $reg->status = $validation;
@@ -190,6 +193,8 @@ class ManageApplicants extends Controller
 
         $reg->status = $validation;
         if ($reg->save()) {
+
+            $exam_data = ExamScheduleModel::find($examSchedule_id);
 
             //TODO send email notification to applicant
             // $email_type == 1 ? email_function_for_reject : null;
