@@ -7,7 +7,7 @@
         @foreach($data as $slider)
             <div class="swiper-slide">
                 <div class="w-full h-full flex justify-end">
-                    <div class="content w-full md:w-[50%] xl:w-[40%] flex items-center mx-10 md:ml-0 md:mr-10">
+                    <div class="content z-30 w-full md:w-[50%] xl:w-[40%] flex items-center mx-10 md:ml-0 md:mr-10">
                         <div class="w-full md:max-w-[30rem] text-white flex flex-col items-center md:items-start">
                             <h1 class="text-3xl md:text-xl lg:text-3xl font-bold font-inter mb-7">{{ $slider->title }}</h1>
                             <p class="font-inter leading-8 text-center md:text-left">{{ $slider->description }}</p>
@@ -17,6 +17,7 @@
                     <div class="absolute top-0 left-0 w-full h-full -z-[1]">
                         <img src="{{ asset("storage/images/".$slider->image) }}" class="w-full h-full object-cover" alt="">
                     </div>
+                    <div class="absolute w-full h-full bg-black z-1 bg-opacity-[0.43]"></div>
                 </div>
             </div>
         @endforeach
