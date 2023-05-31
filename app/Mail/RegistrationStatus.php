@@ -23,6 +23,7 @@ class RegistrationStatus extends Mailable
      *                      - name = > string
      *                      - email = > string
      *                      - intended_for = > string
+     *                      - remark = > string
      */
     public function __construct(
         protected int $status,

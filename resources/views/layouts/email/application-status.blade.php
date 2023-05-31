@@ -15,12 +15,14 @@
                 @endif
             </div>
             @if($status == 1)
-                <p style="color:white;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+                <p style="color:white;">{{$data['remark']}}</p>
             @elseif($status == 2)
-                <p style="color:white;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+                <p style="color:white;">{{$data['remark']}}</p>
             @elseif($status == 4)
-                <p style="color:white;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+                <p style="color:white;"></p>
             @endif
+
+            <p style="color:white;"> If you have concerns you may contact us at <b><i>ralph.talagtag@dict.gov.ph</i></b></p>
         </div>
     </div>
 </body>
