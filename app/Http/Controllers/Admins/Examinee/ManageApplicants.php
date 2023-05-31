@@ -618,6 +618,10 @@ class ManageApplicants extends Controller
                 session()->flash('error', 'server error');
                 return false;
             } elseif ($reg) {
+                if($reg->apply = 1){
+                    session()->flash('warning', 'You have already applied');
+                    return false;
+                }
                 $reg->apply = 1;
 
                 if ($reg->save()) {
