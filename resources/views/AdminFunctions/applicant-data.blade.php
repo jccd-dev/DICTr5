@@ -86,12 +86,22 @@
             </div>
             <div class="flex gap-2 mr-16">
                 <div class="flex flex-col gap-2">
-                    <a href="#" data-popover-target="popover-description2" data-popover-trigger="click" data-popover-placement="left"  class="font-medium hover:underline flex gap-2 items-center bg-dark-blue py-2.5 px-5 rounded-2xl text-white w-fit">
+                    <a href="#" id="edit-btn" data-hs-overlay="#hs-vertically-centered-modal" class="font-medium hover:underline flex gap-2 items-center bg-dark-blue text-white py-2.5 px-5 rounded-2xl w-fit">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
                           </svg>
-                        <span class="font-semibold">Edit</span>
+
+                        <span class="font-semibold">Edit Applicant Data</span>
                     </a>
+                    <a href="#" data-hs-overlay="#hs-slide-down-animation-modal2"  class="font-medium hover:underline flex gap-2 items-center bg-orange-500 py-2.5 px-5 rounded-2xl text-white w-fit">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                          </svg>
+                          
+                        <span class="font-semibold">Verify Status</span>
+                    </a>
+                </div>
+                <div class="flex flex-col gap-2">
                     <a href="#" data-popover-target="popover-description" data-popover-trigger="click" data-popover-placement="left" class="font-medium hover:underline flex gap-2 items-center bg-dark-yellow py-2.5 px-5 rounded-2xl w-fit">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
@@ -99,15 +109,15 @@
 
                         <span class="font-semibold">Send</span>
                     </a>
-                </div>
-                <div class="flex flex-col gap-2">
-                    <a href="#" id="apply-btn" data-value="{{ $examinees_data->id }}" class="font-medium hover:underline flex gap-2 items-center bg-purple-400 py-2.5 px-5 rounded-2xl w-fit">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                          </svg>
+                    @if (!isset($examinees_data->user_login_id))
+                        <a href="#" id="apply-btn" data-value="{{ $examinees_data->id }}" class="font-medium hover:underline flex gap-2 items-center bg-purple-400 py-2.5 px-5 rounded-2xl w-fit">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
 
-                        <span class="font-semibold">Apply</span>
-                    </a>
+                            <span class="font-semibold">Apply</span>
+                        </a>
+                    @endif
                     @if (isset($examinees_data->user_login_id))
                         <a href="#" data-modal-target="deleteModal3" data-modal-show="deleteModal3" class="font-medium hover:underline flex gap-2 items-center bg-custom-red w-fit py-2.5 px-5 rounded-2xl text-white">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -362,6 +372,7 @@
     </div>
 </div>
 
+{{-- pop over --}}
 <div data-popover id="popover-description" role="tooltip" class="absolute z-10 invisible inline-block text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 w-48 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400">
     <div class="space-y-2">
         <div class="w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">

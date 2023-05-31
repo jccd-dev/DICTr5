@@ -654,16 +654,15 @@ class Dashboard extends Component
 
                 session()->flash('error', 'server error');
                 return false;
-            } else{
-                if($reg->apply = 1){
+            } else {
+                if ($reg->apply = 1) {
                     session()->flash('warning', 'You have already applied');
                     return false;
                 }
                 $reg->apply = 1;
 
                 if ($reg->save()) {
-
-                    session()->flash('success', 'Application sent');
+                    session()->flash('success', 'Application has been sent. Your application will be evaluated. Please wait for confirmation from time-to-time.');
                     UserLogActivity::addToLog('ReApply for exam', $user_id);
                     return true;
                 }

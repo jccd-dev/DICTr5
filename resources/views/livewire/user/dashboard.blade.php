@@ -54,12 +54,96 @@
                         <img src="{{ asset('img/Group 44.svg') }}" alt="">
                     </div>
                     <div class="font-quicksand flex flex-col">
-                        <span class="flex gap-10 items-center"><h1 class="font-bold text-3xl">{{ $user->fname }} {{ str_replace(",", "", $user->lname) }}</h1>
-                            <span class="absolute top-10 right-0 sm:top-0 flex items-center text-sm font-medium text-white sm:relative">
-                                <span class="flex w-2.5 h-2.5 bg-green-500 rounded-full mr-1.5 flex-shrink-0"></span>
-                                Approved
-                            </span>
-                        </span>
+                        @if (isset($user_data[0]))
+                            @switch($user_data[0]->regDetails->status)
+                                @case(1)
+                                    <span class="flex gap-10 items-center"><h1 class="font-bold text-3xl">{{ $user->fname }} {{ str_replace(",", "", $user->lname) }}</h1>
+                                        <span class="absolute top-10 right-0 sm:top-0 flex items-center text-sm font-medium text-white sm:relative">
+                                            <span class="flex w-2.5 h-2.5 bg-custom-red rounded-full mr-1.5 flex-shrink-0"></span>
+                                            <button data-popover-target="popover-description" data-popover-placement="bottom-end" type="button" class="flex gap-2">Disapproved<svg class="w-4 h-4 ml-2 text-gray-400 hover:text-gray-500" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path></svg><span class="sr-only">Show information</span></button>
+                                        </span>
+                                    </span>
+                                    <div data-popover id="popover-description" role="tooltip" class="absolute z-10 invisible inline-block text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 w-72 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400">
+                                        <div class="p-3 space-y-2">
+                                            <h3 class="font-semibold text-gray-900 dark:text-white">Your Application has been Disapproved</h3>
+                                            <p>Your application does not met the guidelines or you have cancelled your examination.</p>
+                                        </div>
+                                        <div data-popper-arrow></div>
+                                    </div>
+                                    @break
+                                @case(2)
+                                    <span class="flex gap-10 items-center"><h1 class="font-bold text-3xl">{{ $user->fname }} {{ str_replace(",", "", $user->lname) }}</h1>
+                                        <span class="absolute top-10 right-0 sm:top-0 flex items-center text-sm font-medium text-white sm:relative">
+                                            <span class="flex w-2.5 h-2.5 bg-custom-red rounded-full mr-1.5 flex-shrink-0"></span>
+                                            <button data-popover-target="popover-description" data-popover-placement="bottom-end" type="button" class="flex gap-2">Incomplete Requirements<svg class="w-4 h-4 ml-2 text-gray-400 hover:text-gray-500" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path></svg><span class="sr-only">Show information</span></button>
+                                        </span>
+                                    </span>
+                                    <div data-popover id="popover-description" role="tooltip" class="absolute z-10 invisible inline-block text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 w-72 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400">
+                                        <div class="p-3 space-y-2">
+                                            <h3 class="font-semibold text-gray-900 dark:text-white">Your Application in Incomplete</h3>
+                                            <p>Please upload all the requirements needed to qualify for the ICT Diagnostic Exam.</p>
+                                        </div>
+                                        <div data-popper-arrow></div>
+                                    </div>
+                                    @break
+                                @case(3)
+                                    <span class="flex gap-10 items-center"><h1 class="font-bold text-3xl">{{ $user->fname }} {{ str_replace(",", "", $user->lname) }}</h1>
+                                        <span class="absolute top-10 right-0 sm:top-0 flex items-center text-sm font-medium text-white sm:relative">
+                                            <span class="flex w-2.5 h-2.5 bg-custom-yellow rounded-full mr-1.5 flex-shrink-0"></span>
+                                            <button data-popover-target="popover-description" data-popover-placement="bottom-end" type="button" class="flex gap-2">For Evaluation <svg class="w-4 h-4 ml-2 text-gray-400 hover:text-gray-500" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path></svg><span class="sr-only">Show information</span></button>
+                                        </span>
+                                    </span>
+                                    <div data-popover id="popover-description" role="tooltip" class="absolute z-10 invisible inline-block text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 w-72 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400">
+                                        <div class="p-3 space-y-2">
+                                            <h3 class="font-semibold text-gray-900 dark:text-white">Your Application is for Evaluation</h3>
+                                            <p>Please standby for the confirmation. Regularly check your dashboard or email for the confirmation</p>
+                                        </div>
+                                        <div data-popper-arrow></div>
+                                    </div>
+                                    @break
+                                @case(4)
+                                    <span class="flex gap-10 items-center"><h1 class="font-bold text-3xl">{{ $user->fname }} {{ str_replace(",", "", $user->lname) }}</h1>
+                                        <span class="absolute top-10 right-0 sm:top-0 flex items-center text-sm font-medium text-white sm:relative">
+                                            <span class="flex w-2.5 h-2.5 bg-green-500 rounded-full mr-1.5 flex-shrink-0"></span>
+                                            <button data-popover-target="popover-description" data-popover-placement="bottom-end" type="button" class="flex gap-2">Approved<svg class="w-4 h-4 ml-2 text-gray-400 hover:text-gray-500" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path></svg><span class="sr-only">Show information</span></button>
+                                        </span>
+                                    </span>
+                                    <div data-popover id="popover-description" role="tooltip" class="absolute z-10 invisible inline-block text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 w-72 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400">
+                                        <div class="p-3 space-y-2">
+                                            <h3 class="font-semibold text-gray-900 dark:text-white">Your Application has been Approved</h3>
+                                            <p>Please standby for the schedule and venue of exam. Regularly check your dashboard or email for the confirmation</p>
+                                        </div>
+                                        <div data-popper-arrow></div>
+                                    </div>
+                                    @break
+                                @case(5)
+                                    <span class="flex gap-10 items-center"><h1 class="font-bold text-3xl">{{ $user->fname }} {{ str_replace(",", "", $user->lname) }}</h1>
+                                        <span class="absolute top-10 right-0 sm:top-0 flex items-center text-sm font-medium text-white sm:relative">
+                                            <span class="flex w-2.5 h-2.5 bg-green-500 rounded-full mr-1.5 flex-shrink-0"></span>
+                                            <button data-popover-target="popover-description" data-popover-placement="bottom-end" type="button" class="flex gap-2">Scheduled for Exam<svg class="w-4 h-4 ml-2 text-gray-400 hover:text-gray-500" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path></svg><span class="sr-only">Show information</span></button>
+                                        </span>
+                                    </span>
+                                    <div data-popover id="popover-description" role="tooltip" class="absolute z-10 invisible inline-block text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 w-72 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400">
+                                        <div class="p-3 space-y-2">
+                                            <h3 class="font-semibold text-gray-900 dark:text-white">Your Schedule for Exam has been set</h3>
+                                            <p>Please check the upcomming exam section below for details.</p>
+                                        </div>
+                                        <div data-popper-arrow></div>
+                                    </div>
+                                    @break
+                                @case(6)
+                                    <span class="flex gap-10 items-center"><h1 class="font-bold text-3xl">{{ $user->fname }} {{ str_replace(",", "", $user->lname) }}</h1>
+                                        <span class="absolute top-10 right-0 sm:top-0 flex items-center text-sm font-medium text-white sm:relative">
+                                            <span class="flex w-2.5 h-2.5 bg-orange-500 rounded-full mr-1.5 flex-shrink-0"></span>
+                                            <button data-popover-target="popover-description" data-popover-placement="bottom-end" type="button" class="flex gap-2">Waiting for Result <svg class="w-4 h-4 ml-2 text-gray-400 hover:text-gray-500" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path></svg><span class="sr-only">Show information</span></button>
+                                        </span>
+                                    </span>
+                                    @break
+                                @default
+                                    <h1 class="font-bold text-3xl">{{ $user->fname }} {{ str_replace(",", "", $user->lname) }}</h1>
+
+                            @endswitch
+                        @endif
                         <a href="mailto:{{ $user->email }}" class="hover:underline">{{ $user->email }}</a>
                         <span>Professional</span>
                         <div class="flex gap-5 mt-10">
@@ -90,27 +174,27 @@
                     </div>
                 </div>
             </div>
+            {{-- @dd($user_data) --}}
             <div class="flex flex-col font-quicksand max-w-[15rem] gap-3">
                 @if(isset($user_data) && count($user_data))
                     <button type="button" id="update-form-btn" class="py-4 px-5 bg-custom-red font-semibold" @click="$openModal('cardModal'); isFiles = false" wire:click="populate_user_data">
                             Update Exam Form
                     </button>
-                    <button type="button" id="update-file-btn"  class="py-4 px-5 bg-custom-red font-semibold" @click="$openModal('cardModal'); isFiles = true" wire:click="populate_user_data">
-                            Update Submitted Files
-                    </button>
-                    <button type="button" id="update-form-btn" class="py-4 px-5 bg-custom-red font-semibold" wire:click="apply({{ $user_data[0]->id }})" wire:ignore>
-                        @php
-                            if(isset($userData->userHistory)) {
-                                if($userData->userHistory->status === 'passed') {
-                                    echo "Already passed the exam";
+                    @if (isset($user_data[0]->regDetails) && $user_data[0]->regDetails->apply === 2)
+                        <button type="button" id="update-form-btn" class="py-4 px-5 bg-custom-red font-semibold" wire:click="apply({{ $user_data[0]->id }})" wire:ignore>
+                            @php
+                                if(isset($userData->userHistory)) {
+                                    if($userData->userHistory->status === 'passed') {
+                                        echo "Already passed the exam";
+                                    } else {
+                                        echo "Reapply for Exam";
+                                    }
                                 } else {
-                                    echo "Reapply";
+                                    echo "Apply for Exam";
                                 }
-                            } else {
-                                echo "Apply";
-                            }
-                        @endphp
-                    </button>
+                            @endphp
+                        </button>
+                    @endif
                 @else
                     <button type="button" id="register-form-btn"  class="py-4 px-5 bg-custom-red font-semibold" @click="$openModal('cardModal'); isFiles = false">
                             Register Exam
@@ -229,9 +313,17 @@
                     </tbody>
                 </table>
             </div>
-            <span class="bg-[#FFD500] text-black text-xs py-1 px-3 font-semibold rounded">For Evaluation</span> <br>
-            <span class="bg-[#65E02B] text-black text-xs py-1 px-3 font-semibold rounded">Approved</span> <br>
-            <span class="bg-[#00509D] text-white text-xs py-1 px-3 font-semibold rounded">Waiting for Result</span> <br>
+
+            {{-- Templates for status --}}
+            {{-- START --}}
+
+            {{-- <span class="bg-[#E35F00] text-white text-xs py-1 px-3 font-semibold rounded">Incomplete Req.</span> --}}
+            {{-- <span class="bg-[#C1121F] text-white text-xs py-1 px-3 font-semibold rounded">Disapprove</span> --}}
+            {{-- <span class="bg-[#FFD500] text-black text-xs py-1 px-3 font-semibold rounded">For Evaluation</span> <br> --}}
+            {{-- <span class="bg-[#65E02B] text-black text-xs py-1 px-3 font-semibold rounded">Approved</span> <br> --}}
+            {{-- <span class="bg-[#00509D] text-white text-xs py-1 px-3 font-semibold rounded">Waiting for Result</span> <br> --}}
+
+            {{-- END --}}
         </div>
     </div>
 
@@ -278,6 +370,13 @@
         <div>
             <h1 class="font-bold text-xl">Uploaded Files</h1>
             <br>
+            @if(isset($user_data) && count($user_data))
+            <button type="button" id="update-file-btn"  class="py-2 px-4 text-white bg-custom-red rounded-xl font-semibold text-sm" @click="$openModal('cardModal'); isFiles = true" wire:click="populate_user_data">
+                Update Submitted Files
+            </button>
+            <br>
+            <br>
+            @endif
             <div class="relative overflow-x-auto">
                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -431,7 +530,7 @@
                             <path d="M8.61792 45.3819L15.9759 38.0239" stroke="#FFD500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             <path d="M38.0239 15.9762L45.3819 8.61816" stroke="#FFD500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
-                            
+
                         <div>
                             <h1 class="text-5xl font-quicksand text-white font-semibold">Processing</h1>
                         </div>
@@ -450,7 +549,7 @@
                             <path d="M53 24.6229V27.0149C52.9968 32.6216 51.1813 38.077 47.8243 42.5676C44.4672 47.0582 39.7485 50.3433 34.3719 51.933C28.9953 53.5227 23.2489 53.3318 17.9896 51.3888C12.7304 49.4458 8.2401 45.8547 5.1885 41.1512C2.13689 36.4478 0.687457 30.8838 1.05636 25.2893C1.42526 19.6947 3.59274 14.3693 7.23553 10.1073C10.8783 5.84521 15.8012 2.87488 21.2701 1.63926C26.7389 0.403647 32.4607 0.968958 37.582 3.25088" stroke="#44D600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             <path d="M53 6L26.8462 32L19 24.2078" stroke="#44D600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
-                            
+
                         <div>
                             <h1 class="text-5xl font-quicksand text-white font-semibold">Passed</h1>
                         </div>
@@ -465,7 +564,7 @@
                             <path d="M53 24.6229V27.0149C52.9968 32.6216 51.1813 38.077 47.8243 42.5676C44.4672 47.0582 39.7485 50.3433 34.3719 51.933C28.9953 53.5227 23.2489 53.3318 17.9896 51.3888C12.7304 49.4458 8.2401 45.8547 5.1885 41.1512C2.13689 36.4478 0.687457 30.8838 1.05636 25.2893C1.42526 19.6947 3.59274 14.3693 7.23553 10.1073C10.8783 5.84521 15.8012 2.87488 21.2701 1.63926C26.7389 0.403647 32.4607 0.968958 37.582 3.25088" stroke="#44D600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             <path d="M53 6L26.8462 32L19 24.2078" stroke="#44D600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
-                            
+
                         <div>
                             <h1 class="text-5xl font-quicksand text-white font-semibold">Approved</h1>
                         </div>
