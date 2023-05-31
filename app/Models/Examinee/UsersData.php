@@ -39,6 +39,7 @@ class UsersData extends Model
         'year_level',
         'current_status',
         'add_info',
+        'is_retaker',
         'date_accomplish',
     ];
 

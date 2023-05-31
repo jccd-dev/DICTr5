@@ -38,8 +38,9 @@ class GoogleAuthController extends Controller
             Session::put('user', ['id' => $createdAcc->id, 'fname' => $fname, 'lname' => $lname]);
         }else{
             // if user account has been deactivated by the admin
-            if($account->is_activate == 0){
-                return redirect()->back()->with('alert', 'Your account has been deactivated');
+            if($account->is_active == 0){
+                session()->put('alert_message', 'Your account has been deactivated');
+                return redirect()->route('user.login');
             }
             UserLogActivity::addToLog('Logged In', ' $createdAcc->id');
             Session::put('user', ['id' => $account->id, 'fname' => $fname, 'lname' => $lname]);

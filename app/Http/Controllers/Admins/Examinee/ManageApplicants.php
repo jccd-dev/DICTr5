@@ -3,25 +3,28 @@
 namespace App\Http\Controllers\Admins\Examinee;
 
 use Illuminate\View\View;
+use App\Mail\ScheduleOfExam;
 use Illuminate\Http\Request;
 use App\Models\Examinee\Users;
 use App\Helpers\UserManagement;
+use App\Helpers\UserLogActivity;
+use App\Mail\RegistrationStatus;
+use App\Helpers\AdminLogActivity;
 use Illuminate\Http\JsonResponse;
 use App\Models\Examinee\UsersData;
-use App\Helpers\AdminLogActivity;
 use Illuminate\Support\Facades\DB;
+use App\Models\Examinee\RegDetails;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
 use App\Helpers\SearchExamineesHelper;
 use App\Http\Livewire\Admin\ExamSchedule;
-use App\Models\Admin\ExamSchedule as ExamScheduleModel;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\Collection;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Container\ContainerExceptionInterface;
-use App\Models\Examinee\RegDetails;
-use App\Helpers\UserLogActivity;
+use App\Models\Admin\ExamSchedule as ExamScheduleModel;
 
 class ManageApplicants extends Controller
 {
@@ -154,7 +157,7 @@ class ManageApplicants extends Controller
         $examSchedule_id = (int)$request->post('exam-sched');
         $remark = $request->post('remarks');
 
-        $applicant = UsersData::with('regDetails', 'userHistory')->find($user_id);
+        $applicant = UsersData::with('regDetails', 'userHistory', 'userLogin')->find($user_id);
 
         $reg = $applicant->regDetails;
 
@@ -176,12 +179,15 @@ class ManageApplicants extends Controller
                 $reg->status = 4; // approved only
                 break;
             case 5:
-                $reg->status = 5;
-                break;
-            case 6:
+                if($reg->status != 4){
+                    return response()->json(['error' => 'Applicant is not approve yet'], 400);
+                }
                 $email_type = 6;
                 $reg->exam_schedule_id = $examSchedule_id;
                 $reg->status = 6;
+                break;
+            case 6:
+               $reg->status = 5;
                 break;
             default:
                 $reg->status = $validation;
@@ -191,11 +197,32 @@ class ManageApplicants extends Controller
         $reg->status = $validation;
         if ($reg->save()) {
 
+            $exam_data = ExamScheduleModel::find($examSchedule_id);
+
             //TODO send email notification to applicant
             // $email_type == 1 ? email_function_for_reject : null;
             // $email_type == 2 ? email_function_for_incomplete : null;
             // $email_type == 4 ? email_function_for_approved : null;
-            // $email_type == 5 ? email_function_for_schedule_exam : null;
+            // $email_type == 6 ? email_function_for_schedule_exam : null;
+            if($email_type == 6){
+                $data = [
+                    'first_name'        => $applicant->fname,
+                    'exam_start_date'   => date('F j, Y', strtotime($exam_data->start_date)),
+                    'exam_end_date'     => date('F j, Y', strtotime($exam_data->end_date)),
+                    'name'              => $applicant->formatted_name,
+                    'email'             => $applicant->user_login_id ? $applicant->email : $applicant->userLogin->email,
+                    'intended_for'      => 'Sent Exam Schedule'
+                ];
+                Mail::to('')->send(new ScheduleOfExam($data));
+            }else{
+                $data = [
+                    'name'          => $applicant->formatted_name,
+                    'ramark'        => $remark,
+                    'email'         => $applicant->user_login_id ? $applicant->email : $applicant->userLogin->email,
+                    'intended_for'  => 'Sent Registration Status'
+                ];
+                Mail::to('')->send(new RegistrationStatus($email_type, $data));
+            }
 
             return response()->json(['success' => 'Validated Successfully'], 200);
         }
