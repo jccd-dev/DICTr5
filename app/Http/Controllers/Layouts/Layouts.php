@@ -24,7 +24,8 @@ class Layouts extends Controller
         $this->postModel = new PostModel();
     }
 
-    public function mount(){
+    public function mount()
+    {
 
         if (!session('visited')) {
             session(['visited' => true]);
@@ -35,15 +36,33 @@ class Layouts extends Controller
         $this->usersCounter['visitor'] = DB::table('visitor_count')->value('visitors');
         $this->usersCounter['applicants'] = DB::table('visitor_count')->value('applicants');
         $this->usersCounter['passers'] = DB::table('visitor_count')->value('passers');
-
     }
 
-    public function render() {
+
+
+    public function getLink($vid_link): string
+    {
+        $i = strpos($vid_link, "https");
+        $temp = "";
+        while ($vid_link[$i] !== '"') {
+            $temp .= $vid_link[$i];
+            $i++;
+        }
+
+        return $temp;
+    }
+
+    public function render()
+    {
 
         $this->mount();
         $this->usersCounter['registered'] = DB::table('users_data')->count();
         $banner = $this->banner_model->get();
         $posts = $this->postModel::priority()->get();
+        foreach ($posts as $post) {
+            // dd($post);
+            $post->vid_link = $this->getLink($post->vid_link);
+        }
         $posts = $posts->map(function ($item) {
             $startedAt = Carbon::parse($item->timestamp);
             $endedAt = Carbon::parse(now());
@@ -53,6 +72,7 @@ class Layouts extends Controller
         });
 
         return view('welcome', ['data' => [
-            'banner' => $banner, 'posts' => $posts, 'visitors' => $this->usersCounter]]);
+            'banner' => $banner, 'posts' => $posts, 'visitors' => $this->usersCounter
+        ]]);
     }
 }

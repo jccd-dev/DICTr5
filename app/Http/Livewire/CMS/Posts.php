@@ -64,7 +64,7 @@ class Posts extends Component
         'thumbnail'      => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
         'content'        => 'required',
         'images.*'       => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
-        'vid_link'       => 'nullable|url',
+        'vid_link'       => 'nullable',
         'status'         => 'required|numeric',
     ];
     protected $update_rules = [
@@ -74,7 +74,7 @@ class Posts extends Component
         'thumbnail'      => 'nullable|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
         'content'        => 'required',
         'images.*'       => 'nullable|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
-        'vid_link'       => 'nullable|url',
+        'vid_link'       => 'nullable',
         'status'         => 'required|numeric',
     ];
 
@@ -171,7 +171,7 @@ class Posts extends Component
 
     public function create_post($admin): void
     {
-        $this->vid_link = $this->getLink();
+        // dd($this->vid_link);
         if (count($this->temp_images) > 0)
             $validator = Validator::make([
                 'category_id'   => $this->category_id,
@@ -200,7 +200,7 @@ class Posts extends Component
                 'thumbnail'      => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
                 'content'        => 'required',
                 'images'       => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
-                'vid_link'       => 'nullable|url',
+                'vid_link'       => 'nullable',
                 'status'         => 'required|numeric',
             ]);
 
@@ -258,18 +258,6 @@ class Posts extends Component
         }
 
         session()->flash('error', 'Something went wrong please try again later!');
-    }
-
-    public function getLink(): string
-    {
-        $i = strpos($this->vid_link, "http");
-        $temp = "";
-        while ($this->getLink()[$i] !== '"') {
-            $temp .= $this->getLink()[$i];
-            $i++;
-        }
-
-        return $temp;
     }
 
 
