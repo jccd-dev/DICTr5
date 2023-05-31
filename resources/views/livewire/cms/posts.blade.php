@@ -375,11 +375,11 @@
                         <form action="#" method="POST" wire:submit.prevent="updatePost" class="w-full flex flex-col" >
                             <div x-show="stateUpdate == 1">
 
-                                <x-forms.input-form name="Title" type="text" placeholder="Title" model="title" id="title" classes="mb-6" value="title" />
+                                <x-forms.input-form name="Title" type="text" placeholder="Title" model="title" id="title" classes="mb-6" value="title" err="update.title" />
 
-                                <x-forms.textarea-form name="updateExcerpt" placeholder="Excerpt" model="excerpt" id="excerpt" rows="3" classes="mb-6" value="excerpt" />
+                                <x-forms.textarea-form name="updateExcerpt" placeholder="Excerpt" model="excerpt" id="excerpt" rows="3" classes="mb-6" value="excerpt" err="update.excerpt" />
 
-                                <x-forms.textarea-form name="updateContent" placeholder="Content" model="content" id="content" rows="5" classes="mb-6" value="content" />
+                                <x-forms.textarea-form name="updateContent" placeholder="Content" model="content" id="content" rows="5" classes="mb-6" value="content"  err="update.content" />
 
                             </div>
                             <div x-show="stateUpdate == 2">
@@ -463,9 +463,9 @@
                             </div>
                             <div x-show="stateUpdate == 3">
 
-                                <x-forms.select name="Category" model="category_id" id="" :options="$all_category" classes="mb-6" value="category_id" />
+                                <x-forms.select name="Category" model="category_id" id="" :options="$all_category" classes="mb-6" value="category_id"  err="update.category_id" />
 
-                                <x-forms.input-form name="Link" type="text" placeholder="Video Link" model="vid_link" id="vid_link" classes="mb-6" value="vid_link" />
+                                <x-forms.input-form name="Link" type="text" placeholder="Video Link" model="vid_link" id="vid_link" classes="mb-6" value="vid_link" err="update.vid_link" />
 
                             </div>
 
@@ -536,10 +536,10 @@
             errorAlert.classList.remove("hidden")
             successAlert.classList.add("hidden")
 
-            setTimeout(() =>{
-                dismissAlert.classList.add('hidden')
-                location.reload()
-            }, 2000)
+            // setTimeout(() =>{
+            //     dismissAlert.classList.add('hidden')
+            //     location.reload()
+            // }, 2000)
         })
 
         window.addEventListener('UpdateValidationPostSuccess', _ => {
@@ -601,6 +601,7 @@
 
         function listeners($data) {
 
+            window.addEventListener('UpdateValidationPostError', validationHandler);
             window.addEventListener('ValidationErrors', validationHandler);
             window.addEventListener('ValidationSuccess', (event) => {
                 location.reload();
@@ -617,6 +618,26 @@
                     || event.detail.hasOwnProperty('images');
                 let hasSectionThreeError = event.detail.hasOwnProperty('vid_link')
                     || event.detail.hasOwnProperty('categories');
+
+                if(hasSectionOneError) {
+                    $data.state = 1;
+                } else if(hasSectionTwoError) {
+                    $data.state = 2;
+                } else if (hasSectionThreeError) {
+                    $data.state = 3;
+                }
+            }
+            function validationHandler2(event) {
+                const postsForm = document.querySelector('.posts-form');
+                let hasSectionOneError = event.detail.hasOwnProperty('update.title')
+                    || event.detail.hasOwnProperty('update.excerpt')
+                    || event.detail.hasOwnProperty('update.content');
+
+                let hasSectionTwoError = event.detail.hasOwnProperty('update.thumbnail')
+                    || event.detail.hasOwnProperty('update.status')
+                    || event.detail.hasOwnProperty('update.images');
+                let hasSectionThreeError = event.detail.hasOwnProperty('update.vid_link')
+                    || event.detail.hasOwnProperty('update.categories');
 
                 if(hasSectionOneError) {
                     $data.state = 1;

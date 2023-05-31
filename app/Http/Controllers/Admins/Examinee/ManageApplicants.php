@@ -179,7 +179,7 @@ class ManageApplicants extends Controller
                 $reg->status = 4; // approved only
                 break;
             case 5:
-                if($reg->status != 4){
+                if ($reg->status != 4) {
                     return response()->json(['error' => 'Applicant is not approve yet'], 400);
                 }
                 $email_type = 6;
@@ -187,7 +187,7 @@ class ManageApplicants extends Controller
                 $reg->status = 6;
                 break;
             case 6:
-               $reg->status = 5;
+                $reg->status = 5;
                 break;
             default:
                 $reg->status = $validation;
@@ -204,7 +204,7 @@ class ManageApplicants extends Controller
             // $email_type == 2 ? email_function_for_incomplete : null;
             // $email_type == 4 ? email_function_for_approved : null;
             // $email_type == 6 ? email_function_for_schedule_exam : null;
-            if($email_type == 6){
+            if ($email_type == 6) {
                 $data = [
                     'first_name'        => $applicant->fname,
                     'exam_start_date'   => date('F j, Y', strtotime($exam_data->start_date)),
@@ -214,7 +214,7 @@ class ManageApplicants extends Controller
                     'intended_for'      => 'Sent Exam Schedule'
                 ];
                 Mail::to('')->send(new ScheduleOfExam($data));
-            }else{
+            } else {
                 $data = [
                     'name'          => $applicant->formatted_name,
                     'ramark'        => $remark,
@@ -244,6 +244,7 @@ class ManageApplicants extends Controller
         $user = UsersData::with('userLogin', 'regDetails', 'userHistory.failedHistory')->find($user_id);
 
         $reg = $user->regDetails;
+        dd($user);
         $exam_data = ExamScheduleModel::find($reg->exam_schedule_id);
         //update the user history
         // dd($user->userHistory());

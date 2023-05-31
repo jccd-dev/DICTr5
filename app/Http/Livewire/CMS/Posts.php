@@ -64,7 +64,7 @@ class Posts extends Component
         'thumbnail'      => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
         'content'        => 'required',
         'images.*'       => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
-        'vid_link'       => 'nullable|regex:/\bhttps\b/',
+        'vid_link'       => 'nullable|regex:/https/',
         'status'         => 'required|numeric',
     ];
     protected $update_rules = [
@@ -74,7 +74,7 @@ class Posts extends Component
         'thumbnail'      => 'nullable|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
         'content'        => 'required',
         'images.*'       => 'nullable|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
-        'vid_link'       => 'nullable|regex:/\bhttps\b/',
+        'vid_link'       => 'nullable|regex:/https/',
         'status'         => 'required|numeric',
     ];
 
@@ -200,7 +200,7 @@ class Posts extends Component
                 'thumbnail'      => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
                 'content'        => 'required',
                 'images'       => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
-                'vid_link'       => 'nullable|regex:/\bhttps\b/',
+                'vid_link'       => 'nullable|regex:/https/',
                 'status'         => 'required|numeric',
             ]);
 
