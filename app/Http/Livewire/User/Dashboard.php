@@ -632,8 +632,7 @@ class Dashboard extends Component
 
         // dd($user);
         if ($user) {
-
-            if ($reg === null) {
+            if ($reg == null) {
                 $reg = new RegDetails();
                 $reg->user_id = $user_id;
                 $reg->reg_date = date('Y-m-d', strtotime('now'));
@@ -651,7 +650,11 @@ class Dashboard extends Component
 
                 session()->flash('error', 'server error');
                 return false;
-            } elseif ($reg) {
+            } else{
+                if($reg->apply = 1){
+                    session()->flash('warning', 'You have already applied');
+                    return false;
+                }
                 $reg->apply = 1;
 
                 if ($reg->save()) {
@@ -662,9 +665,6 @@ class Dashboard extends Component
                 }
 
                 session()->flash('error', 'server error');
-                return false;
-            } else {
-                session()->flash('warning', 'You have already applied');
                 return false;
             }
         }
