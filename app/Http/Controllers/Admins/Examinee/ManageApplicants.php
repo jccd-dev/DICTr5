@@ -151,6 +151,7 @@ class ManageApplicants extends Controller
          *  4 => Approved
          *  5 => Scheduled for exam
          *  6 => Waiting for result
+         *  7 => Done Exam
          * ]
          */
         $validation = (int)$request->post('validation');
@@ -199,12 +200,7 @@ class ManageApplicants extends Controller
 
             $exam_data = ExamScheduleModel::find($examSchedule_id);
 
-            //TODO send email notification to applicant
-            // $email_type == 1 ? email_function_for_reject : null;
-            // $email_type == 2 ? email_function_for_incomplete : null;
-            // $email_type == 4 ? email_function_for_approved : null;
-            // $email_type == 6 ? email_function_for_schedule_exam : null;
-            if ($email_type == 6) {
+            if($email_type == 6){
                 $data = [
                     'first_name'        => $applicant->fname,
                     'exam_start_date'   => date('F j, Y', strtotime($exam_data->start_date)),
@@ -213,15 +209,15 @@ class ManageApplicants extends Controller
                     'email'             => $applicant->user_login_id ? $applicant->email : $applicant->userLogin->email,
                     'intended_for'      => 'Sent Exam Schedule'
                 ];
-                Mail::to('')->send(new ScheduleOfExam($data));
-            } else {
+                Mail::to($data['email'])->send(new ScheduleOfExam($data));
+            }else{
                 $data = [
                     'name'          => $applicant->formatted_name,
                     'ramark'        => $remark,
                     'email'         => $applicant->user_login_id ? $applicant->email : $applicant->userLogin->email,
                     'intended_for'  => 'Sent Registration Status'
                 ];
-                Mail::to('')->send(new RegistrationStatus($email_type, $data));
+                Mail::to($data['email'])->send(new RegistrationStatus($email_type, $data));
             }
 
             return response()->json(['success' => 'Validated Successfully'], 200);
@@ -246,16 +242,16 @@ class ManageApplicants extends Controller
         $reg = $user->regDetails;
         dd($user);
         $exam_data = ExamScheduleModel::find($reg->exam_schedule_id);
-        //update the user history
-        // dd($user->userHistory());
+
+
         $userHistory = $user->userHistory()->create([
             'user_id'           => $user_id,
             'registration_date' => $reg->reg_date,
             'approved_date'     => $reg->approved_date,
             'schedule'          => $exam_data->datetime,
             'venue'             => $exam_data->venue,
-            'exam_set' => $exam_data->exam_set,
-            'status'            => $reg->status,
+            'exam_set'          => $exam_data->exam_set,
+            'status'            => 7,
             'exam_result'       => $result
         ]);
 
@@ -263,6 +259,7 @@ class ManageApplicants extends Controller
             DB::table('visitor_count')->increment('passers');
             // reset the reg details data for the user
             $reg->delete();
+            //ToDO passed email here
             return response()->json(['success' => 'Examinee Passed'], 200);
         }
 
@@ -281,13 +278,15 @@ class ManageApplicants extends Controller
         $reg->exam_schedule_id = null;
         $reg->reg_date = null;
         $reg->approved_date = null;
-        $reg->status = 0;
+        $reg->status = 7;
         $reg->apply = 2;
 
         if (!$reg->save()) {
+
             return response()->json(['error' => 'server Error'], 500);
         }
 
+        //TODO failed email here with part 1 to 3 results
         AdminLogActivity::addToLog("send exam result to {$user->id}", session()->get('admin_id'));
         return response()->json(['success' => ''], 200);
     }
@@ -623,6 +622,7 @@ class ManageApplicants extends Controller
                     session()->flash('warning', 'You have already applied');
                     return false;
                 }
+                $reg->status = 3;
                 $reg->apply = 1;
 
                 if ($reg->save()) {

@@ -259,13 +259,16 @@ class UserDataController extends Controller
         if(in_array('PWD', $decoded_add_info)){
             // PWD
             $pdf->Image(public_path('img/checkmark.png'), 45, 156, 1.5, 0);
-        }elseif(in_array('Senior Citizen', $decoded_add_info)){
+        }
+        if(in_array('Senior Citizen', $decoded_add_info)){
             // Senior Citizen
             $pdf->Image(public_path('img/checkmark.png'), 58, 156, 1.5, 0);
-        }elseif(in_array('Solo Parent', $decoded_add_info)){
+        }
+        if(in_array('Solo Parent', $decoded_add_info)){
             // Solo Parent
             $pdf->Image(public_path('img/checkmark.png'), 78, 156, 1.5, 0);
-        }elseif(in_array('Member of an IP Group', $decoded_add_info)){
+        }
+        if(in_array('Member of an IP Group', $decoded_add_info)){
             // Member of an IP Group
             $pdf->Image(public_path('img/checkmark.png'), 94, 156, 1.5, 0);
         }

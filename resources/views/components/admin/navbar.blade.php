@@ -100,6 +100,11 @@
                             >
                                 <a class="w-full" href="{{route('admin.cms.category')}}">Category</a>
                             </li>
+                            <li
+                            class="{{ request()->routeIs('admin.cms.tech4ed') ? 'text-custom-blue' : 'hover:text-gray-800' }} px-2 py-1 transition-colors duration-150"
+                        >
+                            <a class="w-full" href="{{route('admin.cms.tech4ed')}}">Tech4Ed</a>
+                        </li>
                         </ul>
                     </template>
                 </li>

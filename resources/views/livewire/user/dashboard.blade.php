@@ -288,42 +288,24 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <th scope="row" class="flex flex-row px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            <svg fill="none" class="w-5 text-[#00509D]" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path>
-                            </svg>
-                            TOR_ Reeves.pdf
-                        </th>
-                        <td class="">
-                            <button type="button" class="px-3 py-1 text-xs font-medium text-center text-black bg-[#FDC500] rounded-lg hover:bg-yellow-300 focus:ring-4 focus:outline-none focus:ring-yellow-200">Preview</button>
-                            <button type="button" class="px-3 py-1 text-xs font-medium text-center text-white bg-[#00509D] rounded-lg hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300">Replace</button>
-                        </td>
-                    </tr>
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <th scope="row" class="flex flex-row px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            <svg fill="none" class="w-5 text-[#00509D]" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path>
-                            </svg>
-                            Birth_Certificate.png
-                        </th>
-                        <td class="">
-                            <button type="button" class="px-3 py-1 text-xs font-medium text-center text-black bg-[#FDC500] rounded-lg hover:bg-yellow-300 focus:ring-4 focus:outline-none focus:ring-yellow-200">Preview</button>
-                            <button type="button" class="px-3 py-1 text-xs font-medium text-center text-white bg-[#00509D] rounded-lg hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300">Replace</button>
-                        </td>
-                    </tr>
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <th scope="row" class="flex flex-row px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            <svg fill="none" class="w-5 text-[#00509D]" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path>
-                            </svg>
-                            PassportSizeImage.jpg
-                        </th>
-                        <td class="">
-                            <button type="button" class="px-3 py-1 text-xs font-medium text-center text-black bg-[#FDC500] rounded-lg hover:bg-yellow-300 focus:ring-4 focus:outline-none focus:ring-yellow-200">Preview</button>
-                            <button type="button" class="px-3 py-1 text-xs font-medium text-center text-white bg-[#00509D] rounded-lg hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300">Replace</button>
-                        </td>
-                    </tr>
+                    @forelse($user_data as $us)
+                        @forelse($us->submittedFiles as $file)
+                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                <th scope="row" class="flex flex-row px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    <svg fill="none" class="w-5 text-[#00509D]" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path>
+                                    </svg>
+                                    {{$file->file_name}}
+                                </th>
+                                <td class="">
+                                    <a href="{{asset('storage/fileSubmits/'.$file->file_name)}}" target="_blank" class="px-3 py-1 text-xs font-medium text-center text-black bg-[#FDC500] rounded-lg hover:bg-yellow-300 focus:ring-4 focus:outline-none focus:ring-yellow-200">Preview</a>
+                                </td>
+                            </tr>
+                        @empty
+
+                        @endforelse
+                    @empty
+                    @endforelse
                     </tbody>
                 </table>
             </div>
@@ -333,26 +315,37 @@
             <div class="rounded-lg bg-[#D9D9D9] p-3 px-5">
                 <h4 class="font-bold mb-3">How to register?</h4>
                 <ol class="list-decimal list-inside ml-5 mb-3">
-                    <li class="mb-1">Lorem ipsum dolor sit amet.</li>
-                    <li class="mb-1">Consectetur adipiscing elit.</li>
-                    <li class="mb-1">Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</li>
-                    <li class="mb-1">Ut enim ad minim veniam, </li>
+                    <li class="mb-1">Login with your google account.</li>
+                    <li class="mb-1">Click the Register Button and fill out all the required input fields. If you are priviously registered and wants to retake the exam, you can do so by updating your data..</li>
+                    <li class="mb-1">Click the Apply Button.</li>
+                    <li class="mb-1">Then, wait for an email about your registration status. </li>
                 </ol>
 
                 <h4 class="font-bold mb-3">Requirements</h4>
+                <h6>For Professionals:</h6>
                 <ol class="list-decimal list-inside ml-5 mb-3">
-                    <li class="mb-1">Lorem ipsum dolor sit amet.</li>
-                    <li class="mb-1">Consectetur adipiscing elit.</li>
-                    <li class="mb-1">Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</li>
-                    <li class="mb-1">Ut enim ad minim veniam, </li>
+                    <li class="mb-1">Passport Size Photo with label (Surname, Given Name, Middle Name. You can visit this site to resize your photo through <a href="https://www.persofoto.com/upload/passport-photo" class="italic" target="_blank">Persofoto</a>.</li>
+                    <li class="mb-1">Valid ID.</li>
+                    <li class="mb-1">Diploma or TOR.</li>
                 </ol>
-
+                <h6>For Undergraduate Students </h6>
+                <ol class="list-decimal list-inside ml-5 mb-3">
+                    <li class="mb-1">Passport Size Photo with label (Surname, Given Name, Middle Name. You can visit this site to resize your photo through <a href="https://www.persofoto.com/upload/passport-photo" class="italic" target="_blank">Persofoto</a>.</li>
+                    <li class="mb-1">COE or COG.</li>
+                    <li class="mb-1">PSA Birth Certificate.</li>
+                </ol>
                 <h4 class="font-bold mb-3">Coverage of Exam</h4>
                 <ol class="list-decimal list-inside ml-5 mb-3">
-                    <li class="mb-1">Lorem ipsum dolor sit amet.</li>
-                    <li class="mb-1">Consectetur adipiscing elit.</li>
-                    <li class="mb-1">Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</li>
-                    <li class="mb-1">Ut enim ad minim veniam, </li>
+                    <li class="mb-1">Program Simulation</li>
+                    <li class="mb-1">Number System</li>
+                    <li class="mb-1">Data Structures</li>
+                    <li class="mb-1">System Development Life Cycle </li>
+                    <li class="mb-1">OOP Concepts </li>
+                    <li class="mb-1">Networking Concepts </li>
+                    <li class="mb-1">File Acces Methods </li>
+                    <li class="mb-1">Database </li>
+                    <li class="mb-1">Loops </li>
+                    <li class="mb-1">Array </li>
                 </ol>
             </div>
         </div>
@@ -431,7 +424,7 @@
                             <path d="M8.61792 45.3819L15.9759 38.0239" stroke="#FFD500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             <path d="M38.0239 15.9762L45.3819 8.61816" stroke="#FFD500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
-                            
+
                         <div>
                             <h1 class="text-5xl font-quicksand text-white font-semibold">Processing</h1>
                         </div>
@@ -450,7 +443,7 @@
                             <path d="M53 24.6229V27.0149C52.9968 32.6216 51.1813 38.077 47.8243 42.5676C44.4672 47.0582 39.7485 50.3433 34.3719 51.933C28.9953 53.5227 23.2489 53.3318 17.9896 51.3888C12.7304 49.4458 8.2401 45.8547 5.1885 41.1512C2.13689 36.4478 0.687457 30.8838 1.05636 25.2893C1.42526 19.6947 3.59274 14.3693 7.23553 10.1073C10.8783 5.84521 15.8012 2.87488 21.2701 1.63926C26.7389 0.403647 32.4607 0.968958 37.582 3.25088" stroke="#44D600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             <path d="M53 6L26.8462 32L19 24.2078" stroke="#44D600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
-                            
+
                         <div>
                             <h1 class="text-5xl font-quicksand text-white font-semibold">Passed</h1>
                         </div>
@@ -465,7 +458,7 @@
                             <path d="M53 24.6229V27.0149C52.9968 32.6216 51.1813 38.077 47.8243 42.5676C44.4672 47.0582 39.7485 50.3433 34.3719 51.933C28.9953 53.5227 23.2489 53.3318 17.9896 51.3888C12.7304 49.4458 8.2401 45.8547 5.1885 41.1512C2.13689 36.4478 0.687457 30.8838 1.05636 25.2893C1.42526 19.6947 3.59274 14.3693 7.23553 10.1073C10.8783 5.84521 15.8012 2.87488 21.2701 1.63926C26.7389 0.403647 32.4607 0.968958 37.582 3.25088" stroke="#44D600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             <path d="M53 6L26.8462 32L19 24.2078" stroke="#44D600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
-                            
+
                         <div>
                             <h1 class="text-5xl font-quicksand text-white font-semibold">Approved</h1>
                         </div>
