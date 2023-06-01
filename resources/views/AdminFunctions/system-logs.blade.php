@@ -29,7 +29,12 @@
         <form id="search-form" class="flex w-full">
             <div class="flex items-center justify-between py-4 w-full dark:bg-gray-800 px-10 pt-10">
                 <div class="flex gap-3">
-
+                    <select name="admins" class="bg-custom-blue py-3 font-quicksand bg-opacity-10 font-semibold border-none text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-fit p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option value="">admins</option>
+                        @foreach ($names as $name)
+                            <option value="{{$name->name}}">{{$name->name}}</option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="flex gap-3 items-center">
                     <div>
@@ -128,4 +133,5 @@
         </div>
     </div>
 </div>
+@vite(['resources/js/admin/logs.js'])
 @endsection
