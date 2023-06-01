@@ -48,6 +48,7 @@ class Category extends Component
             return false;
         }
 
+        $this->dispatchBrowserEvent('ValidationCategorySuccess', true);
         $category = $this->postCategoryModel::firstOrNew([
             'category' => ucfirst($this->category)
         ]);

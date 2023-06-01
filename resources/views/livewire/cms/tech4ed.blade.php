@@ -158,7 +158,7 @@
 
         let targetHeading;
         for (let i = 0; i < headings.length; i++) {
-            if (headings[i].textContent === 'Add Category') {
+            if (headings[i].textContent === 'Add Courses') {
                 targetHeading = headings[i];
                 break;
             }
@@ -169,9 +169,9 @@
             location.reload()
         })
 
-        window.addEventListener('ValidationCategoryError', _ => {
+        window.addEventListener('ValidationCourseError', _ => {
             dismissAlert.classList.remove('hidden')
-            messageAlert.textContent = "Error Adding Category"
+            messageAlert.textContent = "Error Adding Course"
             targetHeading.nextElementSibling.click()
 
             setTimeout(() =>{
@@ -180,10 +180,11 @@
             }, 2000)
         })
 
-        window.addEventListener('ValidationCategorySuccess', _ => {
+        window.addEventListener('ValidationCourseSuccess', _ => {
             dismissAlert.classList.remove('hidden')
-            messageAlert.textContent = "Successfully Added Category"
+            messageAlert.textContent = "Successfully Added Course"
             targetHeading.nextElementSibling.click()
+            console.log(targetHeading)
 
             setTimeout(() =>{
                 dismissAlert.classList.add('hidden')
@@ -191,9 +192,9 @@
             }, 2000)
         })
 
-        window.addEventListener('DeleteCategorySuccess', _ => {
+        window.addEventListener('DeleteCourseSuccess', _ => {
             dismissAlert.classList.remove('hidden')
-            messageAlert.textContent = "Successfully Deleted Category"
+            messageAlert.textContent = "Successfully Deleted Course"
 
             setTimeout(() =>{
                 dismissAlert.classList.add('hidden')

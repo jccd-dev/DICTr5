@@ -164,7 +164,7 @@ class ManageApplicants extends Controller
 
         $reg = $applicant->regDetails;
 
-        $reg->exam_schedule_id = $examSchedule_id;
+        // $reg->exam_schedule_id = $examSchedule_id;
         $reg->approved_date = date('Y-m-d', strtotime('now'));
 
         $user_email = $applicant->user_login_id == null ? $applicant->email : $applicant->userLogin->email;
@@ -204,7 +204,7 @@ class ManageApplicants extends Controller
 
             $exam_data = ExamScheduleModel::find($examSchedule_id);
 
-            if($email_type == 6){
+            if ($email_type == 6) {
                 $data = [
                     'first_name'        => $applicant->fname,
                     'exam_start_date'   => $exam_data->start_date,
@@ -214,7 +214,7 @@ class ManageApplicants extends Controller
                     'intended_for'      => 'Sent Exam Schedule'
                 ];
                 Mail::to($data['email'])->send(new ScheduleOfExam($data));
-            }else{
+            } else {
                 $data = [
                     'name'          => $applicant->formatted_name,
                     'ramark'        => $remark,
@@ -678,7 +678,7 @@ class ManageApplicants extends Controller
                 session()->flash('error', 'server error');
                 return false;
             } elseif ($reg) {
-                if($reg->apply = 1){
+                if ($reg->apply = 1) {
                     session()->flash('warning', 'You have already applied');
                     return false;
                 }

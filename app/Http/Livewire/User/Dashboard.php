@@ -343,6 +343,19 @@ class Dashboard extends Component
         return $res;
     }
 
+    public $history_data = null;
+
+    public function get_user_history($history_id)
+    {
+        $d = $this->get_user_data()[0];
+        foreach ($d->userHistory as $item) {
+            if ($item->id == $history_id) {
+                $this->history_data = $item;
+                break;
+            }
+        }
+    }
+
 
     /**
      * @return Builder[]|\Illuminate\Database\Eloquent\Collection
@@ -647,23 +660,22 @@ class Dashboard extends Component
                     // count user as applicant if he/she is not a retaker.
                     DB::table('visitor_count')->increment('applicants');
 
-                    session()->flash('success', 'Application sent');
+                    session()->flash('success', 'Application has been sent. Your application will be evaluated. Please wait for confirmation from time-to-time.');
                     UserLogActivity::addToLog('Apply for exam', $user_id);
                     return true;
                 }
 
                 session()->flash('error', 'server error');
                 return false;
-            } else{
-                if($reg->apply = 1){
+            } else {
+                if ($reg->apply = 1) {
                     session()->flash('warning', 'You have already applied');
                     return false;
                 }
                 $reg->apply = 1;
 
                 if ($reg->save()) {
-
-                    session()->flash('success', 'Application sent');
+                    session()->flash('success', 'Application has been sent. Your application will be evaluated. Please wait for confirmation from time-to-time.');
                     UserLogActivity::addToLog('ReApply for exam', $user_id);
                     return true;
                 }

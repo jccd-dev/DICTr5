@@ -1,49 +1,51 @@
 @extends('layouts.main-layout')
 
 @section("content")
-    <div class="container mx-auto mt-3">
-
-        <div class="md:flex md:flex-row font-quicksand">
-            <div class="basis-1/2 lg:px-20">
-                <a href="{{route('homepage')}}" class="flex flex-row font-quicksand">
-                    <svg fill="none" class="w-12" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 9l-3 3m0 0l3 3m-3-3h7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    <span class="font-bold text-xl p-3">Go back to homepage</span>
-                </a>
-                <br>
-                <div class="bg-[#00296B] text-white p-5 text-center rounded-xl py-12">
-                    <img src="{{asset('img/ILCDB.png')}}" class="w-28 mx-auto">
-                    <h3 class="text-xl font-bold">ICT Proficiency Exam Login</h3>
-                    <a href="{{route('redirect.google')}}" type="button" class="mt-10 font-bold bg-white text-slate-900 rounded-lg px-5 py-2.5 text-center inline-flex items-center">
-                        <img src="{{asset('img/googleicon.svg')}}" class="w-8 pr-3" />
-                        Sign in with Google
-                    </a>
-                    @if(session()->get('alert_message'))
-                        <br><br>
-                        <div class="flex p-4 mb-4 text-sm text-center text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
-                            <svg aria-hidden="true" class="flex-shrink-0 inline w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
-                            <span class="sr-only">Info</span>
-                            <div>
-                                <span class="font-medium">Login Alert!</span> {{session()->get('alert_message')}}
+    <div class="flex h-screen ">
+        <div class="flex flex-col flex-1 px-5 sm:px-10 lg:px-0 ml-0 lg:ml-12 xl:ml-24 2xl:ml-32 py-10 lg:py-[10vh]">
+            <a href="{{route('homepage')}}" class="flex flex-row font-quicksand">
+                <svg fill="none" class="w-12 text-custom-blue" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 9l-3 3m0 0l3 3m-3-3h7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span class="font-bold text-xl p-3">Go back to homepage</span>
+            </a>
+            <br>
+            <div class="font-quicksand h-full flex lg:items-center">
+                <div class="w-full mb-14 m-3 2xl:w-3/4 lg:px-5 xl:px-20">
+                    <div class="bg-[#00296B] text-white p-5 text-center rounded-xl py-12">
+                        <img src="{{asset('img/ILCDB.png')}}" class="w-28 lg:w-36 2xl:w-48 mx-auto">
+                        <h3 class="text-xl lg:text-2xl 2xl:text-3xl font-bold mt-10">ICT Proficiency Exam Login</h3>
+                        <p class="text-sm mt-5">Sign-in with google for faster registration. <br> No need for remembering passwords. <br> Just sign-in and your good to go!</p>
+                        <a href="{{route('redirect.google')}}" type="button" class="mt-10 font-bold bg-white text-slate-900 rounded-lg px-5 py-2.5 text-center inline-flex items-center">
+                            <img src="{{asset('img/googleicon.svg')}}" class="w-8 pr-3" />
+                            Sign in with Google
+                        </a>
+                        @if(session()->get('alert_message'))
+                            <br><br>
+                            <div class="flex p-4 mb-4 text-sm text-center text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+                                <svg aria-hidden="true" class="flex-shrink-0 inline w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+                                <span class="sr-only">Info</span>
+                                <div>
+                                    <span class="font-medium">Login Alert!</span> {{session()->get('alert_message')}}
+                                </div>
                             </div>
-                        </div>
-                    @endif
-                    @php
-                    session()->forget('alert_message');
-                    @endphp
-                    <p class="pt-16 font-bold text-sm">
-                        By using this service, you understood and agree to the DICT Camarines Sur Online Services <button data-modal-target="term_of_use" data-modal-toggle="term_of_use" class="text-red-600">Terms of Use</button> and <button data-modal-target="privacy_statement" data-modal-toggle="privacy_statement" class="text-red-600">Privacy Statement</button>.
-                    </p>
+                        @endif
+                        <hr class="mt-5 xl:mt-12 h-px border-t-0 bg-transparent bg-gradient-to-r from-transparent via-neutral-400 to-transparent opacity-100 dark:opacity-150" />
+                        @php
+                        session()->forget('alert_message');
+                        @endphp
+                        <p class="pt-7 xl:pt-12 font-bold text-sm">
+                            By using this service, you understood and agree to the DICT Camarines Sur Online Services <button data-modal-target="term_of_use" data-modal-toggle="term_of_use" class="text-red-600">Terms of Use</button> and <button data-modal-target="privacy_statement" data-modal-toggle="privacy_statement" class="text-red-600">Privacy Statement.</button>
+                        </p>
+                    </div>
                 </div>
-            </div>
-            <div class="basis-1/2 h-full bg-[#00296B]">
             </div>
         </div>
 
-{{--        <div class="absolute top-0 right-0 ">--}}
-{{--            <img src="{{asset('img/Login Design.png')}}" class="w-7/12">--}}
-{{--        </div>--}}
+       <div class="hidden lg:block flex-1 h-full w-auto overflow-hidden rounded-bl-[10rem]">
+           <img src="{{asset('img/ico/DICT(1).png')}}" class="h-full w-full object-cover">
+       </div>
+
         <br>
 
 
