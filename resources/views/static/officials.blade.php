@@ -8,7 +8,7 @@
 
 <x-layouts.navbar />
 
-<div class = 'flex-col w-full gap-10 justify-center'>
+<div class = 'flex-col w-full gap-10 justify-center container mx-auto'>
         <div class = 'text-center p-10'>
             <div class = 'flex justify-center'>
                 <img src="#" class = 'w-[10rem] h-[10rem] rounded-full bg-slate-400'>

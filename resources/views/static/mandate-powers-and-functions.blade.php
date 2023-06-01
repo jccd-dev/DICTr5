@@ -8,7 +8,7 @@
 
 <x-layouts.navbar />
 
-<div class = 'justify-center'>
+<div class = 'justify-center container mx-auto'>
     <div class = 'flex-col px-4 py-8'>
     <h1 class = 'text-3xl font-bold'>Mandate, Powers and Functions</h1>
     </div>

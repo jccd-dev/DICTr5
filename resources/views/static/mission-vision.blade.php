@@ -8,7 +8,7 @@
 
 <x-layouts.navbar />
 
-<div class = 'justify-center'>
+<div class = 'container mx-auto justify-center'>
     <div class = 'flex-col px-4 py-8'>
         <h1 class = 'text-3xl font-bold'>MISSION AND VISION</h1>
     </div>
@@ -43,10 +43,12 @@
 
         <h2 class = 'text-base font-bold'>Core Values</h2>
         <br>
-        <p>D – Dignity</p>
-        <p>I – Integrity</p>
-        <p>C – Competency and Compassion</p>
-        <p>T – Transparency</p>    
+        <ul class = 'list-disc pl-6 text-base'>
+            <li><b>D</b> - Dignity</li>
+            <li><b>I</b> - Integrity</li>
+            <li><b>C</b> - Competency and Compassion</li>
+            <li><b>T</b> - Transparency</li>
+        </ul>  
     </div>
 
 </div>

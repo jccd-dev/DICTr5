@@ -57,7 +57,7 @@
             <div class = 'p-2 w-[25rem] text-white  flex flex-col items-center md:block'>
                 <p class = ' font-3xl'>E-MAIL US</p>
                 <br>
-                <a href = "#" class = 'font-3xl'>INFORMATION@DICT.GOV.PH</a>
+                <a href = "mailto: ralph.talagtag@dict.gov.ph" class = 'font-3xl hover:text-sky-500'>RALPH.TALAGTAG@DICT.GOV.PH</a>
 
             </div>
 

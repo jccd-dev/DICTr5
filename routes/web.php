@@ -37,6 +37,9 @@ use App\Http\Controllers\Admins\SystemLogs;
 Route::get('/', [\App\Http\Controllers\Layouts\Layouts::class, 'render'])->name('homepage');
 Route::get("/posts", [\App\View\Components\Pages\Posts::class, 'render']);
 Route::get('/testing', \App\Http\Livewire\CMS\Testing::class);
+
+
+// STATIC PAGES ROUTES
 Route::get('/mandate-powers-and-functions', function(){
     return view('static.mandate-powers-and-functions');
 });
@@ -49,12 +52,18 @@ Route::get('/ra-10844', function(){
 Route::get('/dict-cam-sur-officials', function(){
     return view('static.officials');
 });
-
-
-// STATIC PAGES ROUTES
 Route::get('/about', function () {
     return view('pages.about');
 });
+Route::get('/dict-gvcs', function () {
+    return view('static.gvcs');
+});
+Route::get('/government-web-hosting-service', function () {
+    return view('static.gov-web-hosting');
+});
+
+
+
 Route::get('/announcement/{id}', [ViewAnnouncementController::class, 'view_announcement'])->name('view.announcement');
 
 // ADMIN SIDE ROUTES
