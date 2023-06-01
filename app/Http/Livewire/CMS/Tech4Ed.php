@@ -46,6 +46,7 @@ class Tech4Ed extends Component
         ]);
 
         AdminLogActivity::addToLog("created a course", session()->get('admin_id'));
+        $this->dispatchBrowserEvent('ValidationCourseSuccess', true);
         if ($course->exists) {
             session()->flash('error', 'course exist!');
             return false;
@@ -77,5 +78,4 @@ class Tech4Ed extends Component
         $cat_data = new Tech4EdModel();
         return view('livewire.cms.tech4ed', ['data' => $cat_data->get()])->layout("layouts.layout");
     }
-
 }

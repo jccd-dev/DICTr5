@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 30, 2023 at 03:52 PM
+-- Generation Time: Jun 01, 2023 at 03:27 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -64,18 +64,6 @@ CREATE TABLE `admin_logs` (
 --
 
 INSERT INTO `admin_logs` (`id`, `admin_id`, `activity`, `end_point`, `timestamp`) VALUES
-(1, 2, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-24 08:22:04'),
-(2, 2, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-25 00:50:26'),
-(3, 2, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-25 05:53:27'),
-(4, 2, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-29 00:56:09'),
-(5, 3, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-29 01:55:24'),
-(6, 3, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-29 02:01:52'),
-(7, 2, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-29 02:08:37'),
-(8, 2, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-29 02:08:39'),
-(9, 1, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-29 02:12:19'),
-(10, 1, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-29 02:12:21'),
-(11, 3, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-29 02:20:19'),
-(12, 1, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-29 05:25:58'),
 (13, 1, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-30 03:06:07'),
 (14, 1, 'update user 7', 'http://localhost:8000/admin/examinee/7/update-examinee', '2023-05-30 03:20:03'),
 (15, 1, 'update user 7', 'http://localhost:8000/admin/examinee/7/update-examinee', '2023-05-30 03:23:03'),
@@ -83,7 +71,18 @@ INSERT INTO `admin_logs` (`id`, `admin_id`, `activity`, `end_point`, `timestamp`
 (17, 2, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-30 12:09:15'),
 (18, 2, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-30 12:35:44'),
 (19, 2, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-30 12:35:45'),
-(20, 2, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-30 12:37:20');
+(20, 2, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-30 12:37:20'),
+(21, 2, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-31 01:16:00'),
+(22, 2, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-31 06:03:31'),
+(23, 2, 'created announcement', 'http://localhost:8000/livewire/message/cms.announcements', '2023-05-31 06:23:06'),
+(24, 2, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-05-31 21:32:59'),
+(25, 2, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-06-01 00:41:32'),
+(26, 2, 'deleted a course', 'http://localhost:8000/livewire/message/c-m-s.tech4-ed', '2023-06-01 00:48:34'),
+(27, 2, 'created a course', 'http://localhost:8000/livewire/message/c-m-s.tech4-ed', '2023-06-01 00:56:42'),
+(28, 2, 'created a course', 'http://localhost:8000/livewire/message/c-m-s.tech4-ed', '2023-06-01 00:57:09'),
+(29, 2, 'created a category', 'http://localhost:8000/livewire/message/c-m-s.category', '2023-06-01 00:59:42'),
+(30, 2, 'deleted a course', 'http://localhost:8000/livewire/message/c-m-s.tech4-ed', '2023-06-01 01:00:12'),
+(31, 2, 'created a course', 'http://localhost:8000/livewire/message/c-m-s.tech4-ed', '2023-06-01 01:03:57');
 
 -- --------------------------------------------------------
 
@@ -110,8 +109,9 @@ CREATE TABLE `announcements` (
 --
 
 INSERT INTO `announcements` (`id`, `cat_id`, `admin_id`, `title`, `excerpt`, `content`, `author`, `status`, `start_duration`, `end_duration`, `timestamp`) VALUES
-(44, 2, 1, 'sdssd', 'hfhgfh', '<p>adsadasdd</p>\n', 'Anonymous', 1, '2023-05-02 13:50:50', '2023-05-03 00:00:47', '2023-05-24 08:39:19'),
-(49, 2, 2, 'zxc', 'asdasdsad', '<p>asdadsd</p>\n', 'John Doe', 1, '2023-05-04 16:36:21', '2023-05-23 01:30:42', '2023-05-24 08:41:18');
+(44, 2, 1, 'sdssd', 'hfhgfh', '<p>adsadasdd</p>\n', 'Anonymous', 1, '2023-05-02 13:50:50', '2023-05-03 00:00:47', '2023-05-31 06:22:27'),
+(49, 2, 2, 'zxc', 'asdasdsad', '<p>asdadsd</p>\n', 'John Doe', 1, '2023-05-04 16:36:21', '2023-05-23 01:30:42', '2023-05-24 08:41:18'),
+(50, 2, 2, 'erewrer', 'werwerwer', '<p>ewrwrwerewrwerwrwe</p>\n', 'John Doe', 1, '2023-05-31 14:22:14', '2023-05-31 02:00:00', '2023-05-31 06:23:05');
 
 -- --------------------------------------------------------
 
@@ -301,7 +301,8 @@ CREATE TABLE `post_categories` (
 INSERT INTO `post_categories` (`id`, `category`) VALUES
 (1, 'Announcement'),
 (2, 'News'),
-(3, 'Wifi4All');
+(3, 'Wifi4All'),
+(4, 'Test');
 
 -- --------------------------------------------------------
 
@@ -347,7 +348,7 @@ CREATE TABLE `reg_details` (
 --
 
 INSERT INTO `reg_details` (`id`, `user_id`, `exam_schedule_id`, `reg_date`, `approved_date`, `status`, `apply`) VALUES
-(4, 6, NULL, '2023-05-13 17:19:02', NULL, 6, 2);
+(4, 6, NULL, '2023-05-13 17:19:02', NULL, 6, 1);
 
 -- --------------------------------------------------------
 
@@ -373,6 +374,25 @@ INSERT INTO `submitted_files` (`id`, `user_id`, `file_name`, `file_type`, `requi
 (12, 7, 'asdasd_passport_2305301685416476.jpg', 'Image', 'passport'),
 (13, 7, 'asdasd_psa_2305301685416477.png', 'Image', 'psa'),
 (14, 7, 'asdasd_coe_2305301685416477.png', 'Image', 'coe');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tech4ed`
+--
+
+CREATE TABLE `tech4ed` (
+  `id` int(11) NOT NULL,
+  `courses` varchar(250) NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `tech4ed`
+--
+
+INSERT INTO `tech4ed` (`id`, `courses`, `timestamp`) VALUES
+(3, 'Course34', '2023-06-01 01:03:57');
 
 -- --------------------------------------------------------
 
@@ -545,7 +565,7 @@ CREATE TABLE `visitor_count` (
 --
 
 INSERT INTO `visitor_count` (`id`, `visitors`, `applicants`, `passers`) VALUES
-(1, 10, 500, 155);
+(1, 11, 500, 155);
 
 --
 -- Indexes for dumped tables
@@ -655,6 +675,12 @@ ALTER TABLE `submitted_files`
   ADD KEY `user_id` (`user_id`);
 
 --
+-- Indexes for table `tech4ed`
+--
+ALTER TABLE `tech4ed`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `tertiary_edu`
 --
 ALTER TABLE `tertiary_edu`
@@ -715,13 +741,13 @@ ALTER TABLE `addresses`
 -- AUTO_INCREMENT for table `admin_logs`
 --
 ALTER TABLE `admin_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `announcements`
 --
 ALTER TABLE `announcements`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `banner`
@@ -775,7 +801,7 @@ ALTER TABLE `posts`
 -- AUTO_INCREMENT for table `post_categories`
 --
 ALTER TABLE `post_categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `post_images`
@@ -794,6 +820,12 @@ ALTER TABLE `reg_details`
 --
 ALTER TABLE `submitted_files`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT for table `tech4ed`
+--
+ALTER TABLE `tech4ed`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `tertiary_edu`

@@ -162,7 +162,7 @@ class ManageApplicants extends Controller
 
         $reg = $applicant->regDetails;
 
-        $reg->exam_schedule_id = $examSchedule_id;
+        // $reg->exam_schedule_id = $examSchedule_id;
         $reg->approved_date = date('Y-m-d', strtotime('now'));
         $email_type = 0;
         switch ($validation) {
@@ -200,7 +200,7 @@ class ManageApplicants extends Controller
 
             $exam_data = ExamScheduleModel::find($examSchedule_id);
 
-            if($email_type == 6){
+            if ($email_type == 6) {
                 $data = [
                     'first_name'        => $applicant->fname,
                     'exam_start_date'   => date('F j, Y', strtotime($exam_data->start_date)),
@@ -210,7 +210,7 @@ class ManageApplicants extends Controller
                     'intended_for'      => 'Sent Exam Schedule'
                 ];
                 Mail::to($data['email'])->send(new ScheduleOfExam($data));
-            }else{
+            } else {
                 $data = [
                     'name'          => $applicant->formatted_name,
                     'ramark'        => $remark,

@@ -1,9 +1,14 @@
 @foreach ($data as $key => $user)
     @if($key % 2 === 0)
         <tr class="bg-[#FDC500] bg-opacity-25">
-            <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
-                {{ $user->formatted_name }}
+            <th class="px-6 py-4">
+                @if (isset($user->regDetails->approved_date))
+                    {{ date("F j, Y h:i a", strtotime($user->regDetails->approved_date)) }}
+                @endif
             </th>
+            <td scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
+                {{ $user->formatted_name }}
+            </td>
             <td class="px-6 py-4">
                 @if ($user->is_retaker == 'yes' AND !empty($user->userHistoryLatest))
                     @if ($user->userHistoryLatest->exam_result == 'failed')
@@ -19,9 +24,6 @@
             </td>
             <td class="px-6 py-4">
                 {{ ucfirst($user->current_status) }}
-            </td>
-            <td class="px-6 py-4">
-                {{ $user->addresses ? $user->addresses->formatted_address : '' }}
             </td>
             <td class="px-6 py-4">
                 @if (empty($user->user_login_id))
@@ -80,9 +82,14 @@
         </tr>
     @else
         <tr class="bg-[#FDC500] bg-opacity-10">
-            <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
-                {{ $user->formatted_name }}
+            <th class="px-6 py-4">
+                @if (isset($user->regDetails->approved_date))
+                    {{ date("F j, Y h:i a", strtotime($user->regDetails->approved_date)) }}
+                @endif
             </th>
+            <td scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
+                {{ $user->formatted_name }}
+            </td>
             <td class="px-6 py-4">
                 @if ($user->is_retaker == 'yes' AND !empty($user->userHistoryLatest))
                     @if ($user->userHistoryLatest->exam_result == 'failed')
@@ -98,9 +105,6 @@
             </td>
             <td class="px-6 py-4">
                 {{ ucfirst($user->current_status) }}
-            </td>
-            <td class="px-6 py-4">
-                {{ $user->addresses ? $user->addresses->formatted_address : '' }}
             </td>
             <td class="px-6 py-4">
                 @if (empty($user->user_login_id))
