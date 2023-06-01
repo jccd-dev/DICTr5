@@ -1,30 +1,31 @@
 <?php
 
-use App\Http\Controllers\Admins\AdminAccounts;
-use App\Http\Controllers\ApiController;
-use App\Http\Controllers\Examinee\GoogleAuthController;
-use App\Http\Controllers\Admins\AdminLoginController;
-use App\Http\Controllers\Admins\AdminLogsController;
-use App\Http\Controllers\VisitorController;
+use App\Http\Livewire\User;
 use App\Http\Livewire\CMS\Post;
-use Illuminate\Support\Facades\Route;
-use App\Http\Livewire\CMS\SliderBanner;
+use App\Http\Livewire\CMS\Posts;
+use App\Http\Livewire\CMS\Slider;
+use App\Http\Livewire\Admin\Login;
+use App\Http\Livewire\CMS\Tech4Ed;
 use App\Http\Livewire\ContactForm;
+use Illuminate\Support\Facades\Route;
+use App\Http\Livewire\Admin\Dashboard;
+use App\Http\Controllers\ApiController;
+use App\Http\Livewire\CMS\SliderBanner;
 use App\Http\Livewire\CMS\Announcements;
 use App\Http\Livewire\CMS\EventCalendar;
-use App\Http\Livewire\CMS\Posts;
 use App\Http\Livewire\Admin\ExamSchedule;
-use App\Http\Livewire\Admin\Login;
-use App\Http\Livewire\Admin\Dashboard;
-use App\Http\Livewire\User;
-use App\Http\Livewire\CMS\Slider;
+use App\Http\Controllers\Admins\SystemLogs;
+use App\Http\Controllers\VisitorController;
+use \App\Http\Controllers\UserDataController;
+use App\Http\Controllers\Admins\AdminAccounts;
+use App\Http\Livewire\Admin\Inbox as CMSInbox;
+use \App\View\Components\Pages\Posts as PostsView;
+use App\Http\Controllers\Admins\AdminLogsController;
+use App\Http\Controllers\Admins\AdminLoginController;
+use App\Http\Controllers\Examinee\GoogleAuthController;
+use App\Http\Controllers\Admins\Examinee\ManageApplicants;
 use App\Http\Controllers\Layouts\ViewAnnouncementController;
 use App\Http\Controllers\Examinee\DashboardController as UserDashboardController;
-use App\Http\Livewire\Admin\Inbox as CMSInbox;
-use App\Http\Controllers\Admins\Examinee\ManageApplicants;
-use App\Http\Controllers\Admins\SystemLogs;
-use \App\Http\Controllers\UserDataController;
-use \App\View\Components\Pages\Posts as PostsView;
 
 /*
 |--------------------------------------------------------------------------
@@ -84,6 +85,7 @@ Route::prefix('admin')->group(function () {
             Route::get('/category', \App\Http\Livewire\CMS\Category::class)->name('admin.cms.category'); // Post::class
             Route::get('/announcement', Announcements::class)->name('admin.cms.announcement');
             Route::get('/event-calendar', EventCalendar::class)->name('admin.cms.calendar');
+            Route::get('/tech4ed-courses', Tech4Ed::class)->name('admin.cms.tech4ed');
         });
 
         // manage admin accounts
@@ -115,6 +117,7 @@ Route::prefix('admin')->group(function () {
             Route::get('/exam-schedule/{id}', ExamSchedule::class)->name('admin.exam-schedule2');
             Route::get('/inbox', CMSInbox::class)->name('admin.inbox');
             Route::get('/logs', [AdminLogsController::class, 'render'])->name('admin.system-log');
+            Route::get('/search-logs', [AdminLogsController::class, 'filter_logs'])->name('admin.slogs');
             Route::get('/clean-logs', [AdminLogsController::class, 'clean_logs'])->name('admin.clean-logs');
         });
     });
