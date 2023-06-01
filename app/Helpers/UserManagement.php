@@ -28,9 +28,9 @@ class UserManagement
         'pl'            => "required",
         'signature'     => "required",
         'passport'      => "mimes:jpg,jpeg,png|max:5120|dimensions:min_width=826,min_height=1062|max:5120",
-        'psa'           => "mimes:jpg,jpeg,png,doc,pdf,docx|max:5120|max:5120",
-        'validId'       => "mimes:jpg,jpeg,png,doc,pdf,docx|max:5120|max:5120",
-        'diploma'       => "mimes:jpg,jpeg,png,doc,pdf,docx|max:5120|max:5120",
+        'psa'           => "mimes:jpg,jpeg,png,doc,pdf|max:5120|max:5120",
+        'validId'       => "mimes:jpg,jpeg,png,doc,pdf|max:5120|max:5120",
+        'diploma'       => "mimes:jpg,jpeg,png,doc,pdf|max:5120|max:5120",
         'trainings.*.center' => 'required|string',
         'trainings.*.course' => 'required|string',
         'trainings.*.hours' => 'required|numeric',
@@ -49,7 +49,7 @@ class UserManagement
         'yearsPresentPosition' => "required|numeric"
     ];
 
-    public function insert_users_data(array $organized_data): bool
+    public function insert_users_data(array $organized_data): bool|array
     {
         $user = new UsersData();
         $file_helper = new FileHandler();
@@ -78,7 +78,7 @@ class UserManagement
             $organized_data['files']['diploma'] != null ? $file_helper->store_files($organized_data['files']['diploma'], $submit, 'diploma_TOR', $last_name) : null;
             $organized_data['files']['cert'] != null ? $file_helper->store_files($organized_data['files']['cert'], $submit, 'coe', $last_name) : null;
 
-            return true;
+            return [true, $user->id];
         }
 
         return false;

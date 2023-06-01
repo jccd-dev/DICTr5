@@ -18,8 +18,8 @@
     <div class = 'p-4'>
         <p><b>Republic Act No. 10844</b>, otherwise known as the “Department of Information and Communications Technology Act of 2015”, which was signed into law on 23 May 2016.
         <br>
-        In accordance to the law, the<b> Department of Information and Communications Technology (DICT) </b> shall be the primary policy, 
-        planning, coordinating, implementing, and administrative entity of the Executive Branch of the government that will plan, develop, 
+        In accordance to the law, the<b> Department of Information and Communications Technology (DICT) </b> shall be the primary policy,
+        planning, coordinating, implementing, and administrative entity of the Executive Branch of the government that will plan, develop,
         and promote the national ICT development agenda.
         <br>
         <br>
@@ -42,12 +42,12 @@
         <ul class = 'list-disc p-4'>
             <li>Development of a National Broadband Plan to accelerate the deployment of fiber optic cables and wireless technologies to improve
                  internet speed</li>
-            <li>Provision of Wi-Fi access at no charge in selected public places including parks, plazas, public libraries, schools, 
+            <li>Provision of Wi-Fi access at no charge in selected public places including parks, plazas, public libraries, schools,
                 government hospitals, train stations, airports, and seaports</li>
             <li>Development of a National ICT Portal</li>
         </ul>
         <br>
-        <p>For information and guidance of all concerned, please click on the link below:</p> 
+        <p>For information and guidance of all concerned, please click on the link below:</p>
         <br>
         <a href="http://www.officialgazette.gov.ph/2016/05/23/republic-act-no-10844/" class = 'text-sky-700 hover:text-sky-600'>Republic Act No.10844</a>
         <br>
@@ -55,7 +55,7 @@
         <p>For a complete copy of the Implementing Rules and Regulation, please click on the link below:</p>
         <br>
         <a href="https://dict.gov.ph/wp-content/uploads/2016/10/DICT-IRR.pdf" class = 'text-sky-700 hover:text-sky-600'>Republic Act No. 10844 IRR</a>
-        
+
     </div>
 </div>
 

@@ -2,17 +2,24 @@
 
 namespace App\Http\Livewire\User;
 
-use App\Helpers\FileHandler;
-use App\Helpers\UserManagement;
-use App\Models\Examinee\UsersData;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Validator;
+use App\Models\Examinee\SubmittedFiles;
 use Livewire\Component;
-use Livewire\WithFileUploads;
 use mysql_xdevapi\Session;
-use Psr\Container\ContainerExceptionInterface;
+use App\Helpers\FileHandler;
+use Livewire\WithFileUploads;
+use App\Models\Examinee\Users;
+use App\Helpers\UserManagement;
+use App\Helpers\UserLogActivity;
+use App\Models\Examinee\UsersData;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use App\Models\Examinee\RegDetails;
+use App\Models\Examinee\UserHistory;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Validator;
 use Psr\Container\NotFoundExceptionInterface;
+use Psr\Container\ContainerExceptionInterface;
+use App\Models\Admin\ExamSchedule;
 
 class Dashboard extends Component
 {
@@ -51,6 +58,8 @@ class Dashboard extends Component
     public string $designationPosition;
     public string $yearsPresentPosition;
 
+    public array|object $file_uploaded;
+
     public string $pl;
     public mixed $passport = null;
     public mixed $psa = null;
@@ -70,14 +79,20 @@ class Dashboard extends Component
     public mixed $toDeleteTrainings = [];
     public mixed $training_ids = [];
 
+    public mixed $additional_info = []; //FIXME
+
     protected $rules;
+
+    public $training_limit = 1;
+    public $retaker;
+
+    public bool $view_file_modal = false;
 
 
     protected $except = ['cardModal', 'cardModal2'];
 
     public function updated($propertyName)
     {
-
         $user_helper = new UserManagement();
 
         $rules = $user_helper->rules;
@@ -87,15 +102,17 @@ class Dashboard extends Component
 
     public function mount()
     {
-        $this->givenName = '';
+        $u = Users::find(session()->get('user')['id']);
+        $this->retaker = '';
+        $this->givenName = $u->fname;
         $this->middleName = '';
-        $this->surName = '';
+        $this->surName = str_replace(",", "",  $u->lname);
         $this->tel = 0;
         $this->region = '';
         $this->province = '';
         $this->municipality = '';
         $this->barangay = '';
-        $this->email = '';
+        $this->email = $u->email;
         $this->pob = '';
         $this->dob = '';
         $this->gender = '';
@@ -135,13 +152,29 @@ class Dashboard extends Component
         $this->diploma = '';
 
         $this->signature = '';
+
+        $userdata = $this->get_user_data();
+        foreach ($userdata as $u) {
+            $this->file_uploaded = $u->submittedFiles;
+        }
     }
 
 
     public function render()
     {
         // get userlog_id from session
-        return view('livewire.user.dashboard', ['user_data' => $this->get_user_data()])->layout('layouts.user-layouts');
+        $hasData = false;
+        if (isset($this->get_user_data()[0]->regDetails)) {
+            $hasData = true;
+        }
+        return view(
+            'livewire.user.dashboard',
+            [
+                'user_data' => $this->get_user_data(),
+                "user" => Users::find(session()->get('user')['id']),
+                'sched' => $hasData ? ExamSchedule::find($this->get_user_data()[0]->regDetails->exam_schedule_id) : null
+            ]
+        )->layout('layouts.user-layouts');
     }
 
     public function popInput()
@@ -159,10 +192,15 @@ class Dashboard extends Component
 
     public function addInput()
     {
+
+        $this->training_limit += 1;
+        if ($this->training_limit > 3) return;
+
         $this->trainings->push([
             'course' => '',
             'center' => '',
             'hours' => '',
+            't' => $this->training_limit,
         ]);
     }
 
@@ -172,7 +210,6 @@ class Dashboard extends Component
      */
     public function submit(): void
     {
-
         $user_helper = new UserManagement();
 
         $rules = $user_helper->rules;
@@ -209,7 +246,6 @@ class Dashboard extends Component
             'officeCategory'      => $this->officeCategory,
             'designationPosition' => $this->designationPosition,
             'yearsPresentPosition' => $this->yearsPresentPosition
-
         ], $rules);
 
         if ($validator->fails()) {
@@ -219,7 +255,7 @@ class Dashboard extends Component
                     $this->addError($field, $message);
                 }
             }
-            $this->dispatchBrowserEvent('RegistrationValidationErrors', $err_msgs->getMessages());
+            $this->dispatchBrowserEvent('RegValidationErrors', $err_msgs->getMessages());
             return;
         }
         $users_data = [
@@ -228,6 +264,7 @@ class Dashboard extends Component
             'fname'             => $this->givenName,
             'lname'             => $this->surName,
             'mname'             => $this->middleName,
+            'email'               => $this->email,
             'place_of_birth'    => $this->pob,
             'date_of_birth'     => date('Y-m-d', strtotime($this->dob)),
             'gender'            => $this->gender,
@@ -242,8 +279,10 @@ class Dashboard extends Component
             'no_of_years_in_pos' => $this->yearsPresentPosition,
             'programming_langs' => $this->pl,
             'e_sign'            => $this->signature,
-            'year_level'         => $this->yearLevel,
+            'year_level'        => $this->yearLevel,
             'current_status'    => $this->currentStatus,
+            'add_info'          => json_encode($this->additional_info), //FIXME
+            'is_retaker'        => $this->retaker ? "yes" : "no",
             'date_accomplish'   => date('Y-m-d H:i:s', strtotime('now'))
         ];
 
@@ -279,9 +318,10 @@ class Dashboard extends Component
 
         // dd($organized_users_data, $this->trainings);
         if ($this->insert_users_data($organized_users_data)) {
-            $this->dispatchBrowserEvent('RegistrationValidationSuccess', true);
+            UserLogActivity::addToLog('Newly Register', '');
+            $this->dispatchBrowserEvent('RegValidationSuccess', true);
         } else {
-            $this->dispatchBrowserEvent('RegistrationValidationError', true);
+            $this->dispatchBrowserEvent('RegValidationError', true);
         }
     }
 
@@ -295,7 +335,25 @@ class Dashboard extends Component
         $user_helper = new UserManagement();
         $file_helper = new FileHandler();
 
-        return $user_helper->insert_users_data($organized_data);
+        $res = $user_helper->insert_users_data($organized_data);
+        if (is_array($res)) {
+            UserLogActivity::addToLog('Newly Register', $res[1]);
+            return $res[0]; //true
+        }
+        return $res;
+    }
+
+    public $history_data = null;
+
+    public function get_user_history($history_id)
+    {
+        $d = $this->get_user_data()[0];
+        foreach ($d->userHistory as $item) {
+            if ($item->id == $history_id) {
+                $this->history_data = $item;
+                break;
+            }
+        }
     }
 
 
@@ -308,19 +366,37 @@ class Dashboard extends Component
     public function get_user_data(): Collection|array
     {
         $user_login_id = session()->get('user')['id'];
-        // dd($user_login_id);
-        return UsersData::with('tertiaryEdu', 'trainingSeminars', 'addresses', 'submittedFiles', 'userLogin', 'userHistory')
+
+        $user = UsersData::with(
+            'tertiaryEdu',
+            'trainingSeminars',
+            'addresses',
+            'submittedFiles',
+            'userLogin',
+            'userHistory.failedHistory',
+            'userHistoryLatest',
+            'regDetails'
+        )
             ->where('user_login_id', $user_login_id)
             ->get();
 
-        // use this to identify if user needs to reapply
-        // $user->userHistory()->exists();
+        return $user;
+        /**
+        if(userHistoryLatest)
+            if(userHistoryLatest->exam_result == passed)
+                you already pass the test
+            else
+                reapply
+        else
+            apply
+         */
     }
 
     public function populate_user_data(): void
     {
         $cur_user_data = $this->get_user_data()[0];
         $this->prev_data = $cur_user_data;
+        $this->retaker = $cur_user_data->is_retaker;
 
         // PERSONNAL INFO
         $this->givenName = $cur_user_data->fname;
@@ -360,6 +436,8 @@ class Dashboard extends Component
         $this->province = $cur_user_data->addresses->province;
         $this->municipality = $cur_user_data->addresses->municipality;
         $this->barangay = $cur_user_data->addresses->barangay;
+
+        $this->additional_info = json_decode($cur_user_data->add_info, true) ?? []; //FIXME
 
         // SEMINARS
         //        $this->trainings = $cur_user_data->trainingSeminars->toArray();
@@ -442,6 +520,7 @@ class Dashboard extends Component
             'fname'             => $this->givenName,
             'lname'             => $this->surName,
             'mname'             => $this->middleName,
+            'email'               => $this->email,
             'place_of_birth'    => $this->pob,
             'date_of_birth'     => $this->dob,
             'gender'            => $this->gender,
@@ -458,6 +537,8 @@ class Dashboard extends Component
             'e_sign'            => $this->signature,
             'yearLevel'         => $this->yearLevel,
             'current_status'    => $this->currentStatus,
+            'add_info'          => json_encode($this->additional_info), //FIXME
+            'is_retaker'        => $this->retaker ? "yes" : "no",
             'date_accomplish'   => date('Y-m-d H:i:s', strtotime('now'))
         ];
 
@@ -486,6 +567,8 @@ class Dashboard extends Component
         $user_helper->update_users_data($organized_users_data, $user_id);
 
         $this->dispatchBrowserEvent('RegUpdateValidationSuccess', true);
+
+        UserLogActivity::addToLog('Update registered Data', $user_id);
     }
 
     public function updateFiles($status, $user_id): void
@@ -563,28 +646,122 @@ class Dashboard extends Component
 
         $user = UsersData::with('regDetails')->find($user_id);
         $reg = $user->regDetails;
+
         // dd($user);
         if ($user) {
-
-            if ($reg && !$reg->exists()) {
+            if ($reg == null) {
+                $reg = new RegDetails();
                 $reg->user_id = $user_id;
                 $reg->reg_date = date('Y-m-d', strtotime('now'));
                 $reg->apply = 1;
 
                 if ($reg->save()) {
-                    session()->flash('success', 'Application sent');
+
+                    // count user as applicant if he/she is not a retaker.
+                    DB::table('visitor_count')->increment('applicants');
+
+                    session()->flash('success', 'Application has been sent. Your application will be evaluated. Please wait for confirmation from time-to-time.');
+                    UserLogActivity::addToLog('Apply for exam', $user_id);
+                    return true;
+                }
+
+                session()->flash('error', 'server error');
+                return false;
+            } else {
+                if ($reg->apply = 1) {
+                    session()->flash('warning', 'You have already applied');
+                    return false;
+                }
+                $reg->apply = 1;
+
+                if ($reg->save()) {
+                    session()->flash('success', 'Application has been sent. Your application will be evaluated. Please wait for confirmation from time-to-time.');
+                    UserLogActivity::addToLog('ReApply for exam', $user_id);
                     return true;
                 }
 
                 session()->flash('error', 'server error');
                 return false;
             }
-            session()->flash('warning', 'You have already applied');
-            return false;
         }
 
         // it means that the user already applied
         session()->flash('warning', 'You have to register first');
         return false;
+    }
+
+    /**
+     * @return
+     * @description Generation of ILCDB Form 2
+     */
+    public function generate_pdf()
+    {
+        $users_data = $this->get_user_data();
+        $data = [];
+        foreach ($users_data as $user_data) {
+            $data = [
+                'id' => $user_data->id,
+                'is_retaker' => $user_data->is_retaker,
+                'email' => $user_data->userLogin->email,
+                'fname' => $user_data->fname,
+                'lname' => $user_data->lname,
+                'mname' => $user_data->mname,
+                'place_of_birth' => $user_data->place_of_birth,
+                'date_of_birth' => date('F d, Y', strtotime($user_data->date_of_birth)),
+                'gender' => $user_data->gender,
+                'citizenship' => $user_data->citizenship,
+                'civil_status' => $user_data->civil_status,
+                'contact_number' => $user_data->contact_number,
+                'present_office' => $user_data->present_office,
+                'designation' => $user_data->designation,
+                'telephone_number' => $user_data->telephone_number,
+                'office_address' => $user_data->office_address,
+                'office_category' => $user_data->office_category,
+                'no_of_years_in_pos' => $user_data->no_of_years_in_pos,
+                'programming_langs' => $user_data->programming_langs,
+                'e_sign' => $user_data->e_sign,
+                'year_level' => $user_data->year_level,
+                'current_status' => $user_data->current_status,
+                'date_accomplished' => $user_data->date_accomplished,
+                'region' => $user_data->addresses->region,
+                'province' => $user_data->addresses->province,
+                'municipality' => $user_data->addresses->municipality,
+                'add_info' => $user_data->add_info,
+                'barangay' => $user_data->addresses->barangay,
+                'school_attended' => $user_data->tertiaryEdu->school_attended,
+                'degree' => $user_data->tertiaryEdu->degree,
+                'inclusive_years' => $user_data->tertiaryEdu->inclusive_years,
+                'passport' => null,
+                'file_type' => null,
+                'training_seminar' => null,
+                'date_accomplish' => $user_data->date_accomplish,
+            ];
+
+            foreach ($user_data->submittedFiles as $file) {
+                if ($file->requirement_type == 'passport') {
+                    $data['passport'] = $file->file_name;
+                    $data['file_type'] = $file->file_type;
+                }
+            }
+
+            foreach ($user_data->trainingSeminars as $ts) {
+                $data['training_seminar'][] = [
+                    'course' => $ts->course,
+                    'center' => $ts->center,
+                    'hours' => $ts->hours,
+                ];
+            }
+        }
+        $user_login_id = session()->get('user')['id'];
+        $user_history = UserHistory::where('user_id', $user_login_id)->count();
+        return redirect()->route('user.generate_pdf', ['data' => $data]);
+    }
+
+    public function view_file_submitted($id)
+    {
+        $submitted_file = SubmittedFiles::where('id', $id)->first();
+        $file_name = $submitted_file->file_name;
+        $this->dispatchBrowserEvent('show_file', $file_name);
+        $this->view_file_modal = true;
     }
 }

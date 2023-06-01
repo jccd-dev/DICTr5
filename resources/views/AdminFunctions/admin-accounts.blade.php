@@ -101,9 +101,30 @@ x-init="">
                                 <td class="px-6 py-4">
                                     {{ $admin->office }}
                                 </td>
-                                <td class="px-6 py-4">
-                                    <a href="#" @click="getUserData({{ $admin->id }})" data-hs-overlay="#hs-vertically-centered-modal2" class="font-medium hover:underline">Edit</a>
-                                    <a href="#" @click="deleteSelected = {{ $admin->id }}" data-modal-target="deleteModal" data-modal-show="deleteModal" class="font-medium hover:underline text-custom-red">Delete</a>
+                                <td class="px-6 py-4 flex gap-3">
+                                    <a href="#" @click="getUserData({{ $admin->id }})" data-hs-overlay="#hs-vertically-centered-modal2" class="font-medium hover:underline flex gap-2 items-center bg-custom-blue bg-opacity-10 py-2 px-3 rounded-2xl">
+                                        <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <g clip-path="url(#clip0_1295_612)">
+                                            <path d="M8.70801 1.58325H7.12467C3.16634 1.58325 1.58301 3.16659 1.58301 7.12492V11.8749C1.58301 15.8333 3.16634 17.4166 7.12467 17.4166H11.8747C15.833 17.4166 17.4163 15.8333 17.4163 11.8749V10.2916" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M12.698 2.39091L6.45966 8.62924C6.22216 8.86674 5.98466 9.33383 5.93716 9.67425L5.59674 12.0572C5.47008 12.9201 6.07966 13.5217 6.94258 13.403L9.32549 13.0626C9.65799 13.0151 10.1251 12.7776 10.3705 12.5401L16.6088 6.30174C17.6855 5.22508 18.1922 3.97424 16.6088 2.39091C15.0255 0.807578 13.7747 1.31424 12.698 2.39091Z" stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M11.8037 3.2854C12.0662 4.21756 12.5637 5.0667 13.2485 5.75148C13.9332 6.43625 14.7824 6.93372 15.7145 7.19623" stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </g>
+                                            <defs>
+                                            <clipPath id="clip0_1295_612">
+                                            <rect width="19" height="19" fill="white"/>
+                                            </clipPath>
+                                            </defs>
+                                            </svg>
+
+                                        <span class="font-semibold">Edit</span>
+                                    </a>
+                                    <a href="#" @click="deleteSelected = {{ $admin->id }}" data-modal-target="deleteModal" data-modal-show="deleteModal" class="font-medium hover:underline flex gap-2 items-center bg-custom-red bg-opacity-10 py-2 px-3 rounded-2xl">
+                                        <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M16.625 4.73409C13.9888 4.47284 11.3367 4.33825 8.6925 4.33825C7.125 4.33825 5.5575 4.41742 3.99 4.57575L2.375 4.73409M6.72917 3.9345L6.90333 2.89742C7.03 2.14534 7.125 1.58325 8.46292 1.58325H10.5371C11.875 1.58325 11.9779 2.177 12.0967 2.90534L12.2708 3.9345M14.9229 7.23575L14.4083 15.2078C14.3213 16.4508 14.25 17.4166 12.0413 17.4166H6.95875C4.75 17.4166 4.67875 16.4508 4.59167 15.2078L4.07708 7.23575M8.17792 13.0624H10.8142M7.52083 9.89575H11.4792" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+
+                                        <span class="font-semibold">Delete</span>
+                                    </a>
                                 </td>
                             </tr>
                         @else
@@ -120,9 +141,30 @@ x-init="">
                                 <td class="px-6 py-4">
                                     {{ $admin->office }}
                                 </td>
-                                <td class="px-6 py-4">
-                                    <a href="#" @click="getUserData({{ $admin->id }})" data-hs-overlay="#hs-vertically-centered-modal2" class="font-medium hover:underline">Edit</a>
-                                    <a href="#" @click="deleteSelected = {{ $admin->id }}" data-modal-target="deleteModal" data-modal-show="deleteModal" class="font-medium hover:underline text-custom-red">Delete</a>
+                                <td class="px-6 py-4 flex gap-3">
+                                    <a href="#" @click="getUserData({{ $admin->id }})" data-hs-overlay="#hs-vertically-centered-modal2" class="font-medium hover:underline flex gap-2 items-center bg-custom-blue bg-opacity-10 py-2 px-3 rounded-2xl">
+                                        <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <g clip-path="url(#clip0_1295_612)">
+                                            <path d="M8.70801 1.58325H7.12467C3.16634 1.58325 1.58301 3.16659 1.58301 7.12492V11.8749C1.58301 15.8333 3.16634 17.4166 7.12467 17.4166H11.8747C15.833 17.4166 17.4163 15.8333 17.4163 11.8749V10.2916" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M12.698 2.39091L6.45966 8.62924C6.22216 8.86674 5.98466 9.33383 5.93716 9.67425L5.59674 12.0572C5.47008 12.9201 6.07966 13.5217 6.94258 13.403L9.32549 13.0626C9.65799 13.0151 10.1251 12.7776 10.3705 12.5401L16.6088 6.30174C17.6855 5.22508 18.1922 3.97424 16.6088 2.39091C15.0255 0.807578 13.7747 1.31424 12.698 2.39091Z" stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M11.8037 3.2854C12.0662 4.21756 12.5637 5.0667 13.2485 5.75148C13.9332 6.43625 14.7824 6.93372 15.7145 7.19623" stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </g>
+                                            <defs>
+                                            <clipPath id="clip0_1295_612">
+                                            <rect width="19" height="19" fill="white"/>
+                                            </clipPath>
+                                            </defs>
+                                            </svg>
+
+                                        <span class="font-semibold">Edit</span>
+                                    </a>
+                                    <a href="#" @click="deleteSelected = {{ $admin->id }}" data-modal-target="deleteModal" data-modal-show="deleteModal" class="font-medium hover:underline flex gap-2 items-center bg-custom-red bg-opacity-10 py-2 px-3 rounded-2xl">
+                                        <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M16.625 4.73409C13.9888 4.47284 11.3367 4.33825 8.6925 4.33825C7.125 4.33825 5.5575 4.41742 3.99 4.57575L2.375 4.73409M6.72917 3.9345L6.90333 2.89742C7.03 2.14534 7.125 1.58325 8.46292 1.58325H10.5371C11.875 1.58325 11.9779 2.177 12.0967 2.90534L12.2708 3.9345M14.9229 7.23575L14.4083 15.2078C14.3213 16.4508 14.25 17.4166 12.0413 17.4166H6.95875C4.75 17.4166 4.67875 16.4508 4.59167 15.2078L4.07708 7.23575M8.17792 13.0624H10.8142M7.52083 9.89575H11.4792" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+
+                                        <span class="font-semibold">Delete</span>
+                                    </a>
                                 </td>
                             </tr>
                         @endif
@@ -223,7 +265,13 @@ x-init="">
                         <button type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600 flex-1">
                             Back
                         </button>
-
+                        <button disabled type="button" class="hidden text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 items-center">
+                            <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>
+                            <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"/>
+                            </svg>
+                            Loading...
+                        </button>
                         <button type="submit" class="text-white bg-dark-blue hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-dark-blue dark:focus:ring-blue-800 flex-1">
                             Submit
                         </button>
@@ -238,9 +286,9 @@ x-init="">
         <div class="flex flex-col bg-white w-fit border shadow-sm rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:shadow-slate-700/[.7]">
             <div class="flex justify-between items-center py-3 px-4 border-b dark:border-gray-700">
             <h3 class="font-bold text-gray-800 dark:text-white font-quicksand">
-                Add Admin Account
+                Edit Admin Account
             </h3>
-            <button type="button" id="close-btn" class="hs-dropdown-toggle inline-flex flex-shrink-0 justify-center items-center h-8 w-8 rounded-md text-gray-500 hover:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-white transition-all text-sm dark:focus:ring-gray-700 dark:focus:ring-offset-gray-800" data-hs-overlay="#hs-vertically-centered-modal">
+            <button type="button" id="close-btn" class="hs-dropdown-toggle inline-flex flex-shrink-0 justify-center items-center h-8 w-8 rounded-md text-gray-500 hover:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-white transition-all text-sm dark:focus:ring-gray-700 dark:focus:ring-offset-gray-800" data-hs-overlay="#hs-vertically-centered-modal2">
                 <span class="sr-only">Close</span>
                 <svg class="w-3.5 h-3.5" width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M0.258206 1.00652C0.351976 0.912791 0.479126 0.860131 0.611706 0.860131C0.744296 0.860131 0.871447 0.912791 0.965207 1.00652L3.61171 3.65302L6.25822 1.00652C6.30432 0.958771 6.35952 0.920671 6.42052 0.894471C6.48152 0.868271 6.54712 0.854471 6.61352 0.853901C6.67992 0.853321 6.74572 0.865971 6.80722 0.891111C6.86862 0.916251 6.92442 0.953381 6.97142 1.00032C7.01832 1.04727 7.05552 1.1031 7.08062 1.16454C7.10572 1.22599 7.11842 1.29183 7.11782 1.35822C7.11722 1.42461 7.10342 1.49022 7.07722 1.55122C7.05102 1.61222 7.01292 1.6674 6.96522 1.71352L4.31871 4.36002L6.96522 7.00648C7.05632 7.10078 7.10672 7.22708 7.10552 7.35818C7.10442 7.48928 7.05182 7.61468 6.95912 7.70738C6.86642 7.80018 6.74102 7.85268 6.60992 7.85388C6.47882 7.85498 6.35252 7.80458 6.25822 7.71348L3.61171 5.06702L0.965207 7.71348C0.870907 7.80458 0.744606 7.85498 0.613506 7.85388C0.482406 7.85268 0.357007 7.80018 0.264297 7.70738C0.171597 7.61468 0.119017 7.48928 0.117877 7.35818C0.116737 7.22708 0.167126 7.10078 0.258206 7.00648L2.90471 4.36002L0.258206 1.71352C0.164476 1.61976 0.111816 1.4926 0.111816 1.36002C0.111816 1.22744 0.164476 1.10028 0.258206 1.00652Z" fill="currentColor"/>
@@ -257,7 +305,7 @@ x-init="">
                             Back
                         </button>
 
-                        <button type="submit" class="text-white bg-dark-blue hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-dark-blue dark:focus:ring-blue-800 flex-1">
+                        <button type="submit" class="submit-btn text-white bg-dark-blue hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-dark-blue dark:focus:ring-blue-800 flex-1">
                             Submit
                         </button>
                     </div>
@@ -302,25 +350,6 @@ x-init="">
         let a = await axios.get('/admin/dict-admins/view/' + id)
         updateContent.innerHTML = a.data
     }
-    function getDeviceName() {
-  var deviceName = 'Unknown';
-
-  if (navigator.userAgent.match(/Android/i)) {
-    deviceName = 'Android Device';
-  } else if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
-    deviceName = 'iOS Device';
-  } else if (navigator.userAgent.match(/Windows Phone|IEMobile|WPDesktop/i)) {
-    deviceName = 'Windows Phone';
-  } else if (navigator.userAgent.match(/BlackBerry|BB10|PlayBook/i)) {
-    deviceName = 'BlackBerry Device';
-  }
-
-  return deviceName;
-}
-
-// Usage
-var deviceName = getDeviceName();
-console.log(navigator.userAgent);
 
     async function deleteAdminAccount(data) {
         try {
@@ -350,7 +379,11 @@ console.log(navigator.userAgent);
 
         let formData = new FormData(event.target);
 
+        let loaderSibling = event.target.querySelector('button[type="submit"]')
         try {
+            loaderSibling.classList.add('hidden');
+            loaderSibling.previousElementSibling.classList.remove('hidden');
+            loaderSibling.previousElementSibling.classList.add('flex');
             let req = await axios.post("/admin/dict-admins/create", formData);
             if (req.status === 200) {
                 dismissAlert.classList.remove("hidden");
@@ -363,6 +396,9 @@ console.log(navigator.userAgent);
                 }, 2000);
             }
         } catch (e) {
+            loaderSibling.classList.remove('hidden');
+            loaderSibling.previousElementSibling.classList.add('hidden');
+            loaderSibling.previousElementSibling.classList.remove('flex');
             errorHandler(e.response?.data?.errors);
         }
     });

@@ -2,11 +2,11 @@
 
 namespace App\Http\Livewire\CMS;
 
-use App\Models\CMS\Announcement as AnnouncementModel;
-use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use App\Helpers\AdminLogActivity;
 use App\Models\CMS\POST\PostModel;
+use Illuminate\Support\Facades\DB;
 use App\Helpers\ImageHandlerHelper;
 use App\Models\CMS\POST\PostImages;
 use Illuminate\Support\Facades\Auth;
@@ -15,9 +15,11 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\Collection;
+use WireUi\Traits\Actions;
 
 class Posts extends Component
 {
+    use Actions;
     use WithFileUploads;
 
     //initialized variable that will hold values from input form
@@ -62,7 +64,7 @@ class Posts extends Component
         'thumbnail'      => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
         'content'        => 'required',
         'images.*'       => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
-        'vid_link'       => 'nullable|url',
+        'vid_link'       => 'nullable|regex:/https/',
         'status'         => 'required|numeric',
     ];
     protected $update_rules = [
@@ -72,7 +74,7 @@ class Posts extends Component
         'thumbnail'      => 'nullable|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
         'content'        => 'required',
         'images.*'       => 'nullable|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
-        'vid_link'       => 'nullable|url',
+        'vid_link'       => 'nullable|regex:/https/',
         'status'         => 'required|numeric',
     ];
 
@@ -87,7 +89,7 @@ class Posts extends Component
         $this->post_model = new PostModel(); // or whatever the name of your Post model is
         $this->imageHelper = new ImageHandlerHelper();
 
-        if (Auth::check()){
+        if (Auth::check()) {
 
             $admin = Auth::user();
 
@@ -110,7 +112,7 @@ class Posts extends Component
         $this->displayFormat = null;
         $this->category_id = 0;
         $this->admin_id = 1;
-//        $this->author = '';
+        //        $this->author = '';
         $this->title = '';
         $this->excerpt = '';
         $this->thumbnail = '';
@@ -118,7 +120,7 @@ class Posts extends Component
         $this->content = '';
         $this->images = [];
         $this->image_names = [];
-        $this->vid_link = '';
+        $this->vid_link = '<iframe src="https://drive.google.com/file/d/1o-69DTgRAy3Expz6Ekj2r3ffd_7AFZFY/preview" width="640" height="480" allow="autoplay"></iframe>';
         $this->status = 0;
         $this->post_data = [];
         $this->post_id = 0;
@@ -135,7 +137,7 @@ class Posts extends Component
         $this->search = '';
         $this->cat_id = null;
         $this->temp_images = [];
-        if (Auth::check()){
+        if (Auth::check()) {
 
             $admin = Auth::user();
 
@@ -148,13 +150,12 @@ class Posts extends Component
         //todo why it become null when post is updated
         $this->admin_role = $this->admin_role ?? Auth::user()->role;
         $this->cur_admin_id = $this->cur_admin_id ?? Auth::user()->id;
-
     }
 
     public function render()
     {
         // get admin name and id
-        if (Auth::check()){
+        if (Auth::check()) {
 
             $admin = Auth::user();
 
@@ -170,6 +171,7 @@ class Posts extends Component
 
     public function create_post($admin): void
     {
+        // dd($this->vid_link);
         if (count($this->temp_images) > 0)
             $validator = Validator::make([
                 'category_id'   => $this->category_id,
@@ -183,24 +185,26 @@ class Posts extends Component
             ], $this->rules);
         else
             $validator = Validator::make([
-                    'category_id'   => $this->category_id,
-                    'title'         => $this->title,
-                    'excerpt'       => $this->excerpt,
-                    'thumbnail'     => $this->thumbnail,
-                    'content'       => $this->content,
-                    'images'        => $this->temp_images,
-                    'vid_link'      => $this->vid_link,
-                    'status'        => $this->status,
-                ],[
+                'category_id'   => $this->category_id,
+                'title'         => $this->title,
+                'excerpt'       => $this->excerpt,
+                'thumbnail'     => $this->thumbnail,
+                'content'       => $this->content,
+                'images'        => $this->temp_images,
+                'vid_link'      => $this->vid_link,
+                'status'        => $this->status,
+            ], [
                 'category_id'    => 'required|numeric',
                 'title'          => 'required|word_count:15',
                 'excerpt'        => 'required',
                 'thumbnail'      => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
                 'content'        => 'required',
                 'images'       => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
-                'vid_link'       => 'nullable|url',
+                'vid_link'       => 'nullable|regex:/https/',
                 'status'         => 'required|numeric',
             ]);
+
+
         if ($validator->fails()) {
             $err_msgs = $validator->getMessageBag();
             foreach ($err_msgs->getMessages() as $field => $messages) {
@@ -250,6 +254,7 @@ class Posts extends Component
             }
 
             $this->dispatchBrowserEvent('ValidationPostSuccess', ['success' => 'success']);
+            AdminLogActivity::addToLog("created a post", session()->get('admin_id'));
         }
 
         session()->flash('error', 'Something went wrong please try again later!');
@@ -296,6 +301,8 @@ class Posts extends Component
         //        $this->images = $post_images;
 
         $this->prev_data = $this->to_update_data;
+
+        $this->dispatchBrowserEvent('update_content', $this->content);
 
         $this->resetValidation();
     }
@@ -358,7 +365,8 @@ class Posts extends Component
     }
 
     // filter data base from admin role
-    public function filter_by_role($posts){
+    public function filter_by_role($posts)
+    {
 
         switch (session()->get('admin_role')) {
             case 100: // super admin
@@ -463,6 +471,7 @@ class Posts extends Component
                 $this->imageHelper->del_image_on_db($this->to_delete_image, $this->post_id);
                 session()->flash('success', 'Post has been created!');
 
+                AdminLogActivity::addToLog("updated a post", session()->get('admin_id'));
                 return true;
             }
         }
@@ -524,6 +533,7 @@ class Posts extends Component
             return true;
         }
         $this->dispatchBrowserEvent("DeletePostError", true);
+        AdminLogActivity::addToLog("deleted a post", session()->get('admin_id'));
         return false;
     }
 
@@ -545,7 +555,7 @@ class Posts extends Component
                 unset($this->temp_images[$loc2]);
             }
         });
-//        dd($this->temp_images);
+        //        dd($this->temp_images);
     }
 
     public function updatedImages($variable)
@@ -557,11 +567,23 @@ class Posts extends Component
         $this->images = [];
     }
 
+    public function change_status($id, $status)
+    {
+        $post = PostModel::find($id);
+        if ($status) {
+            $post->status = 1;
+        } else {
+            $post->status = 0;
+        }
+        $post->save();
+        $this->notification()->success(
+            $title = 'Status Update',
+            $description = 'Post Status has been updated'
+        );
+    }
+
     public function get_all_categories()
     {
         return PostCategory::all()->toArray();
     }
-
-
-
 }

@@ -8,8 +8,8 @@ class SearchExamineesHelper
     public static function search_with_cache($searchValues){
 
        return UsersData::query()
-            ->when($searchValues['gender'], function ($query, $genderValue){
-                $query->where('gender', $genderValue);
+            ->when($searchValues['retake'], function ($query, $retakeValue){
+                $query->where('is_retaker', $retakeValue);
             })
             ->when($searchValues['reg_status'], function ($query, $statusValue){
                 $query->whereHas('regDetails', function ($query) use ($statusValue){
@@ -17,9 +17,17 @@ class SearchExamineesHelper
                 });
             })
             ->when($searchValues['is_applied'], function ($query, $applyValue){
-                $query->whereHas('regDetails', function ($query) use ($applyValue){
-                    $query->where('apply', $applyValue);
-                });
+                if($applyValue == 1){
+                    $query->whereHas('regDetails', function ($query) use ($applyValue){
+                        $query->where('apply', $applyValue);
+                    });
+                }
+                else{
+                    $query->whereHas('regDetails', function ($query) use ($applyValue){
+                        $query->where('apply', $applyValue);
+                    })->orWhereDoesntHave('regDetails');
+                }
+
             })
             ->when($searchValues['search_text'], function($query, $searchValue){
                 $query->where(function ($query) use ($searchValue){
@@ -28,21 +36,27 @@ class SearchExamineesHelper
                         ->orWhere('designation', 'like', '%'.$searchValue.'%');
                 })
                 ->orWhereHas('tertiaryEdu', function ($query) use ($searchValue){
-                    $query->where('degree', 'like', '%'.$searchValue.'%');
+                    $query->where('school_attended', 'like', '%'.$searchValue.'%');
+                })
+                ->orWhereHas('addresses', function ($query) use ($searchValue){
+                    $query->where('province', 'like', '%'.$searchValue.'%')
+                        ->orWhere('municipality', 'like', '%'.$searchValue.'%')
+                        ->orWhere('barangay', 'like', '%'.$searchValue.'%');
                 });
             })
             ->when($searchValues['curr_status'], function ($query, $currStatusValue){
                 $query->where('current_status', $currStatusValue);
             })
-            //parent closure, with reference value
-            ->when($searchValues['municipality'], function ($query, $municipalityValue){
-                // nested closure, capture the reference value from parent
-                $query->whereHas('addresses', function ($query) use ($municipalityValue){
-                    $query->where('municipality', $municipalityValue);
-                });
+            ->when($searchValues['applicant'], function ($query, $applicantValue){
+                if($applicantValue == 1){
+                    $query->where('user_login_id', '!=', null);
+                }
+                else{
+                    $query->where('user_login_id', '=', null);
+                }
             })
             // related tables
-            ->with('tertiaryEdu', 'addresses', 'regDetails')
+            ->with('tertiaryEdu', 'addresses', 'regDetails', 'userLogin', 'userHistoryLatest')
             ->orderBy('timestamp', $searchValues['order_by'])
             ->paginate(20);
     }

@@ -40,5 +40,12 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('delete_content', function ($admin) use ($roles) {
             return (int)$admin->role !== $roles['na'];
         });
+
+        // resttrict
+        Gate::define('manage_admins',function($admin) use ($roles){
+            return (int)$admin->role !== $roles['na'] OR (int)$admin->role !== $roles['cc'];
+        });
+
+
     }
 }

@@ -17,6 +17,7 @@ class UsersData extends Model
     public $timestamps = false;
     protected $fillable = [
         'user_login_id',
+        'email',
         'fname',
         'lname',
         'mname',
@@ -37,6 +38,8 @@ class UsersData extends Model
         'e_sign',
         'year_level',
         'current_status',
+        'add_info',
+        'is_retaker',
         'date_accomplish',
     ];
 
@@ -84,7 +87,8 @@ class UsersData extends Model
      * @return string
      * @description Accessor method to format Full name directly on eloquent statement
      */
-    public function getFormattedNameAttribute(): string{
+    public function getFormattedNameAttribute(): string
+    {
         $first_name = $this->fname;
         $middle_name = $this->mname;
         $last_name = $this->lname;
@@ -92,4 +96,8 @@ class UsersData extends Model
         return "{$last_name}, {$first_name} {$middle_name}";
     }
 
+    public function userHistoryLatest(): HasOne
+    {
+        return $this->hasOne(UserHistory::class, 'user_id', 'id')->latest('timestamp');
+    }
 }

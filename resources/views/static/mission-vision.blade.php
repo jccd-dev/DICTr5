@@ -23,21 +23,21 @@
         <p>The Department of Information and Communications Technology commits to:<p>
         <ul class = 'list-disc p-4'>
             <li>Provide every Filipino access to vital ICT infostructure and services</li>
-            <li>Ensure sustainable growth of Philippine ICT-enabled industries 
+            <li>Ensure sustainable growth of Philippine ICT-enabled industries
                 resulting to creation of more jobs</li>
-            <li>Establish a One Digitized Government, One Nation</li> 
+            <li>Establish a One Digitized Government, One Nation</li>
             <li>Support the administration in fully achieving its goals</li>
-            <li>Be the enabler, innovator, achiever and leader in pushing the country’s 
-                development and transition towards a world-class digital economy</li>   
+            <li>Be the enabler, innovator, achiever and leader in pushing the country’s
+                development and transition towards a world-class digital economy</li>
         </ul>
         <br>
         <h2 class =  'text-base font-bold'>Vision</h2>
         <br>
-        <p class = 'italic'>“An innovative, safe and happy nation that thrives through 
+        <p class = 'italic'>“An innovative, safe and happy nation that thrives through
             and is enabled by Information and Communications Technology.”</p>
         <br>
-        <p>DICT aspires for the Philippines to develop and flourish through innovation 
-            and constant development of ICT in the pursuit of a progressive, safe, secured, contented 
+        <p>DICT aspires for the Philippines to develop and flourish through innovation
+            and constant development of ICT in the pursuit of a progressive, safe, secured, contented
             and happy Filipino nation.</p>
         <br>
 

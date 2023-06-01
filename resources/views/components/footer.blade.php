@@ -43,6 +43,8 @@
             </div>
             <div class="font-quicksand flex flex-col mt-5 gap-2">
                 <span class="text-sm flex items-center">Registered Users: <span class="font-bold text-base ml-2">{{$data['registered']}}</span></span>
+                <span class="text-sm flex items-center">Total Applicants: <span class="font-bold text-base ml-2">{{$data['applicants']}}</span></span>
+                <span class="text-sm flex items-center">Total Passers: <span class="font-bold text-base ml-2">{{$data['passers']}}</span></span>
             </div>
         </div>
       </div>

@@ -6,6 +6,7 @@ use App\Models\CMS\Feedback;
 use Livewire\Component;
 use Livewire\WithPagination;
 use WireUi\Traits\Actions;
+use App\Models\CMS\Inbox as InboxModel;
 
 class Inbox extends Component
 {
@@ -21,7 +22,10 @@ class Inbox extends Component
     // FOR FEEDBACK
     public $feedbackContent;
     public $onReadFeedback;
-    public $toDeleteFeedback;
+    public $toDeleteFeedback = 0;
+    public $toDeleteSentEmail = 0;
+    public bool $feedback_modal;
+    public bool $sent_email_modal;
 
     public function render()
     {
@@ -32,6 +36,7 @@ class Inbox extends Component
                     ->where(fn($query) => $query
                         ->where('content', 'like', '%' . $this->search . '%')
                         ->orWhere('email', 'like', '%' . $this->search . '%')
+                        ->orWhere('name', 'like', '%' . $this->search . '%')
                     )
                     ->orderByDesc('timestamp')
                     ->paginate(5)
@@ -50,7 +55,16 @@ class Inbox extends Component
                     ->paginate(5)
             ];
         }else{
-            $data = [];
+            $data = [
+                'sent_emails' => InboxModel::where('is_archived', 0)
+                                    ->where(fn($query) => $query
+                                        ->where('user', 'like', '%' . $this->search . '%')
+                                        ->orWhere('intended_for', 'like', '%' . $this->search . '%')
+                                        ->orWhere('email', 'like', '%' . $this->search . '%')
+                                    )
+                                    ->orderByDesc('timestamp')
+                                    ->paginate(10)
+            ];
 
         }
         return view('livewire.admin.inbox', $data)
@@ -60,6 +74,8 @@ class Inbox extends Component
     public function mount(){
         $this->feedbackContent = '';
         $this->onReadFeedback = 0;
+        $this->feedback_modal = false;
+        $this->sent_email_modal = false;
     }
 
     public function updatingSearch(){
@@ -85,10 +101,17 @@ class Inbox extends Component
     // trigger when delete icon is clicked
     public function prepare_to_delete($id){
         $this->toDeleteFeedback = $id;
+        $this->feedback_modal = true;
+    }
+
+    public function prepare_to_delete_sent_email($id){
+        $this->toDeleteSentEmail = $id;
+        $this->sent_email_modal = true;
     }
 
     // Delete feedback
     public function delete_feedback(){
+        $this->feedback_modal = false;
         $feedback = Feedback::find($this->toDeleteFeedback);
         $feedback->is_archived = 1;
         $feedback->save();
@@ -97,6 +120,16 @@ class Inbox extends Component
             $description = 'Successfully archived the feedback'
         );
     }
+
     //FOR SENT EMAILS
-    // ...
+    public function delete_sent_email(){
+        $this->sent_email_modal = false;
+        $sentemail = InboxModel::find($this->toDeleteSentEmail);
+        $sentemail->is_archived = 1;
+        $sentemail->save();
+        $this->notification()->success(
+            $title = 'Sent Email Deleted',
+            $description = 'Successfully archived the sent email'
+        );
+    }
 }

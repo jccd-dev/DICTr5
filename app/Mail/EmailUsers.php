@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Helpers\InboxHelper;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -15,10 +16,26 @@ class EmailUsers extends Mailable
 
     /**
      * Create a new message instance.
+     * @param array $data elements:
+     *               - name => string complete name
+     *               - venue => string
+     *               - exam_sched => string exam schedule
+     *               For Failed:
+     *               - part1 => string percentage
+     *               - part2 => string percentage
+     *               - part3 => string percentage
+     *               END For Failed
+     *               *******************
+     *               - email => string
+     *               - intended_for => string
+     * @param bool $passed if pass or failed
      */
-    public function __construct()
+    public function __construct(
+        protected bool $passed,
+        protected array $data
+    )
     {
-        //
+        $inbox = new InboxHelper($data['name'], $data['email'], $data['intended_for']);
     }
 
     /**
@@ -37,7 +54,11 @@ class EmailUsers extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'layouts.email.passed',
+            view: 'layouts.email.exam-result',
+            with: [
+                'data' => $this->data,
+                'passed' => $this->passed,
+            ]
         );
     }
 

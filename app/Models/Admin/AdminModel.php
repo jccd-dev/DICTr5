@@ -126,6 +126,10 @@ class AdminModel extends Authenticatable implements JWTSubject
         return $this->hasMany(Calendar::class, 'admin_id', 'id');
     }
 
+    public function adminLogs(): HasMany {
+        return $this->hasMany(AdminLogs::class, 'admin_id', 'id');
+    }
+
     // automatically hashed the password when $admin->pass = 'pass' $admin->save()
     public function setPasswordAttribute($value) {
         $this->attributes['password'] = Hash::make($value);

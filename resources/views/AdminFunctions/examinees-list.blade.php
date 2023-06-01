@@ -29,10 +29,10 @@
         <form id="search-form" class="flex w-full">
             <div class="flex items-center justify-between py-4 w-full dark:bg-gray-800 px-10 pt-10">
                 <div class="flex gap-3">
-                    <select name="gender" class="bg-custom-blue py-3 font-quicksand bg-opacity-10 font-semibold border-none text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-fit p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <option value="">Select Gender</option>
-                        <option value="male" {{ $searchValues['gender'] === 'male' ? 'selected' : '' }}>Male</option>
-                        <option value="female" {{ $searchValues['gender'] === 'female' ? 'selected' : '' }}>Female</option>
+                    <select name="retake" class="bg-custom-blue py-3 font-quicksand bg-opacity-10 font-semibold border-none text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-fit p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option value="">Retaker</option>
+                        <option value="yes" {{ $searchValues['retake'] === 'yes' ? 'selected' : '' }}>Yes</option>
+                        <option value="no" {{ $searchValues['retake'] === 'no' ? 'selected' : '' }}>No</option>
                     </select>
                     <select name="curr_status" class="bg-custom-blue py-3 font-quicksand bg-opacity-10 font-semibold border-none text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-fit p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <option value="">Select Status</option>
@@ -41,13 +41,27 @@
                     </select>
                     <select name="reg_status" class="bg-custom-blue py-3 font-quicksand bg-opacity-10 font-semibold border-none text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-fit p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <option value="">Select Status</option>
-                        <option value="1" {{ $searchValues['reg_status'] == '1' ? 'selected' : ''}}>Approved</option>
-                        <option value="0" {{ $searchValues['reg_status'] == '0' ? 'selected' : ''}}>Pending</option>
+                        <option value="1" {{ $searchValues['reg_status'] == '1' ? 'selected' : ''}}>Rejected</option>
+                        <option value="2" {{ $searchValues['reg_status'] == '2' ? 'selected' : ''}}>Incomplete Requirements</option>
+                        <option value="3" {{ $searchValues['reg_status'] == '3' ? 'selected' : ''}}>For Evaluation</option>
+                        <option value="4" {{ $searchValues['reg_status'] == '4' ? 'selected' : ''}}>Approved</option>
+                        <option value="5" {{ $searchValues['reg_status'] == '5' ? 'selected' : ''}}>Schedule for Exam</option>
+                        <option value="6" {{ $searchValues['reg_status'] == '6' ? 'selected' : ''}}>Waiting for Result</option>
+                    </select>
+                    <select name="is_applied" class="bg-custom-blue py-3 font-quicksand bg-opacity-10 font-semibold border-none text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-fit p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option value="">Registration</option>
+                        <option value="1" {{ $searchValues['is_applied'] == '1' ? 'selected' : ''}}>Applied</option>
+                        <option value="2" {{ $searchValues['is_applied'] == '2' ? 'selected' : ''}}>Not Applied</option>
+                    </select>
+                    <select name="applicant" class="bg-custom-blue py-3 font-quicksand bg-opacity-10 font-semibold border-none text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-fit p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option value="">Applicants</option>
+                        <option value="1" {{ $searchValues['applicant'] == '1' ? 'selected' : ''}}>Online</option>
+                        <option value="2" {{ $searchValues['applicant'] == '2' ? 'selected' : ''}}>Manual</option>
                     </select>
                     <select name="order_by" class="bg-custom-blue py-3 font-quicksand bg-opacity-10 font-semibold border-none text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-fit p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <option value="">Sort</option>
-                        <option value="asc" {{ $searchValues['order_by'] == 'asc' ? 'selected' : ''}}>Ascending</option>
-                        <option value="desc" {{ $searchValues['order_by'] == 'desc' ? 'selected' : ''}}>Descending</option>
+                        <option value="">ORDER</option>
+                        <option value="asc" {{ $searchValues['order_by'] == 'asc' ? 'selected' : ''}}>ASC</option>
+                        <option value="desc" {{ $searchValues['order_by'] == 'desc' ? 'selected' : ''}}>DESC</option>
                     </select>
                 </div>
                 <div class="flex gap-3 items-center">
@@ -77,19 +91,19 @@
                     <thead class="text-sm uppercase bg-[#FDC500] dark:text-white">
                     <tr>
                         <th scope="col" class="px-6 py-3">
+                            Date
+                        </th>
+                        <th scope="col" class="px-6 py-3">
                             Name
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Registration Date
+                            Retaker?
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Exam Date
+                            Current Status
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Exam Set
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Type
+                            Registration
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Applicant Status
@@ -106,41 +120,85 @@
                         @foreach ($data as $key => $user)
                             @if($key % 2 === 0)
                                 <tr class="bg-[#FDC500] bg-opacity-25">
-                                    <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
-                                        {{ $user->formatted_name }}
+                                    <th class="px-6 py-4">
+                                        @if (isset($user->regDetails->approved_date))
+                                            {{ date("F j, Y h:i a", strtotime($user->regDetails->approved_date)) }}
+                                        @endif
                                     </th>
+                                    <td scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
+                                        {{ $user->formatted_name }}
+                                    </td>
                                     <td class="px-6 py-4">
-                                        {{ ucfirst($user->gender) }}
+                                        @if ($user->is_retaker == 'yes' AND !empty($user->userHistoryLatest))
+                                            @if ($user->userHistoryLatest->exam_result == 'failed')
+                                                Yes
+                                            @else
+                                                No
+                                            @endif
+                                        @elseif ($user->is_retaker == 'yes' AND empty($user->userHistoryLatest))
+                                            Yes
+                                        @else
+                                            No
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4">
                                         {{ ucfirst($user->current_status) }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ $user->addresses ? $user->addresses->formatted_address : '' }}
+                                        @if (empty($user->user_login_id))
+                                            Manual
+                                        @else
+                                            Online
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ $user->tertiaryEdu ? $user->tertiaryEdu->degree : '' }}
+                                        @if (empty($user->regDetails) OR $user->regDetails->apply == 2)
+                                            Not yet been applied
+                                        @else
+                                            @switch($user->regDetails->status)
+                                                @case(1)
+                                                    <i>Disapproved</i>
+                                                    @break
+                                                @case(2)
+                                                    <i>Incomplete Requirements</i>
+                                                    @break
+                                                @case(3)
+                                                    <i>For Evaluation</i>
+                                                    @break
+                                                @case(4)
+                                                    <i>Approved</i>
+                                                    @break
+                                                @case(5)
+                                                    <i>Scheduled for Exam</i>
+                                                    @break
+                                                @case(6)
+                                                    <i>Waiting for Result</i>
+                                                    @break
+                                                @default
+
+                                            @endswitch
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4">
-                                        <select class="bg-[#00509D] bg-opacity-10 border-none text-black text-sm rounded-2xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                            <option selected>Choose status</option>
-                                            <option value="0">Disapproved</option>
-                                            <option value="1">Incomplete Requirements</option>
-                                            <option value="2">For Evaluation</option>
-                                            <option value="3">Approved</option>
-                                            <option value="4">Waiting for Result</option>
-                                        </select>
+                                        @if (empty($user->userHistoryLatest))
+                                            No Exam Results
+                                        @else
+                                            @if ($user->userHistoryLatest->exam_result == 'passed')
+                                                <i>Passed</i>
+                                            @else
+                                                <i>Failed</i>
+                                            @endif
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4">
-                                        <select class="bg-[#00509D] bg-opacity-10 border-none text-black text-sm rounded-2xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                            <option selected>Choose status</option>
-                                            <option value="0">Failed</option>
-                                            <option value="1">Processing</option>
-                                            <option value="2">Passed</option>
-                                        </select>
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <button
+                                        <a href="{{ url('/admin/examinee/' . $user->id) }}" class="font-medium hover:underline flex gap-2 items-center bg-dark-blue bg-opacity-50 w-fit py-2 px-4 rounded-2xl">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                                              </svg>
+                                            <span class="font-semibold">View</span>
+                                        </a>
+
+                                        {{-- <button
                                             data-popover-target="popover-animation"
                                             data-popover-trigger="click"
                                             data-popover-placement="bottom"
@@ -150,46 +208,90 @@
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                                             </svg>
-                                        </button>
+                                        </button> --}}
                                     </td>
                                 </tr>
                             @else
                                 <tr class="bg-[#FDC500] bg-opacity-10">
-                                    <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
-                                        {{ $user->formatted_name }}
+                                    <th class="px-6 py-4">
+                                        @if (isset($user->regDetails->approved_date))
+                                            {{ date("F j, Y h:i a", strtotime($user->regDetails->approved_date)) }}
+                                        @endif
                                     </th>
+                                    <td scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
+                                        {{ $user->formatted_name }}
+                                    </td>
                                     <td class="px-6 py-4">
-                                        {{ $user->gender }}
+                                        @if ($user->is_retaker == 'yes' AND !empty($user->userHistoryLatest))
+                                            @if ($user->userHistoryLatest->exam_result == 'failed')
+                                                Yes
+                                            @else
+                                                No
+                                            @endif
+                                        @elseif ($user->is_retaker == 'yes' AND empty($user->userHistoryLatest))
+                                            Yes
+                                        @else
+                                            No
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4">
                                         {{ $user->current_status }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ $user->addresses ? $user->addresses->formatted_address : '' }}
+                                        @if (empty($user->user_login_id))
+                                            Manual
+                                        @else
+                                            Online
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ $user->tertiaryEdu ? $user->tertiaryEdu->degree : '' }}
+                                        @if (empty($user->regDetails) OR $user->regDetails->apply == 2)
+                                            Not yet been applied
+                                            @else
+                                            @switch($user->regDetails->status)
+                                                @case(1)
+                                                    <i>Disapproved</i>
+                                                    @break
+                                                @case(2)
+                                                    <i>Incomplete Requirements</i>
+                                                    @break
+                                                @case(3)
+                                                    <i>For Evaluation</i>
+                                                    @break
+                                                @case(4)
+                                                    <i>Approved</i>
+                                                    @break
+                                                @case(5)
+                                                    <i>Scheduled for Exam</i>
+                                                    @break
+                                                @case(6)
+                                                    <i>Waiting for Result</i>
+                                                    @break
+                                                @default
+
+                                            @endswitch
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4">
-                                        <select class="bg-[#00509D] bg-opacity-10 border-none text-black text-sm rounded-2xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                            <option selected>Choose status</option>
-                                            <option value="0">Disapproved</option>
-                                            <option value="1">Incomplete Requirements</option>
-                                            <option value="2">For Evaluation</option>
-                                            <option value="3">Approved</option>
-                                            <option value="4">Waiting for Result</option>
-                                        </select>
+                                        @if (empty($user->userHistoryLatest))
+                                            No Exam Results
+                                        @else
+                                            @if ($user->userHistoryLatest->exam_result == 'passed')
+                                                <i>Passed</i>
+                                            @else
+                                                <i>Failed</i>
+                                            @endif
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4">
-                                        <select class="bg-[#00509D] bg-opacity-10 border-none text-black text-sm rounded-2xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                            <option selected>Choose status</option>
-                                            <option value="0">Failed</option>
-                                            <option value="1">Processing</option>
-                                            <option value="2">Passed</option>
-                                        </select>
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <button
+                                        <a href="{{ url('/admin/examinee/' . $user->id) }}" class="font-medium hover:underline flex gap-2 items-center bg-dark-blue bg-opacity-50 w-fit py-2 px-4 rounded-2xl">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                                              </svg>
+                                            <span class="font-semibold">View</span>
+                                        </a>
+
+                                        {{-- <button
                                             data-popover-target="popover-animation"
                                             data-popover-trigger="click"
                                             data-popover-placement="bottom"
@@ -199,7 +301,7 @@
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                                             </svg>
-                                        </button>
+                                        </button> --}}
                                     </td>
                                 </tr>
                             @endif
@@ -207,12 +309,15 @@
                     </tbody>
                 </table>
             </div>
+            <div class="mt-10">
+                {{ $data->links() }}
+            </div>
         </div>
     </div>
 </div>
   @include('AdminFunctions.add-applicant')
 
-<div data-popover id="popover-animation" role="tooltip" class="absolute z-10 invisible inline-block w-48 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
+{{-- <div data-popover id="popover-animation" role="tooltip" class="absolute z-10 invisible inline-block w-48 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
     <div class="flex flex-col gap-1">
         <div class="px-3 py-2 cursor-pointer hover:bg-blue-100">
             <p class="flex gap-3 items-center font-quicksand font-semibold text-black">
@@ -259,23 +364,152 @@
             </p>
         </div>
     </div>
-</div>
-@vite(['resources/js/admin/examinees_list.js'])
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+</div> --}}
 <script>
-    // $(document).ready(function(){
-    //     $('#search-form input, #search-form select').on('change, input', function() {
-    //         var formData = $('#search-form').serialize();
-    //         $.ajax({
-    //             url: '{{ route('search') }}',
-    //             type: 'GET',
-    //             data: formData,
-    //             success: function(data) {
-    //                 $('#results').html(data);
-    //             }
-    //         });
-    //     });
-    // })
+    const messageAlert = document.querySelector("#message-alert");
+    const dismissAlert = document.querySelector("#dismiss-alert");
+    const closeAlertBtn = document.querySelector("#closeAlertBtn");
+    const formInputs = document.querySelectorAll(
+        "#add-applicant input, #add-applicant select"
+    );
+    const resultCon = document.querySelector("#results");
+    const addApplicant = document.querySelector("#add-applicant");
+    const headings = document.querySelectorAll("h3");
+    const saveSign = document.querySelector('#save-btn')
+    const signInput = document.querySelector('#signature')
+    const clearSign = document.querySelector('#clear-btn')
+    const canvas = document.querySelector('#signature-pad');
+    const signaturePad = new SignaturePad(canvas);
+    clearSign.addEventListener("click", () => signaturePad.clear())
+    saveSign.addEventListener("click", async () => {
+            const dataURL = signaturePad.toDataURL();
+            signInput.value = dataURL;
+            console.log(signInput.value)
+            signInput.dispatchEvent(new Event('input'));
+        })
+
+    function listeners($data) {
+
+        addApplicant.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(addApplicant);
+
+        try {
+            let res = await fetch("/admin/examinee/add-examinee", {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                },
+                body: formData,
+            });
+            let data = await res.json();
+            if(data?.errors) throw data.errors
+
+            let [success, id] = data;
+
+            if (success) {
+                dismissAlert.classList.remove("hidden");
+                messageAlert.textContent = "Successfully Added";
+                targetHeading.nextElementSibling.click();
+
+                setTimeout(() => {
+                    dismissAlert.classList.remove("hidden");
+                    location.reload();
+                }, 2000);
+            }
+        } catch (err) {
+            errorHandler(err);
+        }
+    });
+    const errorHandler = (err) => {
+
+        let p = addApplicant.querySelectorAll("p")
+        Array.from(p).forEach((el) => {
+                el.classList.add("hidden");
+            }
+        );
+        for (const key in err) {
+            formInputs.forEach((el) => {
+                if (el.name === key) {
+                    if (el.parentElement.querySelector("p")) {
+                        let p = el.parentElement.querySelector("p");
+                        p.classList.remove("hidden");
+                        p.textContent = err[key];
+                    } else if (el.parentElement.parentElement.querySelector("p")) {
+                        let p = el.parentElement.parentElement.querySelector("p");
+                        p.classList.remove("hidden");
+                        p.textContent = err[key];
+                    } else {
+                        let p =
+                            el.parentElement.parentElement.parentElement.querySelector(
+                                "p"
+                            );
+                        p.classList.remove("hidden");
+                        p.textContent = err[key];
+                    }
+                }
+            });
+        }
+
+        let hasSectionOneError = err.hasOwnProperty('givenName')
+                    || err.hasOwnProperty('middleName')
+                    || err.hasOwnProperty('surName')
+                    || err.hasOwnProperty('tel')
+                    || err.hasOwnProperty('province')
+                    || err.hasOwnProperty('municipality')
+                    || err.hasOwnProperty('barangay')
+                    || err.hasOwnProperty('surName')
+                    || err.hasOwnProperty('email')
+                    || err.hasOwnProperty('pob')
+                    || err.hasOwnProperty('dob')
+                    || err.hasOwnProperty('gender')
+                    || err.hasOwnProperty('citizenship')
+                    || err.hasOwnProperty('civilStatus');
+
+        let hasSectionTwoError = err.hasOwnProperty('thumbnail')
+            || err.hasOwnProperty('status')
+            || err.hasOwnProperty('images');
+
+        let hasSectionThreeError = err.hasOwnProperty('presentOffice')
+            || err.hasOwnProperty('telNum')
+            || err.hasOwnProperty('officeAddress')
+            || err.hasOwnProperty('officeCategory')
+            || err.hasOwnProperty('designationPosition')
+            || err.hasOwnProperty('yearsPresentPosition')
+            || err.hasOwnProperty('pl');
+
+        let hasSectionFourError = err.hasOwnProperty('signature')
+
+        if(hasSectionOneError) {
+            $data.state = 1;
+        } else if(hasSectionTwoError) {
+            $data.state = 2;
+        } else if (hasSectionThreeError) {
+            $data.state = 3;
+        } else if (hasSectionFourError) {
+            $data.state = 4;
+        }
+    };
+    }
+
+
+
+    let targetHeading;
+    for (let i = 0; i < headings.length; i++) {
+        console.log(headings);
+        if (headings[i]?.nextElementSibling?.tagName === "BUTTON") {
+            targetHeading = headings[i];
+            break;
+        }
+    }
+
+    closeAlertBtn.addEventListener("click", (_) => {
+        dismissAlert.classList.toggle("hidden");
+        location.reload();
+    });
 </script>
+@vite(['resources/js/admin/examinees_list.js', 'resources/js/user/dashboard.js'])
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
 @endsection

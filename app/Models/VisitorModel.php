@@ -11,5 +11,9 @@ class VisitorModel extends Model{
     protected $table = 'visitor_count';
     public $timestamps = false;
 
-    protected $fillable = ['visitors'];
+    protected $fillable = [
+        'visitors',
+        'applicants',
+        'passers',
+    ];
 }

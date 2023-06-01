@@ -12,6 +12,7 @@
                         </div>
 
                         <x-datetime-picker
+                            placeholder="From Date"
                             display-format="MM - DD - YYYY"
                             without-time="true"
                             wire:model="from"
@@ -29,7 +30,7 @@
                         </div>
 
                         <x-datetime-picker
-                            placeholder="Appointment Date"
+                            placeholder="To Date"
                             display-format="MM - DD - YYYY"
                             without-time="true"
                             wire:model="to"

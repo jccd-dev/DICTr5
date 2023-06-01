@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Helpers;
 
 use Exception;
@@ -43,7 +44,7 @@ class FileHandler
         ]);
 
         // then insert the actual file into the folder after the inserting into database
-        if($submitted){
+        if ($submitted) {
             $file->storeAs('/public/fileSubmits', $submitted->file_name);
             return true;
         }
@@ -58,7 +59,8 @@ class FileHandler
      * @param string $file_ext
      * @return string
      */
-    public function file_namer(string $applicant_name, string $req_type,string $file_ext): string {
+    public function file_namer(string $applicant_name, string $req_type, string $file_ext): string
+    {
         $timestamp = date('ymd', strtotime('now'));
         $time = time();
         return "{$applicant_name}_{$req_type}_{$timestamp}{$time}.{$file_ext}";
@@ -70,12 +72,13 @@ class FileHandler
      * @param $userId
      * @return bool
      */
-    public function delete_file($file_name, $userId) :bool {
+    public function delete_file($file_name, $userId): bool
+    {
         $file = $this->userModel::find($userId);
 
-        if($file){
+        if ($file) {
             $file->submittedFiles()->where('file_name', $file_name)->delete();
-            Storage::delete('/public/fileSubmits/'.$file_name);
+            Storage::delete('/public/fileSubmits/' . $file_name);
             return true;
         }
 
@@ -89,7 +92,8 @@ class FileHandler
      * @param string $req_type (psa, coe, passport, validId, diploma_TOR)
      * @return bool
      */
-    public function update_the_file($new_file, $user, $req_type):bool{
+    public function update_the_file($new_file, $user, $req_type): bool
+    {
         $old_file_name = '';
         $lname = $user->lname;
         $user_id = $user->id;
@@ -98,7 +102,7 @@ class FileHandler
             ->where('requirement_type', $req_type)
             ->first();
 
-        if ($file){
+        if ($file) {
             $old_file_name = $file->file_name;
         }
 
@@ -106,7 +110,7 @@ class FileHandler
 
         in_array(strtolower($file_extension), $this->accepted_file_types['docs']) ? $file_type = 'Document' : $file_type = 'Image';
 
-        $new_file_name = $this->file_namer($lname, $req_type ,$file_extension);
+        $new_file_name = $this->file_namer($lname, $req_type, $file_extension);
 
         try {
             // check if user have already submitted the file else it will insert
@@ -121,7 +125,7 @@ class FileHandler
             );
 
             // if the file is updated then delete the old file into folder
-            if(!$updated->wasRecentlyCreated) {
+            if (!$updated->wasRecentlyCreated) {
                 Storage::delete('/public/fileSubmits/' . $old_file_name);
             }
 
@@ -129,11 +133,8 @@ class FileHandler
             $new_file->storeAs('/public/fileSubmits', $updated->file_name);
 
             return true;
-        }catch (Exception){
+        } catch (Exception) {
             return false;
         }
-
     }
-
-
 }

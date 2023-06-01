@@ -6,14 +6,14 @@
 
     <!-- Desktop sidebar -->
     <aside
-        class="z-20 hidden w-80 overflow-y-auto bg-white dark:bg-gray-800 md:block flex-shrink-0 px-5"
+        class="z-20 hidden w-64 2xl:w-80 overflow-y-auto bg-white dark:bg-gray-800 md:block flex-shrink-0 px-3 2xl:px-5"
     >
         <div class="py-4 pt-12 px-5 text-gray-500 dark:text-gray-400">
             <a
                 class="text-lg font-bold text-gray-800 dark:text-gray-200"
                 href="#"
             >
-                <img src="{{ asset("img/DICT Standard Logos-05 1.png") }}" alt="">
+                <img src="{{ asset("img/DICTStandardLogos-05.png") }}" alt="">
             </a>
             <ul class="mt-14">
                 <li class="relative py-1">
@@ -101,37 +101,33 @@
                                 <a class="w-full" href="{{route('admin.cms.category')}}">Category</a>
                             </li>
                             <li
-                                class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                            >
-                                <a class="w-full" href="pages/forgot-password.html">
-                                    Forgot password
-                                </a>
-                            </li>
-                            <li
-                                class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                            >
-                                <a class="w-full" href="pages/blank.html">Blank</a>
-                            </li>
+                            class="{{ request()->routeIs('admin.cms.tech4ed') ? 'text-custom-blue' : 'hover:text-gray-800' }} px-2 py-1 transition-colors duration-150"
+                        >
+                            <a class="w-full" href="{{route('admin.cms.tech4ed')}}">Tech4Ed</a>
+                        </li>
                         </ul>
                     </template>
                 </li>
-                <li class="relative py-2">
-                    <div class="{{ request()->routeIs('admin.inbox') ? 'bg-[#00509D] text-white' : 'text-gray-500 hover:text-gray-800' }} transition-colors duration-150 px-4 py-3 flex items-center rounded-lg">
-                        <a
-                            class="inline-flex items-center w-full text-sm "
+                @can('admins_only', auth('jwt')->user())
+                    <li class="relative py-2">
+                        <div class="{{ request()->routeIs('admin.inbox') ? 'bg-[#00509D] text-white' : 'text-gray-500 hover:text-gray-800' }} transition-colors duration-150 px-4 py-3 flex items-center rounded-lg">
+                            <a
+                                class="inline-flex items-center w-full text-sm "
 
-                            href="{{ route('admin.inbox') }}"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-send"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-                            <span
-                                class="ml-4 font-semibold text-base"
-                                style="font-family: Quicksand"
+                                href="{{ route('admin.inbox') }}"
                             >
-                    Inbox
-                  </span>
-                        </a>
-                    </div>
-                </li>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-send"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                                <span
+                                    class="ml-4 font-semibold text-base"
+                                    style="font-family: Quicksand"
+                                >
+                        Inbox
+                    </span>
+                            </a>
+                        </div>
+                    </li>
+                @endcan
+                @can('manage_admins', auth('jwt')->user())
                 <li class="relative py-2">
                     <div class="{{ request()->routeIs('admin.accounts') ? 'bg-[#00509D] text-white' : 'text-gray-500 hover:text-gray-800' }} transition-colors duration-150 px-4 py-3 flex items-center rounded-lg">
                         <a
@@ -149,6 +145,8 @@
                         </a>
                     </div>
                 </li>
+                @endcan
+                @can('admins_only', auth('jwt')->user())
                 <li class="relative py-2">
                     <div class="{{ request()->routeIs('admin.examinees') ? 'bg-[#00509D] text-white' : 'text-gray-500 hover:text-gray-800' }} transition-colors duration-150 px-4 py-3 flex items-center rounded-lg">
                         <a
@@ -166,12 +164,14 @@
                         </a>
                     </div>
                 </li>
+                @endcan
+                @can('admins_only', auth('jwt')->user())
                 <li class="relative py-2">
-                    <div class="{{ request()->routeIs('admin.dashboard') ? 'bg-[#00509D] text-white' : 'text-gray-500 hover:text-gray-800' }} transition-colors duration-150 px-4 py-3 flex items-center rounded-lg">
+                    <div class="{{ request()->routeIs('admin.exam-schedule') ? 'bg-[#00509D] text-white' : 'text-gray-500 hover:text-gray-800' }} transition-colors duration-150 px-4 py-3 flex items-center rounded-lg">
                         <a
                             class="inline-flex items-center w-full text-sm "
 
-                            href="{{ route('admin.dashboard') }}"
+                            href="{{ route('admin.exam-schedule') }}"
                         >
                             <svg
                                 class="w-5 h-5"
@@ -196,12 +196,14 @@
                         </a>
                     </div>
                 </li>
+                @endcan
+                @can('admins_only', auth('jwt')->user())
                 <li class="relative py-2">
-                    <div class="{{ request()->routeIs('admin.dashboard') ? 'bg-[#00509D] text-white' : 'text-gray-500 hover:text-gray-800' }} transition-colors duration-150 px-4 py-3 flex items-center rounded-lg">
+                    <div class="{{ request()->routeIs('admin.system-log') ? 'bg-[#00509D] text-white' : 'text-gray-500 hover:text-gray-800' }} transition-colors duration-150 px-4 py-3 flex items-center rounded-lg">
                         <a
                             class="inline-flex items-center w-full text-sm "
 
-                            href="{{ route('admin.dashboard') }}"
+                            href="{{ route('admin.system-log') }}"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-book"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
                             <span
@@ -213,45 +215,8 @@
                         </a>
                     </div>
                 </li>
-                <li class="relative py-2">
-                    <div class="{{ request()->routeIs('admin.dashboard') ? 'bg-[#00509D] text-white' : 'text-gray-500 hover:text-gray-800' }} transition-colors duration-150 px-4 py-3 flex items-center rounded-lg">
-                        <a
-                            class="inline-flex items-center w-full text-sm "
-
-                            href="{{ route('admin.dashboard') }}"
-                        >
-                            <svg
-                                class="w-5 h-5"
-                                aria-hidden="true"
-                                fill="none"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
-                                ></path>
-                            </svg>
-                            <span
-                                class="ml-4 font-semibold text-base"
-                                style="font-family: Quicksand"
-                            >
-                    Calendar of Activities
-                  </span>
-                        </a>
-                    </div>
-                </li>
+                @endcan
             </ul>
-            <div class="px-6 my-6">
-                <button
-                    class="flex items-center justify-between w-full px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
-                >
-                    Create account
-                    <span class="ml-2" aria-hidden="true">+</span>
-                </button>
-            </div>
         </div>
     </aside>
     <!-- Mobile sidebar -->

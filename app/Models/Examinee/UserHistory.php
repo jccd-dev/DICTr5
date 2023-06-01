@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class UserHistory extends Model {
+class UserHistory extends Model
+{
 
     use HasFactory;
 
@@ -19,11 +20,13 @@ class UserHistory extends Model {
         'approved_date',
         'schedule',
         'venue',
-        'assigned_exam_set',
+        'exam_set',
         'status',
+        'exam_result'
     ];
 
-    public function usersData() : BelongsTo{
+    public function usersData(): BelongsTo
+    {
         return $this->belongsTo(UsersData::class, 'user_id');
     }
 
@@ -31,6 +34,4 @@ class UserHistory extends Model {
     {
         return $this->hasOne(FailedHistory::class, 'history_id', 'id');
     }
-
-
 }

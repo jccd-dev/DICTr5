@@ -4,6 +4,7 @@
 <title>
     @if(request()->routeIs('admin.cms.announcement')) {{'Announcement'}}
     @elseif(request()->routeIs('admin.cms.calendar')) {{'Event Calendar'}}
+    @elseif(request()->routeIs('admin.dashboard')) {{'Dashboard'}}
     @elseif(request()->routeIs('admin.exam-schedule')) {{'Exam Schedule'}}
     @elseif(request()->routeIs('admin.cms.category')) {{'Category'}}
     @elseif(request()->routeIs('admin.cms.slider')) {{'Slider'}}
@@ -11,6 +12,8 @@
     @elseif(request()->routeIs('admin.inbox')) {{'Inbox'}}
     @elseif(request()->routeIs('admin.examinees')) {{'Exam Applicants'}}
     @elseif(request()->routeIs('admin.accounts')) {{'Admin Accounts'}}
+    @elseif(request()->routeIs('admin.system-logs')) {{'All Logs'}}
+    @elseif(request()->routeIs('examinee.get')) {{'Applicant Data'}}
     @else {{'DICT Camarines Sur'}}
     @endif
 </title>
@@ -35,6 +38,7 @@
 {{-- CKEDITOR --}}
 <script src="//cdn.ckeditor.com/4.21.0/standard/ckeditor.js"></script>
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
 {{--<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>--}}
 {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script> --}}
@@ -55,12 +59,14 @@
 <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.min.css" rel="stylesheet">
 {{-- CKEDITOR --}}
 <script src="//cdn.ckeditor.com/4.21.0/standard/ckeditor.js"></script>
+{{-- PDFViewer--}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+
 
 <!-- Styles -->
 <wireui:styles />
 <wireui:scripts />
 
-@vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/utils/moment.js'])
 {{-- Fullcalendar --}}
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
 @livewireStyles

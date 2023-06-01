@@ -1,27 +1,32 @@
 <?php
 
-use App\Http\Controllers\Admins\AdminAccounts;
-use App\Http\Controllers\ApiController;
-use App\Http\Controllers\Examinee\GoogleAuthController;
-use App\Http\Controllers\Admins\AdminLoginController;
-use App\Http\Controllers\VisitorController;
+use App\Http\Livewire\User;
 use App\Http\Livewire\CMS\Post;
-use Illuminate\Support\Facades\Route;
-use App\Http\Livewire\CMS\SliderBanner;
+use App\Http\Livewire\CMS\Posts;
+use App\Http\Livewire\CMS\Slider;
+use App\Http\Livewire\Admin\Login;
+use App\Http\Livewire\CMS\Tech4Ed;
 use App\Http\Livewire\ContactForm;
+use Illuminate\Support\Facades\Route;
+use App\Http\Livewire\Admin\Dashboard;
+use App\Http\Controllers\ApiController;
+use App\Http\Livewire\CMS\SliderBanner;
 use App\Http\Livewire\CMS\Announcements;
 use App\Http\Livewire\CMS\EventCalendar;
-use App\Http\Livewire\CMS\Posts;
 use App\Http\Livewire\Admin\ExamSchedule;
-use App\Http\Livewire\Admin\Login;
-use App\Http\Livewire\Admin\Dashboard;
-use App\Http\Livewire\User;
-use App\Http\Livewire\CMS\Slider;
+use App\Http\Controllers\Admins\SystemLogs;
+use App\Http\Controllers\VisitorController;
+use \App\Http\Controllers\UserDataController;
+use App\Http\Controllers\Admins\AdminAccounts;
+use App\Http\Livewire\Admin\Inbox as CMSInbox;
+use \App\View\Components\Pages\Posts as PostsView;
+use App\Http\Controllers\Admins\AdminLogsController;
+use App\Http\Controllers\Admins\AdminLoginController;
+use App\Http\Controllers\Examinee\GoogleAuthController;
+use App\Http\Controllers\Admins\Examinee\ManageApplicants;
 use App\Http\Controllers\Layouts\ViewAnnouncementController;
 use App\Http\Controllers\Examinee\DashboardController as UserDashboardController;
-use App\Http\Livewire\Admin\Inbox as CMSInbox;
-use App\Http\Controllers\Admins\Examinee\ManageApplicants;
-use App\Http\Controllers\Admins\SystemLogs;
+use \App\Http\Controllers\Layouts\SearchResult;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,23 +40,30 @@ use App\Http\Controllers\Admins\SystemLogs;
 */
 
 Route::get('/', [\App\Http\Controllers\Layouts\Layouts::class, 'render'])->name('homepage');
-Route::get("/posts", [\App\View\Components\Pages\Posts::class, 'render']);
+Route::get("/posts/{id}", function ($id) {
+    $component = new PostsView($id);
+
+    return $component->render();
+})->name('view.post');
 Route::get('/testing', \App\Http\Livewire\CMS\Testing::class);
+Route::get('/mandate-powers-and-functions', function () {
+    return view('static.mandate-powers-and-functions');
+});
+Route::get('/mission-vision', function () {
+    return view('static.mission-vision');
+});
+Route::get('/ra-10844', function () {
+    return view('static.ra-10844');
+});
+Route::get('/dict-cam-sur-officials', function () {
+    return view('static.officials');
+});
+Route::get('/agency', function () {
+    return view('static.agency');
+});
 
 
 // STATIC PAGES ROUTES
-Route::get('/mandate-powers-and-functions', function(){
-    return view('static.mandate-powers-and-functions');
-});
-Route::get('/mission-vision', function(){
-    return view('static.mission-vision');
-});
-Route::get('/ra-10844', function(){
-    return view('static.ra-10844');
-});
-Route::get('/dict-cam-sur-officials', function(){
-    return view('static.officials');
-});
 Route::get('/about', function () {
     return view('pages.about');
 });
@@ -61,10 +73,11 @@ Route::get('/dict-gvcs', function () {
 Route::get('/government-web-hosting-service', function () {
     return view('static.gov-web-hosting');
 });
+Route::get('/announcement/', [ViewAnnouncementController::class, 'view_announcement'])->name('view.announcement');
 
+Route::get('/announcement/{id}', [ViewAnnouncementController::class, 'view_announcement_by_id'])->name('view.announcement-by-id');
 
-
-Route::get('/announcement/{id}', [ViewAnnouncementController::class, 'view_announcement'])->name('view.announcement');
+Route::get('/search_result', [SearchResult::class, 'search_result'])->name('view.search_result');
 
 // ADMIN SIDE ROUTES
 Route::prefix('admin')->group(function () {
@@ -83,10 +96,11 @@ Route::prefix('admin')->group(function () {
             Route::get('/category', \App\Http\Livewire\CMS\Category::class)->name('admin.cms.category'); // Post::class
             Route::get('/announcement', Announcements::class)->name('admin.cms.announcement');
             Route::get('/event-calendar', EventCalendar::class)->name('admin.cms.calendar');
+            Route::get('/tech4ed-courses', Tech4Ed::class)->name('admin.cms.tech4ed');
         });
 
         // manage admin accounts
-        Route::prefix('dict-admins')->group(function () {
+        Route::prefix('dict-admins')->middleware(['jwt.roleCheck:100'])->group(function () {
             Route::get('/', [AdminAccounts::class, 'render'])->name('admin.accounts');
             Route::post('/create', [AdminAccounts::class, 'add_admin'])->name('admin.create');
             Route::get('/view/{id}', [AdminAccounts::class, 'access_admin'])->name('admin.access');
@@ -94,22 +108,38 @@ Route::prefix('admin')->group(function () {
             Route::delete('/delete/{id}', [AdminAccounts::class, 'delete_admin'])->name('admin.delete');
         });
 
-        Route::prefix('examinee')->group( function (){
+        Route::prefix('examinee')->middleware(['jwt.roleCheck:100,200'])->group(function () {
             Route::get('/', [ManageApplicants::class, 'render'])->name('admin.examinees');
             Route::get('/search', [ManageApplicants::class, 'search_examinees'])->name('search');
-            Route::get('/get-examinee/{id}', [ManageApplicants::class, 'select_examinees'])->name('update');
+            Route::get('/{id}', [ManageApplicants::class, 'select_examinee'])->name('examinee.get');
+            Route::post('/add-examinee', [ManageApplicants::class, 'add_user'])->name('examinee.add');
+            // Route::get('/q/{id}', [ManageApplicants::class, 'examinee'])->name('examinee.q');
+            Route::post('/{id}/update-examinee', [ManageApplicants::class, 'update_users_data'])->name('examinee.update');
+            Route::post('/{id}/validation', [ManageApplicants::class, 'validate_application'])->name('examinee.validate');
+            Route::post('/{id}/send-result/', [ManageApplicants::class, 'send_exam_result'])->name('examinee.result');
+            Route::post('/{id}/send-transcript', [ManageApplicants::class, 'send_exam_result'])->name('examinee.script');
+            Route::get('/{id}/deactivate', [ManageApplicants::class, 'deactivate_account'])->name('examinee.deactivate');
+
+            //manually apply the applicant
+            Route::get('/{id}/apply-examinee', [ManageApplicants::class, 'apply_examinee'])->name('examinee.apply');
         });
 
-        Route::get('/exam-schedule', ExamSchedule::class)->name('admin.exam-schedule');
-        Route::get('/inbox', CMSInbox::class)->name('admin.inbox');
-        Route::get('/logs', [SystemLogs::class, 'display_logs'])->name('system-log');
+        Route::middleware(['jwt.roleCheck:100,200'])->group(function () {
+            Route::get('/exam-schedule', ExamSchedule::class)->name('admin.exam-schedule');
+            Route::get('/exam-schedule/{id}', ExamSchedule::class)->name('admin.exam-schedule2');
+            Route::get('/inbox', CMSInbox::class)->name('admin.inbox');
+            Route::get('/logs', [AdminLogsController::class, 'render'])->name('admin.system-log');
+            Route::get('/search-logs', [AdminLogsController::class, 'filter_logs'])->name('admin.slogs');
+            Route::get('/clean-logs', [AdminLogsController::class, 'clean_logs'])->name('admin.clean-logs');
+        });
     });
 });
 
 // USER SIDE ROUTES
 Route::prefix('user')->group(function () {
     Route::get('/login', [GoogleAuthController::class, 'user_login'])->name('user.login');
-    Route::get('/dashboard', User\Dashboard::class)->name('user.dashboard');
+    Route::get('/dashboard', User\Dashboard::class)->name('user.dashboard')->middleware(['user.logAuth']);
+    Route::get('/generate_pdf', [UserDataController::class, 'generateILCDBForm'])->name('user.generate_pdf');
 });
 
 // Google OAuth
@@ -125,9 +155,10 @@ Route::prefix('exam')->group(function () {
     Route::get('/send-email', [UserDashboardController::class, 'sendEmail']);
 });
 
-Route::get('/logout', function () {
+Route::get('/user/logout', function () {
     session()->flush();
-});
+    return redirect()->route('homepage');
+})->name('user.logout');
 
 //Visitor Counter
 Route::get('/visitor-counts', [VisitorController::class, 'incrementVisitor']);

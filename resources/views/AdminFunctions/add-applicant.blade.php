@@ -12,7 +12,7 @@
             </svg>
           </button>
         </div>
-        <div class="p-4 overflow-y-auto w-[60rem]" x-data="{ state: 1, hasVidData: false, err: [], currentStatus: 'professional', isFiles: false }">
+        <div class="p-4 overflow-y-auto w-[60rem]" x-data="{ state: 1, hasVidData: false, err: [], currentStatus: 'professional', isFiles: false }" x-init="listeners($data)">
             <div class="flex flex-col items-center gap-5">
                 <div class="flex flex-col items-center">
                     <h1 class="font-bold font-quicksand text-xl">ICT Proficiency Diagnostic Exam</h1>
@@ -26,28 +26,37 @@
                     id="posts-form"
                     class="flex w-full posts-form"
                 >
-                    <form action="" method="POST" id="add-applicant" class="w-full flex flex-col">
+                    <form id="add-applicant" class="w-full flex flex-col">
+                        @csrf
                         <div x-show="state == 1" class="w-full flex flex-col items-center">
                             <h1 class="font-bold font-quicksand text-xl flex self-start my-4">Personal Information</h1>
+                            <div class="flex justify-start w-full">
+                                <div class="">
+                                    <div class="mb-4">
+                                        <input id="default-checkbox" name="retaker" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                        <label for="default-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Exam Retaker</label>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="flex md:flex-row flex-col w-full gap-3">
                                 <div class="flex md:flex-row flex-col flex-1 gap-3">
                                     <div class="mb-3 md:mb-6 flex-1 flex-col">
-                                        <label for="given-name" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Given Name</label>
+                                        <label for="givenName" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Given Name</label>
                                             <input
                                                 type="text"
-                                                id="given-name"
-                                                name="given-name"
+                                                id="givenName"
+                                                name="givenName"
                                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                 placeholder="Given Name"
                                             >
                                             <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                     </div>
                                     <div class="mb-3 md:mb-6 flex-1 flex-col">
-                                        <label for="middle-name" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Middle Name</label>
+                                        <label for="middleName" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Middle Name</label>
                                             <input
                                                 type="text"
-                                                id="middle-name"
-                                                name="middle-name"
+                                                id="middleName"
+                                                name="middleName"
                                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                 placeholder="Middle Name"
                                             >
@@ -57,11 +66,11 @@
 
                                 <div class="flex md:flex-row flex-col flex-1 gap-3" x-data="{ number: '' }">
                                     <div class="mb-3 md:mb-6 flex-1 flex-col">
-                                        <label for="surname" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Surname</label>
+                                        <label for="surName" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Surname</label>
                                             <input
                                                 type="text"
-                                                id="surname"
-                                                name="surname"
+                                                id="surName"
+                                                name="surName"
                                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                 placeholder="Surname"
                                             >
@@ -71,8 +80,8 @@
                                         <label for="Telephone Number" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Telephone Number</label>
                                         <input
                                             type="text"
-                                            id="tel-num"
-                                            name="tel-num"
+                                            id="tel"
+                                            name="tel"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             placeholder="Telephone Number"
                                             x-model="number"
@@ -88,14 +97,14 @@
                                     <div class="mb-3 md:mb-6 flex-1 flex-col">
                                         <label for="region" class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Region</label>
                                         <select id="region" name="region" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                            <option selected>Choose a category</option>
+                                            <option selected value="">Choose a category</option>
                                         </select>
                                         <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                     </div>
                                     <div class="mb-3 md:mb-6 flex-1 flex-col">
                                         <label for="province" class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Province</label>
                                         <select id="province" name="province" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                            <option selected>Choose a category</option>
+                                            <option selected value="">Choose a category</option>
                                         </select>
                                         <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                     </div>
@@ -105,14 +114,14 @@
                                     <div class="mb-3 md:mb-6 flex-1 flex-col">
                                         <label for="municipality" class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Municipality</label>
                                         <select id="municipality" name="municipality" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                            <option selected>Choose a category</option>
+                                            <option selected value="">Choose a category</option>
                                         </select>
                                         <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                     </div>
                                     <div class="mb-3 md:mb-6 flex-1 flex-col">
                                         <label for="barangay" class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Barangay</label>
                                         <select id="barangay" name="barangay" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                            <option selected>Choose a category</option>
+                                            <option selected value="">Choose a category</option>
                                         </select>
                                         <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                     </div>
@@ -157,7 +166,8 @@
                                             name="dob"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             placeholder="Select date">
-                                    </div>
+                                        </div>
+                                        <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                 </div>
 
                             </div>
@@ -166,7 +176,7 @@
                                 <div class="mb-3 md:mb-6 flex-1 flex-col">
                                     <label for="gender" class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Gender</label>
                                     <select id="gender" name="gender" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                        <option selected>Choose a category</option>
+                                        <option selected value="">Choose a category</option>
                                         <option value="male">Male</option>
                                         <option value="female">Female</option>
                                     </select>
@@ -185,8 +195,8 @@
                                 </div>
                                 <div class="mb-3 md:mb-6 flex-1 flex-col">
                                     <label for="civil-status" class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Civil Status</label>
-                                    <select id="civil-status" name="civil-status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                        <option selected>Choose a category</option>
+                                    <select id="civil-status" name="civilStatus" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                        <option selected value="">Choose a category</option>
                                         <option value="single">Single</option>
                                         <option value="married">Married</option>
                                         <option value="divorced">Divorced</option>
@@ -201,11 +211,11 @@
                             <div class="flex md:flex-row flex-col w-full gap-3">
                                 <div class="flex flex-1">
                                     <div class="mb-3 md:mb-6 flex-1 flex-col">
-                                        <label for="school-attended" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">University / School Attended</label>
+                                        <label for="university" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">University / School Attended</label>
                                             <input
                                                 type="text"
-                                                id="school-attended"
-                                                name="school-attended"
+                                                id="university"
+                                                name="university"
                                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                 placeholder="University / School Attended"
                                             >
@@ -214,22 +224,22 @@
                                 </div>
                                 <div class="flex flex-1 gap-3">
                                     <div class="mb-3 md:mb-6 flex-1 flex-col">
-                                        <label for="degree-earned" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Degree Earned</label>
+                                        <label for="degree" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Degree Earned</label>
                                             <input
                                                 type="text"
-                                                id="degree-earned"
-                                                name="degree-earned"
+                                                id="degree"
+                                                name="degree"
                                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                 placeholder="Degree Earned"
                                             >
                                             <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                     </div>
                                     <div class="mb-3 md:mb-6 flex-1 flex-col">
-                                        <label for="inclusive-years" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Inclusive Years</label>
+                                        <label for="incYears" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Inclusive Years</label>
                                             <input
                                                 type="text"
-                                                id="inclusive-years"
-                                                name="inclusive-years"
+                                                id="incYears"
+                                                name="incYears"
                                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                 placeholder="Inclusive Years"
                                             >
@@ -283,9 +293,9 @@
                                 <div class="flex md:flex-row flex-col w-full gap-3">
                                     <div class="flex md:flex-row flex-col gap-3">
                                         <div class="mb-3 md:mb-6 flex-1 flex-col">
-                                            <label for="year-level" class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Year Level</label>
-                                            <select id="year-level" name="year-level" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                                <option selected>Choose a year level</option>
+                                            <label for="yearLevel" class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Year Level</label>
+                                            <select id="yearLevel" name="yearLevel" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                                <option selected value="">Choose a year level</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
                                                 <option value="3">3</option>
@@ -303,11 +313,11 @@
                                 <div class="flex md:flex-row flex-col w-full gap-3">
                                     <div class="flex md:flex-row flex-col basis-3/4 gap-3">
                                         <div class="mb-3 md:mb-6 flex-1 flex-col">
-                                            <label for="present-office" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Present Office</label>
+                                            <label for="presentOffice" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Present Office</label>
                                                 <input
                                                     type="text"
-                                                    id="present-office"
-                                                    name="present-office"
+                                                    id="presentOffice"
+                                                    name="presentOffice"
                                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                     placeholder="Present Office"
                                                 >
@@ -316,11 +326,11 @@
                                     </div>
                                     <div class="flex md:flex-row flex-col basis-1/4 gap-3">
                                         <div class="mb-3 md:mb-6 flex-1 flex-col">
-                                            <label for="telephone-number" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Telephone Number</label>
+                                            <label for="telNum" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Telephone Number</label>
                                                 <input
                                                     type="number"
-                                                    id="telephone-number"
-                                                    name="telephone-number"
+                                                    id="telNum"
+                                                    name="telNum"
                                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                     placeholder="Telephone Number"
                                                 >
@@ -331,11 +341,11 @@
                                 <div class="flex md:flex-row flex-col w-full gap-3">
                                     <div class="flex md:flex-row flex-col basis-3/4 gap-3">
                                         <div class="mb-3 md:mb-6 flex-1 flex-col">
-                                            <label for="office-address" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Office Address</label>
+                                            <label for="officeAddress" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Office Address</label>
                                                 <input
                                                     type="text"
-                                                    id="office-address"
-                                                    name="office-address"
+                                                    id="officeAddress"
+                                                    name="officeAddress"
                                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                     placeholder="Office Address"
                                                 >
@@ -346,11 +356,11 @@
                                         <h1 class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Office Category</h1>
                                         <div class="flex">
                                             <div class="flex items-center mr-4">
-                                                <input id="government" type="radio" value="government" name="office-category" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                                <input id="government" type="radio" value="government" name="officeCategory" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                                 <label for="government" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Gov't</label>
                                             </div>
                                             <div class="flex items-center mr-4">
-                                                <input id="private" type="radio" value="private" name="office-category" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                                <input id="private" type="radio" value="private" name="officeCategory" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                                 <label for="private" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Private</label>
                                             </div>
                                         </div>
@@ -360,11 +370,11 @@
                                 <div class="flex md:flex-row flex-col w-full gap-3">
                                     <div class="flex md:flex-row flex-col basis-3/4 gap-3">
                                         <div class="mb-3 md:mb-6 flex-1 flex-col">
-                                            <label for="designation-position" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Designation / Position</label>
+                                            <label for="designationPosition" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Designation / Position</label>
                                                 <input
                                                     type="text"
-                                                    id="designation-position"
-                                                    name="designation-position"
+                                                    id="designationPosition"
+                                                    name="designationPosition"
                                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                     placeholder="Designation / Position"
                                                 >
@@ -373,11 +383,11 @@
                                     </div>
                                     <div class="flex md:flex-row flex-col basis-1/4 gap-3">
                                         <div class="mb-3 md:mb-6 flex-1 flex-col">
-                                            <label for="years-pos" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">No. of years in present position</label>
+                                            <label for="yearsPresentPosition" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">No. of years in present position</label>
                                                 <input
                                                     type="number"
-                                                    id="years-pos"
-                                                    name="years-pos"
+                                                    id="yearsPresentPosition"
+                                                    name="yearsPresentPosition"
                                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                     placeholder="No. of years in present position"
                                                 >
@@ -452,12 +462,12 @@
                                 </div>
                                 <div class="w-full md:w-2/5 flex gap-3">
                                     <div class="mb-3 md:mb-6 flex-1 flex-col">
-                                        <label class="block mb-1 text-sm font-medium text-gray-900 dark:text-white" for="certs">COE / COG (required for students)</label>
+                                        <label class="block mb-1 text-sm font-medium text-gray-900 dark:text-white" for="cert">COE / COG (required for students)</label>
                                         <input
                                             class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                                            id="certs"
+                                            id="cert"
                                             type="file"
-                                            name="certs"
+                                            name="cert"
                                             accept=".pdf,.doc,.docx,image/*"
                                         />
                                         <p class="certs-err hidden text-sm">Current upload: <span></span></p>
@@ -493,9 +503,49 @@
                                         <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                     </div>
                                 </div>
+                                <div class="w-full md:w-2/5 flex gap-3">
+                                    <div class="mb-3 md:mb-6 flex-1 flex-col">
+                                        <label class="block mb-1 text-sm font-medium text-gray-900 dark:text-white" for="passport">Upload Passport Size Image (required for students)</label>
+                                        <input
+                                            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                                            id="passport"
+                                            type="file"
+                                            name="passport"
+                                            accept=".pdf,.doc,.docx,image/*"
+                                        />
+                                        <p class="passport-err hidden text-sm">Current upload: <span></span></p>
+                                        <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
+                                    </div>
+                                </div>
                             </div>
                             <br />
                             <hr />
+                            <div class="w-full">
+                                <h1 class="block mb-3 text-sm font-medium text-gray-900 dark:text-white">ADDITIONAL INFO <b>(Please check that apply)</b></h1>
+                               <div class="flex ">
+                                    <div class="flex flex-1 mb-3">
+                                        <div class="flex flex-1 items-center mr-4">
+                                            <input id="pwd" type="checkbox" value="PWD" name="addInfo[]" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                            <label for="pwd" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">PWD</label>
+                                        </div>
+                                        <div class="flex flex-1 items-center mr-4">
+                                            <input id="senior-citizen" type="checkbox" value="Senior Citizen" name="addInfo[]" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                            <label for="senior-citizen" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Senior Citizen</label>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-1">
+                                        <div class="flex flex-1 items-center mr-4">
+                                            <input id="solo-parent" type="checkbox" value="Solo Parent" name="addInfo[]" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                            <label for="solo-parent" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Solo Parent</label>
+                                        </div>
+                                        <div class="flex flex-1 items-center mr-4">
+                                            <input id="ip-member" type="checkbox" value="Member of an IP Group" name="addInfo[]" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                            <label for="ip-member" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Member of an IP Group</label>
+                                        </div>
+                                    </div>
+                               </div>
+                                <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
+                            </div>
 
                             <div class="my-3">
                                 <h1 class="font-bold font-quicksand text-base flex self-start my-1">IMPORTANT</h1>

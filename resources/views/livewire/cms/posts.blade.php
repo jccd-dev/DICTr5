@@ -1,5 +1,6 @@
 <div class="relative" x-data="{ state: 1, hasVidData: false, err: [], stateUpdate: 1, hasVidDataUpdate: false, errUpdate: [], deleteImgName: '', deleteImgId: null, modalActive: 0, location1: 0, location2: 0, deletePostID: 0 }"
      x-init="listeners($data); listenerUpdate($data); ">
+    <x-notifications />
     <div id="dismiss-alert" wire:ignore class="w-full hidden text-white bg-emerald-400 absolute -top-10 right-0 z-10">
         <div class="container relative flex items-center justify-between px-6 py-4 mx-auto">
             <div class="flex items-center">
@@ -24,7 +25,7 @@
     <a href="#" x-ref="deleteModal2" type="button" data-modal-target="deleteModal2" data-modal-show="deleteModal2" class="hidden"></a>
 
     <div class="relative shadow-md bg-white rounded-2xl">
-        <div class="flex items-center justify-between py-4 dark:bg-gray-800 px-10 pt-10">
+        <div class="flex items-center justify-between py-4 dark:bg-gray-800 px-7 pt-7 2xl:px-10 2xl:pt-10">
             <div class="font-quicksand flex gap-3 items-center" wire:ignore>
                 <div class="relative bg-custom-blue bg-opacity-10 border-0 font-semibold rounded-xl flex">
                     <div class="absolute top-0 left-0 h-full px-3 flex items-center bg-custom-blue bg-opacity-10 rounded-tl-xl rounded-bl-xl">
@@ -34,11 +35,11 @@
                     </div>
 
                     <x-datetime-picker
-                        placeholder="Appointment Date"
+                        placeholder="Start Date"
                         display-format="MM - DD - YYYY"
                         without-time="true"
                         wire:model="from"
-                        class="bg-transparent border-none outline-none shadow-none drop-shadow-none py-2.5 pl-14 max-w-[13rem]"
+                        class="bg-transparent border-none outline-none shadow-none drop-shadow-none py-2.5 pl-14 max-w-[10rem] 2xl:max-w-[13rem]"
                     />
                 </div>
                 <b>-</b>
@@ -50,11 +51,11 @@
                     </div>
 
                     <x-datetime-picker
-                        placeholder="Appointment Date"
+                        placeholder="End Date"
                         display-format="MM - DD - YYYY"
                         without-time="true"
                         wire:model="to"
-                        class="bg-transparent border-none outline-none shadow-none drop-shadow-none py-2.5 pl-14 max-w-[13rem]"
+                        class="bg-transparent border-none outline-none shadow-none drop-shadow-none py-2.5 pl-14 max-w-[10rem] 2xl:max-w-[13rem]"
                     />
                 </div>
                 <div>
@@ -75,12 +76,12 @@
                 </div>
             </div>
             <label for="table-search" class="sr-only">Search</label>
-            <div class="flex gap-5">
+            <div class="flex gap-2 2xl:gap-5">
                 <div class="relative h-full">
                     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                         <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path></svg>
                     </div>
-                    <input type="text" wire:model="search" id="table-search" class="block h-full p-2.5 py-3 font-quicksand pl-10 text-base text-gray-900 border-0 rounded-lg w-48 bg-[#E6EEF6] focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search">
+                    <input type="text" wire:model="search" id="table-search" class="block h-full p-2.5 py-3 font-quicksand pl-10 text-base text-gray-900 border-0 rounded-lg w-36 2xl:w-48 bg-[#E6EEF6] focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search">
                 </div>
                 <div>
                     <button
@@ -98,7 +99,7 @@
                 </div>
             </div>
         </div>
-        <div class="px-10 pb-10" wire:ignore.self>
+        <div class="px-7 2xl:px-10 pb-7 2xl:pb-10" wire:ignore.self>
             <div class="rounded-2xl overflow-hidden">
                 <table class="w-full text-black text-sm text-left font-quicksand">
                     <thead class="text-sm uppercase bg-[#FDC500] dark:text-white">
@@ -135,13 +136,11 @@
                                         {{ $val->category->category }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        <div class="flex items-center">
-                                            @if($val->status)
-                                                <div class="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></div> Published
-                                            @else
-                                                <div class="h-2.5 w-2.5 rounded-full bg-yellow-500 mr-2"></div> Unpublished
-                                            @endif
-                                        </div>
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" {{($val->status) ? 'checked' : ''}} class="sr-only peer" wire:click="change_status({{$val->id}}, {{($val->status == 1) ? 0 : 1}})">
+                                            <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                                            <span class="ml-3 text-xs font-medium text-gray-900 dark:text-gray-300">Publish & Prioritize</span>
+                                        </label>
                                     </td>
                                     <td class="px-6 py-4">
                                         <a href="#" type="button" wire:click="get_post_data({{ $val->id }})" @click="state=1; stateUpdate=1; modalActive = 2" data-modal-target="update-post" data-modal-show="update-post" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
@@ -160,13 +159,11 @@
                                         {{ $val->category->category }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        <div class="flex items-center">
-                                            @if($val->status)
-                                                <div class="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></div> Published
-                                            @else
-                                                <div class="h-2.5 w-2.5 rounded-full bg-yellow-500 mr-2"></div> Unpublished
-                                            @endif
-                                        </div>
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" {{($val->status) ? 'checked' : ''}} class="sr-only peer" wire:click="change_status({{$val->id}}, {{($val->status == 1) ? 0 : 1}})">
+                                            <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                                            <span class="ml-3 text-xs font-medium text-gray-900 dark:text-gray-300">Publish & Prioritize</span>
+                                        </label>
                                     </td>
                                     <td class="px-6 py-4">
                                         <a href="#" type="button" wire:click="get_post_data({{ $val->id }})" @click="state=1; stateUpdate=1; modalActive = 2" data-modal-target="update-post" data-modal-show="update-post" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
@@ -267,7 +264,7 @@
                     <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Add Post</h3>
                     <div
                         id="posts-form"
-                        class="flex w-[30rem] posts-form"
+                        class="flex w-[37rem] posts-form"
 
                         {{--    wire:ignore--}}
                     >
@@ -276,9 +273,9 @@
 
                                 <x-forms.input-form name="Title" type="text" placeholder="Title" model="title" id="title" classes="mb-6" />
 
-                                <x-forms.textarea-form name="Excerpt" placeholder="Excerpt" model="excerpt" id="excerpt" rows="3" classes="mb-6" />
+                                <x-forms.textarea-form name="excerpt" placeholder="Excerpt" model="excerpt" id="excerpt" rows="3" classes="mb-6" />
 
-                                <x-forms.textarea-form name="Content" placeholder="Content" model="content" id="content" rows="5" classes="mb-6" />
+                                <x-forms.textarea-form name="content" placeholder="Content" model="content" id="content" rows="5" classes="mb-6" />
 
                             </div>
                             <div x-show="state == 2">
@@ -334,7 +331,7 @@
                             <div x-show="state == 3">
                                 <x-forms.select name="Category" model="category_id" id="category" :options="$all_category" classes="mb-6" />
 
-                                <x-forms.input-form name="Link" type="url" placeholder="Video Link" model="vid_link" id="video_link" classes="mb-6" />
+                                <x-forms.input-form name="Link" type="text" placeholder="Video Link" model="vid_link" id="video_link" classes="mb-6" />
 
                             </div>
 
@@ -371,18 +368,18 @@
                     <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Add Post</h3>
                     <div
                         id="posts-form"
-                        class="flex w-[30rem] posts-form"
+                        class="flex w-[37rem] posts-form"
 
                         {{--    wire:ignore--}}
                     >
                         <form action="#" method="POST" wire:submit.prevent="updatePost" class="w-full flex flex-col" >
                             <div x-show="stateUpdate == 1">
 
-                                <x-forms.input-form name="Title" type="text" placeholder="Title" model="title" id="title" classes="mb-6" value="title" />
+                                <x-forms.input-form name="Title" type="text" placeholder="Title" model="title" id="title" classes="mb-6" value="title" err="update.title" />
 
-                                <x-forms.textarea-form name="Excerpt" placeholder="Excerpt" model="excerpt" id="excerpt" rows="3" classes="mb-6" value="excerpt" />
+                                <x-forms.textarea-form name="updateExcerpt" placeholder="Excerpt" model="excerpt" id="excerpt" rows="3" classes="mb-6" value="excerpt" err="update.excerpt" />
 
-                                <x-forms.textarea-form name="Content" placeholder="Content" model="content" id="excerpt" rows="5" classes="mb-6" value="content" />
+                                <x-forms.textarea-form name="updateContent" placeholder="Content" model="content" id="content" rows="5" classes="mb-6" value="content"  err="update.content" />
 
                             </div>
                             <div x-show="stateUpdate == 2">
@@ -413,18 +410,19 @@
                                                                   <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                                                                 </svg>
                                                             </span>
-
                                                                 <img src="{{ asset('storage/images/'.$v) }}" class="w-full h-full object-cover cursor-default" @click.stop alt="">
                                                             </div>
                                                         @endforeach
                                                     @endforeach
 
 
-                                                    @foreach($images as $img)
-                                                        <div class="w-24 h-24">
-                                                            <img src="{{ $img->temporaryUrl() }}" class="w-full h-full object-cover" alt="">
-                                                        </div>
-                                                    @endforeach
+                                                    @if (isset($images) && count($images))
+                                                        @foreach($images as $img)
+                                                            <div class="w-24 h-24">
+                                                                <img src="{{ $img->temporaryUrl() }}" class="w-full h-full object-cover" alt="">
+                                                            </div>
+                                                        @endforeach
+                                                    @endif
                                                 @endif
                                                 @if($temp_images)
                                                     @foreach($temp_images as $key => $val)
@@ -465,9 +463,9 @@
                             </div>
                             <div x-show="stateUpdate == 3">
 
-                                <x-forms.select name="Category" model="category_id" id="" :options="$all_category" classes="mb-6" value="category_id" />
+                                <x-forms.select name="Category" model="category_id" id="" :options="$all_category" classes="mb-6" value="category_id"  err="update.category_id" />
 
-                                <x-forms.input-form name="Link" type="url" placeholder="Video Link" model="vid_link" id="vid_link" classes="mb-6" value="vid_link" />
+                                <x-forms.input-form name="Link" type="text" placeholder="Video Link" model="vid_link" id="vid_link" classes="mb-6" value="vid_link" err="update.vid_link" />
 
                             </div>
 
@@ -490,7 +488,7 @@
         </div>
     </div>
 
-    <script>
+    <script type="text/javascript">
         const datePickerIcons = document.querySelectorAll("[name='from'], [name='to']")
         datePickerIcons.forEach((el) => {
             el.nextElementSibling.firstElementChild.lastElementChild.remove()
@@ -500,6 +498,8 @@
         const dismissAlert = document.querySelector('#dismiss-alert');
         const successAlert = document.querySelector('#success-alert');
         const errorAlert = document.querySelector('#error-alert');
+
+        document.querySelectorAll('.status-values').forEach(el => el.addEventListener('change', (e) => e.target.nextElementSibling.nextElementSibling.textContent = e.target.nextElementSibling.nextElementSibling.textContent === 'Published' ? 'Unpublished' : 'Published'))
 
         window.addEventListener('ValidationPostError', _ => {
             dismissAlert.classList.remove('hidden')
@@ -536,10 +536,10 @@
             errorAlert.classList.remove("hidden")
             successAlert.classList.add("hidden")
 
-            setTimeout(() =>{
-                dismissAlert.classList.add('hidden')
-                location.reload()
-            }, 2000)
+            // setTimeout(() =>{
+            //     dismissAlert.classList.add('hidden')
+            //     location.reload()
+            // }, 2000)
         })
 
         window.addEventListener('UpdateValidationPostSuccess', _ => {
@@ -583,15 +583,25 @@
             }, 2000)
         })
 
-        document.addEventListener('DOMContentLoaded', () => {
+        let content = CKEDITOR.replace('content')
+        content.on('change', function(event){
+            console.log(event.editor.getData())
+            @this.set('content', event.editor.getData());
+        });
 
-            Alpine.data("posts-form", (d) => {
-                console.log(d)
-            });
+        let content2 = CKEDITOR.replace('updateContent')
+        content2.on('change', function(event){
+            console.log(event.editor.getData())
+            @this.set('content', event.editor.getData());
+        });
+
+        window.addEventListener('update_content', event => {
+            content2.setData(event.detail.content)
         })
 
         function listeners($data) {
 
+            window.addEventListener('UpdateValidationPostError', validationHandler);
             window.addEventListener('ValidationErrors', validationHandler);
             window.addEventListener('ValidationSuccess', (event) => {
                 location.reload();
@@ -608,6 +618,26 @@
                     || event.detail.hasOwnProperty('images');
                 let hasSectionThreeError = event.detail.hasOwnProperty('vid_link')
                     || event.detail.hasOwnProperty('categories');
+
+                if(hasSectionOneError) {
+                    $data.state = 1;
+                } else if(hasSectionTwoError) {
+                    $data.state = 2;
+                } else if (hasSectionThreeError) {
+                    $data.state = 3;
+                }
+            }
+            function validationHandler2(event) {
+                const postsForm = document.querySelector('.posts-form');
+                let hasSectionOneError = event.detail.hasOwnProperty('update.title')
+                    || event.detail.hasOwnProperty('update.excerpt')
+                    || event.detail.hasOwnProperty('update.content');
+
+                let hasSectionTwoError = event.detail.hasOwnProperty('update.thumbnail')
+                    || event.detail.hasOwnProperty('update.status')
+                    || event.detail.hasOwnProperty('update.images');
+                let hasSectionThreeError = event.detail.hasOwnProperty('update.vid_link')
+                    || event.detail.hasOwnProperty('update.categories');
 
                 if(hasSectionOneError) {
                     $data.state = 1;

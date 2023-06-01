@@ -24,7 +24,8 @@ class Layouts extends Controller
         $this->postModel = new PostModel();
     }
 
-    public function mount(){
+    public function mount()
+    {
 
         if (!session('visited')) {
             session(['visited' => true]);
@@ -33,10 +34,12 @@ class Layouts extends Controller
         }
 
         $this->usersCounter['visitor'] = DB::table('visitor_count')->value('visitors');
-
+        $this->usersCounter['applicants'] = DB::table('visitor_count')->value('applicants');
+        $this->usersCounter['passers'] = DB::table('visitor_count')->value('passers');
     }
 
-    public function render() {
+    public function render()
+    {
 
         $this->mount();
         $this->usersCounter['registered'] = DB::table('users_data')->count();
@@ -51,6 +54,7 @@ class Layouts extends Controller
         });
 
         return view('welcome', ['data' => [
-            'banner' => $banner, 'posts' => $posts, 'visitors' => $this->usersCounter]]);
+            'banner' => $banner, 'posts' => $posts, 'visitors' => $this->usersCounter
+        ]]);
     }
 }

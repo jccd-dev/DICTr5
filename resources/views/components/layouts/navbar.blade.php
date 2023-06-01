@@ -10,7 +10,7 @@
         </div>
         <div class="hidden xl:block">
           <div class="flex items-center ">
-            <a href="#" class="nav--top font-semibold flex flex-row items-center xl:px-2 2xl:px-3 py-2 text-sm text-black rounded-md focus:outline-none focus:text-black">
+            <a href="/" class="nav--top font-semibold flex flex-row items-center xl:px-2 2xl:px-3 py-2 text-sm text-black rounded-md focus:outline-none focus:text-black">
               <span class="ml-2">HOME</span>
             </a>
             {{-- <a href="#" class="flex flex-row items-center xl:px-2 2xl:px-3 py-2 ml-4 text-sm text-black rounded-md hover:text-black  focus:outline-none focus:text-black">
@@ -34,18 +34,18 @@
                     </a>
 
                     <div class="relative" x-data="{ open: false}" x-on:mouseover="open = true" x-on:mouseleave="open = false">
-                        <a href="#" class="nav--top font-medium flex flex-row items-center px-4 py-2 text-sm text-gray-700 focus:text-gray-900 hover:text-gray-900 focus:outline-none hover:bg-gray-100 focus:bg-gray-100">
+                        <a href="{{ url('/agency') }}" class="nav--top font-medium flex flex-row items-center px-4 py-2 text-sm text-gray-700 focus:text-gray-900 hover:text-gray-900 focus:outline-none hover:bg-gray-100 focus:bg-gray-100">
                             Attached Agencies
                             <svg xmlns="http://www.w3.org/2000/svg" :class="{'rotate-90': open, '-rotate-90': !open}" class="w-4 h-4 mt-1 ml-2 transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
                         </a>
                         <div x-show="open" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opaity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="absolute top-0 left-full w-full origin-top-left rounded-md shadow-lg bg-white" style="z-index: 101">
-                            <a href="#" class="nav--top font-medium flex flex-row items-center px-4 py-2 text-sm text-gray-700 focus:text-gray-900 hover:text-gray-900 focus:outline-none hover:bg-gray-100 focus:bg-gray-100">
+                            <a href="https://ntc.gov.ph/" class="nav--top font-medium flex flex-row items-center px-4 py-2 text-sm text-gray-700 focus:text-gray-900 hover:text-gray-900 focus:outline-none hover:bg-gray-100 focus:bg-gray-100">
                             National Telecommunication Commission (NTC)
                             </a>
-                            <a href="#" class="nav--top font-medium flex flex-row items-center px-4 py-2 text-sm text-gray-700 focus:text-gray-900 hover:text-gray-900 focus:outline-none hover:bg-gray-100 focus:bg-gray-100">
+                            <a href="https://privacy.gov.ph/" class="nav--top font-medium flex flex-row items-center px-4 py-2 text-sm text-gray-700 focus:text-gray-900 hover:text-gray-900 focus:outline-none hover:bg-gray-100 focus:bg-gray-100">
                             National Privacy Commission (NPC)
                             </a>
-                            <a href="#" class="nav--top font-medium flex flex-row items-center px-4 py-2 text-sm text-gray-700 focus:text-gray-900 hover:text-gray-900 focus:outline-none hover:bg-gray-100 focus:bg-gray-100">
+                            <a href="#https://dict.gov.ph/cybercrime-investigation-and-coordinating-center-cicc/" class="nav--top font-medium flex flex-row items-center px-4 py-2 text-sm text-gray-700 focus:text-gray-900 hover:text-gray-900 focus:outline-none hover:bg-gray-100 focus:bg-gray-100">
                             Cybercrime Investigation and Coordinating Center (CICC)
                             </a>
                         </div>
@@ -225,7 +225,7 @@
                 <div class="absolute top-1/2 left-3 -translate-y-1/2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#474747" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 </div>
-                <input type="search" name="" id="" class="xl:w-36 2xl:w-56 bg-[#00509D] bg-opacity-5 px-3 pl-10 py-2 rounded-md text-[#474747] text-sm" placeholder="Search">
+                <input type="search" name="" id="search_input" class="xl:w-36 2xl:w-56 bg-[#00509D] bg-opacity-5 px-3 pl-10 py-2 rounded-md text-[#474747] text-sm" placeholder="Search">
             </div>
 
         </div>
@@ -475,7 +475,7 @@
             <!-- Modal header -->
             <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                 <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                    Terms of Service
+                    Tech4Ed Registration
                 </h3>
                 <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="tech4ed_registration_modal">
                     <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
@@ -489,4 +489,17 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+        $('#search_input').keypress(function(event) {
+            if (event.which === 13) {
+                // Execute your desired function here
+                // console.log('');
+                var url = '{{route('view.search_result')}}';
+                window.location.href = url+'?search='+$('#search_input').val();
+            }
+        });
+    });
+</script>
 
