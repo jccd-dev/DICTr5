@@ -124,9 +124,9 @@ Route::prefix('admin')->group(function () {
 });
 
 // USER SIDE ROUTES
-Route::prefix('user')->middleware(['user.logAuth'])->group(function () {
+Route::prefix('user')->group(function () {
     Route::get('/login', [GoogleAuthController::class, 'user_login'])->name('user.login');
-    Route::get('/dashboard', User\Dashboard::class)->name('user.dashboard');
+    Route::get('/dashboard', User\Dashboard::class)->name('user.dashboard')->middleware(['user.logAuth']);
     Route::get('/generate_pdf', [UserDataController::class, 'generateILCDBForm'])->name('user.generate_pdf');
 });
 

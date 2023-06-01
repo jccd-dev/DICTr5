@@ -277,7 +277,7 @@
       <div class="flex flex-col bg-white border shadow-sm rounded-xl dark:bg-gray-800 dark:border-gray-700 dark:shadow-slate-700/[.7]">
         <div class="flex justify-between items-center py-3 px-4 border-b dark:border-gray-700">
           <h3 class="font-bold text-gray-800 dark:text-white">
-            Update Application Status
+            Send Exam Result
           </h3>
           <button type="button" class="hs-dropdown-toggle inline-flex flex-shrink-0 justify-center items-center h-8 w-8 rounded-md text-gray-500 hover:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-white transition-all text-sm dark:focus:ring-gray-700 dark:focus:ring-offset-gray-800" data-hs-overlay="#hs-slide-down-animation-modal3">
             <span class="sr-only">Close</span>
@@ -437,7 +437,7 @@
             messageAlert.textContent = "Successfully Added";
             let targetHeading;
             for (let i = 0; i < headings.length; i++) {
-                if (headings[i]?.textContent.trim() === "Update Application Status") {
+                if (headings[i]?.textContent.trim() === "Send Exam Result") {
                     targetHeading = headings[i];
                     break;
                 }
