@@ -26,11 +26,6 @@ use App\Http\Controllers\Examinee\GoogleAuthController;
 use App\Http\Controllers\Admins\Examinee\ManageApplicants;
 use App\Http\Controllers\Layouts\ViewAnnouncementController;
 use App\Http\Controllers\Examinee\DashboardController as UserDashboardController;
-use App\Http\Livewire\Admin\Inbox as CMSInbox;
-use App\Http\Controllers\Admins\Examinee\ManageApplicants;
-use App\Http\Controllers\Admins\SystemLogs;
-use \App\Http\Controllers\UserDataController;
-use \App\View\Components\Pages\Posts as PostsView;
 use \App\Http\Controllers\Layouts\SearchResult;
 
 /*
