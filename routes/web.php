@@ -25,6 +25,7 @@ use App\Http\Controllers\Admins\Examinee\ManageApplicants;
 use App\Http\Controllers\Admins\SystemLogs;
 use \App\Http\Controllers\UserDataController;
 use \App\View\Components\Pages\Posts as PostsView;
+use \App\Http\Controllers\Layouts\SearchResult;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,7 +43,7 @@ Route::get("/posts/{id}", function ($id) {
     $component = new PostsView($id);
 
     return $component->render();
-});
+})->name('view.post');
 Route::get('/testing', \App\Http\Livewire\CMS\Testing::class);
 Route::get('/mandate-powers-and-functions', function () {
     return view('static.mandate-powers-and-functions');
@@ -65,7 +66,11 @@ Route::get('/agency', function () {
 Route::get('/about', function () {
     return view('pages.about');
 });
-Route::get('/announcement/{id}', [ViewAnnouncementController::class, 'view_announcement'])->name('view.announcement');
+Route::get('/announcement/', [ViewAnnouncementController::class, 'view_announcement'])->name('view.announcement');
+
+Route::get('/announcement/{id}', [ViewAnnouncementController::class, 'view_announcement_by_id'])->name('view.announcement-by-id');
+
+Route::get('/search_result', [SearchResult::class, 'search_result'])->name('view.search_result');
 
 // ADMIN SIDE ROUTES
 Route::prefix('admin')->group(function () {
