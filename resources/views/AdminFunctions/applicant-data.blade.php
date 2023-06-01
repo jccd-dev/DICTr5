@@ -467,7 +467,7 @@
         })
     }
 
-    submitResultAppForm.addEventListener('submit', async (event) => {
+    submitTranscriptForm.addEventListener('submit', async (event) => {
         event.preventDefault()
         let formData = new FormData(event.currentTarget);
 
