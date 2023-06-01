@@ -43,7 +43,7 @@
         </div>
 
        <div class="hidden lg:block flex-1 h-full w-auto overflow-hidden rounded-bl-[10rem]">
-           <img src="{{asset('img/ico/DICT(1).png')}}" class="h-full w-full object-cover">
+           <img src="{{asset('img/ico/DICT(2).png')}}" class="h-full w-full object-cover">
        </div>
 
         <br>
