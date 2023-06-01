@@ -25,10 +25,19 @@ class ViewAnnouncementController extends Controller
 
     }
     //
-    public function view_announcement(string $id){
+    public function view_announcement(){
         $this->mount();
         $this->usersCounter['registered'] = DB::table('users_data')->count();
         return view('pages.announcement', [
+            'announcements' => Announcement::where('status', 1)->orderBy('timestamp', 'desc')->get(),
+            'visitors'     => $this->usersCounter
+        ]);
+    }
+
+    public function view_announcement_by_id($id){
+        $this->mount();
+        $this->usersCounter['registered'] = DB::table('users_data')->count();
+        return view('pages.announcement-by-id', [
             'announcement' => Announcement::where('id', $id)->first(),
             'visitors'     => $this->usersCounter
         ]);

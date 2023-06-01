@@ -52,6 +52,6 @@
             </ol>
         </div>
         <p>You may undergo another Diagnostic Examination with us as soon as you are ready.</p>
-        <p>For inquiries, kindly contact Ms. Maria Peñafrancia L. Nepomuceno through <b>pinky.nepomuceno@dict.gov.ph</b>.</p>
+        <p>For inquiries, kindly contact Mr. Ralph Spencer Talagtag through <b>ralph.talagtag@dict.gov.ph</b>.</p>
     @endif
 </body>

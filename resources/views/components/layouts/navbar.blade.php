@@ -225,7 +225,7 @@
                 <div class="absolute top-1/2 left-3 -translate-y-1/2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#474747" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 </div>
-                <input type="search" name="" id="" class="xl:w-36 2xl:w-56 bg-[#00509D] bg-opacity-5 px-3 pl-10 py-2 rounded-md text-[#474747] text-sm" placeholder="Search">
+                <input type="search" name="" id="search_input" class="xl:w-36 2xl:w-56 bg-[#00509D] bg-opacity-5 px-3 pl-10 py-2 rounded-md text-[#474747] text-sm" placeholder="Search">
             </div>
 
         </div>
@@ -489,4 +489,17 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+        $('#search_input').keypress(function(event) {
+            if (event.which === 13) {
+                // Execute your desired function here
+                // console.log('');
+                var url = '{{route('view.search_result')}}';
+                window.location.href = url+'?search='+$('#search_input').val();
+            }
+        });
+    });
+</script>
 

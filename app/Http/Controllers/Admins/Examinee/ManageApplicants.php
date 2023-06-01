@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admins\Examinee;
 
+use App\Mail\EmailUsers;
 use Illuminate\View\View;
 use App\Mail\ScheduleOfExam;
 use Illuminate\Http\Request;
@@ -164,6 +165,8 @@ class ManageApplicants extends Controller
 
         // $reg->exam_schedule_id = $examSchedule_id;
         $reg->approved_date = date('Y-m-d', strtotime('now'));
+
+        $user_email = $applicant->user_login_id == null ? $applicant->email : $applicant->userLogin->email;
         $email_type = 0;
         switch ($validation) {
             case 1:
@@ -203,10 +206,10 @@ class ManageApplicants extends Controller
             if ($email_type == 6) {
                 $data = [
                     'first_name'        => $applicant->fname,
-                    'exam_start_date'   => date('F j, Y', strtotime($exam_data->start_date)),
-                    'exam_end_date'     => date('F j, Y', strtotime($exam_data->end_date)),
+                    'exam_start_date'   => $exam_data->start_date,
+                    'exam_end_date'     => $exam_data->end_date,
                     'name'              => $applicant->formatted_name,
-                    'email'             => $applicant->user_login_id ? $applicant->email : $applicant->userLogin->email,
+                    'email'             => $user_email,
                     'intended_for'      => 'Sent Exam Schedule'
                 ];
                 Mail::to($data['email'])->send(new ScheduleOfExam($data));
@@ -214,7 +217,7 @@ class ManageApplicants extends Controller
                 $data = [
                     'name'          => $applicant->formatted_name,
                     'ramark'        => $remark,
-                    'email'         => $applicant->user_login_id ? $applicant->email : $applicant->userLogin->email,
+                    'email'         => $user_email,
                     'intended_for'  => 'Sent Registration Status'
                 ];
                 Mail::to($data['email'])->send(new RegistrationStatus($email_type, $data));
@@ -227,7 +230,6 @@ class ManageApplicants extends Controller
     }
 
     /**
-     * TODO: Add the email
      * @param Request $request
      * @param int|string $user_id
      * @return JsonResponse
@@ -236,19 +238,29 @@ class ManageApplicants extends Controller
      */
     public function send_exam_result(Request $request, int|string $user_id): JsonResponse
     {
-        $result = $request->post('exam-result');
+        $result = $request->post('exam_result');
+
         $user = UsersData::with('userLogin', 'regDetails', 'userHistory.failedHistory')->find($user_id);
 
         $reg = $user->regDetails;
-        // dd($user);
+        // dd($reg);
         $exam_data = ExamScheduleModel::find($reg->exam_schedule_id);
 
+        $user_email = $user->user_login_id == null ? $user->email : $user->userLogin->email;
+        // dd($user_email);
+
+        $start_time = date('g:i a', strtotime($exam_data->start_date));
+        $end_time = date('g:i a', strtotime($exam_data->end_date));
+        $day = date('F d, Y', strtotime($exam_data->start_date));
+
+        $sched = "{$day} from {$start_time} - {$end_time}";
+        // dd($sched);
 
         $userHistory = $user->userHistory()->create([
             'user_id'           => $user_id,
             'registration_date' => $reg->reg_date,
             'approved_date'     => $reg->approved_date,
-            'schedule'          => $exam_data->datetime,
+            'schedule'          => $sched,
             'venue'             => $exam_data->venue,
             'exam_set'          => $exam_data->exam_set,
             'status'            => 7,
@@ -259,7 +271,18 @@ class ManageApplicants extends Controller
             DB::table('visitor_count')->increment('passers');
             // reset the reg details data for the user
             $reg->delete();
-            //ToDO passed email here
+
+            $data = [
+                'name'          => $user->formatted_name,
+                'venue'         => $exam_data->venue,
+                'exam_sched'    => $sched,
+                'email'         => $user_email,
+                'intended_for'  => 'Sent passed result'
+            ];
+            // dd($data);
+            Mail::to($user_email)->send(new EmailUsers(true, $data));
+
+            AdminLogActivity::addToLog("send exam passed result to {$user->id}", session()->get('admin_id'));
             return response()->json(['success' => 'Examinee Passed'], 200);
         }
 
@@ -286,8 +309,19 @@ class ManageApplicants extends Controller
             return response()->json(['error' => 'server Error'], 500);
         }
 
-        //TODO failed email here with part 1 to 3 results
-        AdminLogActivity::addToLog("send exam result to {$user->id}", session()->get('admin_id'));
+        $data = [
+            'name'          => $user->formatted_name,
+            'venue'         => $exam_data->venue,
+            'exam_sched'    => $sched,
+            'email'         => $user_email,
+            'intended_for'  => 'Sent Registration Status',
+            'part1'        => $part1,
+            'part2'        => $part2,
+            'part3'        => $part3
+        ];
+        Mail::to($user_email)->send(new EmailUsers(false, $data));
+
+        AdminLogActivity::addToLog("send exam failed result to {$user->id}", session()->get('admin_id'));
         return response()->json(['success' => ''], 200);
     }
 

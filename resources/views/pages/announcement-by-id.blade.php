@@ -7,7 +7,11 @@
     <x-layouts.banner />
 
     <x-layouts.navbar />
-    @forelse($announcements as $announcement)
+    @empty($announcement)
+        <div class="container mx-auto py-14">
+            <h2>NO AVAILABLE ANNOUNCEMENT</h2>
+        </div>
+    @else
         <div class="container mx-auto py-9">
             <h1 class="text-2xl font-bold">{{$announcement->title}}</h1>
             <h6>{{date('F d, Y', strtotime($announcement->timestamp))}}</h6>
@@ -15,11 +19,7 @@
             <br>
             @php echo $announcement->content; @endphp
         </div>
-    @empty
-        <div class="container mx-auto py-14">
-            <h2>NO AVAILABLE ANNOUNCEMENT</h2>
-        </div>
-    @endforelse
+    @endempty
 
     <x-home.section.details-section />
 

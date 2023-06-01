@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\EmailAdminAccount;
 use App\Mail\EmailUsers;
 use App\Mail\RegistrationStatus;
+use App\Mail\SendTranscript;
 use App\Models\Examinee\UsersData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -25,12 +26,12 @@ class DashboardController extends Controller
         $data = [
             'name' => 'Christian E. Quelonio',
             'email' => 'cquelonio@gmail.com',
-            'intended_for' => 'Sent Admin Account Credential',
-            'password' => 'Abcde_12345',
-            'url' => 'www.facebook.com',
+            'intended_for' => 'Send ICT Proficiency Exam Transcript Record',
+            'exam_schedule' => '2023-04-15',
+            'file_location' => 'public/sample_transcript.pdf',
         ];
 //         Mail::to('cquelonio@gmail.com')->send(new EmailUsers(false, $data));
-         Mail::to('cquelonio@gmail.com')->send(new EmailAdminAccount($data));
+         Mail::to('cquelonio@gmail.com')->send(new SendTranscript($data));
          echo  "Success";
 //        return view('layouts.email.exam-schedule', ['data' => $data]);
     }
