@@ -9,25 +9,22 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Mail\Mailables\Attachment;
 
-class RegistrationStatus extends Mailable
+class SendTranscript extends Mailable
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
-     * @param int $status : 1 - Disapprove
-     *                      2 - Incomplete Requirements
-     *                      4 - Approve
-     * @param array $data - contains:
-     *                      - name = > string
-     *                      - email = > string
-     *                      - intended_for = > string
-     *                      - remark = > string
+     * @param array $data : content:
+     *                  - name => string
+     *                  - email => string
+     *                  - exam_schedule => string
+     *                  - file_location => string : gets from storage, example value is 'public/sample_transcript.pdf'
      */
     public function __construct(
-        protected int $status,
-        protected array $data,
+        protected array $data
     )
     {
         $inbox = new InboxHelper($data['name'], $data['email'], $data['intended_for']);
@@ -39,7 +36,7 @@ class RegistrationStatus extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'ICT Diagnostic Exam Application Status',
+            subject: 'ICT Diagnostic Exam Transcript',
         );
     }
 
@@ -49,10 +46,9 @@ class RegistrationStatus extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'layouts.email.application-status',
+            view: 'layouts.email.send-transcript',
             with: [
-                'status' => $this->status,
-                'data' => $this->data
+                'data' => $this->data,
             ]
         );
     }
@@ -64,6 +60,8 @@ class RegistrationStatus extends Mailable
      */
     public function attachments(): array
     {
-        return [];
+        return [
+            Attachment::fromStorage($this->data['file_location']),
+        ];
     }
 }
