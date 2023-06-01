@@ -24,6 +24,7 @@ class EmailUsers extends Mailable
      *               - part1 => string percentage
      *               - part2 => string percentage
      *               - part3 => string percentage
+     *               END For Failed
      *               *******************
      *               - email => string
      *               - intended_for => string
