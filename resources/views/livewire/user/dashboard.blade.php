@@ -1,4 +1,4 @@
-<div class="container relative mx-auto px-4 py-10 flex flex-col lg:flex-row gap-7" x-data="{ state: 1, hasVidData: false, err: [], currentStatus: '{{ $currentStatus ?: 'professional' }}', isFiles: false }">
+<div class="container relative mx-auto px-4 py-10 flex flex-col lg:flex-row gap-7" x-data="{ state: 1, hasVidData: false, err: [], currentStatus: '{{ $currentStatus ?: 'professional' }}', isFiles: false, exam_status_id: '', exam_history: [] }">
 
 {{--  main  --}}
 @if(session()->has('warning') || session()->has('erorr') || session()->has('success'))
@@ -49,16 +49,16 @@
     <div class="basis-3/4">
         <div class="flex flex-col lg:flex-row rounded-3xl bg-darker-blue text-white p-14 gap-14 lg:gap-7 justify-between pb-20 lg:pb-36">
             <div class="flex flex-col">
-                <div class="flex gap-7 flex-wrap relative">
+                <div class="flex gap-7 flex-col 2xl:flex-row relative">
                     <div>
                         <img src="{{ asset('img/Group 44.svg') }}" alt="">
                     </div>
                     <div class="font-quicksand flex flex-col">
-                        @if (isset($user_data[0]))
+                        @if (isset($user_data[0]) && isset($user_data[0]->regDetails))
                             @switch($user_data[0]->regDetails->status)
                                 @case(1)
                                     <span class="flex gap-10 items-center"><h1 class="font-bold text-3xl">{{ $user->fname }} {{ str_replace(",", "", $user->lname) }}</h1>
-                                        <span class="absolute top-10 right-0 sm:top-0 flex items-center text-sm font-medium text-white sm:relative">
+                                        <span class="absolute top-10 right-0 2xl:top-0 flex items-center text-sm font-medium text-white 2xl:relative">
                                             <span class="flex w-2.5 h-2.5 bg-custom-red rounded-full mr-1.5 flex-shrink-0"></span>
                                             <button data-popover-target="popover-description" data-popover-placement="bottom-end" type="button" class="flex gap-2">Disapproved<svg class="w-4 h-4 ml-2 text-gray-400 hover:text-gray-500" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path></svg><span class="sr-only">Show information</span></button>
                                         </span>
@@ -73,7 +73,7 @@
                                     @break
                                 @case(2)
                                     <span class="flex gap-10 items-center"><h1 class="font-bold text-3xl">{{ $user->fname }} {{ str_replace(",", "", $user->lname) }}</h1>
-                                        <span class="absolute top-10 right-0 sm:top-0 flex items-center text-sm font-medium text-white sm:relative">
+                                        <span class="absolute top-10 right-0 2xl:top-0 flex items-center text-sm font-medium text-white 2xl:relative">
                                             <span class="flex w-2.5 h-2.5 bg-custom-red rounded-full mr-1.5 flex-shrink-0"></span>
                                             <button data-popover-target="popover-description" data-popover-placement="bottom-end" type="button" class="flex gap-2">Incomplete Requirements<svg class="w-4 h-4 ml-2 text-gray-400 hover:text-gray-500" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path></svg><span class="sr-only">Show information</span></button>
                                         </span>
@@ -88,7 +88,7 @@
                                     @break
                                 @case(3)
                                     <span class="flex gap-10 items-center"><h1 class="font-bold text-3xl">{{ $user->fname }} {{ str_replace(",", "", $user->lname) }}</h1>
-                                        <span class="absolute top-10 right-0 sm:top-0 flex items-center text-sm font-medium text-white sm:relative">
+                                        <span class="absolute top-10 right-0 2xl:top-0 flex items-center text-sm font-medium text-white 2xl:relative">
                                             <span class="flex w-2.5 h-2.5 bg-custom-yellow rounded-full mr-1.5 flex-shrink-0"></span>
                                             <button data-popover-target="popover-description" data-popover-placement="bottom-end" type="button" class="flex gap-2">For Evaluation <svg class="w-4 h-4 ml-2 text-gray-400 hover:text-gray-500" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path></svg><span class="sr-only">Show information</span></button>
                                         </span>
@@ -103,7 +103,7 @@
                                     @break
                                 @case(4)
                                     <span class="flex gap-10 items-center"><h1 class="font-bold text-3xl">{{ $user->fname }} {{ str_replace(",", "", $user->lname) }}</h1>
-                                        <span class="absolute top-10 right-0 sm:top-0 flex items-center text-sm font-medium text-white sm:relative">
+                                        <span class="absolute top-10 right-0 2xl:top-0 flex items-center text-sm font-medium text-white 2xl:relative">
                                             <span class="flex w-2.5 h-2.5 bg-green-500 rounded-full mr-1.5 flex-shrink-0"></span>
                                             <button data-popover-target="popover-description" data-popover-placement="bottom-end" type="button" class="flex gap-2">Approved<svg class="w-4 h-4 ml-2 text-gray-400 hover:text-gray-500" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path></svg><span class="sr-only">Show information</span></button>
                                         </span>
@@ -118,7 +118,7 @@
                                     @break
                                 @case(5)
                                     <span class="flex gap-10 items-center"><h1 class="font-bold text-3xl">{{ $user->fname }} {{ str_replace(",", "", $user->lname) }}</h1>
-                                        <span class="absolute top-10 right-0 sm:top-0 flex items-center text-sm font-medium text-white sm:relative">
+                                        <span class="absolute top-10 right-0 2xl:top-0 flex items-center text-sm font-medium text-white 2xl:relative">
                                             <span class="flex w-2.5 h-2.5 bg-green-500 rounded-full mr-1.5 flex-shrink-0"></span>
                                             <button data-popover-target="popover-description" data-popover-placement="bottom-end" type="button" class="flex gap-2">Scheduled for Exam<svg class="w-4 h-4 ml-2 text-gray-400 hover:text-gray-500" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path></svg><span class="sr-only">Show information</span></button>
                                         </span>
@@ -133,16 +133,25 @@
                                     @break
                                 @case(6)
                                     <span class="flex gap-10 items-center"><h1 class="font-bold text-3xl">{{ $user->fname }} {{ str_replace(",", "", $user->lname) }}</h1>
-                                        <span class="absolute top-10 right-0 sm:top-0 flex items-center text-sm font-medium text-white sm:relative">
+                                        <span class="absolute top-10 right-0 2xl:top-0 flex items-center text-sm font-medium text-white 2xl:relative">
                                             <span class="flex w-2.5 h-2.5 bg-orange-500 rounded-full mr-1.5 flex-shrink-0"></span>
                                             <button data-popover-target="popover-description" data-popover-placement="bottom-end" type="button" class="flex gap-2">Waiting for Result <svg class="w-4 h-4 ml-2 text-gray-400 hover:text-gray-500" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path></svg><span class="sr-only">Show information</span></button>
                                         </span>
                                     </span>
+                                    <div data-popover id="popover-description" role="tooltip" class="absolute z-10 invisible inline-block text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 w-72 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400">
+                                        <div class="p-3 space-y-2">
+                                            <h3 class="font-semibold text-gray-900 dark:text-white">Waiting for Result</h3>
+                                            <p>Please wait for your result to be released. Regularly check the dashboard for the result.</p>
+                                        </div>
+                                        <div data-popper-arrow></div>
+                                    </div>
                                     @break
                                 @default
                                     <h1 class="font-bold text-3xl">{{ $user->fname }} {{ str_replace(",", "", $user->lname) }}</h1>
 
                             @endswitch
+                        @else
+                            <h1 class="font-bold text-3xl">{{ $user->fname }} {{ str_replace(",", "", $user->lname) }}</h1>
                         @endif
                         <a href="mailto:{{ $user->email }}" class="hover:underline">{{ $user->email }}</a>
                         <span>Professional</span>
@@ -180,7 +189,7 @@
                     <button type="button" id="update-form-btn" class="py-4 px-5 bg-custom-red font-semibold" @click="$openModal('cardModal'); isFiles = false" wire:click="populate_user_data">
                             Update Exam Form
                     </button>
-                    @if (isset($user_data[0]->regDetails) && $user_data[0]->regDetails->apply === 2)
+                    @if (!isset($user_data[0]->regDetails) || $user_data[0]->regDetails->apply === 2)
                         <button type="button" id="update-form-btn" class="py-4 px-5 bg-custom-red font-semibold" wire:click="apply({{ $user_data[0]->id }})" wire:ignore>
                             @php
                                 if(isset($userData->userHistory)) {
@@ -244,7 +253,7 @@
                 </table>
             </div>
             <br><br>
-            <span class="text-lg font-bold">Application and Exam History</span><br>
+            <span class="text-lg font-bold">Exam History</span><br>
             <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -253,7 +262,7 @@
                             Registration Date
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Approved Date
+                            Exam Set
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Exam Date
@@ -270,46 +279,66 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            February 10, 2023
-                        </th>
-                        <td class="px-6 py-4">
-                            03-10-2023
-                        </td>
-                        <td class="px-6 py-4">
-                            05-24-2023
-                        </td>
-                        <td class="px-6 py-4">
-                            Naga City Digital Innovation Hub
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="bg-[#E35F00] text-white text-xs py-1 px-3 font-semibold rounded">Incomplete Req.</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <button type="button" data-modal-target="failed_modal" data-modal-toggle="failed_modal" class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-xs px-3 py-1 text-center">View</button>
-                        </td>
-                    </tr>
-                    <tr class="border-b bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            May 24, 2023
-                        </th>
-                        <td class="px-6 py-4">
-                            03-10-2023
-                        </td>
-                        <td class="px-6 py-4">
-                            05-24-2023
-                        </td>
-                        <td class="px-6 py-4">
-                            Naga City Digital Innovation Hub
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="bg-[#C1121F] text-white text-xs py-1 px-3 font-semibold rounded">Disapprove</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <button type="button" class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-xs px-3 py-1 text-center">View</button>
-                        </td>
-                    </tr>
+                        @if (isset($user_data[0]->userHistory) && count($user_data[0]->userHistory) > 0)
+                            @foreach ($user_data[0]->userHistory as $item)
+                                <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
+                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        {{ date("F j, Y", strtotime($item->registration_date)) }}
+                                    </th>
+                                    <td class="px-6 py-4">
+                                        {{ $item->exam_set }}
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        {{ date("m-d-Y", strtotime($item->schedule)) }}
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        {{ $item->venue }}
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        @switch($item->exam_result)
+                                            @case('passed')
+                                                <span class="bg-[#65E02B] text-black text-xs py-1 px-3 font-semibold rounded">Passed</span> <br>
+                                                @break
+                                            @case('failed')
+                                                <span class="bg-[#E35F00] text-white text-xs py-1 px-3 font-semibold rounded">Failed</span>
+                                                @break
+                                            @default
+
+                                        @endswitch
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <button type="button" @click="$wire.get_user_history({{ $item->id }})" data-modal-target="failed_modal" wire:click="" data-modal-toggle="failed_modal" class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-xs px-3 py-1 text-center">View</button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @elseif(isset($user_data[0]->regDetails) && $user_data[0]->regDetails->status == 6)
+                            <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    {{ date("F j, Y", strtotime($user_data[0]->regDetails->reg_date)) }}
+                                </th>
+                                <td class="px-6 py-4">
+
+                                </td>
+                                <td class="px-6 py-4">
+
+                                </td>
+                                <td class="px-6 py-4">
+
+                                </td>
+                                <td class="px-6 py-4">
+                                        <span class="bg-[#00509D] text-white text-xs py-1 px-3 font-semibold rounded">Waiting for Result</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <button type="button" data-modal-target="failed_modal" wire:click="" data-modal-toggle="failed_modal" class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-xs px-3 py-1 text-center">View</button>
+                                </td>
+                            </tr>
+                        @else
+                            <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
+                                <td colspan="6" class="px-6 py-4 text-center">
+                                    No Exam History
+                                </td>
+                            </tr>
+                        @endif
                     </tbody>
                 </table>
             </div>
@@ -473,7 +502,7 @@
 
     <!-- Results Modal -->
     <!-- Failed -->
-    <div id="failed_modal" data-modal-backdrop="static" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div id="failed_modal" wire:ignore.self data-modal-backdrop="static" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
         <div class="relative w-full max-w-3xl max-h-full">
             <!-- Modal content -->
             <div class="relative bg-darker-blue rounded-lg shadow dark:bg-gray-700">
@@ -492,39 +521,65 @@
 
                     {{-- START --}}
 
-                    {{-- <div class="flex gap-5 items-center">
-                        <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M28 55C42.9117 55 55 42.9117 55 28C55 13.0883 42.9117 1 28 1C13.0883 1 1 13.0883 1 28C1 42.9117 13.0883 55 28 55Z" stroke="#FB2F2F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M36.0999 19.9L19.8999 36.1" stroke="#FB2F2F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M19.8999 19.9L36.0999 36.1" stroke="#FB2F2F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
+                    @if (isset($history_data))
+                        @if ($history_data->exam_result === 'failed')
+                            <div class="flex gap-5 items-center">
+                                <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M28 55C42.9117 55 55 42.9117 55 28C55 13.0883 42.9117 1 28 1C13.0883 1 1 13.0883 1 28C1 42.9117 13.0883 55 28 55Z" stroke="#FB2F2F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M36.0999 19.9L19.8999 36.1" stroke="#FB2F2F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M19.8999 19.9L36.0999 36.1" stroke="#FB2F2F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
 
-                        <div>
-                            <h1 class="text-5xl font-quicksand text-white font-semibold">Failed</h1>
-                        </div>
-                    </div>
-                    <div>
-                        <p class="text-center">
-                            We regret to inform you that based on the result of the Diagnostic Examination conducted last <span>March 29, 2023</span>, you are not qualified to take the ICT Proficiency Certification Examination.
-                        </p>
-                    </div>
-                    <table>
-                        <tr>
-                            <td><span>Part 1 (Multiple Choice)</span></td>
-                            <td><span class="px-5">:</span></td>
-                            <td><span class="text-[#FFD500] font-semibold">5.00 %</span></td>
-                        </tr>
-                        <tr>
-                            <td><span>Part 2 (Program Simulation)</span></td>
-                            <td><span class="px-5">:</span></td>
-                            <td><span class="text-[#FFD500] font-semibold">15.00 %</span></td>
-                        </tr>
-                        <tr>
-                            <td><span>Part 3 (Mini Programming)</span></td>
-                            <td><span class="px-5">:</span></td>
-                            <td><span class="text-[#FFD500] font-semibold">25.00 %</span></td>
-                        </tr>
-                    </table> --}}
+                                <div>
+                                    <h1 class="text-5xl font-quicksand text-white font-semibold">Failed</h1>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="text-center">
+                                    We regret to inform you that based on the result of the Diagnostic Examination conducted last <span>{{ date('F j, Y', strtotime($history_data->schedule)) }}</span>, you are not qualified to take the ICT Proficiency Certification Examination.
+                                </p>
+                            </div>
+                            <table>
+                                <tr>
+                                    <td><span>Part 1 (Multiple Choice)</span></td>
+                                    <td><span class="px-5">:</span></td>
+                                    <td><span class="text-[#FFD500] font-semibold">{{ $history_data->failedHistory->part_1 }}</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>Part 2 (Program Simulation)</span></td>
+                                    <td><span class="px-5">:</span></td>
+                                    <td><span class="text-[#FFD500] font-semibold">{{ $history_data->failedHistory->part_2 }}</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>Part 3 (Mini Programming)</span></td>
+                                    <td><span class="px-5">:</span></td>
+                                    <td><span class="text-[#FFD500] font-semibold">{{ $history_data->failedHistory->part_3 }}</span></td>
+                                </tr>
+                            </table>
+                        @else
+                            {{-- Passed template --}}
+
+                            {{-- START --}}
+
+                            <div class="flex gap-5 items-center">
+                                <svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M53 24.6229V27.0149C52.9968 32.6216 51.1813 38.077 47.8243 42.5676C44.4672 47.0582 39.7485 50.3433 34.3719 51.933C28.9953 53.5227 23.2489 53.3318 17.9896 51.3888C12.7304 49.4458 8.2401 45.8547 5.1885 41.1512C2.13689 36.4478 0.687457 30.8838 1.05636 25.2893C1.42526 19.6947 3.59274 14.3693 7.23553 10.1073C10.8783 5.84521 15.8012 2.87488 21.2701 1.63926C26.7389 0.403647 32.4607 0.968958 37.582 3.25088" stroke="#44D600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M53 6L26.8462 32L19 24.2078" stroke="#44D600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+
+                                <div>
+                                    <h1 class="text-5xl font-quicksand text-white font-semibold">Passed</h1>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="text-center font-quicksand font-medium">
+                                    Congratulations! You are qualified to receive ICT Proficiency Certification Examination.
+                                </p>
+                            </div>
+
+                            {{-- END --}}
+                        @endif
+                    @endif
 
                     {{-- END --}}
 
@@ -532,64 +587,46 @@
                     {{-- Processing template --}}
 
                     {{-- START --}}
+                    {{-- @dd(isset($user_data[0]->regDetails) && $user_data[0]->regDetails->status == 6 && count($user_data[0]->userHistory) > 0) --}}
+                    @if(isset($user_data[0]->regDetails) && $user_data[0]->regDetails->status == 6 && count($user_data[0]->userHistory) == 0)
+                        <div class="flex gap-5 items-center">
+                            <svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M27 1V11.4" stroke="#FFD500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M27 42.6V53" stroke="#FFD500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M8.61792 8.61816L15.9759 15.9762" stroke="#FFD500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M38.0239 38.0239L45.3819 45.3819" stroke="#FFD500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M1 27H11.4" stroke="#FFD500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M42.6001 27H53.0001" stroke="#FFD500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M8.61792 45.3819L15.9759 38.0239" stroke="#FFD500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M38.0239 15.9762L45.3819 8.61816" stroke="#FFD500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
 
-                    {{-- <div class="flex gap-5 items-center">
-                        <svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M27 1V11.4" stroke="#FFD500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M27 42.6V53" stroke="#FFD500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M8.61792 8.61816L15.9759 15.9762" stroke="#FFD500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M38.0239 38.0239L45.3819 45.3819" stroke="#FFD500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M1 27H11.4" stroke="#FFD500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M42.6001 27H53.0001" stroke="#FFD500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M8.61792 45.3819L15.9759 38.0239" stroke="#FFD500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M38.0239 15.9762L45.3819 8.61816" stroke="#FFD500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-
-                        <div>
-                            <h1 class="text-5xl font-quicksand text-white font-semibold">Processing</h1>
+                            <div>
+                                <h1 class="text-5xl font-quicksand text-white font-semibold">Processing</h1>
+                            </div>
                         </div>
-                    </div>
-                    <div>
-                        <p class="text-center font-quicksand font-medium">
-                            Results are still in the process of evaluation. For more information you can contact the DICT R5 Camarines Sur thru
-                        </p>
-                    </div>
-                    <div class="flex flex-col items-center font-quicksand font-medium">
-                        <p>ralph.talagtag@dict.gov.ph</p>
-                        <p>09XXXXXXXXX</p>
-                    </div> --}}
+                        <div>
+                            <p class="text-center font-quicksand font-medium">
+                                Results are still in the process of evaluation. For more information you can contact the DICT R5 Camarines Sur thru
+                            </p>
+                        </div>
+                        <div class="flex flex-col items-center font-quicksand font-medium">
+                            <p>ralph.talagtag@dict.gov.ph</p>
+                            <p>09XXXXXXXXX</p>
+                        </div>
+                    @endif
 
                     {{-- END --}}
 
 
-                    {{-- Passed template --}}
 
-                    {{-- START --}}
-
-                    {{-- <div class="flex gap-5 items-center">
-                        <svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M53 24.6229V27.0149C52.9968 32.6216 51.1813 38.077 47.8243 42.5676C44.4672 47.0582 39.7485 50.3433 34.3719 51.933C28.9953 53.5227 23.2489 53.3318 17.9896 51.3888C12.7304 49.4458 8.2401 45.8547 5.1885 41.1512C2.13689 36.4478 0.687457 30.8838 1.05636 25.2893C1.42526 19.6947 3.59274 14.3693 7.23553 10.1073C10.8783 5.84521 15.8012 2.87488 21.2701 1.63926C26.7389 0.403647 32.4607 0.968958 37.582 3.25088" stroke="#44D600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M53 6L26.8462 32L19 24.2078" stroke="#44D600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-
-                        <div>
-                            <h1 class="text-5xl font-quicksand text-white font-semibold">Passed</h1>
-                        </div>
-                    </div>
-                    <div>
-                        <p class="text-center font-quicksand font-medium">
-                            Congratulations! You are qualified to receive ICT Proficiency Certification Examination.
-                        </p>
-                    </div> --}}
-
-                    {{-- END --}}
 
 
 
                     {{-- Approved template --}}
 
                     {{-- START --}}
-                    <div class="flex gap-5 items-center">
+                    {{-- <div class="flex gap-5 items-center">
                         <svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M53 24.6229V27.0149C52.9968 32.6216 51.1813 38.077 47.8243 42.5676C44.4672 47.0582 39.7485 50.3433 34.3719 51.933C28.9953 53.5227 23.2489 53.3318 17.9896 51.3888C12.7304 49.4458 8.2401 45.8547 5.1885 41.1512C2.13689 36.4478 0.687457 30.8838 1.05636 25.2893C1.42526 19.6947 3.59274 14.3693 7.23553 10.1073C10.8783 5.84521 15.8012 2.87488 21.2701 1.63926C26.7389 0.403647 32.4607 0.968958 37.582 3.25088" stroke="#44D600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             <path d="M53 6L26.8462 32L19 24.2078" stroke="#44D600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -604,7 +641,7 @@
                             Application has been approved! You are scheduled to take the diagnostic exam on May 1, 2023 12:00 am at Naga City Coloseum. Be there before the given time.
                         </p>
                     </div>
-                </div>
+                </div> --}}
 
                 {{-- END --}}
 

@@ -244,7 +244,7 @@ class ManageApplicants extends Controller
         $user = UsersData::with('userLogin', 'regDetails', 'userHistory.failedHistory')->find($user_id);
 
         $reg = $user->regDetails;
-        dd($user);
+        // dd($user);
         $exam_data = ExamScheduleModel::find($reg->exam_schedule_id);
         //update the user history
         // dd($user->userHistory());
@@ -619,7 +619,7 @@ class ManageApplicants extends Controller
                 session()->flash('error', 'server error');
                 return false;
             } elseif ($reg) {
-                if($reg->apply = 1){
+                if ($reg->apply = 1) {
                     session()->flash('warning', 'You have already applied');
                     return false;
                 }
