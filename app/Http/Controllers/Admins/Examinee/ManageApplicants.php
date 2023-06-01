@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admins\Examinee;
 use App\Mail\EmailUsers;
 use Illuminate\View\View;
 use App\Mail\ScheduleOfExam;
+use App\Mail\SendTranscript;
 use Illuminate\Http\Request;
 use App\Models\Examinee\Users;
 use App\Helpers\UserManagement;
@@ -328,21 +329,46 @@ class ManageApplicants extends Controller
     /**
      * @param Request $request
      * @param $user_id
-     * @return void
      * @uses SENDTRANSCRIPT
      */
     public function sendTranscript(Request $request, $user_id)
     {
 
         $file = $request->file('pdf_file');
+        // Store the file
+        $filePath = $file->store('fileSubmits', 'public');
 
-        $user = UsersData::with('userLogin')->find($user_id);
+        // Get the full storage path
+        $storagePath = storage_path('app/public/' . $filePath);
+
+        dd($storagePath);
+
+        $user = UsersData::with('userLogin', 'regDetails')->find($user_id);
 
         $reg = $user->regDetails;
 
+        $exam_data = ExamScheduleModel::find($reg->exam_schedule_id);
+
         $user_email = $user->userLogin == null ? $user->email : $user->userLogin->email;
 
-        //todo ADD THE EMAIL PROCESS HERE.
+        $data = [
+            'name'          => $user->formatted_name,
+            'email'         => $user_email,
+            'exam_schedule' => $exam_data->start_date,
+            'intended_for'  => 'Sent transcript Status',
+            'file'          => $storagePath // Use the storage path for the file
+        ];
+
+        Mail::to($user_email)->send(new SendTranscript($data));
+
+        // Delete the file after sending the email
+        if (file_exists($storagePath)) {
+            unlink($storagePath);
+        }
+
+        AdminLogActivity::addToLog("send transcript to user {$user->id}", session()->get('admin_id'));
+        return response()->json(['success' => ''], 200);
+
     }
 
     /**
