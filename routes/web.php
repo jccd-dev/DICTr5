@@ -111,6 +111,7 @@ Route::prefix('admin')->group(function () {
             Route::post('/{id}/update-examinee', [ManageApplicants::class, 'update_users_data'])->name('examinee.update');
             Route::post('/{id}/validation', [ManageApplicants::class, 'validate_application'])->name('examinee.validate');
             Route::post('/{id}/send-result/', [ManageApplicants::class, 'send_exam_result'])->name('examinee.result');
+            Route::post('/{id}/send-transcript', [ManageApplicants::class, 'send_exam_result'])->name('examinee.script');
             Route::get('/{id}/deactivate', [ManageApplicants::class, 'deactivate_account'])->name('examinee.deactivate');
 
             //manually apply the applicant
