@@ -7,7 +7,7 @@
 <body class="overflow-y-scroll overflow-x-hidden">
 
 <nav class="bg-white dark:bg-gray-900 border-b-2 border-custom-blue">
-    <div class="container mx-auto  flex flex-wrap items-center justify-between mx-auto p-2">
+    <div class="container  flex flex-wrap items-center justify-between mx-auto p-2">
         <a href="https://flowbite.com/" class="flex items-center">
             <img src="{{ asset("img/DICTR5CamSur.png") }}" class="h-12" alt="Flowbite Logo" />
         </a>

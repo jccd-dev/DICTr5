@@ -1,4 +1,4 @@
-<div class="w-full mt-32 p-5" x-data="{ data: [1,2,3] }">
+<div class="w-full mt-32 p-5" id = "highlight-post-section" x-data="{ data: [1,2,3] }">
     <div class="w-full flex flex-col justify-center">
         <h1 class="text-center font-bold font-inter text-2xl md:text-3xl">Highlight Posts</h1>
         <p class="text-center text-base md:text-lg mt-3">Lorem ipsum dolor sit amet consectetur. Adipiscing pretium quam sapien leo magna.</p>

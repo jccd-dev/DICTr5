@@ -8,7 +8,7 @@
 
 <x-layouts.navbar />
 
-<div class = 'flex-col w-full gap-10 justify-center'>
+<div class = 'flex-col w-full gap-10 justify-center container mx-auto'>
         <div class = 'text-center p-10'>
             <div class = 'flex justify-center'>
                 <img src="#" class = 'w-[10rem] h-[10rem] rounded-full bg-slate-400'>
@@ -91,7 +91,7 @@
                     <br>
                     <ul class="list-unstyled mb-0">
                         <li>
-                            <a href="#!" class = 'hover:text-sky-500'>Office of the President</a>
+                            <a href="http://op-proper.gov.ph/" class = 'hover:text-sky-500'>Office of the President</a>
                         </li>
                         <li>
                             <a href="http://ovp.gov.ph/" class = 'hover:text-sky-500'>Office of the Vice President</a>

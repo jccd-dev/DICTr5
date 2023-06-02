@@ -67,6 +67,15 @@ Route::get('/agency', function () {
 Route::get('/about', function () {
     return view('pages.about');
 });
+Route::get('/dict-gvcs', function () {
+    return view('static.gvcs');
+});
+Route::get('/government-web-hosting-service', function () {
+    return view('static.gov-web-hosting');
+});
+Route::get('/dict-cam-sur-address', function () {
+    return view('static.location-map');
+});
 Route::get('/announcement/', [ViewAnnouncementController::class, 'view_announcement'])->name('view.announcement');
 
 Route::get('/announcement/{id}', [ViewAnnouncementController::class, 'view_announcement_by_id'])->name('view.announcement-by-id');

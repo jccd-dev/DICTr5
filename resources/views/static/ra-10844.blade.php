@@ -8,7 +8,7 @@
 
 <x-layouts.navbar />
 
-<div class = 'container mx-auto justify-center'>
+<div class = 'justify-center container mx-auto'>
     <div class = 'flex-col px-4 py-8'>
         <h1 class = 'text-3xl font-bold'>Republic Act No. 10844</h1>
     </div>
@@ -103,7 +103,7 @@
                     <br>
                     <ul class="list-unstyled mb-0">
                         <li>
-                            <a href="#!" class = 'hover:text-sky-500'>Office of the President</a>
+                            <a href="http://op-proper.gov.ph/" class = 'hover:text-sky-500'>Office of the President</a>
                         </li>
                         <li>
                             <a href="http://ovp.gov.ph/" class = 'hover:text-sky-500'>Office of the Vice President</a>

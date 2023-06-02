@@ -43,10 +43,12 @@
 
         <h2 class = 'text-base font-bold'>Core Values</h2>
         <br>
-        <p>D – Dignity</p>
-        <p>I – Integrity</p>
-        <p>C – Competency and Compassion</p>
-        <p>T – Transparency</p>
+        <ul class = 'list-disc pl-6 text-base'>
+            <li><b>D</b> - Dignity</li>
+            <li><b>I</b> - Integrity</li>
+            <li><b>C</b> - Competency and Compassion</li>
+            <li><b>T</b> - Transparency</li>
+        </ul>  
     </div>
 
 </div>
@@ -95,7 +97,7 @@
                     <br>
                     <ul class="list-unstyled mb-0">
                         <li>
-                            <a href="#!" class = 'hover:text-sky-500'>Office of the President</a>
+                            <a href="http://op-proper.gov.ph/" class = 'hover:text-sky-500'>Office of the President</a>
                         </li>
                         <li>
                             <a href="http://ovp.gov.ph/" class = 'hover:text-sky-500'>Office of the Vice President</a>

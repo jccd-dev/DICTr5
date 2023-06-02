@@ -1,11 +1,11 @@
-<div class = "flex flex-row w-full p-10 gap-10 bg-white text-black container mx-auto justify-evenly flex-wrap">
+<div class = "flex flex-row w-full p-10 gap-10 bg-white text-black container mx-auto justify-evenly flex-wrap" id = "footer-section">
       <div class = "flex-1 order-1 md:order-none">
         <div class =  "w-fit md:w-64">
             <img src="{{asset('img/DICT Standard Commercial Logo .png')}}">
         </div>
         <div class="ml-5">
             <h2 class = "font-bold  text-sm">Contact Information</h2>
-            <p class = "text-sm">EMAIL : <a href="#" class = "hover:text-sky-500">example@dict.gov.ph</a></p>
+            <p class = "text-sm">EMAIL : <a href="mailto: ralph.talagtag@dict.gov.ph" class = "hover:text-sky-500">ralph.talagtag@dict.gov.ph</a></p>
             <p class = "text-sm">PHONE : (882) 1938 284</p>
         </div>
 
@@ -13,19 +13,19 @@
       <div class = "flex-1 order-3  md:order-none">
         <h2 class = "font-bold font-quicksand">AFFLIATE SITES</h2>
         <br>
-        <a href = "#" class = "text-sm hover:text-sky-500">ICT Knowledge Portal</a>
+        <a href = "https://dict.gov.ph/ictstatistics/" class = "text-sm hover:text-sky-500">ICT Knowledge Portal</a>
         <br>
-        <a href = "#" class = "text-sm hover:text-sky-500">Central Business Portal</a>
+        <a href = "https://business.gov.ph/" class = "text-sm hover:text-sky-500">Central Business Portal</a>
         <br>
-        <a href = "#" class = "text-sm hover:text-sky-500">Digital Governance Awards</a>
+        <a href = "https://dgawards.dict.gov.ph/" class = "text-sm hover:text-sky-500">Digital Governance Awards</a>
         <br>
-        <a href = "#" class = "text-sm hover:text-sky-500">National Computer Emergency Response Team</a>
+        <a href = "https://ncert.gov.ph/" class = "text-sm hover:text-sky-500">National Computer Emergency Response Team</a>
         <br>
-        <a href = "#" class = "text-sm hover:text-sky-500">Medium-Term Information Information and <br> Communications Technology Harmonization Initiative</a>
+        <a href = "https://mithi.gov.ph/" class = "text-sm hover:text-sky-500">Medium-Term Information Information and Communications Technology Harmonization Initiative</a>
         <br>
-        <a href = "#" class = "text-sm hover:text-sky-500">Common Tower Registration Portal</a>
+        <a href = "https://commontower.gov.ph/" class = "text-sm hover:text-sky-500">Common Tower Registration Portal</a>
         <br>
-        <a href = "#" class = "text-sm hover:text-sky-500">Workplace Learning and Development Platform</a>
+        <a href = "https://dict.gophilippines.org/" class = "text-sm hover:text-sky-500">Workplace Learning and Development Platform</a>
       </div>
 
       <div class="flex-1 order-4 md:order-none">
@@ -93,7 +93,7 @@
                     <br>
                     <ul class="list-unstyled mb-0">
                         <li>
-                            <a href="#!" class = 'hover:text-sky-500'>Office of the President</a>
+                            <a href="http://op-proper.gov.ph/" class = 'hover:text-sky-500'>Office of the President</a>
                         </li>
                         <li>
                             <a href="http://ovp.gov.ph/" class = 'hover:text-sky-500'>Office of the Vice President</a>
