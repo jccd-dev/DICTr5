@@ -386,10 +386,10 @@
             </svg>
           </button>
         </div>
-        <form action="" id="submitTranscriptForm" data-value="{{ $examinees_data->id }}">
+        <form action="" id="submitTranscriptForm" data-value="{{ $examinees_data->id }}" enctype="multipart/form-data">
             @csrf
             <div class="p-4 overflow-y-auto">
-                <input id="pdf_file"
+                <input id="pdf_file" name="pdf_file"
                                type="file"
                                accept="application/pdf"
                         />
