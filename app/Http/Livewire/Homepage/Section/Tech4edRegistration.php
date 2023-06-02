@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Homepage\Section;
 
 use App\Models\CMS\Feedback;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use WireUi\Traits\Actions;
 
@@ -15,6 +16,7 @@ class Tech4edRegistration extends Component
     public string $cp_number;
     public string $email;
     public string $tech4ed_course_training;
+    public $tech4ed_choices;
 
     protected $rules = [
         'name' => 'required',
@@ -36,6 +38,7 @@ class Tech4edRegistration extends Component
 
     public function mount(){
         $this->register_modal = false;
+        $this->tech4ed_choices = DB::table('tech4ed')->get();
     }
 
     public function open_registration_form(){

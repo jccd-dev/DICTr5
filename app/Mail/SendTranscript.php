@@ -21,6 +21,7 @@ class SendTranscript extends Mailable
      *                  - name => string
      *                  - email => string
      *                  - exam_schedule => string
+     *                  - intended for => string
      *                  - file_location => string : gets from storage, example value is 'public/sample_transcript.pdf'
      */
     public function __construct(
