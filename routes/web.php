@@ -76,6 +76,10 @@ Route::get('/government-web-hosting-service', function () {
 Route::get('/dict-cam-sur-address', function () {
     return view('static.location-map');
 });
+Route::get('/gov-mail', function () {
+    return view('static.gov-mail');
+});
+
 Route::get('/announcement/', [ViewAnnouncementController::class, 'view_announcement'])->name('view.announcement');
 
 Route::get('/announcement/{id}', [ViewAnnouncementController::class, 'view_announcement_by_id'])->name('view.announcement-by-id');
@@ -120,7 +124,7 @@ Route::prefix('admin')->group(function () {
             Route::post('/{id}/update-examinee', [ManageApplicants::class, 'update_users_data'])->name('examinee.update');
             Route::post('/{id}/validation', [ManageApplicants::class, 'validate_application'])->name('examinee.validate');
             Route::post('/{id}/send-result/', [ManageApplicants::class, 'send_exam_result'])->name('examinee.result');
-            Route::post('/{id}/send-transcript', [ManageApplicants::class, 'send_exam_result'])->name('examinee.script');
+            Route::post('/{id}/send-transcript', [ManageApplicants::class, 'sendTranscript'])->name('examinee.script');
             Route::get('/{id}/deactivate', [ManageApplicants::class, 'deactivate_account'])->name('examinee.deactivate');
 
             //manually apply the applicant

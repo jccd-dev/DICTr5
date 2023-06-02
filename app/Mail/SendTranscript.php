@@ -62,7 +62,7 @@ class SendTranscript extends Mailable
     public function attachments(): array
     {
         return [
-            Attachment::fromStorage($this->data['file_location']),
+            Attachment::fromPath($this->data['file_location']),
         ];
     }
 }
