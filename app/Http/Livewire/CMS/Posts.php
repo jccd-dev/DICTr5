@@ -64,7 +64,7 @@ class Posts extends Component
         'thumbnail'      => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
         'content'        => 'required',
         'images.*'       => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
-        'vid_link'       => 'nullable|regex:/https/',
+        'vid_link'       => 'nullable|regex:/iframe/',
         'status'         => 'required|numeric',
     ];
     protected $update_rules = [
@@ -74,14 +74,12 @@ class Posts extends Component
         'thumbnail'      => 'nullable|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
         'content'        => 'required',
         'images.*'       => 'nullable|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
-        'vid_link'       => 'nullable|regex:/https/',
+        'vid_link'       => 'nullable|regex:/iframe/',
         'status'         => 'required|numeric',
     ];
 
     public PostModel $post_model;
     private ImageHandlerHelper $imageHelper;
-
-
 
     public function __construct()
     {
@@ -120,7 +118,7 @@ class Posts extends Component
         $this->content = '';
         $this->images = [];
         $this->image_names = [];
-        $this->vid_link = '<iframe src="https://drive.google.com/file/d/1o-69DTgRAy3Expz6Ekj2r3ffd_7AFZFY/preview" width="640" height="480" allow="autoplay"></iframe>';
+        $this->vid_link = '';
         $this->status = 0;
         $this->post_data = [];
         $this->post_id = 0;
@@ -171,6 +169,7 @@ class Posts extends Component
 
     public function create_post($admin): void
     {
+        $this->resetValidation();
         // dd($this->vid_link);
         if (count($this->temp_images) > 0)
             $validator = Validator::make([
@@ -200,7 +199,7 @@ class Posts extends Component
                 'thumbnail'      => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:5120|dimensions:min_width=674,min_height=506',
                 'content'        => 'required',
                 'images'       => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=674,min_height=506',
-                'vid_link'       => 'nullable|regex:/https/',
+                'vid_link'       => 'nullable|regex:/iframe/',
                 'status'         => 'required|numeric',
             ]);
 
@@ -388,6 +387,7 @@ class Posts extends Component
 
     public function updatePost(): bool
     {
+        $this->resetValidation();
         if (gettype($this->thumbnail) === 'object') {
             $validator = Validator::make([
                 'category_id' => $this->category_id,

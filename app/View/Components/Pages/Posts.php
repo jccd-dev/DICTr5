@@ -62,7 +62,11 @@ class Posts extends Component
         $banner = $this->banner_model->get();
         $posts = $this->postModel::with('category')->priority()->get();
 
-        $this->data->vid_link = $this->getLink($this->data->vid_link);
+        $isValidURL = (strstr($this->data->vid_link, 'iframe'));
+
+        if(isset($this->data->vid_link) && $isValidURL) {
+            $this->data->vid_link = $this->getLink($this->data->vid_link);
+        }
 
         $posts = $posts->map(function ($item) {
             $startedAt = Carbon::parse($item->timestamp);

@@ -268,7 +268,7 @@
 
                         {{--    wire:ignore--}}
                     >
-                        <form action="#" method="POST" wire:ignore.self wire:submit.prevent="create_post({{ json_encode($admin_data) }})" class="w-full flex flex-col">
+                        <form action="#" method="POST" wire:submit.prevent="create_post({{ json_encode($admin_data) }})" class="w-full flex flex-col">
                             <div x-show="state == 1">
 
                                 <x-forms.input-form name="Title" type="text" placeholder="Title" model="title" id="title" classes="mb-6" />
@@ -331,7 +331,7 @@
                             <div x-show="state == 3">
                                 <x-forms.select name="Category" model="category_id" id="category" :options="$all_category" classes="mb-6" />
 
-                                <x-forms.input-form name="Link" type="text" placeholder="Video Link" model="vid_link" id="video_link" classes="mb-6" />
+                                <x-forms.input-form name="Embedd Video *must be embedded" type="text" placeholder="Video Link" model="vid_link" id="video_link" classes="mb-6" />
 
                             </div>
 
