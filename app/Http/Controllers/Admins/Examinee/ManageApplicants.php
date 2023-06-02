@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
 use App\Helpers\SearchExamineesHelper;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Livewire\Admin\ExamSchedule;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\Collection;
@@ -44,6 +45,7 @@ class ManageApplicants extends Controller
     public array $trainings = [];
     public array $toDeleteTrainings = [];
 
+    public $file = null;
     public function render(Request $request): View
     {
 
@@ -192,10 +194,13 @@ class ManageApplicants extends Controller
                 $reg->status = 6;
                 break;
             case 6:
+                if ($reg->status != 6) {
+                    return response()->json(['error' => 'Applicant Has no Exam Schedule yet'], 400);
+                }
                 $reg->status = 5;
                 break;
             default:
-                $reg->status = $validation;
+                return response()->json(['error' => 'Invalid validation'], 400);
                 break;
         }
 
@@ -213,7 +218,11 @@ class ManageApplicants extends Controller
                     'email'             => $user_email,
                     'intended_for'      => 'Sent Exam Schedule'
                 ];
-                Mail::to($data['email'])->send(new ScheduleOfExam($data));
+                try {
+                    Mail::to($data['email'])->send(new ScheduleOfExam($data));
+                } catch(\Throwable $th){
+                    return response()->json(['error' => 'Email Not Sent'], 404);
+                }
             } else {
                 $data = [
                     'name'          => $applicant->formatted_name,
@@ -221,7 +230,11 @@ class ManageApplicants extends Controller
                     'email'         => $user_email,
                     'intended_for'  => 'Sent Registration Status'
                 ];
-                Mail::to($data['email'])->send(new RegistrationStatus($email_type, $data));
+                try{
+                    Mail::to($data['email'])->send(new RegistrationStatus($email_type, $data));
+                } catch(\Throwable $th){
+                    return response()->json(['error' => 'Email Not Sent'], 404);
+                }
             }
 
             return response()->json(['success' => 'Validated Successfully'], 200);
@@ -244,18 +257,16 @@ class ManageApplicants extends Controller
         $user = UsersData::with('userLogin', 'regDetails', 'userHistory.failedHistory')->find($user_id);
 
         $reg = $user->regDetails;
-        // dd($reg);
+
         $exam_data = ExamScheduleModel::find($reg->exam_schedule_id);
 
         $user_email = $user->user_login_id == null ? $user->email : $user->userLogin->email;
-        // dd($user_email);
 
         $start_time = date('g:i a', strtotime($exam_data->start_date));
         $end_time = date('g:i a', strtotime($exam_data->end_date));
         $day = date('F d, Y', strtotime($exam_data->start_date));
 
         $sched = "{$day} from {$start_time} - {$end_time}";
-        // dd($sched);
 
         $userHistory = $user->userHistory()->create([
             'user_id'           => $user_id,
@@ -280,8 +291,13 @@ class ManageApplicants extends Controller
                 'email'         => $user_email,
                 'intended_for'  => 'Sent passed result'
             ];
-            // dd($data);
-            Mail::to($user_email)->send(new EmailUsers(true, $data));
+
+            try{
+                Mail::to($user_email)->send(new EmailUsers(true, $data));
+            }
+            catch(\Throwable $th){
+                return response()->json(['error' => 'Email Not Sent'], 404);
+            }
 
             AdminLogActivity::addToLog("send exam passed result to {$user->id}", session()->get('admin_id'));
             return response()->json(['success' => 'Examinee Passed'], 200);
@@ -299,6 +315,7 @@ class ManageApplicants extends Controller
         ]);
 
         // reset the reg details data for the user
+        // done status if its  exam_status is failed cause passed the reg details will be deleted
         $reg->exam_schedule_id = null;
         $reg->reg_date = null;
         $reg->approved_date = null;
@@ -320,7 +337,12 @@ class ManageApplicants extends Controller
             'part2'        => $part2,
             'part3'        => $part3
         ];
-        Mail::to($user_email)->send(new EmailUsers(false, $data));
+
+        try {
+            Mail::to($user_email)->send(new EmailUsers(false, $data));
+        } catch(\Throwable $th){
+            return response()->json(['error' => 'Email Not Sent'], 404);
+        }
 
         AdminLogActivity::addToLog("send exam failed result to {$user->id}", session()->get('admin_id'));
         return response()->json(['success' => ''], 200);
@@ -333,40 +355,42 @@ class ManageApplicants extends Controller
      */
     public function sendTranscript(Request $request, $user_id)
     {
+        $this->file = $request->file('pdf_file');
 
-        $file = $request->file('pdf_file');
-        // Store the file
-        $filePath = $file->store('fileSubmits', 'public');
-
-        // Get the full storage path
-        $storagePath = storage_path('app/public/' . $filePath);
-
-        dd($storagePath);
+        $file_extension = $this->file->getClientOriginalExtension();
 
         $user = UsersData::with('userLogin', 'regDetails')->find($user_id);
 
         $reg = $user->regDetails;
-
+        // dd($reg);
         $exam_data = ExamScheduleModel::find($reg->exam_schedule_id);
 
-        $user_email = $user->userLogin == null ? $user->email : $user->userLogin->email;
+        $file_name = "{$user->fname}_transcript.{$file_extension}";
 
+        $this->file->storeAs('/public/fileSubmits', $file_name);
+
+        $storagePath = storage_path('app/public/fileSubmits/' . $file_name);
+
+        // Send email with attachment
         $data = [
-            'name'          => $user->formatted_name,
-            'email'         => $user_email,
+            'name' => $user->formatted_name,
             'exam_schedule' => $exam_data->start_date,
-            'intended_for'  => 'Sent transcript Status',
-            'file'          => $storagePath // Use the storage path for the file
+            'email' => $user->userLogin == null ? $user->email : $user->userLogin->email,
+            'intended_for' => 'Sent transcript Status',
+            'file_location' => $storagePath
         ];
 
-        Mail::to($user_email)->send(new SendTranscript($data));
-
-        // Delete the file after sending the email
-        if (file_exists($storagePath)) {
-            unlink($storagePath);
+        try{
+            Mail::to($data['email'])->send(new SendTranscript($data));
+        } catch(\Throwable $th){
+            return response()->json(['error' => $th], 404);
         }
 
+        // Delete the stored file
+        Storage::delete('public/fileSubmits/' . $file_name);
+
         AdminLogActivity::addToLog("send transcript to user {$user->id}", session()->get('admin_id'));
+
         return response()->json(['success' => ''], 200);
 
     }
