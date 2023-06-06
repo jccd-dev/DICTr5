@@ -7,7 +7,7 @@
                     <span x-text="year"></span>
                 </span>
                 <div class="flex items-center">
-                    <button aria-label="calendar backward"
+                    <button id="prev_but" aria-label="calendar backward"
                         :class="{'cursor-not-allowed opacity-25': month == 0 }"
                         :disabled="month == 0 ? true : false"
                         @click="month--; getNoOfDays();"
@@ -17,7 +17,7 @@
                         <polyline points="15 6 9 12 15 18" />
                     </svg>
                 </button>
-                <button aria-label="calendar forward"
+                <button id="next_but" aria-label="calendar forward"
                         :class="{'cursor-not-allowed opacity-25': month == 11 }"
                         :disabled="month == 11 ? true : false"
                         @click="() => {month++; getNoOfDays()}"
@@ -87,7 +87,7 @@
             isToday(date) {
                 const today = new Date();
                 const d = new Date(this.year, this.month, date);
-                console.log(d, today)
+                // console.log(d, today)
 
                 return today.toDateString() === d.toDateString() ? true : false;
             },
@@ -112,4 +112,26 @@
             },
         }
     }
+
+    var currentDate = new Date();  // Create a new Date object
+    var numberOfMonthsToAdd = 3;  // Number of months to add
+
+    // Add the specified number of months to the current date
+    var futureDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + numberOfMonthsToAdd, currentDate.getDate());
+
+    // Display the future date
+    var month = futureDate.toLocaleString('default', { month: 'long' });  // Get the month name
+    var day = futureDate.getDate();  // Get the day
+    var year = futureDate.getFullYear();  // Get the year
+    var formattedDate = month + ' ' + day + ', ' + year;
+
+    console.log(formattedDate);
+    console.log(currentDate.getDate());
+    $("#try").text('Try lang');
+
+    $("#next_but").click(function(){
+    });
+
+    $("#prev_but").click(function(){
+    });
 </script>
