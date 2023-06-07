@@ -1,4 +1,4 @@
-<body>
+<body style="color: black">
 {{--    <img src="http://drive.google.com/uc?export=view&id=1XmXmKLsUVakbhAn74iv_k-NmZcb7_7AV" style="width: 300px">--}}
 {{--    <img src="{{$message->embed(public_path('img/DICTStandardLogos05.png'))}}" style="width: 300px">--}}
     <h2 style="">DICT Camarines Sur</h2>

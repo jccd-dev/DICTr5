@@ -50,7 +50,7 @@
                             </a>
                         </div>
                     </div>
-                    <a href="{{url('/dict-cam-sur-officials')}}" class="nav--top font-medium flex flex-row items-center px-4 py-2 text-sm text-gray-700 focus:text-gray-900 hover:text-gray-900 focus:outline-none hover:bg-gray-100 focus:bg-gray-100">
+                    <a href="https://dict.gov.ph/officials/" class="nav--top font-medium flex flex-row items-center px-4 py-2 text-sm text-gray-700 focus:text-gray-900 hover:text-gray-900 focus:outline-none hover:bg-gray-100 focus:bg-gray-100">
                       Officials
                     </a>
                   </div>
@@ -141,7 +141,7 @@
                     <a href="{{url('/government-web-hosting-service')}}" class="nav--top font-medium flex flex-row items-center px-4 py-2 text-sm text-gray-700 focus:text-gray-900 hover:text-gray-900 focus:outline-none hover:bg-gray-100 focus:bg-gray-100">
                       Government Web Hosting Services
                     </a>
-                    <a href="#" class="nav--top font-medium flex flex-row items-center px-4 py-2 text-sm text-gray-700 focus:text-gray-900 hover:text-gray-900 focus:outline-none hover:bg-gray-100 focus:bg-gray-100">
+                    <a href="{{url('/gov-mail')}}" class="nav--top font-medium flex flex-row items-center px-4 py-2 text-sm text-gray-700 focus:text-gray-900 hover:text-gray-900 focus:outline-none hover:bg-gray-100 focus:bg-gray-100">
                       GovMail
                     </a>
                     <a href="{{url('/dict-gvcs')}}" class="nav--top font-medium flex flex-row items-center px-4 py-2 text-sm text-gray-700 focus:text-gray-900 hover:text-gray-900 focus:outline-none hover:bg-gray-100 focus:bg-gray-100">

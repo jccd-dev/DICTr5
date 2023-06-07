@@ -145,7 +145,7 @@
                     <br>
                     <ul class="list-unstyled mb-0">
                         <li>
-                            <a href="#!" class = 'hover:text-sky-500'>Office of the President</a>
+                            <a href="http://op-proper.gov.ph/" class = 'hover:text-sky-500'>Office of the President</a>
                         </li>
                         <li>
                             <a href="http://ovp.gov.ph/" class = 'hover:text-sky-500'>Office of the Vice President</a>

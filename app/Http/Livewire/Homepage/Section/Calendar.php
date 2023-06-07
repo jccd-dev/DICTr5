@@ -32,19 +32,13 @@ class Calendar extends Component
         $this->toShowEventDetail['is_exam_schedule'] = false;
         $this->toShowEventDetail['exam_set'] = '';
 
-    }
-
-    public function render()
-    {
-        date_default_timezone_set('Asia/Manila');
-        $this->events = [];
         $calendars = CalendarModel::where('start_date', '<=', date('Y-m-t 23:59:00'))
-                            ->where('end_date', '>=', date('Y-m-01 00:00:00'))
-                            ->orderBy('start_date', 'asc')
-                            ->get();
+            ->where('end_date', '>=', date('Y-m-01 00:00:00'))
+            ->orderBy('start_date', 'asc')
+            ->get();
         $exams = ExamScheduleModel::where('start_date', '<=', date('Y-m-t 23:59:00'))
-                            ->where('end_date', '>=', date('Y-m-01 00:00:00'))
-                            ->get();
+            ->where('end_date', '>=', date('Y-m-01 00:00:00'))
+            ->get();
 
         foreach ($calendars as $calendar){
             $this->events[] = [
@@ -64,9 +58,13 @@ class Calendar extends Component
                 'is_exam_sched' => true,
             ];
         }
-        return view('livewire.homepage.section.calendar', [
-            'toShowEventDetail' => $this->toShowEventDetail
-        ]);
+
+    }
+
+    public function render()
+    {
+
+        return view('livewire.homepage.section.calendar');
     }
 
     public function showEvent($id, $is_exam_schedule = false){
@@ -103,5 +101,36 @@ class Calendar extends Component
             $this->toShowEventDetail['is_exam_schedule'] = true;
         }
         $this->event_modal = true;
+    }
+
+    public function change_events(string $change_date){
+        $this->todayMonth = date('F', strtotime($change_date));
+        $this->todayYear = date('Y', strtotime($change_date));
+        $change_calendars = CalendarModel::where('start_date', '<=', date('Y-m-t 23:59:00', strtotime($change_date)))
+            ->where('end_date', '>=', date('Y-m-01 00:00:00', strtotime($change_date)))
+            ->orderBy('start_date', 'asc')
+            ->get();
+        $change_exams = ExamScheduleModel::where('start_date', '<=', date('Y-m-t 23:59:00', strtotime($change_date)))
+            ->where('end_date', '>=', date('Y-m-01 00:00:00', strtotime($change_date)))
+            ->get();
+        $this->events = [];
+        foreach ($change_calendars as $calendar){
+            $this->events[] = [
+                'id' => $calendar->id,
+                'start' => $calendar->start_date,
+                'end'   => $calendar->end_date,
+                'title' => $calendar->event_title,
+                'is_exam_sched' => false,
+            ];
+        }
+        foreach ($change_exams as $exam){
+            $this->events[] = [
+                'id' => $exam->id,
+                'start' => $exam->start_date,
+                'end'   => $exam->end_date,
+                'title' => 'ICT Proficiency Exam Schedule',
+                'is_exam_sched' => true,
+            ];
+        }
     }
 }
