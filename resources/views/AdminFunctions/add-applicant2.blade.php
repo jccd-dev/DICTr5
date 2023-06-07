@@ -588,7 +588,7 @@
                             <hr />
 
                             @php
-                                if(!empty($examinees_data->add_info)){
+                                if(isset($examinees_data->add_info) && json_decode($examinees_data->add_info) !== null) {
                                     foreach (json_decode($examinees_data->add_info) as $value) {
                                         if ($value === 'PWD') {
                                             $pwd = $value;
