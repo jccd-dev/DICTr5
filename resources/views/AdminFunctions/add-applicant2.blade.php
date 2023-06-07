@@ -11,7 +11,7 @@
             </svg>
           </button>
         </div>
-        <div class="p-4 overflow-y-auto w-[60rem]" x-data="{ state: 1, hasVidData: false, err: [], currentStatus: '{{ $examinees_data->current_status }}', isFiles: false }" x-init="listeners($data)">
+        <div class="p-4 overflow-y-auto w-[60rem]" x-data="{ state: 1, hasVidData: false, err: [], currentStatus: '{{ isset($examinees_data->current_status) ? $examinees_data->current_status : '' }}', isFiles: false }" x-init="listeners($data)">
             <div class="flex flex-col items-center gap-5">
                 <div class="flex flex-col items-center">
                     <h1 class="font-bold font-quicksand text-xl">ICT Proficiency Diagnostic Exam</h1>
@@ -47,7 +47,7 @@
                                                 name="givenName"
                                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                 placeholder="Given Name"
-                                                value="{{ $examinees_data->fname }}"
+                                                value="{{ isset($examinees_data->fname) ? $examinees_data->fname : '' }}"
                                             >
                                             <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                     </div>
@@ -59,13 +59,13 @@
                                                 name="middleName"
                                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                 placeholder="Middle Name"
-                                                value="{{ $examinees_data->mname }}"
+                                                value="{{ isset($examinees_data->mname) ? $examinees_data->fname : "" }}"
                                             >
                                             <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                     </div>
                                 </div>
 
-                                <div class="flex md:flex-row flex-col flex-1 gap-3" x-data="{ number: '{{ $examinees_data->contact_number }}' }">
+                                <div class="flex md:flex-row flex-col flex-1 gap-3" x-data="{ number: '{{ isset($examinees_data->contact_number) ? $examinees_data->fname : '' }}' }">
                                     <div class="mb-3 md:mb-6 flex-1 flex-col">
                                         <label for="surName" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Surname</label>
                                             <input
@@ -74,7 +74,7 @@
                                                 name="surName"
                                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                 placeholder="Surname"
-                                                value="{{ $examinees_data->lname }}"
+                                                value="{{ isset($examinees_data->lname) ? $examinees_data->lname : '' }}"
                                             >
                                             <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                     </div>
@@ -88,7 +88,7 @@
                                             placeholder="Telephone Number"
                                             x-model="number"
                                             x-on:input="number = number.replace(/[^0-9]/g, '')"
-                                            value="{{ $examinees_data->contact_number }}"
+                                            value="{{ isset($examinees_data->contact_number) ? $examinees_data->contact_number : '' }}"
                                         >
                                         <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                     </div>
@@ -152,7 +152,7 @@
                                             name="pob"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             placeholder="Place of Birth"
-                                            value="{{ $examinees_data->place_of_birth }}"
+                                            value="{{ isset($examinees_data->place_of_birth) ? $examinees_data->place_of_birth : '' }}"
                                         >
                                         <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                 </div>
@@ -171,7 +171,7 @@
                                             name="dob"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             placeholder="Select date"
-                                            value="{{ $examinees_data->date_of_birth }}"
+                                            value="{{ isset($examinees_data->date_of_birth) ? $examinees_data->date_of_birth : '' }}"
                                             >
                                         </div>
                                         <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
@@ -197,7 +197,7 @@
                                             name="citizenship"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             placeholder="Citizenship"
-                                            value="{{ $examinees_data->citizenship }}"
+                                            value="{{ isset($examinees_data->citizenship) ? $examinees_data->citizenship : '' }}"
                                         >
                                         <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                 </div>
@@ -225,7 +225,7 @@
                                                 name="university"
                                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                 placeholder="University / School Attended"
-                                                value="{{ $examinees_data->tertiaryEdu->school_attended }}"
+                                                value="{{ isset($examinees_data->tertiaryEdu->school_attended) ? $examinees_data->tertiaryEdu->school_attended : '' }}"
                                             >
                                             <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                     </div>
@@ -239,7 +239,7 @@
                                                 name="degree"
                                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                 placeholder="Degree Earned"
-                                                value="{{ $examinees_data->tertiaryEdu->degree }}"
+                                                value="{{ isset($examinees_data->tertiaryEdu->degree) ? $examinees_data->tertiaryEdu->degree : '' }}"
                                             >
                                             <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                     </div>
@@ -251,7 +251,7 @@
                                                 name="incYears"
                                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                 placeholder="Inclusive Years"
-                                                value="{{ $examinees_data->tertiaryEdu->inclusive_years }}"
+                                                value="{{ isset($examinees_data->tertiaryEdu->inclusive_years) ? $examinees_data->tertiaryEdu->inclusive_years : '' }}"
                                             >
                                             <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                     </div>
@@ -327,7 +327,7 @@
                                                     name="presentOffice"
                                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                     placeholder="Present Office"
-                                                    value="{{ $examinees_data->present_office }}"
+                                                    value="{{ isset($examinees_data->present_office) ? $examinees_data->present_office : '' }}"
                                                 >
                                                 <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                         </div>
@@ -341,7 +341,7 @@
                                                     name="telNum"
                                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                     placeholder="Telephone Number"
-                                                    value="{{ $examinees_data->telephone_number }}"
+                                                    value="{{ isset($examinees_data->telephone_number) ? $examinees_data->telephone_number : '' }}"
                                                 >
                                                 <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                         </div>
@@ -357,7 +357,7 @@
                                                     name="officeAddress"
                                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                     placeholder="Office Address"
-                                                    value="{{ $examinees_data->office_address }}"
+                                                    value="{{ isset($examinees_data->office_address) ? $examinees_data->office_address : '' }}"
                                                 >
                                                 <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                         </div>
@@ -387,7 +387,7 @@
                                                     name="designationPosition"
                                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                     placeholder="Designation / Position"
-                                                    value="{{ $examinees_data->designation }}"
+                                                    value="{{ isset($examinees_data->designation) ? $examinees_data->designation : '' }}"
                                                 >
                                                 <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                         </div>
@@ -401,7 +401,7 @@
                                                     name="yearsPresentPosition"
                                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                     placeholder="No. of years in present position"
-                                                    value="{{ $examinees_data->no_of_years_in_pos }}"
+                                                    value="{{ isset($examinees_data->no_of_years_in_pos) ? $examinees_data->no_of_years_in_pos : '' }}"
                                                 >
                                                 <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                         </div>
@@ -457,12 +457,14 @@
                                             accept=".pdf,.doc,.docx,image/*"
                                         />
                                         @php
+                                        if(isset($examinees_data->submittedFiles) && count($examinees_data->submittedFiles) > 0) {
                                             foreach ($examinees_data->submittedFiles as $key => $value) {
                                                 if ($value->requirement_type == "passport") {
                                                     echo '<p class="passport-err text-sm">Current upload: <span>'.$value->file_name.'</span></p>';
                                                     break;
                                                 }
                                             }
+                                        }
                                         @endphp
                                         <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                     </div>
@@ -476,12 +478,14 @@
                                             accept=".pdf,.doc,.docx,image/*"
                                         />
                                         @php
+                                        if(isset($examinees_data->submittedFiles) && count($examinees_data->submittedFiles) > 0) {
                                             foreach ($examinees_data->submittedFiles as $key => $value) {
                                                 if ($value->requirement_type == "psa") {
                                                     echo '<p class="psa-err text-sm">Current upload: <span>'.$value->file_name.'</span></p>';
                                                     break;
                                                 }
                                             }
+                                        }
                                         @endphp
                                         <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                     </div>
@@ -497,12 +501,14 @@
                                             accept=".pdf,.doc,.docx,image/*"
                                         />
                                         @php
+                                        if(isset($examinees_data->submittedFiles) && count($examinees_data->submittedFiles) > 0) {
                                             foreach ($examinees_data->submittedFiles as $key => $value) {
                                                 if ($value->requirement_type == "coe") {
                                                     echo '<p class="certs-err text-sm">Current upload: <span>'.$value->file_name.'</span></p>';
                                                     break;
                                                 }
                                             }
+                                        }
                                         @endphp
                                         <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                     </div>
@@ -521,12 +527,14 @@
                                             accept=".pdf,.doc,.docx,image/*"
                                         />
                                         @php
+                                        if(isset($examinees_data->submittedFiles) && count($examinees_data->submittedFiles) > 0) {
                                             foreach ($examinees_data->submittedFiles as $key => $value) {
                                                 if ($value->requirement_type == "validId") {
                                                     echo '<p class="valid-err text-sm">Current upload: <span>'.$value->file_name.'</span></p>';
                                                     break;
                                                 }
                                             }
+                                        }
                                         @endphp
                                         <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                     </div>
@@ -540,12 +548,14 @@
                                             accept=".pdf,.doc,.docx,image/*"
                                         />
                                         @php
+                                        if(isset($examinees_data->submittedFiles) && count($examinees_data->submittedFiles) > 0) {
                                             foreach ($examinees_data->submittedFiles as $key => $value) {
                                                 if ($value->requirement_type == "diploma_TOR") {
                                                     echo '<p class="diploma-err text-sm">Current upload: <span>'.$value->file_name.'</span></p>';
                                                     break;
                                                 }
                                             }
+                                        }
                                         @endphp
                                         <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                     </div>
@@ -561,12 +571,14 @@
                                             accept=".pdf,.doc,.docx,image/*"
                                         />
                                         @php
+                                        if(isset($examinees_data->submittedFiles) && count($examinees_data->submittedFiles) > 0) {
                                             foreach ($examinees_data->submittedFiles as $key => $value) {
                                                 if ($value->requirement_type == "passport") {
                                                     echo '<p class="passport-err text-sm">Current upload: <span>'.$value->file_name.'</span></p>';
                                                     break;
                                                 }
                                             }
+                                        }
                                         @endphp
                                         <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
                                     </div>
@@ -635,7 +647,7 @@
                                     <h1 class="font-bold font-quicksand text-lg flex self-start my-4">Signature</h1>
                                     <div class="w-fit rounded-xl border-2 border-custom-blue bg-custom-blue bg-opacity-5">
                                         <canvas id="signature-pad" width="400" height="200"></canvas>
-                                        <input type="text" hidden name="signature" id="signature" value="{{ $examinees_data->e_sign }}" />
+                                        <input type="text" hidden name="signature" id="signature" value="{{ isset($examinees_data->e_sign) ? $examinees_data->e_sign : '' }}" />
                                     </div>
                                     <div class="flex gap-3">
                                         <button type="button" id="clear-btn">Clear</button>
