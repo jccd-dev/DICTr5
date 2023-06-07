@@ -68,5 +68,6 @@ class Kernel extends HttpKernel
         'jwt.logAuth' => \App\Http\Middleware\JWTAuthAdmins::class,
         'jwt.isLoggedIn' => \App\Http\Middleware\IsLoggedIn::class,
         'user.logAuth' => \App\Http\Middleware\UserLogAuth::class,
+        'redirectOnError' => \App\Http\Middleware\RedirectOnError::class,
     ];
 }

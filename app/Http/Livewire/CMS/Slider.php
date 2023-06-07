@@ -45,13 +45,13 @@ class Slider extends Component
         'title'        => 'required|word_count:7',
         'description'  => 'required|word_count:20',
         'image'        => 'required|mimes:jpg,jpeg,png,bmp,gif,svg,webp|max:8192|dimensions:min_width=950,min_height=635',
-        'button_links' => 'required',
+        'button_links' => 'required|regex:/https/',
     ];
     protected $rulesUpdate = [
         'title'        => 'required|word_count:7',
         'description'  => 'required|word_count:20',
         'image'        => 'required|string',
-        'button_links' => 'required',
+        'button_links' => 'required|regex:/https/',
     ];
 
     // Custom validation messages
@@ -86,6 +86,7 @@ class Slider extends Component
      */
     public function submit(): void
     {
+        $this->resetValidation();
         //validate Inputs data before inserting to database
         $validator = Validator::make([
             'title'       => $this->title,
@@ -149,6 +150,7 @@ class Slider extends Component
      */
     public function update_banner(string|int $banner_id): void
     {
+        $this->resetValidation();
         //validate Inputs data before inserting to database
         if ($this->image) {
             $validator = Validator::make([

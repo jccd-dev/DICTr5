@@ -22,7 +22,7 @@ class AnnouncementMarquee extends Component
                                         ->get();
     }
 
-    public function redirect_announcement($id){
+    public function redirect_announcement(){
 //        return redirect()->route('view.announcement', ['id' => $id]);
         return redirect()->route('view.announcement');
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Layouts;
 
 use App\Http\Controllers\Controller;
+use App\Models\CMS\Announcement;
 use App\Models\CMS\POST\PostModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -38,6 +39,17 @@ class SearchResult extends Controller
               'url' => route('view.post', ['id' => $post->id]),
             ];
         }
-        return view('pages.search-result')->with('data', $data)->with('visitors', $this->usersCounter);
+        $announcements = Announcement::where('title', 'like', '%'.$request->search.'%')
+                                ->orWhere('excerpt', 'like', '%'.$request->search.'%')
+                                ->orWhere('content', 'like', '%'.$request->search.'%')
+                                ->get();
+        foreach($announcements as $ann){
+            $data[] = [
+                'name' => $ann->title,
+                'type' => 'announcement',
+                'url' => route('view.announcement-by-id', ['id' => $ann->id]),
+            ];
+        }
+        return view('pages.search-result')->with('data', $data)->with('visitors', $this->usersCounter)->with('search', $request->search);
     }
 }

@@ -15,11 +15,10 @@
         </div>
         <div class="basis-1/2 ml-1">
             <x-native-select label="Tech4Ed Course" wire:model="tech4ed_course_training">
-                <option value="Tech4Ed1">Select Tech4Ed Course/Training</option>
-                <option value="Tech4Ed1">Tech4Ed1</option>
-                <option value="Tech4Ed2">Tech4Ed2</option>
-                <option value="Tech4Ed3">Tech4Ed3</option>
-                <option value="Tech4Ed4">Tech4Ed4</option>
+                <option>Select Tech4Ed Course/Training</option>
+                @foreach($tech4ed_choices as $tech4Ed)
+                    <option value="{{$tech4Ed->courses}}">{{$tech4Ed->courses}}</option>
+                @endforeach
             </x-native-select>
         </div>
     </div>

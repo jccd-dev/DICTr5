@@ -76,6 +76,10 @@ Route::get('/government-web-hosting-service', function () {
 Route::get('/dict-cam-sur-address', function () {
     return view('static.location-map');
 });
+Route::get('/gov-mail', function () {
+    return view('static.gov-mail');
+});
+
 Route::get('/announcement/', [ViewAnnouncementController::class, 'view_announcement'])->name('view.announcement');
 
 Route::get('/announcement/{id}', [ViewAnnouncementController::class, 'view_announcement_by_id'])->name('view.announcement-by-id');
