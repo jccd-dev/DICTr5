@@ -194,7 +194,7 @@ class ManageApplicants extends Controller
                 $reg->status = 6;
                 break;
             case 6:
-                if ($reg->status != 6) {
+                if ($reg->status != 5) {
                     return response()->json(['error' => 'Applicant Has no Exam Schedule yet'], 400);
                 }
                 $reg->status = 5;
