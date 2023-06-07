@@ -180,7 +180,7 @@ class Dashboard extends Component
     public function popInput()
     {
         if (count($this->trainings) != 1) {
-            if (isset($this->training_ids)) {
+            if (isset($this->training_ids) && count($this->training_ids) > 1) {
                 $last_id = $this->training_ids[count($this->training_ids) - 1];
                 $this->training_ids->pop();
                 $this->toDeleteTrainings[] = $last_id;
