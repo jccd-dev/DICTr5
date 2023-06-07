@@ -57,7 +57,10 @@ class SearchExamineesHelper
             })
             // related tables
             ->with('tertiaryEdu', 'addresses', 'regDetails', 'userLogin', 'userHistoryLatest')
-            ->orderBy('timestamp', $searchValues['order_by'])
+            // use this one to filder by order the user by appproved_date if statatus is
+            // 4 => approved || 5 => scheduled for exam || 6 => waiting for result.
+            // else it is order by timestamp when the registered
+            ->orderByRaw("(CASE WHEN (SELECT `status` FROM `reg_details` WHERE `reg_details`.`user_id` = `users_data`.`id`) IN (4, 5, 6) THEN (SELECT `approved_date` FROM `reg_details` WHERE `reg_details`.`user_id` = `users_data`.`id`) END) {$searchValues['order_by']}, timestamp {$searchValues['order_by']}")
             ->paginate(20);
     }
 }

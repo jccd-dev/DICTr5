@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 01, 2023 at 03:27 AM
+-- Generation Time: Jun 07, 2023 at 10:38 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -82,7 +82,8 @@ INSERT INTO `admin_logs` (`id`, `admin_id`, `activity`, `end_point`, `timestamp`
 (28, 2, 'created a course', 'http://localhost:8000/livewire/message/c-m-s.tech4-ed', '2023-06-01 00:57:09'),
 (29, 2, 'created a category', 'http://localhost:8000/livewire/message/c-m-s.category', '2023-06-01 00:59:42'),
 (30, 2, 'deleted a course', 'http://localhost:8000/livewire/message/c-m-s.tech4-ed', '2023-06-01 01:00:12'),
-(31, 2, 'created a course', 'http://localhost:8000/livewire/message/c-m-s.tech4-ed', '2023-06-01 01:03:57');
+(31, 2, 'created a course', 'http://localhost:8000/livewire/message/c-m-s.tech4-ed', '2023-06-01 01:03:57'),
+(32, 2, 'Logged In', 'http://localhost:8000/livewire/message/admin.login', '2023-06-07 07:35:12');
 
 -- --------------------------------------------------------
 
@@ -204,6 +205,13 @@ CREATE TABLE `exam_schedules` (
   `start_date` datetime DEFAULT NULL,
   `end_date` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `exam_schedules`
+--
+
+INSERT INTO `exam_schedules` (`id`, `exam_set`, `venue`, `datetime`, `start_date`, `end_date`) VALUES
+(1, '1', 'zczxxzczxc', '2023-06-07 07:43:12', '2023-06-21 09:51:38', '2023-06-30 09:51:38');
 
 -- --------------------------------------------------------
 
@@ -340,7 +348,7 @@ CREATE TABLE `reg_details` (
   `reg_date` datetime DEFAULT NULL,
   `approved_date` datetime DEFAULT NULL,
   `status` int(1) NOT NULL DEFAULT 3,
-  `apply` int(2) NOT NULL DEFAULT 1
+  `apply` int(2) NOT NULL DEFAULT 2
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -348,7 +356,8 @@ CREATE TABLE `reg_details` (
 --
 
 INSERT INTO `reg_details` (`id`, `user_id`, `exam_schedule_id`, `reg_date`, `approved_date`, `status`, `apply`) VALUES
-(4, 6, NULL, '2023-05-13 17:19:02', NULL, 6, 1);
+(4, 6, NULL, '2023-05-13 17:19:02', '2023-06-05 15:44:12', 4, 1),
+(6, 4, NULL, '2023-05-13 17:19:02', '2023-06-14 10:15:29', 4, 1);
 
 -- --------------------------------------------------------
 
@@ -495,7 +504,7 @@ CREATE TABLE `user_history` (
   `user_id` int(11) NOT NULL,
   `registration_date` datetime NOT NULL,
   `approved_date` datetime NOT NULL,
-  `schedule` datetime NOT NULL,
+  `schedule` varchar(255) NOT NULL,
   `exam_set` varchar(50) NOT NULL,
   `venue` varchar(250) NOT NULL,
   `status` int(1) NOT NULL,
@@ -741,7 +750,7 @@ ALTER TABLE `addresses`
 -- AUTO_INCREMENT for table `admin_logs`
 --
 ALTER TABLE `admin_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `announcements`
@@ -771,7 +780,7 @@ ALTER TABLE `dict_admins`
 -- AUTO_INCREMENT for table `exam_schedules`
 --
 ALTER TABLE `exam_schedules`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `failed_history`
@@ -813,7 +822,7 @@ ALTER TABLE `post_images`
 -- AUTO_INCREMENT for table `reg_details`
 --
 ALTER TABLE `reg_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `submitted_files`
