@@ -91,7 +91,7 @@
                     <thead class="text-sm uppercase bg-[#FDC500] dark:text-white">
                     <tr>
                         <th scope="col" class="px-6 py-3">
-                            Date
+                            Approved Date
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Name
