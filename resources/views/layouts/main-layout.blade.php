@@ -44,7 +44,9 @@
             </div>
             <div data-popper-arrow></div>
         </div>
+        <script>
 
+        </script>
     @livewireScripts
     </body>
 </html>
