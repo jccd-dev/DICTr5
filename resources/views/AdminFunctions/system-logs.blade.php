@@ -37,6 +37,7 @@
                     </select>
                 </div>
                 <div class="flex gap-3 items-center">
+                    @can('admin_only', auth('jwt')->user())
                     <div>
                         <a
                             href="{{ route('admin.clean-logs') }}"
@@ -44,6 +45,7 @@
                             Clean Logs
                         </a>
                     </div>
+                    @endcan
                 </div>
             </div>
         </form>
