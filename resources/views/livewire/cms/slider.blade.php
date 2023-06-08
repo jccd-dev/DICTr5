@@ -105,9 +105,31 @@
                                     <td class="px-6 py-4">
                                         {{ $val->button_links }}
                                     </td>
-                                    <td class="px-6 py-4">
-                                        <a href="#" class="font-medium hover:underline" @click="$openModal('updateModal'); updateBannerID = {{ $val->id }}" wire:click="get_banner_data({{ $val->id }})">Edit</a>
-                                        <a href="#" data-modal-target="deleteModal3" data-modal-show="deleteModal3" class="font-medium hover:underline text-custom-red" @click="deleteItem = {{ $val->id }}">Delete</a>
+                                    <td class="px-6 py-4 flex gap-2">
+                                        <a href="#" class="font-medium hover:underline flex gap-2 items-center bg-custom-blue bg-opacity-10 py-2 px-3 rounded-2xl w-fit" @click="$openModal('updateModal'); updateBannerID = {{ $val->id }}" wire:click="get_banner_data({{ $val->id }})">
+                                        <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <g clip-path="url(#clip0_1295_612)">
+                                                <path d="M8.70801 1.58325H7.12467C3.16634 1.58325 1.58301 3.16659 1.58301 7.12492V11.8749C1.58301 15.8333 3.16634 17.4166 7.12467 17.4166H11.8747C15.833 17.4166 17.4163 15.8333 17.4163 11.8749V10.2916" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                                <path d="M12.698 2.39091L6.45966 8.62924C6.22216 8.86674 5.98466 9.33383 5.93716 9.67425L5.59674 12.0572C5.47008 12.9201 6.07966 13.5217 6.94258 13.403L9.32549 13.0626C9.65799 13.0151 10.1251 12.7776 10.3705 12.5401L16.6088 6.30174C17.6855 5.22508 18.1922 3.97424 16.6088 2.39091C15.0255 0.807578 13.7747 1.31424 12.698 2.39091Z" stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                                                <path d="M11.8037 3.2854C12.0662 4.21756 12.5637 5.0667 13.2485 5.75148C13.9332 6.43625 14.7824 6.93372 15.7145 7.19623" stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                                                </g>
+                                                <defs>
+                                                <clipPath id="clip0_1295_612">
+                                                <rect width="19" height="19" fill="white"/>
+                                                </clipPath>
+                                                </defs>
+                                                </svg>
+
+                                            <span class="font-semibold">Edit</span>
+                                        </a>
+                                        @can('admin_only', auth('jwt')->user())
+                                        <a href="#" data-modal-target="deleteModal3" data-modal-show="deleteModal3" class="font-medium hover:underline flex gap-2 items-center bg-custom-red bg-opacity-10 py-2 px-3 rounded-2xl w-fit" @click="deleteItem = {{ $val->id }}">
+                                            <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M16.625 4.73409C13.9888 4.47284 11.3367 4.33825 8.6925 4.33825C7.125 4.33825 5.5575 4.41742 3.99 4.57575L2.375 4.73409M6.72917 3.9345L6.90333 2.89742C7.03 2.14534 7.125 1.58325 8.46292 1.58325H10.5371C11.875 1.58325 11.9779 2.177 12.0967 2.90534L12.2708 3.9345M14.9229 7.23575L14.4083 15.2078C14.3213 16.4508 14.25 17.4166 12.0413 17.4166H6.95875C4.75 17.4166 4.67875 16.4508 4.59167 15.2078L4.07708 7.23575M8.17792 13.0624H10.8142M7.52083 9.89575H11.4792" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                                </svg>
+                                            <span class="font-semibold">Delete</span>
+                                        </a>
+                                        @endcan
                                     </td>
                                 </tr>
                             @else
@@ -121,9 +143,31 @@
                                     <td class="px-6 py-4">
                                         {{ $val->button_links }}
                                     </td>
-                                    <td class="px-6 py-4">
-                                        <a href="#" class="font-medium hover:underline" @click="$openModal('updateModal'); updateBannerID = {{ $val->id }}" wire:click="get_banner_data({{ $val->id }})">Edit</a>
-                                        <a href="#" data-modal-target="deleteModal3" data-modal-show="deleteModal3" class="font-medium hover:underline text-custom-red" @click="deleteItem = {{ $val->id }}">Delete</a>
+                                    <td class="px-6 py-4 flex gap-2">
+                                        <a href="#" class="font-medium hover:underline flex gap-2 items-center bg-custom-blue bg-opacity-10 py-2 px-3 rounded-2xl w-fit" @click="$openModal('updateModal'); updateBannerID = {{ $val->id }}" wire:click="get_banner_data({{ $val->id }})">
+                                        <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <g clip-path="url(#clip0_1295_612)">
+                                                <path d="M8.70801 1.58325H7.12467C3.16634 1.58325 1.58301 3.16659 1.58301 7.12492V11.8749C1.58301 15.8333 3.16634 17.4166 7.12467 17.4166H11.8747C15.833 17.4166 17.4163 15.8333 17.4163 11.8749V10.2916" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                                <path d="M12.698 2.39091L6.45966 8.62924C6.22216 8.86674 5.98466 9.33383 5.93716 9.67425L5.59674 12.0572C5.47008 12.9201 6.07966 13.5217 6.94258 13.403L9.32549 13.0626C9.65799 13.0151 10.1251 12.7776 10.3705 12.5401L16.6088 6.30174C17.6855 5.22508 18.1922 3.97424 16.6088 2.39091C15.0255 0.807578 13.7747 1.31424 12.698 2.39091Z" stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                                                <path d="M11.8037 3.2854C12.0662 4.21756 12.5637 5.0667 13.2485 5.75148C13.9332 6.43625 14.7824 6.93372 15.7145 7.19623" stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                                                </g>
+                                                <defs>
+                                                <clipPath id="clip0_1295_612">
+                                                <rect width="19" height="19" fill="white"/>
+                                                </clipPath>
+                                                </defs>
+                                                </svg>
+
+                                            <span class="font-semibold">Edit</span>
+                                        </a>
+                                        @can('admin_only', auth('jwt')->user())
+                                        <a href="#" data-modal-target="deleteModal3" data-modal-show="deleteModal3" class="font-medium hover:underline flex gap-2 items-center bg-custom-red bg-opacity-10 py-2 px-3 rounded-2xl w-fit" @click="deleteItem = {{ $val->id }}">
+                                            <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M16.625 4.73409C13.9888 4.47284 11.3367 4.33825 8.6925 4.33825C7.125 4.33825 5.5575 4.41742 3.99 4.57575L2.375 4.73409M6.72917 3.9345L6.90333 2.89742C7.03 2.14534 7.125 1.58325 8.46292 1.58325H10.5371C11.875 1.58325 11.9779 2.177 12.0967 2.90534L12.2708 3.9345M14.9229 7.23575L14.4083 15.2078C14.3213 16.4508 14.25 17.4166 12.0413 17.4166H6.95875C4.75 17.4166 4.67875 16.4508 4.59167 15.2078L4.07708 7.23575M8.17792 13.0624H10.8142M7.52083 9.89575H11.4792" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                                </svg>
+                                            <span class="font-semibold">Delete</span>
+                                        </a>
+                                        @endcan
                                     </td>
                                 </tr>
                             @endif

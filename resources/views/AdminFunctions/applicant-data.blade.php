@@ -483,7 +483,27 @@
 
         if (data.success) {
             dismissAlert.classList.remove("hidden");
+            dismissAlert.classList.add("bg-emerald-400");
+            dismissAlert.classList.remove("bg-orange-400");
             messageAlert.textContent = "Successfully Added";
+            let targetHeading;
+            for (let i = 0; i < headings.length; i++) {
+                if (headings[i]?.textContent.trim() === "Upload Transcript") {
+                    targetHeading = headings[i];
+                    break;
+                }
+            }
+            targetHeading.nextElementSibling.click();
+
+            setTimeout(() => {
+                dismissAlert.classList.remove("hidden");
+                location.reload();
+            }, 2000);
+        } else {
+            dismissAlert.classList.remove("hidden");
+            dismissAlert.classList.remove("bg-emerald-400");
+            dismissAlert.classList.add("bg-orange-400");
+            messageAlert.textContent = "Failed to submit";
             let targetHeading;
             for (let i = 0; i < headings.length; i++) {
                 if (headings[i]?.textContent.trim() === "Upload Transcript") {
@@ -516,7 +536,27 @@
 
         if (data.success) {
             dismissAlert.classList.remove("hidden");
+            dismissAlert.classList.add("bg-emerald-400");
+            dismissAlert.classList.remove("bg-orange-400");
             messageAlert.textContent = "Successfully Added";
+            let targetHeading;
+            for (let i = 0; i < headings.length; i++) {
+                if (headings[i]?.textContent.trim() === "Send Exam Result") {
+                    targetHeading = headings[i];
+                    break;
+                }
+            }
+            targetHeading.nextElementSibling.click();
+
+            setTimeout(() => {
+                dismissAlert.classList.remove("hidden");
+                location.reload();
+            }, 2000);
+        } else {
+            dismissAlert.classList.remove("hidden");
+            dismissAlert.classList.remove("bg-emerald-400");
+            dismissAlert.classList.add("bg-orange-400");
+            messageAlert.textContent = "Failed to submit";
             let targetHeading;
             for (let i = 0; i < headings.length; i++) {
                 if (headings[i]?.textContent.trim() === "Send Exam Result") {
@@ -567,6 +607,8 @@
 
                 if (data === 1) {
                     dismissAlert.classList.remove("hidden");
+                    dismissAlert.classList.add("bg-emerald-400");
+                    dismissAlert.classList.remove("bg-orange-400");
                     messageAlert.textContent = "Successfully Added";
                     targetHeading.nextElementSibling.click();
 
@@ -671,7 +713,27 @@
 
                 if (data?.success) {
                     dismissAlert.classList.remove("hidden");
+                    dismissAlert.classList.add("bg-emerald-400");
+                    dismissAlert.classList.remove("bg-orange-400");
                     messageAlert.textContent = "Successfully Added";
+                    let targetHeading;
+                    for (let i = 0; i < headings.length; i++) {
+                        if (headings[i]?.textContent.trim() === "Update Application Status") {
+                            targetHeading = headings[i];
+                            break;
+                        }
+                    }
+                    targetHeading.nextElementSibling.click();
+
+                    setTimeout(() => {
+                        dismissAlert.classList.remove("hidden");
+                        location.reload();
+                    }, 2000);
+                } else {
+                    dismissAlert.classList.remove("hidden");
+                    dismissAlert.classList.remove("bg-emerald-400");
+                    dismissAlert.classList.add("bg-orange-400");
+                    messageAlert.textContent = "Failed to submit";
                     let targetHeading;
                     for (let i = 0; i < headings.length; i++) {
                         if (headings[i]?.textContent.trim() === "Update Application Status") {
