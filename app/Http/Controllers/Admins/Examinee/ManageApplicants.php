@@ -166,6 +166,8 @@ class ManageApplicants extends Controller
 
         $reg = $applicant->regDetails;
 
+        // dd($user_id);
+
         // $reg->exam_schedule_id = $examSchedule_id;
         $reg->approved_date = date('Y-m-d', strtotime('now'));
 
@@ -181,9 +183,10 @@ class ManageApplicants extends Controller
                 $reg->status = 2;
                 break;
             case 4:
-                $email_type = 4;
+                $email_type = 6;
                 $reg->approved_date = date('Y-m-d', strtotime('now'));
-                $reg->status = 4; // approved only
+                $reg->status = 6; // approved only
+                $reg->exam_schedule_id = $examSchedule_id;
                 break;
             case 5:
                 if ($reg->status != 4) {

@@ -239,17 +239,17 @@
                     <option value="1">Disapproved</option>
                     <option value="2">Incomplete</option>
                     <option value="4">Approved</option>
-                    <option value="5">Scheduled for exam</option>
+                    {{-- <option value="5">Scheduled for exam</option> --}}
                     <option value="6">Waiting for result</option>
                 </select>
-                <div class="mt-3 mb-3 md:mb-6 flex-1 flex-col" x-show="statusValue == 5">
+                <div class="mt-3 mb-3 md:mb-6 flex-1 flex-col" x-show="statusValue == 4">
                     <label for="exam-sched" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Exam Schedule</label>
                         <select
                             id="exam-sched"
                             name="exam-sched"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="Exam Schedule"
-                            :required="statusValue == 5"
+                            :required="statusValue == 4"
                         >
                         @foreach ($examSched as $sched)
                             <option value="{{ $sched->id }}">{{ date('F j, Y h:i a', strtotime($sched->start_date)) }}</option>
@@ -503,7 +503,7 @@
             dismissAlert.classList.remove("hidden");
             dismissAlert.classList.remove("bg-emerald-400");
             dismissAlert.classList.add("bg-orange-400");
-            messageAlert.textContent = "Failed to submit";
+            messageAlert.textContent = data.error;
             let targetHeading;
             for (let i = 0; i < headings.length; i++) {
                 if (headings[i]?.textContent.trim() === "Upload Transcript") {
@@ -556,7 +556,7 @@
             dismissAlert.classList.remove("hidden");
             dismissAlert.classList.remove("bg-emerald-400");
             dismissAlert.classList.add("bg-orange-400");
-            messageAlert.textContent = "Failed to submit";
+            messageAlert.textContent = data.error;
             let targetHeading;
             for (let i = 0; i < headings.length; i++) {
                 if (headings[i]?.textContent.trim() === "Send Exam Result") {
@@ -593,7 +593,6 @@
 
             const formData = new FormData(addApplicant);
 
-            console.log(123)
             try {
                 let res = await fetch("/admin/examinee/{{ $examinees_data->id }}/update-examinee", {
                     method: 'POST',
@@ -733,7 +732,7 @@
                     dismissAlert.classList.remove("hidden");
                     dismissAlert.classList.remove("bg-emerald-400");
                     dismissAlert.classList.add("bg-orange-400");
-                    messageAlert.textContent = "Failed to submit";
+                    messageAlert.textContent = data.error;
                     let targetHeading;
                     for (let i = 0; i < headings.length; i++) {
                         if (headings[i]?.textContent.trim() === "Update Application Status") {
