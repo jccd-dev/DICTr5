@@ -92,18 +92,6 @@ class ManageApplicants extends Controller
         return view('AdminFunctions.applicant-data', ['examinees_data' => $examinees_data, 'examSched' => $exam_schedule::all()]);
     }
 
-    // public function examinee(int $examinees_id)
-    // {
-    //     $examinees_data = UsersData::with('addresses', 'tertiaryEdu', 'trainingSeminars', 'submittedFiles', 'regDetails', 'userHistory', 'userLogs', 'userLogin')->where('id', $examinees_id)->first();
-    //     // dd($examinees_data);
-    //     // if record is null or not found
-    //     if (!$examinees_data) {
-    //         return redirect()->back()->with('error', 'Record cannot found');
-    //     }
-
-    //     return $examinees_data->toArray();
-    // }
-
     /**
      * @param Request $request
      * @return View
@@ -153,9 +141,8 @@ class ManageApplicants extends Controller
          *   2 => incomplete,
          *  3 => for evaluation (pending)/auto
          *  4 => Approved
-         *  5 => Scheduled for exam
-         *  6 => Waiting for result
-         *  7 => Done Exam
+         *  5 => Waiting for result
+         *  6 => Done Exam
          * ]
          */
         $validation = (int)$request->post('validation');
@@ -165,11 +152,6 @@ class ManageApplicants extends Controller
         $applicant = UsersData::with('regDetails', 'userHistory', 'userLogin')->find($user_id);
 
         $reg = $applicant->regDetails;
-
-        // dd($user_id);
-
-        // $reg->exam_schedule_id = $examSchedule_id;
-        $reg->approved_date = date('Y-m-d', strtotime('now'));
 
         $user_email = $applicant->user_login_id == null ? $applicant->email : $applicant->userLogin->email;
         $email_type = 0;
@@ -182,29 +164,23 @@ class ManageApplicants extends Controller
                 $email_type = 2;
                 $reg->status = 2;
                 break;
-            case 4:
+            case 4: // approved and send exam schedule
                 $email_type = 6;
                 $reg->approved_date = date('Y-m-d', strtotime('now'));
-                $reg->status = 6; // approved only
                 $reg->exam_schedule_id = $examSchedule_id;
+                $reg->status = 4; // approved only
                 break;
             case 5:
                 if ($reg->status != 4) {
-                    return response()->json(['error' => 'Applicant is not approve yet'], 400);
-                }
-                $email_type = 6;
-                $reg->exam_schedule_id = $examSchedule_id;
-                $reg->status = 6;
-                break;
-            case 6:
-                if ($reg->status != 5) {
                     return response()->json(['error' => 'Applicant Has no Exam Schedule yet'], 400);
                 }
                 $reg->status = 5;
                 break;
+            case 9:
+                $reg->delete();
+                return response()->json(['success' => 'Reset Application'], 200);
             default:
                 return response()->json(['error' => 'Invalid validation'], 400);
-                break;
         }
 
         $reg->status = $validation;
@@ -278,7 +254,7 @@ class ManageApplicants extends Controller
             'schedule'          => $sched,
             'venue'             => $exam_data->venue,
             'exam_set'          => $exam_data->exam_set,
-            'status'            => 7,
+            'status'            => 6,
             'exam_result'       => $result
         ]);
 
@@ -322,7 +298,7 @@ class ManageApplicants extends Controller
         $reg->exam_schedule_id = null;
         $reg->reg_date = null;
         $reg->approved_date = null;
-        $reg->status = 7;
+        $reg->status = 6;
         $reg->apply = 2;
 
         if (!$reg->save()) {

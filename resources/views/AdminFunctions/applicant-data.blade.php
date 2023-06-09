@@ -239,8 +239,8 @@
                     <option value="1">Disapproved</option>
                     <option value="2">Incomplete</option>
                     <option value="4">Approved</option>
-                    {{-- <option value="5">Scheduled for exam</option> --}}
-                    <option value="6">Waiting for result</option>
+                    <option value="5">Waiting for result</option>
+                    <option value="9">Did not take the exam</option>
                 </select>
                 <div class="mt-3 mb-3 md:mb-6 flex-1 flex-col" x-show="statusValue == 4">
                     <label for="exam-sched" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Exam Schedule</label>
@@ -485,7 +485,7 @@
             dismissAlert.classList.remove("hidden");
             dismissAlert.classList.add("bg-emerald-400");
             dismissAlert.classList.remove("bg-orange-400");
-            messageAlert.textContent = "Successfully Added";
+            messageAlert.textContent = "Successfully Sent";
             let targetHeading;
             for (let i = 0; i < headings.length; i++) {
                 if (headings[i]?.textContent.trim() === "Upload Transcript") {
@@ -538,7 +538,7 @@
             dismissAlert.classList.remove("hidden");
             dismissAlert.classList.add("bg-emerald-400");
             dismissAlert.classList.remove("bg-orange-400");
-            messageAlert.textContent = "Successfully Added";
+            messageAlert.textContent = "Successfully Sent";
             let targetHeading;
             for (let i = 0; i < headings.length; i++) {
                 if (headings[i]?.textContent.trim() === "Send Exam Result") {

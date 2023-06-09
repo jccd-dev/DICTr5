@@ -111,7 +111,7 @@ Route::prefix('admin')->group(function () {
             Route::get('/', [AdminAccounts::class, 'render'])->name('admin.accounts');
             Route::post('/create', [AdminAccounts::class, 'add_admin'])->name('admin.create');
             Route::get('/view/{id}', [AdminAccounts::class, 'access_admin'])->name('admin.access');
-            Route::get('/update/{id}', [AdminAccounts::class, 'update_admin'])->name('admin.update');
+            Route::post('/update/{id}', [AdminAccounts::class, 'update_admin'])->name('admin.update');
             Route::delete('/delete/{id}', [AdminAccounts::class, 'delete_admin'])->name('admin.delete');
         });
 
@@ -137,6 +137,7 @@ Route::prefix('admin')->group(function () {
             Route::get('/inbox', CMSInbox::class)->name('admin.inbox');
             Route::get('/logs', [AdminLogsController::class, 'render'])->name('admin.system-log');
             Route::get('/search-logs', [AdminLogsController::class, 'filter_logs'])->name('admin.slogs');
+            Route::get('/gen-logs', [AdminLogsController::class, 'generate_logs_file'])->name('admin.glogs');
             Route::get('/clean-logs', [AdminLogsController::class, 'clean_logs'])->name('admin.clean-logs');
         });
     });

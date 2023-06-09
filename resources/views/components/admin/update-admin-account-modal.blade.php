@@ -67,6 +67,11 @@
                 placeholder="Designation"
                 value="{{ $admin_data->designation }}"
             >
+            <input
+                type="hidden"
+                name="admin_id"
+                value="{{ $admin_data->id }}"
+            >
         <p class="mt-2 hidden text-sm text-red-600 dark:text-red-500"></p>
     </div>
 </div>

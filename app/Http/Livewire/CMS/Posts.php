@@ -25,7 +25,7 @@ class Posts extends Component
     //initialized variable that will hold values from input form
     public mixed $myModal = null;
     public mixed $displayFormat = null;
-    public string|int $category_id = 0;
+    public string|int $category_id = 1;
     public string|int $admin_id = 1;
     public string $title = '';
     public string $excerpt = '';
@@ -108,7 +108,7 @@ class Posts extends Component
         $this->to_update_data['thumbnail'] = '';
         $this->myModal = null;
         $this->displayFormat = null;
-        $this->category_id = 0;
+        $this->category_id = 1;
         $this->admin_id = 1;
         //        $this->author = '';
         $this->title = '';
@@ -215,7 +215,6 @@ class Posts extends Component
             $this->dispatchBrowserEvent('ValidationErrors', $err_msgs->getMessages());
             return;
         }
-
         $this->thumbnail_img_name = $this->imageHelper->extract_image_names($this->thumbnail);
 
         //arrange data for insertion
@@ -232,29 +231,43 @@ class Posts extends Component
         ];
 
         $this->populateImages($this->temp_images);
+        try {
+            $post = $this->post_model->fill($this->post_data);
+            if ($post->save()) {
 
-        $post = $this->post_model->fill($this->post_data);
-        if ($post->save()) {
+                $this->image_names = $this->imageHelper->extract_image_names($this->images);
 
-            $this->image_names = $this->imageHelper->extract_image_names($this->images);
+                $images = collect($this->image_names)->map(function ($image_name) use ($post) {
+                    return new PostImages([
+                        'post_id' => $post->id,
+                        'image_filename' => $image_name
+                    ]);
+                });
 
-            $images = collect($this->image_names)->map(function ($image_name) use ($post) {
-                return new PostImages([
-                    'post_id' => $post->id,
-                    'image_filename' => $image_name
-                ]);
-            });
+                if ($post->images()->saveMany($images)) {
 
-            if ($post->images()->saveMany($images)) {
+                    $this->storeImages();
+                    $this->storeThumbnailImage();
+                    session()->flash('success', 'Post has been created!');
+                }
 
-                $this->storeImages();
-                $this->storeThumbnailImage();
-                session()->flash('success', 'Post has been created!');
+                $this->dispatchBrowserEvent('ValidationPostSuccess', ['success' => 'success']);
+                AdminLogActivity::addToLog("created a post", session()->get('admin_id'));
             }
+        } catch(\Illuminate\Database\QueryException $e) {
 
-            $this->dispatchBrowserEvent('ValidationPostSuccess', ['success' => 'success']);
-            AdminLogActivity::addToLog("created a post", session()->get('admin_id'));
+            $message = 'Invalid text. Change Font Style to regular';
+            if(strpos($e->getMessage(), 'posts')) {
+                $this->addError('title', $message);
+                $this->dispatchBrowserEvent('UpdateValidationPostError', ['title' => $message]);
+            }
+            else if(strpos($e->getMessage(), 'excerpt')) {
+
+                $this->addError('excerpt', $message);
+                $this->dispatchBrowserEvent('UpdateValidationPostError', ['excerpt' => $message]);
+            }
         }
+
 
         session()->flash('error', 'Something went wrong please try again later!');
     }
@@ -302,6 +315,7 @@ class Posts extends Component
         $this->prev_data = $this->to_update_data;
 
         $this->dispatchBrowserEvent('update_content', $this->content);
+        $this->dispatchBrowserEvent('update_excerpt', $this->excerpt);
 
         $this->resetValidation();
     }
@@ -452,28 +466,32 @@ class Posts extends Component
 
         $post_update = PostModel::find($this->post_id);
 
+        try{
+            $post_update->fill($this->post_data);
+            if ($post_update->save()) {
+                $new_images = collect($this->image_names)->map(function ($image_name) use ($post_update) {
+                    return new PostImages([
+                        'post_id' => $post_update->id,
+                        'image_filename' => $image_name
+                    ]);
+                });
 
-        $post_update->fill($this->post_data);
-        if ($post_update->save()) {
-            $new_images = collect($this->image_names)->map(function ($image_name) use ($post_update) {
-                return new PostImages([
-                    'post_id' => $post_update->id,
-                    'image_filename' => $image_name
-                ]);
-            });
+                if ($post_update->images()->saveMany($new_images)) {
 
-            if ($post_update->images()->saveMany($new_images)) {
+                    if ($this->thumbnail_img_name) {
+                        $this->storeThumbnailImage();
+                    }
+                    $this->storeImages();
+                    $this->imageHelper->del_image_on_db($this->to_delete_image, $this->post_id);
+                    session()->flash('success', 'Post has been created!');
 
-                if ($this->thumbnail_img_name) {
-                    $this->storeThumbnailImage();
+                    AdminLogActivity::addToLog("updated a post", session()->get('admin_id'));
+                    return true;
                 }
-                $this->storeImages();
-                $this->imageHelper->del_image_on_db($this->to_delete_image, $this->post_id);
-                session()->flash('success', 'Post has been created!');
-
-                AdminLogActivity::addToLog("updated a post", session()->get('admin_id'));
-                return true;
             }
+        } catch(\Illuminate\Database\QueryException $e) {
+            // dd($e);
+            $this->dispatchBrowserEvent('UpdateValidationPostError', ['detail' => ['excerpt' => 'Invalid Excerpt Font']]);
         }
 
         return false;
