@@ -45,6 +45,13 @@
                             Clean Logs
                         </a>
                     </div>
+                    <div>
+                        <a
+                            href="{{ route('admin.glogs') }}"
+                            class="font-bold font-quicksand bg-custom-blue bg-opacity-10 hover:bg-opacity-20 focus:ring-4 focus:outline-none focus:ring-[#3b5998]/50 rounded-lg text-base px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#3b5998]/55 mr-2">
+                            Generate Logs
+                        </a>
+                    </div>
                     @endcan
                 </div>
             </div>

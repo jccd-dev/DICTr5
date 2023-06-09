@@ -4,7 +4,7 @@
             Hi {{$data['first_name']}},
         </p>
         <p style="padding-right: 20px; padding-left: 20px">
-            This is to inform you that your ICT Proficiency Diagnostic Exam is scheduled on <b> {{date('F d, Y', strtotime($data['exam_start_date']))}} from {{date('H:m A', strtotime($data['exam_start_date']))}} - {{date('H:m A', strtotime($data['exam_end_date']))}}. </b>
+            This is to inform you that your ICT Proficiency Diagnostic Exam application has beed <b>approved</b> and scheduled on <b> {{date('F d, Y', strtotime($data['exam_start_date']))}} from {{date('H:m A', strtotime($data['exam_start_date']))}} - {{date('H:m A', strtotime($data['exam_end_date']))}}. </b>
             Don't forget to bring the following:
         </p>
         <ol style="margin-left: 40px">

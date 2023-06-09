@@ -45,8 +45,7 @@
                         <option value="2" {{ $searchValues['reg_status'] == '2' ? 'selected' : ''}}>Incomplete Requirements</option>
                         <option value="3" {{ $searchValues['reg_status'] == '3' ? 'selected' : ''}}>For Evaluation</option>
                         <option value="4" {{ $searchValues['reg_status'] == '4' ? 'selected' : ''}}>Approved</option>
-                        <option value="5" {{ $searchValues['reg_status'] == '5' ? 'selected' : ''}}>Schedule for Exam</option>
-                        <option value="6" {{ $searchValues['reg_status'] == '6' ? 'selected' : ''}}>Waiting for Result</option>
+                        <option value="5" {{ $searchValues['reg_status'] == '5' ? 'selected' : ''}}>Waiting for result</option>
                     </select>
                     <select name="is_applied" class="bg-custom-blue py-3 font-quicksand bg-opacity-10 font-semibold border-none text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-fit p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <option value="">Registration</option>
