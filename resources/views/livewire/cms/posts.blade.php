@@ -157,7 +157,7 @@
                                             </svg>
 
                                         <span class="font-semibold">Edit</span></a>
-                                        @can('admin_only', auth('jwt')->user())
+                                        @can('delete_content', auth('jwt')->user())
                                         <a href="#" type="button" data-modal-target="deleteModal3" data-modal-show="deleteModal3" @click="deletePostID = {{ $val->id }}" class="font-medium hover:underline flex gap-2 items-center bg-custom-red bg-opacity-10 py-2 px-3 rounded-2xl w-fit"><svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M16.625 4.73409C13.9888 4.47284 11.3367 4.33825 8.6925 4.33825C7.125 4.33825 5.5575 4.41742 3.99 4.57575L2.375 4.73409M6.72917 3.9345L6.90333 2.89742C7.03 2.14534 7.125 1.58325 8.46292 1.58325H10.5371C11.875 1.58325 11.9779 2.177 12.0967 2.90534L12.2708 3.9345M14.9229 7.23575L14.4083 15.2078C14.3213 16.4508 14.25 17.4166 12.0413 17.4166H6.95875C4.75 17.4166 4.67875 16.4508 4.59167 15.2078L4.07708 7.23575M8.17792 13.0624H10.8142M7.52083 9.89575H11.4792" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                                 </svg>
@@ -200,7 +200,7 @@
 
                                             <span class="font-semibold">Edit</span>
                                         </a>
-                                        @can('admin_only', auth('jwt')->user())
+                                        @can('delete_content', auth('jwt')->user())
                                         <a href="#" type="button" data-modal-target="deleteModal3" data-modal-show="deleteModal3" @click="deletePostID = {{ $val->id }}" class="font-medium hover:underline flex gap-2 items-center bg-custom-red bg-opacity-10 py-2 px-3 rounded-2xl w-fit"><svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M16.625 4.73409C13.9888 4.47284 11.3367 4.33825 8.6925 4.33825C7.125 4.33825 5.5575 4.41742 3.99 4.57575L2.375 4.73409M6.72917 3.9345L6.90333 2.89742C7.03 2.14534 7.125 1.58325 8.46292 1.58325H10.5371C11.875 1.58325 11.9779 2.177 12.0967 2.90534L12.2708 3.9345M14.9229 7.23575L14.4083 15.2078C14.3213 16.4508 14.25 17.4166 12.0413 17.4166H6.95875C4.75 17.4166 4.67875 16.4508 4.59167 15.2078L4.07708 7.23575M8.17792 13.0624H10.8142M7.52083 9.89575H11.4792" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                                 </svg>
@@ -566,9 +566,10 @@
                 location.reload()
             }, 2000)
         })
-        window.addEventListener('UpdateValidationPostError', _ => {
+        window.addEventListener('UpdateValidationPostError', event => {
+            console.log(event.detail)
             dismissAlert.classList.remove('hidden')
-            messageAlert.textContent = "Error Adding Category"
+            messageAlert.textContent = "Error Updating Post"
             dismissAlert.classList.remove('bg-emerald-400')
             dismissAlert.classList.add('bg-custom-red')
             errorAlert.classList.remove("hidden")
@@ -636,7 +637,6 @@
         window.addEventListener('update_content', event => {
             content2.setData(event.detail.content)
         })
-
         function listeners($data) {
 
             window.addEventListener('UpdateValidationPostError', validationHandler);
@@ -646,6 +646,7 @@
             });
 
             function validationHandler(event) {
+                console.log(event.detail)
                 const postsForm = document.querySelector('.posts-form');
                 let hasSectionOneError = event.detail.hasOwnProperty('title')
                     || event.detail.hasOwnProperty('excerpt')

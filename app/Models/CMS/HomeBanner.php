@@ -16,7 +16,8 @@ class HomeBanner extends Model
         'title',
         'description',
         'image',
-        'button_links'
+        'button_links',
+        'content_toggler'
     ];
 
     public $timestamps = false;

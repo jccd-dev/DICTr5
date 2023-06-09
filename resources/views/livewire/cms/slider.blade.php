@@ -122,7 +122,7 @@
 
                                             <span class="font-semibold">Edit</span>
                                         </a>
-                                        @can('admin_only', auth('jwt')->user())
+                                        @can('delete_content', auth('jwt')->user())
                                         <a href="#" data-modal-target="deleteModal3" data-modal-show="deleteModal3" class="font-medium hover:underline flex gap-2 items-center bg-custom-red bg-opacity-10 py-2 px-3 rounded-2xl w-fit" @click="deleteItem = {{ $val->id }}">
                                             <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M16.625 4.73409C13.9888 4.47284 11.3367 4.33825 8.6925 4.33825C7.125 4.33825 5.5575 4.41742 3.99 4.57575L2.375 4.73409M6.72917 3.9345L6.90333 2.89742C7.03 2.14534 7.125 1.58325 8.46292 1.58325H10.5371C11.875 1.58325 11.9779 2.177 12.0967 2.90534L12.2708 3.9345M14.9229 7.23575L14.4083 15.2078C14.3213 16.4508 14.25 17.4166 12.0413 17.4166H6.95875C4.75 17.4166 4.67875 16.4508 4.59167 15.2078L4.07708 7.23575M8.17792 13.0624H10.8142M7.52083 9.89575H11.4792" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -160,7 +160,7 @@
 
                                             <span class="font-semibold">Edit</span>
                                         </a>
-                                        @can('admin_only', auth('jwt')->user())
+                                        @can('delete_content', auth('jwt')->user())
                                         <a href="#" data-modal-target="deleteModal3" data-modal-show="deleteModal3" class="font-medium hover:underline flex gap-2 items-center bg-custom-red bg-opacity-10 py-2 px-3 rounded-2xl w-fit" @click="deleteItem = {{ $val->id }}">
                                             <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M16.625 4.73409C13.9888 4.47284 11.3367 4.33825 8.6925 4.33825C7.125 4.33825 5.5575 4.41742 3.99 4.57575L2.375 4.73409M6.72917 3.9345L6.90333 2.89742C7.03 2.14534 7.125 1.58325 8.46292 1.58325H10.5371C11.875 1.58325 11.9779 2.177 12.0967 2.90534L12.2708 3.9345M14.9229 7.23575L14.4083 15.2078C14.3213 16.4508 14.25 17.4166 12.0413 17.4166H6.95875C4.75 17.4166 4.67875 16.4508 4.59167 15.2078L4.07708 7.23575M8.17792 13.0624H10.8142M7.52083 9.89575H11.4792" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -217,12 +217,22 @@
                         >
                         @error('button_links') <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p> @enderror
                     </div>
+                    <div class="mb-6 flex-1">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="post-status">
+                            Enable Content
+                        </label>
+                        <div class="pt-2">
+                            <label class="relative inline-flex items-center mb-4 cursor-pointer">
+                                <x-toggle lg label="" wire:model.lazy="content" />
+                            </label>
+                        </div>
+                    </div>
 
                     <x-forms.textarea-form name="Description" required="false" placeholder="" model="description" id="" rows="10"  />
 
                 </div>
 
-                <div class="flex items-center justify-center w-full">
+                <div class="flex flex-col items-center justify-center w-full">
                     <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 overflow-hidden border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
                         <div class="flex justify-center items-center">
                             @if($image)
@@ -243,8 +253,8 @@
                                class="hidden"
                                wire:model="image"
                         />
-                        @error('image') <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p> @enderror
                     </label>
+                    @error('image') <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p> @enderror
                 </div>
                 <x-slot name="footer">
                     <div class="flex justify-end">
@@ -285,6 +295,16 @@
                             wire:model="button_links"
                         >
                         @error('button_links') <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p> @enderror
+                    </div>
+                    <div class="mb-6 flex-1">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="post-status">
+                            Enable Content
+                        </label>
+                        <div class="pt-2">
+                            <label class="relative inline-flex items-center mb-4 cursor-pointer">
+                                <x-toggle lg label="" wire:model.lazy="content" />
+                            </label>
+                        </div>
                     </div>
 
                     <x-forms.textarea-form name="Description" required="false" placeholder="" model="description" id="" rows="10"  />

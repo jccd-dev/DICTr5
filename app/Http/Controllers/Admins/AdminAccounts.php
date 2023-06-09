@@ -120,13 +120,13 @@ class AdminAccounts extends Controller
         }
 
         $admin_to_update = AdminModel::find($admin_id);
-
-        $admin_to_update->email = $request->email;
-        $admin_to_update->password = $request->password;
-        $admin_to_update->name = $request->name;
-        $admin_to_update->office = $request->office;
-        $admin_to_update->role = $request->role;
-        $admin_to_update->designation = $request->designation;
+        // dd($request->post('name'));
+        $admin_to_update->email = $request->post('email');
+        $admin_to_update->password = $request->post('password');
+        $admin_to_update->name = $request->post('name');
+        $admin_to_update->office = $request->post('office');
+        $admin_to_update->role = $request->post('role');
+        $admin_to_update->designation = $request->post('designation');
 
         if (!$admin_to_update->save()) {
             return response()->json(['error' => 'Server Error'], 500);
@@ -134,9 +134,11 @@ class AdminAccounts extends Controller
 
         AdminLogActivity::addToLog("update admin {$admin_to_update->name}", session()->get('admin_id'));
         $data = [
+            'name' => $request->name,
             'email' => $request->email,
             'password' => $request->password,
-            'url' => route('admin.login')
+            'url' => route('admin.login'),
+            'intended_for' => ''
         ];
 
         Mail::to($request->email)->send(new EmailAdminAccount($data));

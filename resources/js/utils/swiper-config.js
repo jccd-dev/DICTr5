@@ -10,7 +10,7 @@ const swiper = new Swiper(".swiper", {
     loop: true,
     direction: "horizontal",
     autoplay: {
-        delay: 2500,
+        delay: 5000,
         disableOnInteraction: false,
     },
     pagination: {
