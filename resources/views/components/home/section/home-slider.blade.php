@@ -5,7 +5,7 @@
     <div class="swiper-wrapper">
         <!-- Slides -->
         @foreach($data as $slider)
-            @if ($slider->content_toggler == 1)
+            @if (isset($slider->content_toggler) && $slider->content_toggler == 1)
                 <div class="swiper-slide">
                     <div class="w-full h-full flex justify-end">
                         <div class="absolute top-0 left-0 w-full h-full -z-[1]">

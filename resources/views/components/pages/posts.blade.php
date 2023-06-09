@@ -70,6 +70,11 @@
                     <div class="w-full flex justify-center h-[80vh]" id="embedd-con">
                         <iframe class="w-full rounded-[2rem] h-auto" src="{{ $data['cur_post']->vid_link }}" allow="autoplay"></iframe>
                     </div>
+                @elseif(strstr($data['cur_post']->vid_link, 'facebook'))
+                    <h1 class="mt-20 mb-5 font-bold font -inter text-xl 2xl:text-2xl">Watch our events</h1>
+                    <div class="w-full flex justify-center h-[80vh]" id="embedd-con">
+                        <iframe class="w-full rounded-[2rem] h-auto" src="{{ $data['cur_post']->vid_link }}" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe>
+                    </div>
                 @endif
             </div>
         </div>
