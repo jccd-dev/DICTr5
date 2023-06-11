@@ -126,15 +126,18 @@ CREATE TABLE `banner` (
   `description` mediumtext NOT NULL,
   `image` varchar(250) NOT NULL,
   `button_links` varchar(250) NOT NULL,
-  `timestamp` timestamp NULL DEFAULT current_timestamp()
+  `timestamp` timestamp NULL DEFAULT current_timestamp(),
+  `content_toggler` int(2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `banner`
 --
 
-INSERT INTO `banner` (`id`, `title`, `description`, `image`, `button_links`, `timestamp`) VALUES
-(8, 'dict_rv', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut ', '1683528329_5J5U1xch.jpg', 'https://loremipsum.io/', '2023-05-08 06:45:29');
+INSERT INTO `banner` (`id`, `title`, `description`, `image`, `button_links`, `timestamp`, `content_toggler`) VALUES
+(10, 'Student graduates from DICT CamSur Internship Program', 'June 2, 2023, marks another milestone for our interns from Camarines Sur Polytechnic Colleges and Camarines Norte State College', '1686306252_bJ4DpGxO.jpg', 'https://www.facebook.com/dictcamarinessur', '2023-06-09 10:24:12', 0),
+(11, 'Cyber Security Awareness Seminar', 'The DICT Camarines Sur conducted Cybersecurity Awareness Seminar during the Peace and Development Forum Program  held today at BCC.', '1686306801_ixsRNAYL.jpg', 'https://www.facebook.com/dictcamarinessur', '2023-06-09 10:32:31', 0),
+(12, 'National ICT Month 2023', 'the DICT once again celebrates National ICT this month of  June 2023', '1686307179_ItpZmsAV.png', 'https://www.facebook.com/dictcamarinessur', '2023-06-09 10:39:39', 1);
 
 -- --------------------------------------------------------
 

@@ -192,7 +192,7 @@ x-init="">
                 </svg>
             </button>
             </div>
-            <form action="" method="POST" id="form">
+            <form action="" id="form">
                 <div class="p-4 overflow-y-auto w-[30rem]">
                     <div class="mb-3 md:mb-5 flex-1 flex-col">
                         <label for="email" class="block text-sm font-medium text-gray-900 dark:text-white mb-1">Email</label>
@@ -339,6 +339,7 @@ x-init="">
 
 <script>
     const form = document.querySelector("#form");
+    const formUpdate = document.querySelector("#formUpdate");
     const messageAlert = document.querySelector("#message-alert");
     const dismissAlert = document.querySelector("#dismiss-alert");
     const closeAlertBtn = document.querySelector("#closeAlertBtn");
@@ -350,6 +351,35 @@ x-init="">
         let a = await axios.get('/admin/dict-admins/view/' + id)
         updateContent.innerHTML = a.data
     }
+
+    formUpdate.addEventListener('submit', async event => {
+        event.preventDefault()
+        let formData = new FormData(event.target);
+
+        let loaderSibling = event.target.querySelector('button[type="submit"]')
+        let id = event.target.querySelector('input[name="admin_id"]')
+        try {
+            loaderSibling.classList.add('hidden');
+            loaderSibling.previousElementSibling.classList.remove('hidden');
+            loaderSibling.previousElementSibling.classList.add('flex');
+            let req = await axios.post("http://localhost:8000/admin/dict-admins/update/"+id.value, formData);
+            if (req.status === 200) {
+                dismissAlert.classList.remove("hidden");
+                messageAlert.textContent = "Successfully Updated Admin Account";
+                closeBtn.click();
+
+                setTimeout(() => {
+                    dismissAlert.classList.remove("hidden");
+                    location.reload();
+                }, 2000);
+            }
+        } catch (e) {
+            loaderSibling.classList.remove('hidden');
+            loaderSibling.previousElementSibling.classList.add('hidden');
+            loaderSibling.previousElementSibling.classList.remove('flex');
+            errorHandler(e.response?.data?.errors);
+        }
+    })
 
     async function deleteAdminAccount(data) {
         try {

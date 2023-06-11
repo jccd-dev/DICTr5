@@ -130,7 +130,7 @@
                                 </td>
                                 <td class="px-6 py-4">
                                     <button wire:click="to_update_announcement('{{$ann->id}}')" class="px-2 py-1 m-1 mr-0 bg-[#00509D] bg-opacity-40 rounded-md">Edit</button>
-                                    @can('admin_only', auth('jwt')->user())
+                                    @can('delete_content', auth('jwt')->user())
                                     <button onclick="delete_confirm('{{$ann->id}}')" class="px-2 py-1 m-1 ml-0 bg-[#C1121F] bg-opacity-40 rounded-md">Delete</button>
                                     @endcan
                                 </td>
@@ -161,7 +161,7 @@
                                 </td>
                                 <td class="px-6 py-4">
                                     <button wire:click="to_update_announcement('{{$ann->id}}')" class="px-2 py-1 m-1 mr-0 bg-[#00509D] bg-opacity-40 rounded-md">Edit</button>
-                                    @can('admin_only', auth('jwt')->user())
+                                    @can('delete_content', auth('jwt')->user())
                                     <button onclick="delete_confirm('{{$ann->id}}')" class="px-2 py-1 m-1 ml-0 bg-[#C1121F] bg-opacity-40 rounded-md">Delete</button>
                                     @endcan
                                 </td>

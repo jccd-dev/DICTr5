@@ -50,7 +50,7 @@
                                 {{-- left --}}
 
                                 <div class="w-8 sm:w-10 h-8 sm:h-10">
-                                    <img class="rounded-full w-full h-full object-cover" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
+                                    <img class="rounded-full w-full h-full object-cover" src="https://png.pngtree.com/png-vector/20190329/ourmid/pngtree-vector-avatar-icon-png-image_889567.jpg" alt="" />
                                 </div>
 
                                 {{-- right --}}
