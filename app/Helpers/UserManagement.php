@@ -21,7 +21,7 @@ class UserManagement
         'barangay'      => "required",
         'email'         => "required|email",
         'pob'           => "required",
-        'dob'           => "required",
+        'dob'           => "required|age_limit:18",
         'gender'        => "required",
         'citizenship'   => "required",
         'civilStatus'   => "required",

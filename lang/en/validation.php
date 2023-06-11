@@ -150,7 +150,9 @@ return [
     'url' => 'The :attribute field must be a valid URL.',
     'ulid' => 'The :attribute field must be a valid ULID.',
     'uuid' => 'The :attribute field must be a valid UUID.',
+    // custom message from custom validations
     'word_count' => 'The :attribute must not more than :count words.',
+    'age_limit' => 'Applicant must be at least :age years old or above',
 
     /*
     |--------------------------------------------------------------------------
